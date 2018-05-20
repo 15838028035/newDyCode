@@ -46,6 +46,8 @@ public interface SecGroupsMapper {
 
 	void insertURL(@Param("gid")Integer gid,@Param("ruiId") Integer ruiId);
 
+	List<Integer> selectGrouipId(Integer id);
+
 
 
 }
