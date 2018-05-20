@@ -126,6 +126,7 @@ public class SecAdminUserController extends BaseController{
 						restAPIResult.setRespMsg("设置失败，用户已存在");
 						}
 					}else {
+						secAdminUser.setEnableFlag("1");
 						secAdminUserService.insertSelective(secAdminUser);
 					}
 					

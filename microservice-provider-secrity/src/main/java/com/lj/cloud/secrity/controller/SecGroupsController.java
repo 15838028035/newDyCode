@@ -169,11 +169,11 @@ public class SecGroupsController extends BaseController{
                  restAPIResult.setRespMsg("分组名称不为空");
                  return restAPIResult;
         	}
-        	if(StringUtil.isEmpty(secGroups.getRemarks())) {
+        	/*if(StringUtil.isEmpty(secGroups.getRemarks())) {
        		 restAPIResult.setRespCode(0);
                 restAPIResult.setRespMsg("描述不为空");
                 return restAPIResult;
-       	     }
+       	     }*/
         	String data =DateUtil.getNowDateYYYYMMddHHMMSS();
         	secGroups.setCreateDate(data);
         	String str[] = secGroups.getUrids().split(",");
