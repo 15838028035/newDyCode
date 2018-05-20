@@ -1,6 +1,7 @@
 package com.lj.cloud.secrity.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.weixindev.micro.serv.common.bean.weixin.WeixinConfig;
 import com.weixindev.micro.serv.common.msg.LayUiTableResultResponse;
@@ -24,4 +25,6 @@ public interface WeixinConfigService  {
     public LayUiTableResultResponse	 selectByQuery(Query query) ;
 
     public  List<WeixinConfig> selectByExample(Query query);
+    
+    public List<Map<String,Object>> selectVideoCate();
 }
