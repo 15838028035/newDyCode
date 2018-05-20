@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -65,6 +64,9 @@
  	  <div class="layui-form-item">
         <label class="layui-form-label">分类</label>
         <div class="layui-input-block" id="categoryIds" >
+        <input name="sex" value="男" title="男" checked="" type="radio">
+      <input name="sex" value="女" title="女" type="radio">
+      <input name="sex" value="禁" title="禁用" disabled="" type="radio">
         </div>
      </div>
 
@@ -94,7 +96,7 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
 	  ,layedit = layui.layedit
 	  ,laydate = layui.laydate;
 	 
-	var isUpload=false;
+
     //执行上传
     var uploadInst = upload.render({
         elem: '#upload' //绑定元素
@@ -104,7 +106,6 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
         ,size:2048
         ,before: function(obj){
             layer.load();
-            isUpload=true;
         }
         ,done: function(res){//上传完毕回调
             layer.closeAll('loading');
@@ -134,22 +135,19 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
   /*   layer.alert(JSON.stringify(data.field), {
       title: '最终的提交信息'
     }) */
-    if(!isUpload){
-    	parent.layer.msg('请先上传视频');
-    	return false;
-    }
-	  function trim(str){
-		  return str.replace(/(^\s*)|(\s*$)/g, "");
-		  }
-  
-    var title=$('#title').val();
-    if(typeof title=='string'){
-    	title=trim(title);
-    }
-    if(title==null||title==''){
-    	parent.layer.msg('请输入标题');
-    	return false;
-    }
+
+      var title = $("#title").val();
+      var headImg = $("#headImg").val();
+
+      if (title == '') {
+          layer.msg("请输入标题");
+          return false;
+      }
+      if (headImg == '') {
+          layer.msg("请上传音频");
+          return false;
+      }
+    
     data.field.Authorization=acekeystoken;
     var files = data.field;
     var postType ="POST";
@@ -166,10 +164,10 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
         type: postType,
         dataType: "json",
         success: function(data){
-        	parent.parent.layer.msg(data.respMsg);
-                 var index = parent.layer.getFrameIndex(window.name);  
-                 parent.layer.close(index); 
-             	   layer.closeAll('loading');
+        	var index = parent.layer.getFrameIndex(window.name);  
+            parent.layer.close(index); 
+        	   layer.closeAll('loading');
+                 layer.msg(data.respMsg);
 	     return true;
           },
           error: function(data){

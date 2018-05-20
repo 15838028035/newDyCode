@@ -913,17 +913,26 @@ $("#btnSend").click(function(){
     var     url =ctxAppWeixin+'/api/doExexcuteBatchSend';
     var imgTextId = getQueryString("tempId");//模板ID
     console.log(imgTextId);
-    
+
     var table = layui.table;
     var checkStatus = table.checkStatus('datagridTable');
     var datas = checkStatus.data;
-    
+
+
+    if (datas.length == 0) {
+        layer.msg("请选择至少一个公众号");
+        return false;
+    }
+
+
+
     var ids = "";
     $.each(datas, function(index, item){
          var id = item.authorizerAppid;
          ids+=id+",";
      });
-    
+
+
     var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken};
     
     console.log(postData);
@@ -936,7 +945,7 @@ $("#btnSend").click(function(){
         dataType: "json",
         success: function(data){
                layer.closeAll('loading');
-                 layer.alert(data.respMsg,{area: ['1000px', '300px']});
+                 layer.alert(data.respMsg,{area: ['400px', '300px']});
                  return true;
           },
           error: function(data){
@@ -978,7 +987,7 @@ $("#btnSync").click(function(){
             dataType: "json",
             success: function(data){
                    layer.closeAll('loading');
-                     layer.alert(data.respMsg,{area: ['1000px', '300px']});
+                     layer.alert(data.respMsg,{area: ['400px', '300px']});
                      return true;
               },
               error: function(data){
@@ -1089,8 +1098,17 @@ $("#btnSync").click(function(){
     	    $('.closeBtn').on('click', function () {
     	        $('.previewcountent').hide();
     	    });
-    	    
+
+             var lock =true;
     	    $('.prsure').on('click', function () {
+
+          /*      if(!lock){
+                    layer.msg("操作时间间隔太短，请稍后重试！");
+                    return false;
+                }
+                lock =false;
+            */
+
     	    	 var imgTextId = getQueryString("tempId");//模板ID
     	    	 var table = layui.table;
     	         var checkStatus = table.checkStatus('datagridTable');
@@ -1116,6 +1134,8 @@ $("#btnSync").click(function(){
     	                if (data.respCode == 1) {
     	                    $('.previewcountent').hide();
     	                    alert("请在微信中预览");
+                            //lock =true;
+
     	                } else {
     	                    alert("请关注微信公众号或重新输入昵称");
     	                }

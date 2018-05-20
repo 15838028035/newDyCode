@@ -829,8 +829,7 @@
                 <script type="text/pain" id="deitor" name="articleContent"></script>
                 <div class="bootm">
                     <div class="yuanwen">
-                        <p>原文链接<input id="originUrl" style="width: 400px;height: 35px;margin-left: 20px;"
-                                      name="originUrl" type="text"></p>
+                        <p>原文链接<input id="originUrl" style="width: 400px;height: 35px;margin-left: 20px;"  name="originUrl" type="text" placeholder="http://或https://开头"></p>
                         <p>原创：未声明</p>
                         <a class="sehnmbtn" href="#"><label><input name="yuanchuang" value="1"
                                                                    type="checkbox">申明原创</label></a>
@@ -1273,6 +1272,9 @@ function toShowContent(className){
             success: function (data) {
                 tempId = data.dataCode;
                 $("#imgTextId").val(tempId);
+
+
+
             },
             error: function (data) {
                 try {
@@ -1713,10 +1715,10 @@ function toShowContent(className){
                 type: 'post',
                 dataType: "json",
                 success: function (data) {
-                    console.log(data);
-                   // layer.msg(data.respMsg);
+                    console.log($("#imgTextId").val());
+                    var secid = $("#imgTextId").val();
                     layer.alert(data.respMsg, function(){
-                        window.location.href="weixinNewtextformEdit.html?id="+$("#imgTextId").val();
+                        window.location.href="weixinNewtextformEdit.html?id="+secid;
                   });
 
                 }
@@ -1731,11 +1733,11 @@ function toShowContent(className){
                    $("#saveBtn").attr({ disabled: "true" });
                }, 
                 success: function (data) {
-                    console.log(data);
+                    console.log($("#imgTextId").val());
                   //  layer.alert(data.respMsg);
-                    
+                    var secid = $("#imgTextId").val();
                     layer.alert(data.respMsg, function(){
-                    	  window.location.href="weixinNewtextformEdit.html?id="+$("#imgTextId").val();
+                    	  window.location.href="weixinNewtextformEdit.html?id="+secid;
                     });
 
                     var length = $('.tuwenli ul .cur').length;
