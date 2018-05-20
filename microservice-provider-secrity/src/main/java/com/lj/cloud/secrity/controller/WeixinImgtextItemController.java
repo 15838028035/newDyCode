@@ -54,6 +54,13 @@ public class WeixinImgtextItemController extends BaseController{
 						articleContent=articleContent.substring(1, articleContent.length()-1);
 						weixinImgtextItem.setArticleContent(articleContent);
 					}
+
+					List<WeixinImgtextItem> WeixinImgtextItemList =weixinImgtextItemService.selectByTemplateimdId(weixinImgtextItem.getImgTextId());
+					if(WeixinImgtextItemList!=null && WeixinImgtextItemList.size()>8){
+						restAPIResult.setRespCode(0);
+						restAPIResult.setRespMsg("最多只能添加8个图文消息");
+						return restAPIResult;
+					}
 					
 					Integer createBy = getLoginId();
 					weixinImgtextItem.setCreateBy(createBy);
@@ -109,6 +116,13 @@ public class WeixinImgtextItemController extends BaseController{
 				if(articleContent.startsWith(",")||articleContent.startsWith("，")){
 					articleContent=articleContent.substring(1, articleContent.length()-1);
 					weixinImgtextItem.setArticleContent(articleContent);
+				}
+				
+				List<WeixinImgtextItem> WeixinImgtextItemList =weixinImgtextItemService.selectByTemplateimdId(weixinImgtextItem.getImgTextId());
+				if(WeixinImgtextItemList!=null && WeixinImgtextItemList.size()>8){
+					restAPIResult.setRespCode(0);
+					restAPIResult.setRespMsg("最多只能添加8个图文消息");
+					return restAPIResult;
 				}
 				
 				WeixinImgtextItem weixinImgtextItemSelect =weixinImgtextItemService.selectByPrimaryKey(id);
