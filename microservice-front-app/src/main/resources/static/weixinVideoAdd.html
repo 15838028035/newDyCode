@@ -35,6 +35,8 @@
 			font-size: 12px;
 			color: #999;
 		}
+		#tags{width:80%;margin-bottom:20px;margin-top:0px}
+		#tags>div{width:100px}
 	</style>
 </head>
 
@@ -139,6 +141,7 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
         ,done: function(res){//上传完毕回调
             layer.closeAll('loading');
             layer.msg(res.msg);
+            isUpload=true;
             var result = ctxApp+"/" +res.imgUrl;
             $("#headImg").val(result);
             $("#headImgPic").attr("src",result);
@@ -171,7 +174,7 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
     }) */
 	   if(!isUpload){
 	    	parent.layer.msg('请先上传视频');
-	    	return;
+	    	return false;
 	    }
 	  function trim(str){
 		  return str.replace(/(^\s*)|(\s*$)/g, "");
@@ -183,7 +186,7 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
     }
     if(title==null||title==''){
     	parent.layer.msg('请输入标题');
-    	return;
+    	return false;
     }
     console.log(data);
     data.field.Authorization=acekeystoken;

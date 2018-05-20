@@ -296,6 +296,15 @@
         </if>
             
   </select>
+  <select id="selectVideoCate" resultType="map">
+  		select 
+  			cfg_class
+  		from
+  			weixin_config
+  		where
+  			remarks='视频标签'
+  		group by cfg_class
+  </select>
 
 
 </mapper>

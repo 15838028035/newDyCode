@@ -208,7 +208,7 @@
 		    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));  
 		    return fmt;  
 		} 
-		initForList("categoryId", null)
+		initForList("categoryId", null);
 		
 		var table;
 
@@ -319,28 +319,14 @@
 																					type : "DELETE",
 																					dataType : "json",
 																					success : function(data) {
-																						layer
-																								.msg(data.respMsg);
-																						table
-																								.reload(
-																										"datagridTable",
-																										{
-																											where : {
-																												"createDateBegin" : $(
-																														"#createDateBegin")
-																														.val(),
-																												"createDateEnd" : $(
-																														"#createDateEnd")
-																														.val(),
-																												"categoryId" : $(
-																														"#categoryId")
-																														.val(),
-																												"title":$("#title").val()
-																											},
-																											page : {
-																												curr : 1
-																											//重新从第 1 页开始
-																											}
+																						layer.msg(data.respMsg);
+																						table.reload("datagridTable",{
+																		                	where:{
+																		                	    aaaaaa: 'xxx',
+																		                	    bbb: 'yyy'
+																		                	},page: {
+																		                	    curr: 1 //重新从第 1 页开始
+																		                	  }
 																										});
 																					},
 																					error : function(
