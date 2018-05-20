@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lj.cloud.secrity.service.WeixinImgtextItemService;
 import com.lj.cloud.secrity.service.WeixinPushLogService;
-import com.lj.cloud.secrity.service.impl.WeixinPushLogServiceImpl;
 import com.weixindev.micro.serv.common.bean.RestAPIResult2;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImgtextItem;
 import com.weixindev.micro.serv.common.msg.LayUiTableResultResponse;
 import com.weixindev.micro.serv.common.pagination.Query;
 import com.weixindev.micro.serv.common.util.DateUtil;
+import com.weixindev.micro.serv.common.util.StringUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,6 +48,13 @@ public class WeixinImgtextItemController extends BaseController{
 				restAPIResult.setRespCode(1);
 				restAPIResult.setRespMsg("成功");
 				try {
+					String articleContent = StringUtil.trimBlank(weixinImgtextItem.getArticleContent());
+					
+					if(articleContent.startsWith(",")||articleContent.startsWith("，")){
+						articleContent=articleContent.substring(1, articleContent.length()-1);
+						weixinImgtextItem.setArticleContent(articleContent);
+					}
+					
 					Integer createBy = getLoginId();
 					weixinImgtextItem.setCreateBy(createBy);
 					weixinImgtextItem.setCreateByUname(getUserName());
@@ -96,6 +103,13 @@ public class WeixinImgtextItemController extends BaseController{
 			restAPIResult.setRespCode(1);
 			restAPIResult.setRespMsg("成功");
 			try {
+				
+				String articleContent = StringUtil.trimBlank(weixinImgtextItem.getArticleContent());
+				
+				if(articleContent.startsWith(",")||articleContent.startsWith("，")){
+					articleContent=articleContent.substring(1, articleContent.length()-1);
+					weixinImgtextItem.setArticleContent(articleContent);
+				}
 				
 				WeixinImgtextItem weixinImgtextItemSelect =weixinImgtextItemService.selectByPrimaryKey(id);
 				if(weixinImgtextItemSelect== null) {
