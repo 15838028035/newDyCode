@@ -182,8 +182,13 @@
 	  			<div class="ipt_count">
 	  				<div class="ipt_box">
 	  					<span>角色名称</span>
-	  					<p><input type="text" value="填写分组名称" id="groupName" name="groupName"/></p>
+	  					<p><input type="text" value="" id="groupName" name="groupName"/></p>
 	  					<i>*</i>
+	  				</div>
+	  				<div class="ipt_box">
+	  					<span>备注</span>
+	  					<p><input type="text" value="" id="remarks" name="remarks"/></p>
+	  					
 	  				</div>
 		  			<div class="ipt_box">
 		  				<span>组别权限</span>
@@ -238,9 +243,17 @@
 	                }
 	            }
 	        });
+	    
 
 			
 			$(".saveBtn").click(function(){
+				var groupName = $("#groupName").val();
+				if(groupName==""){
+			    	showMsg("分组名称不能为空",function(){
+			    		return ;
+			    	});
+			    	return false;
+			    }
 				var obj = document.getElementsByName("checkId");
 			    check_val = [];
 			    for(k in obj){
@@ -249,8 +262,9 @@
 			    }
 			    var urids=check_val.join(",");
 			    var groupName = $("#groupName").val();
+			    var remarks=$("#remarks").val();
 				var  url = ctxAppSec + '/api/SecGroupsAdd'  + '?Authorization=' + acekeystoken;
-				var postData = {"groupName":groupName,"urids":urids};
+				var postData = {"groupName":groupName,"urids":urids,"remarks":remarks};
 				$.ajax({
 			        url:url ,
 			        data:postData,
@@ -279,6 +293,25 @@
 			
 		
 	});
+	function showMsg(content,fun,param){
+	    layer.open({
+	        title: [
+	            '操作提示',
+	            'font-size:14px;color:#fff'
+	        ], maxmin: false
+	        ,anim: 'up'
+	        ,content: content
+	        ,btn: ['确认']
+	        ,end:function(index){
+	            if(fun){
+	                fun(index,param); 
+	            }else{
+	                layer.close(index);
+	            }
+	        }
+	    });
+	}
+	
 	
 	</script>
 </html>

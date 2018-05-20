@@ -310,4 +310,7 @@
 			VALUES
 				( #{gid}, #{ruiId})
    </insert>
+   <select id="selectGrouipId" resultType="Integer">
+       select sec_privilege_id FROM sec_previlege_relation WHERE sec_ag_id=#{id}
+   </select>
 </mapper>
