@@ -801,8 +801,7 @@
                 <script type="text/pain" id="deitor" name="articleContentEditor"></script>
                 <div class="bootm">
                     <div class="yuanwen">
-                        <p>原文链接<input id="originUrl" style="width: 400px;height: 35px;margin-left: 20px;"
-                                      name="originUrl" type="text"></p>
+                        <p>原文链接<input id="originUrl" style="width: 400px;height: 35px;margin-left: 20px;" name="originUrl" type="text" placeholder="http://或https://开头"></p>
                         <p>原创：未声明</p>
                         <a class="sehnmbtn" href="#"><label><input name="yuanchuang" value="1"
                                                                    type="checkbox">申明原创</label></a>
@@ -1459,7 +1458,7 @@ function getImg() {
                 
                 //选择图片
 
-                $('body .imglistBox ul li').on('click',function () {
+                $('#imglists li').on('click',function () {
                 	if ($(this).hasClass('cur')) {
                         $(this).removeClass('cur');
                     } else {
@@ -1609,7 +1608,7 @@ function getImg() {
                 
                 //选择图片
 
-                $('.imglistBox ul li').on('click',function () {
+                $('#fmimglists li').on('click',function () {
                     $(this).addClass('cur').siblings().removeClass('cur')
                     $(this).children('.pimg').show();
                     $(this).siblings().children('.pimg').hide();
