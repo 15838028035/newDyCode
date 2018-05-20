@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>微信公众账号分组管理</title>
+
+    <link rel="stylesheet" href="/plugins/layui/css/layui.css" media="all">
+    <script src="js/jquery-1.8.2.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    <script src="js/mustache.js"></script>
+
+    <script src="treeTable/jquery.treeTable.js"></script>
+    <link rel="stylesheet" href="treeTable/themes/vsStyle/treeTable.min.css">
+
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+
+    <style>
+        body {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body class="kit-doc">
+<!-- <div class="kit-doc-title"> -->
+<!--     <fieldset> -->
+<!--         <legend><a name="blockquote">公众账号分列表</a></legend> -->
+<!--     </fieldset> -->
+<!-- </div> -->
+
+<table id="treeTable" class="layui-table table table-striped table-bordered table-condensed" lay-skin="line">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>分组名称</th>
+        <th>备注</th>
+        <th>创建人姓名</th>
+        <th>创建日期</th>
+        <th>公众号数量</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="treeTableList"></tbody>
+</table>
+<script type="text/template" id="treeTableTpl">
+    <tr id="{{row.id}}" pId="{{pid}}" data-level="{{row.level}}">
+        <td>{{row.id}}</td>
+        <td>{{row.groupName}}</td>
+        <td>{{row.remarks}}</td>
+        <td>{{row.createByUname}}</td>
+        <td>{{row.createDate}}</td>
+        <td><a href="weixinUserinfoList.html?weixinGroupsId={{row.id}}">{{row.count}}</a></td>
+        <td>
+            <a href="javascript:void(0)" class="layui-btn layui-btn-edit layui-btn-xs"
+               onclick="update({{row.id}},{{row.parentId}})">修改</a>
+            <a href="javascript:void(0)" class="layui-btn layui-btn-primary layui-btn-xs deleteBtn"
+               onclick="deleteId({{row.id}})">删除</a>
+            <a href="javascript:void(0)" class="layui-btn layui-btn-edit layui-btn-xs"
+               onclick="movie({{row.id}},{{row.parentId}})">移动</a>
+            <a href="javascript:void(0)" class="layui-btn layui-btn-edit layui-btn-xs addnextlevelbtn"
+               onclick="update(0,{{row.id}})">添加下级</a>
+        </td>
+    </tr>
+</script>
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+    	var acekeystoken = $.cookie('bearcktkaeskey');
+    	if (acekeystoken == "") {
+    	    parent.location.href = ctxApp + '/login.html';
+    	}
+
+        var tpl = $("#treeTableTpl").html().replace(/(\/\/\<!\-\-)|(\/\/\-\->)/g, "");
+
+        $.ajax({
+            url: ctxAppSec + '/api/WeixinGroups/tree/0',
+            data: {"Authorization":acekeystoken},
+            type: "GET",
+            dataType: "json",
+            success: function (dataObj) {
+                var data = dataObj, ids = [], rootIds = [];
+                for (var i = 0; i < data.length; i++) {
+                    ids.push(data[i].id);
+                }
+                ids = ',' + ids.join(',') + ',';
+                for (var i = 0; i < data.length; i++) {
+                    if (ids.indexOf(',' + data[i].parentId + ',') == -1) {
+                        if ((',' + rootIds.join(',') + ',').indexOf(',' + data[i].parentId + ',') == -1) {
+                            rootIds.push(data[i].parentId);
+                        }
+                    }
+                }
+                for (var i = 0; i < rootIds.length; i++) {
+                    addRow("#treeTableList", tpl, data, rootIds[i], true);
+                }
+
+                $("#treeTable").treeTable({expandLevel: 5});
+                $("#treeTableList tr").each(function (index, elem) {
+                    console.log(elem);
+                    if ($(elem).attr("data-level") > 1) {
+                        console.log($(elem).children());
+                        $(elem).find(".addnextlevelbtn").remove();
+                    }
+                    
+                    if ($(elem).attr("id") <=1) {
+                        console.log($(elem).children());
+                        $(elem).find(".deleteBtn").remove();
+                    }
+                    
+                })
+            },
+            error: function (data) {
+                try {
+                    layer.msg("请刷新重试");
+                    return false;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+
+
+    });
+
+    function addRow(list, tpl, data, pid, root) {
+        for (var i = 0; i < data.length; i++) {
+            var row = data[i];
+            if (row.parentId == pid) {
+                $(list).append(Mustache.render(tpl, {
+                    pid: (root ? 0 : pid), row: row
+                }));
+                addRow(list, tpl, data, row.id);
+            }
+        }
+    }
+
+    function update(id, parentId) {
+        layer.open({
+            title: "修改分组",
+            type: 2,
+            maxmin: true,
+            area: ['470px', '300px'],
+            content: 'weixinGroupsAdd.html?id=' + id + "&parentId=" + parentId,
+            // 下面这句是,添加页面关闭后,刷新本页面.
+            end: function () {
+                location.reload();
+            }
+        });
+    }
+
+    function movie(id, parentId) {
+        layer.open({
+            title: "移动分组",
+            type: 2,
+            maxmin: true,
+            area: ['470px', '300px'],
+            content: 'weixinGroupsMovie.html?id=' + id + "&parentId=" + parentId,
+            // 下面这句是,添加页面关闭后,刷新本页面.
+            end: function () {
+                location.reload();
+            }
+        });
+    }
+
+    function deleteId(id) {
+    	var acekeystoken = $.cookie('bearcktkaeskey');
+    	console.log(acekeystoken);
+
+        layer.confirm('确定要删除？您在该组中的公众号将被移到默认分组中', {title: "系统提示", anim: 1, icon: 3, closeBtn: 0}, function (index) {
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinGroups/' + id +"?Authorization="+acekeystoken,
+                data: {"Authorization":acekeystoken},
+                type: "DELETE",
+                dataType: "json",
+                success: function (data) {
+                    layer.msg(data.respMsg);
+                    location.reload();
+                },
+                error: function (data) {
+                    try {
+                        layer.msg("请刷新重试");
+                        return false;
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            });
+        });
+    }
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+第一套流程:
+
+upload:临时素材
+
+curl -F media=@3983c5be133302a74b143ede5544b9f3.MP4 "http://file.api.weixin.qq.com/cgi-bin/media/upload?access_token=9_auLrGXENQxD6G-hdXSwrvAZnY5xaQrHqRmKiJV9s1Abq53ZeFmmRBYWV3fgGRURtOs01cnjd1vPgD_Q-FTfZLD8cpYM8Y4cYRfOTeDIxz5wx4Gim7tTWcDif5ClOFbLwD4J4WAlm4Hn-WgnAIKShAHDPRZ&type=video"
+
+{"type":"video","media_id":"Xuh-nOuyxzQkohy4fkhrT9iwMP8Kv9f-4AQYvIgLufx7wWVgI4mmC7AR40Pr_Ubl","created_at":1525936573}
+
+{"type":"video","media_id":"2zcR3ipbHBz-9ctpMjOOWhFAdOeRQDALM6nzRv3J2S1QOEeJcLKCeTX-tM3WY83v","created_at":1525937502}
+
+{"type":"video","media_id":"N4P6Ewm-o_yR89YDrzRQBKaw0ZAkYMbaPh4l6Hle7TDIDLzl_nfIMhmppn0R9LeH","created_at":1525938082}
+
+
+cansend:
+
+curl -i -X POST -H 'Content-type':'application/json' -d '{"media_id": "N4P6Ewm-o_yR89YDrzRQBKaw0ZAkYMbaPh4l6Hle7TDIDLzl_nfIMhmppn0R9LeH","title": "videotest","description": "nononono"' https://api.weixin.qq.com/cgi-bin/media/uploadvideo?access_token=9_auLrGXENQxD6G-hdXSwrvAZnY5xaQrHqRmKiJV9s1Abq53ZeFmmRBYWV3fgGRURtOs01cnjd1vPgD_Q-FTfZLD8cpYM8Y4cYRfOTeDIxz5wx4Gim7tTWcDif5ClOFbLwD4J4WAlm4Hn-WgnAIKShAHDPRZ
+
+{"type":"video","media_id":"_f8U-JxA4Bygwm5-rJsyCWYvB5TdFc0sxltGTRbdchNKifT1gBGhaeEBgfSL9a0b","created_at":1525936663}
+
+{"type":"video","media_id":"Z4ImcllvkoyPQ0IKnZqrf1SkHmBSfsPQtZDCIOPBjwGia3krujwvoTGq5eH11vRb","created_at":1525937585}
+
+{"type":"video","media_id":"0uoPeXlu34W8DML21PhzYHpFAwTbO0mJg9aHOu6aKnW5ggROl6rSqw8EoKthHFBo","created_at":1525938123}
+
+send:
+
+curl -i -X POST -H 'Content-type':'application/json' -d '{"towxname":"esungee","mpvideo":{"media_id":"0uoPeXlu34W8DML21PhzYHpFAwTbO0mJg9aHOu6aKnW5ggROl6rSqw8EoKthHFBo"},"msgtype":"mpvideo"}' https://api.weixin.qq.com/cgi-bin/message/mass/preview?access_token=9_auLrGXENQxD6G-hdXSwrvAZnY5xaQrHqRmKiJV9s1Abq53ZeFmmRBYWV3fgGRURtOs01cnjd1vPgD_Q-FTfZLD8cpYM8Y4cYRfOTeDIxz5wx4Gim7tTWcDif5ClOFbLwD4J4WAlm4Hn-WgnAIKShAHDPRZ
+
+
+第二套流程:
+
+upload:永久素材
+
+curl "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=9_Ki2vQgaLX1iHQDhYQoRUpoLTsH5X4E_7QYWAKQ3vwyFP36qKuT2LZUvAd3K3CNXlTq_i_KPAjejUkO6LehFrHy5oJyS_PcWAn0sJbZcr4h7DhB1UuBCMPko33Y_rpD5I8myAhFkFih_plvXEUYWgAEDAEC&type=video" -F media=@3983c5be133302a74b143ede5544b9f3.MP4 -F  description='{"title":"VIDEO_TITLE", "introduction":"INTRODUCTION"}'
+
+{"media_id":"UFyprEXBvieSOBZuNARuqVCUs2Crd3LU9vfDYvsAUsA"}
+
+{"media_id":"UFyprEXBvieSOBZuNARuqf6B7lFjq3628rgpb4Z5CgE"}
+
+cansend:
+
+curl -i -X POST -H 'Content-type':'application/json' -d '{"media_id": "UFyprEXBvieSOBZuNARuqf6B7lFjq3628rgpb4Z5CgE","title": "videotest","description": "nononono"' https://api.weixin.qq.com/cgi-bin/media/uploadvideo?access_token=9_Ki2vQgaLX1iHQDhYQoRUpoLTsH5X4E_7QYWAKQ3vwyFP36qKuT2LZUvAd3K3CNXlTq_i_KPAjejUkO6LehFrHy5oJyS_PcWAn0sJbZcr4h7DhB1UuBCMPko33Y_rpD5I8myAhFkFih_plvXEUYWgAEDAEC
+
+{"type":"video","media_id":"_f8U-JxA4Bygwm5-rJsyCWYvB5TdFc0sxltGTRbdchNKifT1gBGhaeEBgfSL9a0b","created_at":1525936663}
+
+send:
+
+curl -i -X POST -H 'Content-type':'application/json' -d '{"towxname":"esungee","mpvideo":{"media_id":"UFyprEXBvieSOBZuNARuqf6B7lFjq3628rgpb4Z5CgE"},"msgtype":"mpvideo"}' https://api.weixin.qq.com/cgi-bin/message/mass/preview?access_token=9_Ki2vQgaLX1iHQDhYQoRUpoLTsH5X4E_7QYWAKQ3vwyFP36qKuT2LZUvAd3K3CNXlTq_i_KPAjejUkO6LehFrHy5oJyS_PcWAn0sJbZcr4h7DhB1UuBCMPko33Y_rpD5I8myAhFkFih_plvXEUYWgAEDAEC
+
+
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: application/json; encoding=utf-8
+Date: Thu, 10 May 2018 08:31:07 GMT
+Content-Length: 40
+
+{"errcode":0,"errmsg":"preview success"}

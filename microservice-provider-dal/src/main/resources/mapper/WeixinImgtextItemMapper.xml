@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+
+<mapper namespace="com.lj.cloud.secrity.dal.WeixinImgtextItemMapper">
+    <resultMap id="weixinImgtextItemResult" type="com.weixindev.micro.serv.common.bean.weixin.WeixinImgtextItem">
+   	  	<result property="id" column="id" jdbcType="INTEGER"   />
+   	  	<result property="title" column="title" jdbcType="VARCHAR"   />
+   	  	<result property="articleContent" column="article_content" jdbcType="LONGVARCHAR"  />
+   	  	<result property="headImg" column="headImg" jdbcType="VARCHAR"   />
+   	  	<result property="mediaId" column="mediaId" jdbcType="VARCHAR"   />
+   	  	<result property="categoryId" column="categoryId" jdbcType="VARCHAR"   />
+   	  	<result property="originUrl" column="originUrl" jdbcType="VARCHAR"   />
+   	  	<result property="author" column="author" jdbcType="VARCHAR"   />
+   	  	<result property="yuanchuang" column="yuanchuang" jdbcType="VARCHAR"   />
+   	  	<result property="intro" column="intro" jdbcType="VARCHAR"   />
+   	  	<result property="seeType" column="seeType" jdbcType="VARCHAR"   />
+   	  	<result property="tuisongCount" column="tuisongCount" jdbcType="INTEGER"   />
+   	  	<result property="readCount" column="readCount" jdbcType="INTEGER"   />
+   	  	<result property="shareCount" column="shareCount" jdbcType="INTEGER"   />
+   	  	<result property="sycCount" column="sycCount" jdbcType="INTEGER"   />
+   	  	<result property="pingLunCount" column="pingLunCount" jdbcType="INTEGER"   />
+   	  	<result property="msgType" column="msgType" jdbcType="VARCHAR"   />
+   	  	<result property="sortNo" column="sortNo" jdbcType="INTEGER"   />
+   	  	<result property="imgTextId" column="imgText_id" jdbcType="INTEGER"   />
+   	  	<result property="createBy" column="create_by" jdbcType="INTEGER"   />
+   	  	<result property="createByUname" column="create_By_UName" jdbcType="VARCHAR"   />
+   	  	<result property="createDate" column="create_date" jdbcType="VARCHAR"   />
+   	  	<result property="updateBy" column="update_by" jdbcType="INTEGER"   />
+   	  	<result property="updateByUname" column="update_By_Uname" jdbcType="VARCHAR"   />
+   	  	<result property="updateDate" column="update_date" jdbcType="VARCHAR"   />
+    </resultMap>
+    
+    <resultMap id="weixinImgtextItemResult2" type="com.weixindev.micro.serv.common.bean.weixin.WeixinImgtextItemVO">
+        <result property="imgTextId" column="imgText_id" jdbcType="INTEGER"   />
+    </resultMap>
+
+	<sql id="Base_Column_List">
+	    <![CDATA[
+	   
+        	id ,
+        	title ,
+        	article_content ,
+        	headImg ,
+        	mediaId ,
+        	categoryId ,
+        	originUrl ,
+        	author ,
+        	yuanchuang ,
+        	intro ,
+        	seeType ,
+        	tuisongCount ,
+        	readCount ,
+        	shareCount ,
+        	sycCount ,
+        	pingLunCount ,
+        	msgType ,
+        	sortNo ,
+        	imgText_id ,
+        	create_by ,
+        	create_By_UName ,
+        	create_date ,
+        	update_by ,
+        	update_By_Uname ,
+        	update_date 
+	    ]]>
+	</sql>
+
+   <select id="selectByPrimaryKey" resultMap="weixinImgtextItemResult">
+	 select 
+	    <include refid="Base_Column_List"/>
+	    
+	        from weixin_imgtext_item 
+	        where 
+		       id = #{id,jdbcType=INTEGER}
+			
+</select>
+
+<select id="selectByTemplateimdId" resultMap="weixinImgtextItemResult">
+	 select 
+	    <include refid="Base_Column_List"/>
+	    
+	        from weixin_imgtext_item 
+	        where 
+		       imgText_id = #{templateid,jdbcType=INTEGER}
+			
+</select>
+
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+           delete from weixin_imgtext_item where
+        id = #{id,jdbcType=INTEGER}
+	
+       </delete>
+
+ <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+        INSERT INTO weixin_imgtext_item (
+         id, title, article_content, headImg, mediaId, categoryId, originUrl, author, yuanchuang, intro, seeType, tuisongCount, readCount, shareCount, sycCount, pingLunCount, msgType, sortNo, imgText_id, create_by, create_By_UName, create_date, update_by, update_By_Uname, update_date
+        ) VALUES (
+         #{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{articleContent,jdbcType=LONGVARCHAR}, #{headImg,jdbcType=VARCHAR}, #{mediaId,jdbcType=VARCHAR}, #{categoryId,jdbcType=VARCHAR}, #{originUrl,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, #{yuanchuang,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR}, #{seeType,jdbcType=VARCHAR}, #{tuisongCount,jdbcType=INTEGER}, #{readCount,jdbcType=INTEGER}, #{shareCount,jdbcType=INTEGER}, #{sycCount,jdbcType=INTEGER}, #{pingLunCount,jdbcType=INTEGER}, #{msgType,jdbcType=VARCHAR}, #{sortNo,jdbcType=INTEGER}, #{imgTextId,jdbcType=INTEGER}, #{createBy,jdbcType=INTEGER}, #{createByUname,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateByUname,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}        
+        )
+   
+</insert>
+
+ <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.weixin.WeixinImgtextItem"  useGeneratedKeys="true" keyProperty="id">
+    
+          INSERT INTO weixin_imgtext_item 
+	         <trim prefix="(" suffix=")" suffixOverrides="," >
+	    	<if test="id != null" >
+        		id,
+     	 	</if>
+	    	<if test="title != null" >
+        		title,
+     	 	</if>
+	    	<if test="articleContent != null" >
+        		article_content,
+     	 	</if>
+	    	<if test="headImg != null" >
+        		headImg,
+     	 	</if>
+	    	<if test="mediaId != null" >
+        		mediaId,
+     	 	</if>
+	    	<if test="categoryId != null" >
+        		categoryId,
+     	 	</if>
+	    	<if test="originUrl != null" >
+        		originUrl,
+     	 	</if>
+	    	<if test="author != null" >
+        		author,
+     	 	</if>
+	    	<if test="yuanchuang != null" >
+        		yuanchuang,
+     	 	</if>
+	    	<if test="intro != null" >
+        		intro,
+     	 	</if>
+	    	<if test="seeType != null" >
+        		seeType,
+     	 	</if>
+	    	<if test="tuisongCount != null" >
+        		tuisongCount,
+     	 	</if>
+	    	<if test="readCount != null" >
+        		readCount,
+     	 	</if>
+	    	<if test="shareCount != null" >
+        		shareCount,
+     	 	</if>
+	    	<if test="sycCount != null" >
+        		sycCount,
+     	 	</if>
+	    	<if test="pingLunCount != null" >
+        		pingLunCount,
+     	 	</if>
+	    	<if test="msgType != null" >
+        		msgType,
+     	 	</if>
+	    	<if test="sortNo != null" >
+        		sortNo,
+     	 	</if>
+	    	<if test="imgTextId != null" >
+        		imgText_id,
+     	 	</if>
+	    	<if test="createBy != null" >
+        		create_by,
+     	 	</if>
+	    	<if test="createByUname != null" >
+        		create_By_UName,
+     	 	</if>
+	    	<if test="createDate != null" >
+        		create_date,
+     	 	</if>
+	    	<if test="updateBy != null" >
+        		update_by,
+     	 	</if>
+	    	<if test="updateByUname != null" >
+        		update_By_Uname,
+     	 	</if>
+	    	<if test="updateDate != null" >
+        		update_date,
+     	 	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+
+	    		<if test="id != null" >
+        		     #{id,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="title != null" >
+        		     #{title,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="articleContent != null" >
+        		     #{articleContent,jdbcType=LONGVARCHAR},
+     	 		</if>
+	    		<if test="headImg != null" >
+        		     #{headImg,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="mediaId != null" >
+        		     #{mediaId,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="categoryId != null" >
+        		     #{categoryId,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="originUrl != null" >
+        		     #{originUrl,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="author != null" >
+        		     #{author,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="yuanchuang != null" >
+        		     #{yuanchuang,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="intro != null" >
+        		     #{intro,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="seeType != null" >
+        		     #{seeType,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="tuisongCount != null" >
+        		     #{tuisongCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="readCount != null" >
+        		     #{readCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="shareCount != null" >
+        		     #{shareCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="sycCount != null" >
+        		     #{sycCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="pingLunCount != null" >
+        		     #{pingLunCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="msgType != null" >
+        		     #{msgType,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="sortNo != null" >
+        		     #{sortNo,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="imgTextId != null" >
+        		     #{imgTextId,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="createBy != null" >
+        		     #{createBy,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="createByUname != null" >
+        		     #{createByUname,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="createDate != null" >
+        		     #{createDate,jdbcType=TIMESTAMP},
+     	 		</if>
+	    		<if test="updateBy != null" >
+        		     #{updateBy,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="updateByUname != null" >
+        		     #{updateByUname,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="updateDate != null" >
+        		     #{updateDate,jdbcType=TIMESTAMP},
+     	 		</if>
+		</trim>
+		
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+SELECT LAST_INSERT_ID()
+</selectKey> 
+
+ </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.weixindev.micro.serv.common.bean.weixin.WeixinImgtextItem">
+    
+        UPDATE weixin_imgtext_item 
+     
+      <set >
+		<if test="title != null and  title != ''" >
+			title = #{title,jdbcType=VARCHAR} ,
+		</if>
+		<if test="articleContent != null and  articleContent != ''" >
+			article_content = #{articleContent,jdbcType=LONGVARCHAR} ,
+		</if>
+		<if test="headImg != null and  headImg != ''" >
+			headImg = #{headImg,jdbcType=VARCHAR} ,
+		</if>
+		<if test="mediaId != null and  mediaId != ''" >
+			mediaId = #{mediaId,jdbcType=VARCHAR} ,
+		</if>
+		<if test="categoryId != null and  categoryId != ''" >
+			categoryId = #{categoryId,jdbcType=VARCHAR} ,
+		</if>
+		<if test="originUrl != null and  originUrl != ''" >
+			originUrl = #{originUrl,jdbcType=VARCHAR} ,
+		</if>
+		<if test="author != null and  author != ''" >
+			author = #{author,jdbcType=VARCHAR} ,
+		</if>
+		<if test="yuanchuang != null and  yuanchuang != ''" >
+			yuanchuang = #{yuanchuang,jdbcType=VARCHAR} ,
+		</if>
+		<if test="intro != null and  intro != ''" >
+			intro = #{intro,jdbcType=VARCHAR} ,
+		</if>
+		<if test="seeType != null and  seeType != ''" >
+			seeType = #{seeType,jdbcType=VARCHAR} ,
+		</if>
+		<if test="tuisongCount != null and  tuisongCount != ''" >
+			tuisongCount = #{tuisongCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="readCount != null and  readCount != ''" >
+			readCount = #{readCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="shareCount != null and  shareCount != ''" >
+			shareCount = #{shareCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="sycCount != null and  sycCount != ''" >
+			sycCount = #{sycCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="pingLunCount != null and  pingLunCount != ''" >
+			pingLunCount = #{pingLunCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="msgType != null and  msgType != ''" >
+			msgType = #{msgType,jdbcType=VARCHAR} ,
+		</if>
+		<if test="sortNo != null and  sortNo != ''" >
+			sortNo = #{sortNo,jdbcType=INTEGER} ,
+		</if>
+		<if test="imgTextId != null and  imgTextId != ''" >
+			imgText_id = #{imgTextId,jdbcType=INTEGER} ,
+		</if>
+		<if test="createBy != null and  createBy != ''" >
+			create_by = #{createBy,jdbcType=INTEGER} ,
+		</if>
+		<if test="createByUname != null and  createByUname != ''" >
+			create_By_UName = #{createByUname,jdbcType=VARCHAR} ,
+		</if>
+		<if test="createDate != null and  createDate != ''" >
+			create_date = #{createDate,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="updateBy != null and  updateBy != ''" >
+			update_by = #{updateBy,jdbcType=INTEGER} ,
+		</if>
+		<if test="updateByUname != null and  updateByUname != ''" >
+			update_By_Uname = #{updateByUname,jdbcType=VARCHAR} ,
+		</if>
+		<if test="updateDate != null and  updateDate != ''" >
+			update_date = #{updateDate,jdbcType=TIMESTAMP} ,
+		</if>
+
+	 </set>
+        WHERE 
+	        id = #{id,jdbcType=INTEGER}
+		
+    </update>
+   
+    <update id="updateByPrimaryKey" >
+
+        UPDATE weixin_imgtext_item SET
+	        title = #{title} , article_content = #{articleContent} , headImg = #{headImg} , mediaId = #{mediaId} , categoryId = #{categoryId} , originUrl = #{originUrl} , author = #{author} , yuanchuang = #{yuanchuang} , intro = #{intro} , seeType = #{seeType} , tuisongCount = #{tuisongCount} , readCount = #{readCount} , shareCount = #{shareCount} , sycCount = #{sycCount} , pingLunCount = #{pingLunCount} , msgType = #{msgType} , sortNo = #{sortNo} , imgText_id = #{imgTextId} , create_by = #{createBy} , create_By_UName = #{createByUname} , create_date = #{createDate} , update_by = #{updateBy} , update_By_Uname = #{updateByUname} , update_date = #{updateDate}  
+        WHERE 
+		id = #{id,jdbcType=INTEGER}
+		 
+  
+</update>
+    
+    <select id="select" resultMap="weixinImgtextItemResult">
+	 select 
+    	<include refid="Base_Column_List"/>
+	   
+	        from weixin_imgtext_item WHERE 1=1  
+	  
+	      	     and  id = #{id,jdbcType=INTEGER}
+	      	     and  title = #{title,jdbcType=VARCHAR}
+	      	     and  article_content = #{articleContent,jdbcType=LONGVARCHAR}
+	      	     and  headImg = #{headImg,jdbcType=VARCHAR}
+	      	     and  mediaId = #{mediaId,jdbcType=VARCHAR}
+	      	     and  categoryId = #{categoryId,jdbcType=VARCHAR}
+	      	     and  originUrl = #{originUrl,jdbcType=VARCHAR}
+	      	     and  author = #{author,jdbcType=VARCHAR}
+	      	     and  yuanchuang = #{yuanchuang,jdbcType=VARCHAR}
+	      	     and  intro = #{intro,jdbcType=VARCHAR}
+	      	     and  seeType = #{seeType,jdbcType=VARCHAR}
+	      	     and  tuisongCount = #{tuisongCount,jdbcType=INTEGER}
+	      	     and  readCount = #{readCount,jdbcType=INTEGER}
+	      	     and  shareCount = #{shareCount,jdbcType=INTEGER}
+	      	     and  sycCount = #{sycCount,jdbcType=INTEGER}
+	      	     and  pingLunCount = #{pingLunCount,jdbcType=INTEGER}
+	      	     and  msgType = #{msgType,jdbcType=VARCHAR}
+	      	     and  sortNo = #{sortNo,jdbcType=INTEGER}
+	      	     and  imgText_id = #{imgTextId,jdbcType=INTEGER}
+	      	     and  create_by = #{createBy,jdbcType=INTEGER}
+	      	     and  create_By_UName = #{createByUname,jdbcType=VARCHAR}
+	      	     and  create_date = #{createDate,jdbcType=TIMESTAMP}
+	      	     and  update_by = #{updateBy,jdbcType=INTEGER}
+	      	     and  update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+	      	     and  update_date = #{updateDate,jdbcType=TIMESTAMP}
+		
+    </select>
+      
+<select id="selectByExample" resultMap="weixinImgtextItemResult" >
+	 select 
+	 id ,
+            title ,
+            article_content ,
+            headImg ,
+            mediaId ,
+            categoryId ,
+            originUrl ,
+            author ,
+            yuanchuang ,
+            intro ,
+            seeType ,
+            tuisongCount ,
+            readCount ,
+            shareCount ,
+            sycCount ,
+            pingLunCount ,
+            msgType ,
+            sortNo ,
+            imgText_id ,
+            create_by ,
+            create_By_UName ,
+            date_format(create_date, '%Y-%m-%d %H:%i:%s' )  as create_date,
+            update_by ,
+            update_By_Uname ,
+             date_format(update_date, '%Y-%m-%d %H:%i:%s' )  as update_date
+            
+   	       	   from weixin_imgtext_item WHERE 1=1  
+	  
+		<if test="id != null and  id != ''" >
+	      	   and   id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="title != null and  title != ''" >
+	      	   and   title = #{title,jdbcType=VARCHAR}
+		</if>
+		<if test="articleContent != null and  articleContent != ''" >
+	      	   and   article_content = #{articleContent,jdbcType=LONGVARCHAR}
+		</if>
+		<if test="headImg != null and  headImg != ''" >
+	      	   and   headImg = #{headImg,jdbcType=VARCHAR}
+		</if>
+		<if test="mediaId != null and  mediaId != ''" >
+	      	   and   mediaId = #{mediaId,jdbcType=VARCHAR}
+		</if>
+		<if test="categoryId != null and  categoryId != ''" >
+	      	   and   categoryId = #{categoryId,jdbcType=VARCHAR}
+		</if>
+		<if test="originUrl != null and  originUrl != ''" >
+	      	   and   originUrl = #{originUrl,jdbcType=VARCHAR}
+		</if>
+		<if test="author != null and  author != ''" >
+	      	   and   author = #{author,jdbcType=VARCHAR}
+		</if>
+		<if test="yuanchuang != null and  yuanchuang != ''" >
+	      	   and   yuanchuang = #{yuanchuang,jdbcType=VARCHAR}
+		</if>
+		<if test="intro != null and  intro != ''" >
+	      	   and   intro = #{intro,jdbcType=VARCHAR}
+		</if>
+		<if test="seeType != null and  seeType != ''" >
+	      	   and   seeType = #{seeType,jdbcType=VARCHAR}
+		</if>
+		<if test="tuisongCount != null and  tuisongCount != ''" >
+	      	   and   tuisongCount = #{tuisongCount,jdbcType=INTEGER}
+		</if>
+		<if test="readCount != null and  readCount != ''" >
+	      	   and   readCount = #{readCount,jdbcType=INTEGER}
+		</if>
+		<if test="shareCount != null and  shareCount != ''" >
+	      	   and   shareCount = #{shareCount,jdbcType=INTEGER}
+		</if>
+		<if test="sycCount != null and  sycCount != ''" >
+	      	   and   sycCount = #{sycCount,jdbcType=INTEGER}
+		</if>
+		<if test="pingLunCount != null and  pingLunCount != ''" >
+	      	   and   pingLunCount = #{pingLunCount,jdbcType=INTEGER}
+		</if>
+		<if test="msgType != null and  msgType != ''" >
+	      	   and   msgType = #{msgType,jdbcType=VARCHAR}
+		</if>
+		<if test="sortNo != null and  sortNo != ''" >
+	      	   and   sortNo = #{sortNo,jdbcType=INTEGER}
+		</if>
+		<if test="imgTextId != null and  imgTextId != ''" >
+	      	   and   imgText_id = #{imgTextId,jdbcType=INTEGER}
+		</if>
+		<if test="createBy != null and  createBy != ''" >
+	      	   and   create_by = #{createBy,jdbcType=INTEGER}
+		</if>
+		<if test="createByUname != null and  createByUname != ''" >
+	      	   and   create_By_UName = #{createByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="createDate != null and  createDate != ''" >
+	      	   and   create_date = #{createDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateBy != null and  updateBy != ''" >
+	      	   and   update_by = #{updateBy,jdbcType=INTEGER}
+		</if>
+		<if test="updateByUname != null and  updateByUname != ''" >
+	      	   and   update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="updateDate != null and  updateDate != ''" >
+	      	   and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+		</if>
+		
+		order by sortNo
+			
+  </select>
+
+<select id="selectByPageExample" resultType="java.util.HashMap" >
+	 select 
+		<include refid="Base_Column_List"/>
+   	       	   from weixin_imgtext_item WHERE 1=1  
+	  
+		<if test="id != null and  id != ''" >
+	      	   and   id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="title != null and  title != ''" >
+	      	   and   title = #{title,jdbcType=VARCHAR}
+		</if>
+		<if test="articleContent != null and  articleContent != ''" >
+	      	   and   article_content = #{articleContent,jdbcType=LONGVARCHAR}
+		</if>
+		<if test="headImg != null and  headImg != ''" >
+	      	   and   headImg = #{headImg,jdbcType=VARCHAR}
+		</if>
+		<if test="mediaId != null and  mediaId != ''" >
+	      	   and   mediaId = #{mediaId,jdbcType=VARCHAR}
+		</if>
+		<if test="categoryId != null and  categoryId != ''" >
+	      	   and   categoryId = #{categoryId,jdbcType=VARCHAR}
+		</if>
+		<if test="originUrl != null and  originUrl != ''" >
+	      	   and   originUrl = #{originUrl,jdbcType=VARCHAR}
+		</if>
+		<if test="author != null and  author != ''" >
+	      	   and   author = #{author,jdbcType=VARCHAR}
+		</if>
+		<if test="yuanchuang != null and  yuanchuang != ''" >
+	      	   and   yuanchuang = #{yuanchuang,jdbcType=VARCHAR}
+		</if>
+		<if test="intro != null and  intro != ''" >
+	      	   and   intro = #{intro,jdbcType=VARCHAR}
+		</if>
+		<if test="seeType != null and  seeType != ''" >
+	      	   and   seeType = #{seeType,jdbcType=VARCHAR}
+		</if>
+		<if test="tuisongCount != null and  tuisongCount != ''" >
+	      	   and   tuisongCount = #{tuisongCount,jdbcType=INTEGER}
+		</if>
+		<if test="readCount != null and  readCount != ''" >
+	      	   and   readCount = #{readCount,jdbcType=INTEGER}
+		</if>
+		<if test="shareCount != null and  shareCount != ''" >
+	      	   and   shareCount = #{shareCount,jdbcType=INTEGER}
+		</if>
+		<if test="sycCount != null and  sycCount != ''" >
+	      	   and   sycCount = #{sycCount,jdbcType=INTEGER}
+		</if>
+		<if test="pingLunCount != null and  pingLunCount != ''" >
+	      	   and   pingLunCount = #{pingLunCount,jdbcType=INTEGER}
+		</if>
+		<if test="msgType != null and  msgType != ''" >
+	      	   and   msgType = #{msgType,jdbcType=VARCHAR}
+		</if>
+		<if test="sortNo != null and  sortNo != ''" >
+	      	   and   sortNo = #{sortNo,jdbcType=INTEGER}
+		</if>
+		<if test="imgTextId != null and  imgTextId != ''" >
+	      	   and   imgText_id = #{imgTextId,jdbcType=INTEGER}
+		</if>
+		<if test="createBy != null and  createBy != ''" >
+	      	   and   create_by = #{createBy,jdbcType=INTEGER}
+		</if>
+		<if test="createByUname != null and  createByUname != ''" >
+	      	   and   create_By_UName = #{createByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="createDate != null and  createDate != ''" >
+	      	   and   create_date = #{createDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateBy != null and  updateBy != ''" >
+	      	   and   update_by = #{updateBy,jdbcType=INTEGER}
+		</if>
+		<if test="updateByUname != null and  updateByUname != ''" >
+	      	   and   update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="updateDate != null and  updateDate != ''" >
+	      	   and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+		</if>
+			
+  </select>
+  
+  <select id="selectDistinctTmpId"  resultMap="weixinImgtextItemResult2" >
+     select distinct  imgText_id
+               from weixin_imgtext_item WHERE 1=1  
+      
+        <if test="id != null and  id != ''" >
+               and   id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="title != null and  title != ''" >
+               and   title = #{title,jdbcType=VARCHAR}
+        </if>
+        <if test="articleContent != null and  articleContent != ''" >
+               and   article_content = #{articleContent,jdbcType=LONGVARCHAR}
+        </if>
+        <if test="headImg != null and  headImg != ''" >
+               and   headImg = #{headImg,jdbcType=VARCHAR}
+        </if>
+        <if test="mediaId != null and  mediaId != ''" >
+               and   mediaId = #{mediaId,jdbcType=VARCHAR}
+        </if>
+        <if test="categoryId != null and  categoryId != ''" >
+               and   categoryId = #{categoryId,jdbcType=VARCHAR}
+        </if>
+        <if test="originUrl != null and  originUrl != ''" >
+               and   originUrl = #{originUrl,jdbcType=VARCHAR}
+        </if>
+        <if test="author != null and  author != ''" >
+               and   author = #{author,jdbcType=VARCHAR}
+        </if>
+        <if test="yuanchuang != null and  yuanchuang != ''" >
+               and   yuanchuang = #{yuanchuang,jdbcType=VARCHAR}
+        </if>
+        <if test="intro != null and  intro != ''" >
+               and   intro = #{intro,jdbcType=VARCHAR}
+        </if>
+        <if test="seeType != null and  seeType != ''" >
+               and   seeType = #{seeType,jdbcType=VARCHAR}
+        </if>
+        <if test="tuisongCount != null and  tuisongCount != ''" >
+               and   tuisongCount = #{tuisongCount,jdbcType=INTEGER}
+        </if>
+        <if test="readCount != null and  readCount != ''" >
+               and   readCount = #{readCount,jdbcType=INTEGER}
+        </if>
+        <if test="shareCount != null and  shareCount != ''" >
+               and   shareCount = #{shareCount,jdbcType=INTEGER}
+        </if>
+        <if test="sycCount != null and  sycCount != ''" >
+               and   sycCount = #{sycCount,jdbcType=INTEGER}
+        </if>
+        <if test="pingLunCount != null and  pingLunCount != ''" >
+               and   pingLunCount = #{pingLunCount,jdbcType=INTEGER}
+        </if>
+        <if test="msgType != null and  msgType != ''" >
+               and   msgType = #{msgType,jdbcType=VARCHAR}
+        </if>
+        <if test="sortNo != null and  sortNo != ''" >
+               and   sortNo = #{sortNo,jdbcType=INTEGER}
+        </if>
+        <if test="imgTextId != null and  imgTextId != ''" >
+               and   imgText_id = #{imgTextId,jdbcType=INTEGER}
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+               and   create_by = #{createBy,jdbcType=INTEGER}
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+               and   create_By_UName = #{createByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+               and   create_date = #{createDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+               and   update_by = #{updateBy,jdbcType=INTEGER}
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+               and   update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+               and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+        </if>
+        
+        order by id desc 
+            
+  </select>
+  
+  <delete id="batchDelete" parameterType="java.lang.String">
+           delete from weixin_imgtext_item where
+        id  in (#{id,jdbcType=VARCHAR})
+    
+       </delete>
+       
+  <delete id="deleteByTmpId" parameterType="java.lang.String">
+           delete from weixin_imgtext_item where
+        imgText_id = #{deleteByTmpId,jdbcType=VARCHAR}
+    
+       </delete>
+   
+
+</mapper>

@@ -1,0 +1,599 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="./build/css/doc.css" media="all">
+    <style>
+        .info-box {
+            height: 85px;
+            background-color: white;
+            background-color: #ecf0f5;
+        }
+
+        .info-box .info-box-icon {
+            border-top-left-radius: 2px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 2px;
+            display: block;
+            float: left;
+            height: 85px;
+            width: 85px;
+            text-align: center;
+            font-size: 45px;
+            line-height: 85px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .info-box .info-box-content {
+            padding: 5px 10px;
+            margin-left: 85px;
+        }
+
+        .info-box .info-box-content .info-box-text {
+            display: block;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+        }
+
+        .info-box .info-box-content .info-box-number {
+            display: block;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .main {
+            margin-top: 25px;
+        }
+
+        .main .layui-row {
+            margin: 10px 0;
+        }
+        .icobtnm {
+            text-align: center;
+            display: block;
+            padding-bottom: 10px;
+        }
+        .icobtnm a {
+            display: block;
+            padding-bottom: 5px;
+        }
+        .kit-doc-title {
+            padding-top: 10px;
+        }
+        .centerboth {
+            display:flex;
+            display: -webkit-flex;
+            align-items:center;
+            -webkit-align-items:center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+        .ztp {
+            font-size: 14px;
+            color: #353535;
+            padding-top: 15px;
+        }
+        .ztp img {
+            width: 22px;
+            margin-right: 5px;
+        }
+        .numki {
+            text-align: center;
+            font-size: 34px;
+            padding-top: 10px;
+        }
+        .kit-doc-title fieldset legend a {
+            font-size: 18px;
+        }
+        .tubiao {
+            height: 400px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .tubiao_ct {
+            border: 1px solid #E7E7EB;
+            width: 100%;
+            height: 100%;
+        }
+        .tubiao>h2 {
+            font-size: 14px;
+            color: #696969;
+            padding-bottom: 5px;
+        }
+        .tubiao>h2 a {
+            float: right;
+            color: #00a65a;
+        }
+        .heaot {
+            height: 28vw;
+        }
+        #test1 img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .layui-carousel {
+            height: 100% !important;
+        }
+        .layui-table {
+            margin: 0;
+
+        }
+        .tabm {
+            overflow-y: auto;
+        }
+        .layui-table td, .layui-table th {
+            position: relative;
+            padding: 9px 6px;
+            min-height: 20px;
+            line-height: 20px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="layui-row">
+    <div class="kit-doc">
+        <div class="kit-doc-title">
+            <fieldset>
+                <legend><a name="blockquote">常用操作</a></legend>
+            </fieldset>
+        </div>
+    </div>
+    <div class="">
+        <div class="layui-row site-demo-button">
+            <div class="layui-col-md2 icobtnm">
+                <a href="javascript:;" id="add">
+                    <img width="50px" src="img/ico_wx.png">
+                </a>
+                <div>公众号授权</div>
+            </div>
+            <div class="layui-col-md2 icobtnm">
+                <a href="javascript:void(0)" onclick="commonLayerFrame2('分组管理','weixinGroupsTreetableList.html')">
+                    <img width="50px" src="img/ico_fz.png">
+                </a>
+                <div>分组管理</div>
+            </div>
+            <div class="layui-col-md2 icobtnm">
+                <a href="javascript:void(0)" onclick="commonLayerFrame2('图文编辑','weixinNewtextform.html')">
+                    <img width="50px" src="img/ico_twg.png">
+                </a>
+                <div>图文编辑</div>
+            </div>
+            <div class="layui-col-md2 icobtnm">
+                 <a href="javascript:void(0)" onclick="commonLayerFrame2('图文列表','weixinImgtextList.html')">
+                    <img width="50px" src="img/ico_twl.png">
+                </a>
+                <div>图文列表</div>
+            </div>
+<!--             <div class="layui-col-md2 icobtnm"> -->
+<!--                 <a href="javascript:;"> -->
+<!--                     <img width="50px" src="img/ico_pl.png"> -->
+<!--                 </a> -->
+<!--                 <div>批量推送</div> -->
+<!--             </div> -->
+            <div class="layui-col-md2 icobtnm">
+                <a href="javascript:void(0)" onclick="commonLayerFrame2('自定义菜单','weixinMenuItemAdd.html')">
+                    <img width="50px" src="img/ico_cd.png">
+                </a>
+                <div>自定义菜单</div>
+            </div>
+            <div class="layui-col-md2 icobtnm">
+                 <a href="javascript:void(0)" onclick="commonLayerFrame2('管理员添加','secAdminUserAdd.html')">
+                    <img width="50px" src="img/ico_cy.png">
+                </a>
+                <div>管理员添加</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="layui-row">
+    <div class="kit-doc">
+        <div class="kit-doc-title">
+            <fieldset>
+                <legend><a name="blockquote">整体情况</a></legend>
+            </fieldset>
+        </div>
+    </div>
+    <div class="">
+        <div class="layui-row ">
+            <div class="layui-col-md4">
+                <div class='ztp centerboth'><img src="img/li_wex.png" alt=""><span>已绑公众号总数</span></div>
+                <h2 class="numki" id="titleCounts"></h2>
+            </div>
+            <div class="layui-col-md4">
+                <div class='ztp centerboth'><img src="img/li_tuis.png" alt=""><span>已推送图文总数</span></div>
+                <h2 class="numki" id="weixinUserCount"></h2>
+            </div>
+            <div class="layui-col-md4">
+                <div class='ztp centerboth'><img src="img/li_fensi.png" alt=""><span>粉丝总人数</span></div>
+                <h2 class="numki" id = "selecCountAllFans"></h2>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="layui-row">
+    <div class="kit-doc">
+        <div class="kit-doc-title">
+            <fieldset>
+                <legend><a name="blockquote">数据统计</a></legend>
+            </fieldset>
+        </div>
+    </div>
+    <div class="layui-row ">
+        <div class="layui-col-md12 tubiao">
+            <h2>最新数据<a href="weixinGroupsXTree.html">更多</a> </h2>
+            <div class="tubiao_ct" id="mainAnaylsis">
+                <!--这里放图表-->
+            </div>
+        </div>
+
+    </div>
+    <div class="layui-row ">
+        <div class="layui-col-md6 tubiao">
+            <h2>粉丝来源<a href="#">更多</a></h2>
+            <div class="tubiao_ct" id="fansSource">
+                <!--这里放图表-->
+            </div>
+        </div>
+        <div class="layui-col-md6 tubiao">
+            <h2>图文阅读量排名（图文琅琊榜）<a href="weixinGroupsXTree.html">更多</a></h2>
+            <div class="tubiao_ct"  id="mainAnaylsis3">
+                <!--这里放图表-->
+            </div>
+        </div>
+    </div>
+<!--
+
+    <div class="layui-row ">
+        <div class="layui-col-md6 tubiao">
+            <h2>最新推送图文<a href="#">更多</a></h2>
+            <div class="tubiao_ct heaot">
+                &lt;!&ndash;这里放轮播&ndash;&gt;
+                <div class="layui-carousel" id="test1">
+                    <div carousel-item>
+                        <div>
+                            <img src="img/kf01.png" alt="">
+                            <p>条目1</p>
+                        </div>
+                        <div>
+                            <img src="img/kf01.png" alt="">
+                            <p>条目2</p>
+                        </div>
+                        <div>
+                            <img src="img/kf01.png" alt="">
+                            <p>条目3</p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="layui-col-md6 tubiao">
+            <h2>管理员操作日志<a href="#">更多</a></h2>
+            <div class="tubiao_ct heaot tabm">
+                &lt;!&ndash;这里放列表&ndash;&gt;
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="12%">
+                        <col width="12%">
+                        <col width="15%">
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>身份</th>
+                        <th>姓名</th>
+                        <th>操作时间</th>
+                        <th>动作</th>
+                        <th>内容</th>
+                        <th>内容类型</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>管理员</td>
+                        <td>贤心</td>
+                        <td>2016-11-29</td>
+                        <td>删除</td>
+                        <td>《于千万人之中遇见你所遇见的人，于千万年之中》</td>
+                        <td>图文</td>
+                    </tr>
+
+                    <tr>
+                        <td>管理员</td>
+                        <td>贤心</td>
+                        <td>2016-11-29</td>
+                        <td>删除</td>
+                        <td>《于千万人之中遇见你所遇见的人，于千万年之中》</td>
+                        <td>图文</td>
+                    </tr>
+
+                    <tr>
+                        <td>管理员</td>
+                        <td>贤心</td>
+                        <td>2016-11-29</td>
+                        <td>删除</td>
+                        <td>《于千万人之中遇见你所遇见的人，于千万年之中》</td>
+                        <td>图文</td>
+                    </tr>
+
+                    <tr>
+                        <td>管理员</td>
+                        <td>贤心</td>
+                        <td>2016-11-29</td>
+                        <td>删除</td>
+                        <td>《于千万人之中遇见你所遇见的人，于千万年之中》</td>
+                        <td>图文</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+-->
+
+</div>
+
+<script src="js/jquery-1.10.1.min.js"></script>
+ <script src="./js/jquery.cookie.js"></script>
+<script src="js/js.js"></script>
+
+<script src="layer/layer.js"></script>
+<script src="layui/layui.js"></script>
+<script src="echats/echarts-all.js"></script>
+<script>
+    /*轮播*/
+    layui.use('carousel', function(){
+        var carousel = layui.carousel;
+        //建造实例
+        carousel.render({
+            elem: '#test1'
+            ,width: '100%' //设置容器宽度
+            ,arrow: 'always' //始终显示箭头
+            //,anim: 'updown' //切换动画方式
+        });
+    });
+
+    initLoad();
+    
+    function initLoad() {
+        $.ajax({
+            type : "POST",
+            url : ctxAppWeixin+"/getReportDataMain",
+            dataType : "json",
+            data:{},
+            success : function(data) {
+                $("#titleCounts").text(data.titleCounts);
+                $("#weixinUserCount").text(data.weixinUserCount);
+                $("#selecCountAllFans").text(data.selecCountAllFans);
+            }
+        });
+    }
+    
+
+    $('#add').on('click', function () {
+        layer.open({
+            title: "公众号授权",
+            type: 2,
+            maxmin: true,
+            area: ['1200px', '600px'],
+            content: hostname + '/api/auth/goto_auth_url_show',
+            // 下面这句是,添加页面关闭后,刷新本页面.
+            end: function () {
+                location.reload();
+            }
+        });
+    })
+
+
+    var myChart = echarts.init(document.getElementById('mainAnaylsis'));
+    var option = {
+        title: {   text: '阅读量趋势图'},
+        tooltip: {  trigger: 'axis' },
+        tooltip : {
+            show : true
+        },
+        grid: {       //直角坐标系内绘图网格
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+
+        toolbox: {     //工具栏
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        legend : {
+            data : []
+        },
+        xAxis : [ {
+            type : 'category',
+            boundaryGap: false,
+            data : []
+        } ],
+        yAxis : [ {
+            type : 'value'
+        } ],
+        series : []
+    };
+
+
+    function init() {
+      var postData ={"selectDays":7,
+      };
+      
+      $.ajax({
+          type : "POST",
+          url : ctxAppWeixin+"/getReportData",
+          dataType : "json",
+          data:postData,
+          success : function(result) {
+              
+              //将从后台接收的json字符串转换成json对象
+              var jsonobj = eval(result);
+              //给图标标题赋值
+              option.xAxis.data = jsonobj.legend;
+              //读取横坐标值
+              option.xAxis[0].data = jsonobj.axis;
+              var series_arr = jsonobj.series;
+              //驱动图表生成的数据内容，数组中每一项代表一个系列的特殊选项及数据
+              for (var i = 0; i < series_arr.length; i++) {
+                  option.series[i] = result.series[i];
+              }
+              //过渡控制，隐藏loading（读取中）
+              myChart.hideLoading();
+               // 为echarts对象加载数据
+              myChart.setOption(option);
+          }
+      });
+  }
+  
+  init();
+  
+  getMainAnaylsis3();
+  
+  function getMainAnaylsis3(){
+      var url=ctxAppWeixin+"/getReportData3";
+      var postData={};
+      $.get(url,postData,function(obj){
+          mainAnaylsis3Data(obj);
+      });
+   }
+  
+  function mainAnaylsis3Data(obj){
+      var myChart3 = echarts.init(document.getElementById('mainAnaylsis3'));
+      
+      var TITLES=[];
+      var datas=[];
+      for(var i=0;i<obj.length;i++){
+          TITLES.push(obj[i].TITLE);
+          datas.push(obj[i].int_page_read_count);
+      }
+     var  option3 = {
+          title: {
+                 text: 'top 20',
+                 left: 'center'
+          },
+          tooltip : {
+              trigger: 'axis',
+              axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                  type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+              }
+          },
+          grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+          },
+          xAxis:  {
+              type: 'value'
+          },
+          yAxis: {
+              type: 'category',
+              data: TITLES
+          },
+          series: [
+              {
+                  name: '阅读量',
+                  type: 'bar',
+                  label: {
+                      normal: {
+                          show: true,
+                          position: 'insideRight'
+                      }
+                  },
+                  data:datas
+              }
+          ]
+      };
+      myChart3.setOption(option3);
+
+  }
+  getFansSource();
+  function getFansSource(){
+      var url=ctxAppWeixin+'/api/count/getFansSource';
+      $.get(url,function(obj){
+          fansSource(obj);
+      });
+  }
+  function fansSource(obj){
+      console.log(obj);
+     var fansEc= echarts.init(document.getElementById('fansSource'));
+    var search=obj.add_scene_search 
+    var accountmigration=obj.add_scene_account_migration 
+    var profilecard=obj.add_scene_profile_card 
+    var qrcode=obj.add_scene_qr_code 
+    var profilelink=obj.add_sceneprofile_link 
+    var profileitem=obj.add_scene_profile_item 
+    var paid=obj.add_scene_paid 
+    var others=obj.add_scene_others
+    var addcirclefriends=obj.add_circle_friends
+    
+    option = {
+            color: ['#3398DB'],
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis : [
+                {
+                    type : 'category',
+                    data : ['公众号搜索', '公众号文章广告', '名片分享', '扫描二维码', '图文页内名称点击', '图文页右上角菜单', '支付后关注','其他','朋友圈广告'],
+                    axisTick: {
+                        alignWithLabel: false
+                    }
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    name:'直接访问',
+                    type:'bar',
+                    data:[search, accountmigration, profilecard, qrcode, profilelink, profileitem, paid,others,addcirclefriends]
+                }
+            ]
+        };
+    
+      fansEc.setOption(option);
+
+         }
+</script>
+</body>
+
+</html>

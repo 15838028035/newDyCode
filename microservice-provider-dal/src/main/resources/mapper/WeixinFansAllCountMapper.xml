@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+
+<mapper namespace="com.lj.cloud.secrity.dal.WeixinFansAllCountMapper">
+    <resultMap id="weixinFansAllCountResult" type="com.weixindev.micro.serv.common.bean.report.WeixinFansAllCount">
+   	  	<result property="id" column="id" jdbcType="INTEGER"   />
+   	  	<result property="count" column="count" jdbcType="INTEGER"   />
+   	  	<result property="male" column="male" jdbcType="INTEGER"   />
+   	  	<result property="female" column="female" jdbcType="INTEGER"   />
+   	  	<result property="chinese" column="chinese" jdbcType="INTEGER"   />
+   	  	<result property="notChinese" column="not_chinese" jdbcType="INTEGER"   />
+   	  	<result property="cancel" column="cancel" jdbcType="INTEGER"   />
+   	  	<result property="langCh" column="lang_ch" jdbcType="INTEGER"   />
+   	  	<result property="langOther" column="lang_other" jdbcType="INTEGER"   />
+   	  	<result property="netGrowth" column="net_growth" jdbcType="INTEGER"   />
+   	  	<result property="createTime" column="create_time" jdbcType="TIMESTAMP"   />
+   	  	<result property="updateTime" column="update_time" jdbcType="TIMESTAMP"   />
+   	  	<result property="newFans" column="new_fans" jdbcType="INTEGER"   />
+   	  	<result property="addSceneSearch" column="add_scene_search" jdbcType="INTEGER"   />
+   	  	<result property="addSceneAccountMigration" column="add_scene_account_migration" jdbcType="INTEGER"   />
+   	  	<result property="addSceneProfileCard" column="add_scene_profile_card" jdbcType="INTEGER"   />
+   	  	<result property="addSceneQrCode" column="add_scene_qr_code" jdbcType="INTEGER"   />
+   	  	<result property="addSceneprofileLink" column="add_sceneprofile_link" jdbcType="INTEGER"   />
+   	  	<result property="addSceneProfileItem" column="add_scene_profile_item" jdbcType="INTEGER"   />
+   	  	<result property="addScenePaid" column="add_scene_paid" jdbcType="INTEGER"   />
+   	  	<result property="addSceneOthers" column="add_scene_others" jdbcType="INTEGER"   />
+   	  	<result property="addCircleFriends" column="add_circle_friends" jdbcType="INTEGER"   />
+    </resultMap>
+
+	<sql id="Base_Column_List">
+	    <![CDATA[
+	   
+        	id ,
+        	count ,
+        	male ,
+        	female ,
+        	chinese ,
+        	not_chinese ,
+        	cancel ,
+        	lang_ch ,
+        	lang_other ,
+        	net_growth ,
+        	create_time ,
+        	update_time ,
+        	new_fans ,
+        	add_scene_search ,
+        	add_scene_account_migration ,
+        	add_scene_profile_card ,
+        	add_scene_qr_code ,
+        	add_sceneprofile_link ,
+        	add_scene_profile_item ,
+        	add_scene_paid ,
+        	add_scene_others ,
+        	add_circle_friends 
+	    ]]>
+	</sql>
+
+   <select id="selectByPrimaryKey" resultMap="weixinFansAllCountResult">
+	 select 
+	    <include refid="Base_Column_List"/>
+	    
+	        from weixin_fans_all_count 
+	        where 
+		       id = #{id,jdbcType=INTEGER}
+			
+</select>
+
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+           delete from weixin_fans_all_count where
+        id = #{id,jdbcType=INTEGER}
+	
+       </delete>
+
+ <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+        INSERT INTO weixin_fans_all_count (
+         id, count, male, female, chinese, not_chinese, cancel, lang_ch, lang_other, net_growth, create_time, update_time, new_fans, add_scene_search, add_scene_account_migration, add_scene_profile_card, add_scene_qr_code, add_sceneprofile_link, add_scene_profile_item, add_scene_paid, add_scene_others, add_circle_friends
+        ) VALUES (
+         #{id,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, #{male,jdbcType=INTEGER}, #{female,jdbcType=INTEGER}, #{chinese,jdbcType=INTEGER}, #{notChinese,jdbcType=INTEGER}, #{cancel,jdbcType=INTEGER}, #{langCh,jdbcType=INTEGER}, #{langOther,jdbcType=INTEGER}, #{netGrowth,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},  #{newFans,jdbcType=INTEGER}, #{addSceneSearch,jdbcType=INTEGER}, #{addSceneAccountMigration,jdbcType=INTEGER}, #{addSceneProfileCard,jdbcType=INTEGER}, #{addSceneQrCode,jdbcType=INTEGER}, #{addSceneprofileLink,jdbcType=INTEGER}, #{addSceneProfileItem,jdbcType=INTEGER}, #{addScenePaid,jdbcType=INTEGER}, #{addSceneOthers,jdbcType=INTEGER}, #{addCircleFriends,jdbcType=INTEGER}        
+        )
+   
+</insert>
+
+ <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinFansAllCount">
+          INSERT INTO weixin_fans_all_count 
+	         <trim prefix="(" suffix=")" suffixOverrides="," >
+	    	<if test="id != null" >
+        		id,
+     	 	</if>
+	    	<if test="count != null" >
+        		count,
+     	 	</if>
+	    	<if test="male != null" >
+        		male,
+     	 	</if>
+	    	<if test="female != null" >
+        		female,
+     	 	</if>
+	    	<if test="chinese != null" >
+        		chinese,
+     	 	</if>
+	    	<if test="notChinese != null" >
+        		not_chinese,
+     	 	</if>
+	    	<if test="cancel != null" >
+        		cancel,
+     	 	</if>
+	    	<if test="langCh != null" >
+        		lang_ch,
+     	 	</if>
+	    	<if test="langOther != null" >
+        		lang_other,
+     	 	</if>
+	    	<if test="netGrowth != null" >
+        		net_growth,
+     	 	</if>
+	    	<if test="createTime != null" >
+        		create_time,
+     	 	</if>
+	    	<if test="updateTime != null" >
+        		update_time,
+     	 	</if>
+	    	<if test="newFans != null" >
+        		new_fans,
+     	 	</if>
+	    	<if test="addSceneSearch != null" >
+        		add_scene_search,
+     	 	</if>
+	    	<if test="addSceneAccountMigration != null" >
+        		add_scene_account_migration,
+     	 	</if>
+	    	<if test="addSceneProfileCard != null" >
+        		add_scene_profile_card,
+     	 	</if>
+	    	<if test="addSceneQrCode != null" >
+        		add_scene_qr_code,
+     	 	</if>
+	    	<if test="addSceneprofileLink != null" >
+        		add_sceneprofile_link,
+     	 	</if>
+	    	<if test="addSceneProfileItem != null" >
+        		add_scene_profile_item,
+     	 	</if>
+	    	<if test="addScenePaid != null" >
+        		add_scene_paid,
+     	 	</if>
+	    	<if test="addSceneOthers != null" >
+        		add_scene_others,
+     	 	</if>
+	    	<if test="addCircleFriends != null" >
+        		add_circle_friends,
+     	 	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+
+	    		<if test="id != null" >
+        		     #{id,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="count != null" >
+        		     #{count,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="male != null" >
+        		     #{male,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="female != null" >
+        		     #{female,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="chinese != null" >
+        		     #{chinese,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="notChinese != null" >
+        		     #{notChinese,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="cancel != null" >
+        		     #{cancel,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="langCh != null" >
+        		     #{langCh,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="langOther != null" >
+        		     #{langOther,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="netGrowth != null" >
+        		     #{netGrowth,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="createTime != null" >
+        		     #{createTime,jdbcType=TIMESTAMP},
+     	 		</if>
+	    		<if test="updateTime != null" >
+        		     #{updateTime,jdbcType=TIMESTAMP},
+     	 		</if>
+	    		<if test="newFans != null" >
+        		     #{newFans,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="addSceneSearch != null" >
+        		     #{addSceneSearch,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="addSceneAccountMigration != null" >
+        		     #{addSceneAccountMigration,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="addSceneProfileCard != null" >
+        		     #{addSceneProfileCard,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="addSceneQrCode != null" >
+        		     #{addSceneQrCode,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="addSceneprofileLink != null" >
+        		     #{addSceneprofileLink,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="addSceneProfileItem != null" >
+        		     #{addSceneProfileItem,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="addScenePaid != null" >
+        		     #{addScenePaid,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="addSceneOthers != null" >
+        		     #{addSceneOthers,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="addCircleFriends != null" >
+        		     #{addCircleFriends,jdbcType=INTEGER},
+     	 		</if>
+		</trim>
+ </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinFansAllCount">
+    
+        UPDATE weixin_fans_all_count 
+     
+      <set >
+		<if test="count != null and  count != ''" >
+			count = #{count,jdbcType=INTEGER} ,
+		</if>
+		<if test="male != null and  male != ''" >
+			male = #{male,jdbcType=INTEGER} ,
+		</if>
+		<if test="female != null and  female != ''" >
+			female = #{female,jdbcType=INTEGER} ,
+		</if>
+		<if test="chinese != null and  chinese != ''" >
+			chinese = #{chinese,jdbcType=INTEGER} ,
+		</if>
+		<if test="notChinese != null and  notChinese != ''" >
+			not_chinese = #{notChinese,jdbcType=INTEGER} ,
+		</if>
+		<if test="cancel != null and  cancel != ''" >
+			cancel = #{cancel,jdbcType=INTEGER} ,
+		</if>
+		<if test="langCh != null and  langCh != ''" >
+			lang_ch = #{langCh,jdbcType=INTEGER} ,
+		</if>
+		<if test="langOther != null and  langOther != ''" >
+			lang_other = #{langOther,jdbcType=INTEGER} ,
+		</if>
+		<if test="netGrowth != null and  netGrowth != ''" >
+			net_growth = #{netGrowth,jdbcType=INTEGER} ,
+		</if>
+		<if test="createTime != null and  createTime != ''" >
+			create_time = #{createTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="updateTime != null and  updateTime != ''" >
+			update_time = #{updateTime,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="newFans != null and  newFans != ''" >
+			new_fans = #{newFans,jdbcType=INTEGER} ,
+		</if>
+		<if test="addSceneSearch != null and  addSceneSearch != ''" >
+			add_scene_search = #{addSceneSearch,jdbcType=INTEGER} ,
+		</if>
+		<if test="addSceneAccountMigration != null and  addSceneAccountMigration != ''" >
+			add_scene_account_migration = #{addSceneAccountMigration,jdbcType=INTEGER} ,
+		</if>
+		<if test="addSceneProfileCard != null and  addSceneProfileCard != ''" >
+			add_scene_profile_card = #{addSceneProfileCard,jdbcType=INTEGER} ,
+		</if>
+		<if test="addSceneQrCode != null and  addSceneQrCode != ''" >
+			add_scene_qr_code = #{addSceneQrCode,jdbcType=INTEGER} ,
+		</if>
+		<if test="addSceneprofileLink != null and  addSceneprofileLink != ''" >
+			add_sceneprofile_link = #{addSceneprofileLink,jdbcType=INTEGER} ,
+		</if>
+		<if test="addSceneProfileItem != null and  addSceneProfileItem != ''" >
+			add_scene_profile_item = #{addSceneProfileItem,jdbcType=INTEGER} ,
+		</if>
+		<if test="addScenePaid != null and  addScenePaid != ''" >
+			add_scene_paid = #{addScenePaid,jdbcType=INTEGER} ,
+		</if>
+		<if test="addSceneOthers != null and  addSceneOthers != ''" >
+			add_scene_others = #{addSceneOthers,jdbcType=INTEGER} ,
+		</if>
+		<if test="addCircleFriends != null and  addCircleFriends != ''" >
+			add_circle_friends = #{addCircleFriends,jdbcType=INTEGER} ,
+		</if>
+
+	 </set>
+        WHERE 
+	        id = #{id,jdbcType=INTEGER}
+		
+    </update>
+   
+    <update id="updateByPrimaryKey" >
+
+        UPDATE weixin_fans_all_count SET
+	        count = #{count} , male = #{male} , female = #{female} , chinese = #{chinese} , not_chinese = #{notChinese} , cancel = #{cancel} , lang_ch = #{langCh} , lang_other = #{langOther} , net_growth = #{netGrowth} , create_time = #{createTime} , update_time = #{updateTime} , new_fans = #{newFans} , add_scene_search = #{addSceneSearch} , add_scene_account_migration = #{addSceneAccountMigration} , add_scene_profile_card = #{addSceneProfileCard} , add_scene_qr_code = #{addSceneQrCode} , add_sceneprofile_link = #{addSceneprofileLink} , add_scene_profile_item = #{addSceneProfileItem} , add_scene_paid = #{addScenePaid} , add_scene_others = #{addSceneOthers} , add_circle_friends = #{addCircleFriends}  
+        WHERE 
+		id = #{id,jdbcType=INTEGER}
+		 
+  
+</update>
+    
+    <select id="select" resultMap="weixinFansAllCountResult">
+	 select 
+    	<include refid="Base_Column_List"/>
+	   
+	        from weixin_fans_all_count WHERE 1=1  
+	  
+	      	     and  id = #{id,jdbcType=INTEGER}
+	      	     and  count = #{count,jdbcType=INTEGER}
+	      	     and  male = #{male,jdbcType=INTEGER}
+	      	     and  female = #{female,jdbcType=INTEGER}
+	      	     and  chinese = #{chinese,jdbcType=INTEGER}
+	      	     and  not_chinese = #{notChinese,jdbcType=INTEGER}
+	      	     and  cancel = #{cancel,jdbcType=INTEGER}
+	      	     and  lang_ch = #{langCh,jdbcType=INTEGER}
+	      	     and  lang_other = #{langOther,jdbcType=INTEGER}
+	      	     and  net_growth = #{netGrowth,jdbcType=INTEGER}
+	      	     and  create_time = #{createTime,jdbcType=TIMESTAMP}
+	      	     and  update_time = #{updateTime,jdbcType=TIMESTAMP}
+	      	     and  new_fans = #{newFans,jdbcType=INTEGER}
+	      	     and  add_scene_search = #{addSceneSearch,jdbcType=INTEGER}
+	      	     and  add_scene_account_migration = #{addSceneAccountMigration,jdbcType=INTEGER}
+	      	     and  add_scene_profile_card = #{addSceneProfileCard,jdbcType=INTEGER}
+	      	     and  add_scene_qr_code = #{addSceneQrCode,jdbcType=INTEGER}
+	      	     and  add_sceneprofile_link = #{addSceneprofileLink,jdbcType=INTEGER}
+	      	     and  add_scene_profile_item = #{addSceneProfileItem,jdbcType=INTEGER}
+	      	     and  add_scene_paid = #{addScenePaid,jdbcType=INTEGER}
+	      	     and  add_scene_others = #{addSceneOthers,jdbcType=INTEGER}
+	      	     and  add_circle_friends = #{addCircleFriends,jdbcType=INTEGER}
+		
+    </select>
+    
+    <select id="selectByPageExample" parameterType="string" resultType="java.util.HashMap" >
+     select 
+            a.id ,
+            a.count ,
+            a.male ,
+            a.female ,
+            a.chinese ,
+            a.not_chinese ,
+            a.cancel ,
+            a.lang_ch ,
+            a.lang_other ,
+            a.net_growth ,
+            a.next_openid ,
+            date_format(a.create_time, '%Y-%m-%d' )  as create_time,
+        	date_format(a.update_time, '%Y-%m-%d' )  as update_time,
+            a.nike_name ,
+            a.new_fans ,
+            a.add_scene_search ,
+            a.add_scene_account_migration ,
+            a.add_scene_profile_card ,
+            a.add_scene_qr_code ,
+            a.add_sceneprofile_link ,
+            a.add_scene_profile_item ,
+            a.add_scene_paid ,
+            a.add_scene_others,
+            a.add_circle_friends,
+            a.user_id,
+            b.nick_name,
+            b.authorizerAppid
+        from weixin_fans_count a left join weixin_userinfo b
+        on a.user_id=b.id
+        where 1=1
+        <if test="ids != null and ids != '' and ids!='null'"  >
+         and b.weixin_groups_id in (${ids}) 
+         </if>
+         <if test="createDateBegin != null" >
+               <![CDATA[ and  a.create_time >= str_to_date(#{createDateBegin,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEnd != null " >
+                <![CDATA[ and  a.create_time <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+  </select>
+  <select id="selectByPageExampleMaxTime" resultType="java.util.HashMap">
+  select 
+            a.id ,
+            a.count ,
+            a.male ,
+            a.female ,
+            a.chinese ,
+            a.not_chinese ,
+            a.cancel ,
+            a.lang_ch ,
+            a.lang_other ,
+            a.net_growth ,
+            a.next_openid ,
+            date_format(a.create_time, '%Y-%m-%d' )  as create_time,
+        	date_format(a.update_time, '%Y-%m-%d' )  as update_time,
+            a.nike_name ,
+            a.new_fans ,
+            a.add_scene_search ,
+            a.add_scene_account_migration ,
+            a.add_scene_profile_card ,
+            a.add_scene_qr_code ,
+            a.add_sceneprofile_link ,
+            a.add_scene_profile_item ,
+            a.add_scene_paid ,
+            a.add_scene_others,
+            a.add_circle_friends,
+            a.user_id,
+            b.nick_name,
+            b.authorizerAppid
+        from weixin_fans_count a left join weixin_userinfo b
+        on a.user_id=b.id
+        where 1=1
+        <if test="ids != null and ids != '' and ids!='null'"  >
+         and b.weixin_groups_id in (${ids}) 
+         </if>
+         <if test="createDateBegin != null" >
+               <![CDATA[ and  a.create_time >= str_to_date(#{createDateBegin,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEnd != null " >
+                <![CDATA[ and  a.create_time <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+  		and a.create_time=max(a.create_time)
+  </select>
+      
+<select id="selectByExample" resultMap="weixinFansAllCountResult" >
+	 select 
+		 a.id ,
+            a.count ,
+            a.male ,
+            a.female ,
+            a.chinese ,
+            a.not_chinese ,
+            a.cancel ,
+            a.lang_ch ,
+            a.lang_other ,
+            a.net_growth ,
+            a.next_openid ,
+            date_format(a.create_time, '%Y-%m-%d')  as create_time,
+        	date_format(a.update_time, '%Y-%m-%d')  as update_time,
+            a.nike_name ,
+            a.new_fans ,
+            a.add_scene_search ,
+            a.add_scene_account_migration ,
+            a.add_scene_profile_card ,
+            a.add_scene_qr_code ,
+            a.add_sceneprofile_link ,
+            a.add_scene_profile_item ,
+            a.add_scene_paid ,
+            a.add_scene_others,
+            a.add_circle_friends,
+            a.user_id
+   	       	from weixin_fans_count a left join weixin_userinfo b
+        on a.user_id=b.id
+        where 1=1 
+		<if test="id != null and  id != ''" >
+	      	   and   a.id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="count != null and  count != ''" >
+	      	   and   a.count = #{count,jdbcType=INTEGER}
+		</if>
+		<if test="male != null and  male != ''" >
+	      	   and   a.male = #{male,jdbcType=INTEGER}
+		</if>
+		<if test="female != null and  female != ''" >
+	      	   and   a.female = #{female,jdbcType=INTEGER}
+		</if>
+		<if test="chinese != null and  chinese != ''" >
+	      	   and   a.chinese = #{chinese,jdbcType=INTEGER}
+		</if>
+		<if test="notChinese != null and  notChinese != ''" >
+	      	   and   a.not_chinese = #{notChinese,jdbcType=INTEGER}
+		</if>
+		<if test="cancel != null and  cancel != ''" >
+	      	   and   a.cancel = #{cancel,jdbcType=INTEGER}
+		</if>
+		<if test="langCh != null and  langCh != ''" >
+	      	   and   a.lang_ch = #{langCh,jdbcType=INTEGER}
+		</if>
+		<if test="langOther != null and  langOther != ''" >
+	      	   and   a.lang_other = #{langOther,jdbcType=INTEGER}
+		</if>
+		<if test="netGrowth != null and  netGrowth != ''" >
+	      	   and   a.net_growth = #{netGrowth,jdbcType=INTEGER}
+		</if>
+		<if test="createTime != null and  createTime != ''" >
+	      	   and   a.create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateTime != null and  updateTime != ''" >
+	      	   and   a.update_time = #{updateTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="newFans != null and  newFans != ''" >
+	      	   and   a.new_fans = #{newFans,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneSearch != null and  addSceneSearch != ''" >
+	      	   and   a.add_scene_search = #{addSceneSearch,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneAccountMigration != null and  addSceneAccountMigration != ''" >
+	      	   and   a.add_scene_account_migration = #{addSceneAccountMigration,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneProfileCard != null and  addSceneProfileCard != ''" >
+	      	   and   a.add_scene_profile_card = #{addSceneProfileCard,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneQrCode != null and  addSceneQrCode != ''" >
+	      	   and   a.add_scene_qr_code = #{addSceneQrCode,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneprofileLink != null and  addSceneprofileLink != ''" >
+	      	   and   a.add_sceneprofile_link = #{addSceneprofileLink,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneProfileItem != null and  addSceneProfileItem != ''" >
+	      	   and   a.add_scene_profile_item = #{addSceneProfileItem,jdbcType=INTEGER}
+		</if>
+		<if test="addScenePaid != null and  addScenePaid != ''" >
+	      	   and   a.add_scene_paid = #{addScenePaid,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneOthers != null and  addSceneOthers != ''" >
+	      	   and   a.add_scene_others = #{addSceneOthers,jdbcType=INTEGER}
+		</if>
+		<if test="addCircleFriends != null and  addCircleFriends != ''" >
+	      	   and   a.add_circle_friends = #{addCircleFriends,jdbcType=INTEGER}
+		</if>
+		<if test="ids != null and ids != '' and ids!='null'"  >
+        	   and b.weixin_groups_id in (${ids}) 
+         </if>
+         <if test="createDateBegin != null" >
+               <![CDATA[ and  a.create_time >= str_to_date(#{createDateBegin,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEnd != null " >
+                <![CDATA[ and  a.create_time <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+			
+  </select>
+  <select id="selectFansSource" resultType="map">
+  		select
+  		  add_scene_search ,
+          add_scene_account_migration ,
+          add_scene_profile_card ,
+          add_scene_qr_code ,
+          add_sceneprofile_link ,
+          add_scene_profile_item ,
+          add_scene_paid ,
+          add_scene_others,
+          add_circle_friends,
+          create_time
+  		from
+  		weixin_fans_all_count
+  		where 1=1 
+		and create_time=(SELECT
+	max(create_time)
+FROM
+	weixin_fans_all_count)
+  </select>
+<!--  
+<select id="selectByPageExample" resultType="java.util.HashMap" >
+	 select 
+	 
+        	id ,
+        	count ,
+        	male ,
+        	female ,
+        	chinese ,
+        	not_chinese ,
+        	cancel ,
+        	lang_ch ,
+        	lang_other ,
+        	net_growth ,
+            date_format(create_time, '%Y-%m-%d' )  as create_time,
+        	date_format(update_time, '%Y-%m-%d' )  as update_time,
+        	new_fans ,
+        	add_scene_search ,
+        	add_scene_account_migration ,
+        	add_scene_profile_card ,
+        	add_scene_qr_code ,
+        	add_sceneprofile_link ,
+        	add_scene_profile_item ,
+        	add_scene_paid ,
+        	add_scene_others ,
+        	add_circle_friends 
+        	
+   	       	   from weixin_fans_all_count WHERE 1=1  
+	  
+		<if test="id != null and  id != ''" >
+	      	   and   id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="count != null and  count != ''" >
+	      	   and   count = #{count,jdbcType=INTEGER}
+		</if>
+		<if test="male != null and  male != ''" >
+	      	   and   male = #{male,jdbcType=INTEGER}
+		</if>
+		<if test="female != null and  female != ''" >
+	      	   and   female = #{female,jdbcType=INTEGER}
+		</if>
+		<if test="chinese != null and  chinese != ''" >
+	      	   and   chinese = #{chinese,jdbcType=INTEGER}
+		</if>
+		<if test="notChinese != null and  notChinese != ''" >
+	      	   and   not_chinese = #{notChinese,jdbcType=INTEGER}
+		</if>
+		<if test="cancel != null and  cancel != ''" >
+	      	   and   cancel = #{cancel,jdbcType=INTEGER}
+		</if>
+		<if test="langCh != null and  langCh != ''" >
+	      	   and   lang_ch = #{langCh,jdbcType=INTEGER}
+		</if>
+		<if test="langOther != null and  langOther != ''" >
+	      	   and   lang_other = #{langOther,jdbcType=INTEGER}
+		</if>
+		<if test="netGrowth != null and  netGrowth != ''" >
+	      	   and   net_growth = #{netGrowth,jdbcType=INTEGER}
+		</if>
+		<if test="createDateBegin != null " >
+               <![CDATA[ and  create_time >= str_to_date(#{createDateBegin,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEnd != null " >
+                <![CDATA[ and  create_time <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+		<if test="newFans != null and  newFans != ''" >
+	      	   and   new_fans = #{newFans,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneSearch != null and  addSceneSearch != ''" >
+	      	   and   add_scene_search = #{addSceneSearch,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneAccountMigration != null and  addSceneAccountMigration != ''" >
+	      	   and   add_scene_account_migration = #{addSceneAccountMigration,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneProfileCard != null and  addSceneProfileCard != ''" >
+	      	   and   add_scene_profile_card = #{addSceneProfileCard,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneQrCode != null and  addSceneQrCode != ''" >
+	      	   and   add_scene_qr_code = #{addSceneQrCode,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneprofileLink != null and  addSceneprofileLink != ''" >
+	      	   and   add_sceneprofile_link = #{addSceneprofileLink,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneProfileItem != null and  addSceneProfileItem != ''" >
+	      	   and   add_scene_profile_item = #{addSceneProfileItem,jdbcType=INTEGER}
+		</if>
+		<if test="addScenePaid != null and  addScenePaid != ''" >
+	      	   and   add_scene_paid = #{addScenePaid,jdbcType=INTEGER}
+		</if>
+		<if test="addSceneOthers != null and  addSceneOthers != ''" >
+	      	   and   add_scene_others = #{addSceneOthers,jdbcType=INTEGER}
+		</if>
+		<if test="addCircleFriends != null and  addCircleFriends != ''" >
+	      	   and   add_circle_friends = #{addCircleFriends,jdbcType=INTEGER}
+		</if>
+			
+  </select>
+  -->
+
+</mapper>

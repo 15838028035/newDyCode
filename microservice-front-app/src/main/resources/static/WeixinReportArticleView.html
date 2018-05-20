@@ -1,0 +1,515 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>图文分析详情</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+    
+      <script src="echats/echarts-all.js"></script>
+
+</head>
+
+    <body>
+      <div class="layui-form-item">
+        <label class="layui-form-label">图文消息的标题</label>
+        <div class="layui-input-block">
+      <input name="title" id="title"  class="layui-input" type="text" readonly="readonly">
+        </div>
+     </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">msgid</label>
+        <div class="layui-input-block">
+            <input name="msgid" id="msgid"  class="layui-input" type="text"  readonly="readonly">
+        </div>
+     </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">编辑</label>
+        <div class="layui-input-block">
+            <input name="editorUserName" id="editorUserName"  class="layui-input" type="text"  readonly="readonly">
+        </div>
+     </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">推送时间</label>
+        <div class="layui-input-block">
+            <input name="pushTime" id="pushTime"  class="layui-input" type="text"  readonly="readonly">
+        </div>
+     </div>
+    
+    
+    <div class="demoTable">
+       图文单篇查询时间：
+        <div class="layui-inline">
+            <input class="layui-input" name="createDateBegin"
+                id="createDateBegin" autocomplete="off" placeholder="开始时间">
+        </div>
+        <div class="layui-inline">
+            <input class="layui-input" name="createDateEnd" id="createDateEnd"
+                autocomplete="off" placeholder="结束时间">
+        </div>
+
+        <button class="layui-btn" data-type="reload">搜索</button>
+    </div>
+
+<table id="datagrid" class="layui-table" lay-filter="Grid" ></table>
+
+<form class="layui-form" id="form2">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">请选择:</label>
+            <div class="layui-input-inline">
+                <select name="selectDays" id="selectDays" lay-filter="selectDays" id="selectDays">
+                    <option value="30">最近30天</option>
+                    <option value="20">最近20天</option>
+                    <option value="10">最近10天</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-inline demoTable3" style="width: 350px;">
+                <span class="layui-btn" data-type="reload3" id="reload3" onClick="init()">搜索</span>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="mainAnaylsis"  style="width:98%;height:200px;"></div>
+  <p id="mainAnaylsis2" style="width: 98%;height:500px;"></p>
+
+<form class="layui-form">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">选择分组:</label>
+            <div class="layui-input-inline">
+                <select name="quiz1" lay-filter="quiz1" id="fenzu1">
+                </select>
+            </div>
+            <div class="layui-input-inline" id="fenzudiv2" style="display: none;">
+                <select name="quiz2" id="fenzu2">
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-inline demoTableA" style="width: 350px;">
+                <span class="layui-btn" data-type="reload2">搜索</span>
+            </div>
+        </div>
+    </div>
+</form>
+
+ 
+<table id="datagrid2" class="layui-table" lay-filter="Grid2"></table>
+
+
+<script type="text/html" id="qrcode_urltpl">
+    <div style="height: 28px;text-align: center;width: 100%;"><img width="28px"
+                                                                   src="{{d.qrcode_url}}?token=25965475995565785"></div>
+</script>
+
+<!-- 数据操作监听事件 -->
+<script type="text/html" id="optTpl">
+    <a href="javascript:;" data-url="http://www.bzon.cn" class="layui-btn layui-btn-primary layui-btn-xs info-btn"
+       lay-event="info">详情</a>
+</script>
+
+     
+     <script>
+
+     var acekeystoken = $.cookie('bearcktkaeskey');
+     if (acekeystoken == "") {
+         parent.location.href = ctxApp + '/login.html';
+     }
+
+  var  url =ctxAppWeixin+'/api/WeixinReportArticle/showInfo2/'+getQueryString("id");
+  
+  $.ajax({
+      url: url,
+      data: {},
+      type: "get",
+      dataType: "json",
+      async:'false',
+      success: function(data){
+          console.log(data);
+          dataTmp=data;
+          $("#title").val(data.weixinReportArticle.title);
+          $("#msgid").val(data.weixinReportArticle.msgid);
+          $("#editorUserName").val(data.weixinImgtext.createByUname);
+          $("#pushTime").val(data.weixinPushLog.createDate);
+        },
+        error: function(data){
+            try {
+               layer.msg("请求异常");
+               return false;
+            }catch (e) {
+               console.log(e);
+            }
+        }
+   });
+
+
+  layui.use(['laypage', 'table', 'element', 'layer','laydate'], function(){
+      var table = layui.table;
+      var laydate = layui.laydate;
+      var form = layui.form;
+      
+    //自定义事件
+      laydate.render({ 
+        elem: '#createDateEnd'
+        ,trigger: 'click' //采用click弹出
+      });
+      laydate.render({ 
+            elem: '#createDateBegin'
+            ,trigger: 'click' //采用click弹出
+          });
+      
+
+  table.render({
+    elem: '#datagrid'
+    ,url:ctxAppWeixin+'/api/WeixinReportArticle?Authorization='+ acekeystoken+"&msgId="+$("#msgid").val()+"&uids="+getQueryString("uids")
+    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+    
+    ,cols: [[
+    {field:'stat_date',title:'日期'},
+    {field:'int_page_read_user',title:'图文阅读人数'},
+    {field:'int_page_read_count',title:'图文阅读次数'},
+    {field:'int_page_from_session_read_user',title:'公众号会话阅读人数'},
+    {field:'int_page_from_session_read_count',title:'公众号会话阅读次数'},
+    {field:'share_user',title:'分享的人数'},
+    {field:'share_count',title:'分享的次数'},
+    {field:'int_page_from_feed_read_user',title:'朋友圈阅读人数'},
+    {field:'int_page_from_feed_read_count',title:'朋友圈阅读次数'},
+    {field:'feed_share_from_session_user',title:'分享转发人数'},
+    {field:'feed_share_from_session_cnt',title:'分享转发次数'},
+    {field:'feed_share_from_feed_user',title:'朋友圈转发朋友圈人数'},
+    {field:'feed_share_from_feed_cnt',title:'朋友圈转发朋友圈次数'},
+    {field:'add_to_fav_user',title:'收藏人数'},
+    {field:'add_to_fav_count',title:'收藏次数'}
+      
+    ]]
+  ,page: true
+  ,id: 'datagridTable'  
+  ,initSort: {  
+      field: 'stat_date' //排序字段，对应 cols 设定的各字段名  
+     ,type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序  
+            }  
+  ,request: {  
+     pageName: 'page' //页码的参数名称，默认：page  
+    ,limitName: 'limit' //每页数据量的参数名，默认：limit  
+        }
+  });
+
+ var $ = layui.$, active = {  
+          reload: function(){  
+            table.reload('datagridTable', {  
+              where: {  
+                  "createDateBegin" : $("#createDateBegin") .val(),
+                  "createDateEnd" : $("#createDateEnd") .val(),
+                  "msgid" : $("#msgid") .val(),
+                  "uids":getQueryString("uids")
+              }  
+            });  
+          }  
+    };  
+
+$('.demoTable .layui-btn').on('click', function(){  
+  var type = $(this).data('type');  
+  active[type] ? active[type].call(this) : '';  
+});  
+
+var selectedfenzuID = getQueryString("weixinGroupsId");
+console.log(selectedfenzuID);
+
+var tableLoadurl = selectedfenzuID == null||selectedfenzuID == "-1"?"":"weixinGroupsId="+selectedfenzuID+"&";
+
+table.render({
+	elem: '#datagrid2'
+	    ,url:ctxAppWeixin+'/api/WeixinReportArticle2?Authorization='+ acekeystoken+"&uids="+getQueryString("uids")
+	    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+	    
+	    ,cols: [[
+		    {field:'weixin_user_id',title:'公众号ID'},
+		    {field:'nick_name',title:'公众账号'},
+		    {field:'int_page_read_user',title:'图文阅读人数'},
+		    {field:'share_user',title:'分享的人数'},
+		    {field:'add_to_fav_count',title:'收藏的人数'},
+		    {field:'int_page_from_feed_read_user',title:'朋友圈阅读人数'},
+		    {field: 'opt', title: '操作',templet: '#optTpl'}
+	    ]]
+    , page: true
+    , initSort: {
+        field: 'weixin_user_id' //排序字段，对应 cols 设定的各字段名
+        , type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+    }
+    , request: {
+        pageName: 'page' //页码的参数名称，默认：page
+        , limitName: 'limit' //每页数据量的参数名，默认：limit
+    }
+});
+
+table.on('tool(Grid2)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+    var data = obj.data; //获得当前行数据
+    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+     if (layEvent === 'info') { //详情
+        var authorizerAppid = data.authorizerAppid;
+        info(authorizerAppid);
+    }
+});
+
+var nowgroupIndex = -1;
+
+$.ajax({
+    url: ctxAppSec + '/api/WeixinGroups/list?parentId=' + nowgroupIndex+'&Authorization='+acekeystoken,
+    type: "get",
+    dataType: "json",
+    success: function (data) {
+        console.log(data);
+        var html = "<option value=\"\">请选分组</option>";
+
+        var datas = data;
+
+        for (var i = 0; i < datas.length; i++) {
+            html += '<option value=' + datas[i].id + '>' + datas[i].groupName + '</option>';
+        }
+        $("#fenzu1").html(html);
+        form.render();
+    },
+    error: function (data) {
+        try {
+            layer.msg("请求异常");
+            return false;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+});
+
+//监听提交
+form.on('select(quiz1)', function (data) {
+    console.log(data);
+    $.ajax({
+        url: ctxAppSec + '/api/WeixinGroups/list?parentId=' + data.value+'&Authorization='+acekeystoken,
+        type: "get",
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            if (data.length == 0) {
+                $("#fenzudiv2").hide();
+            }
+            else {
+                $("#fenzudiv2").show();
+            }
+            var html = "";
+
+            var datas = data;
+
+            for (var i = 0; i < datas.length; i++) {
+                html += '<option value=' + datas[i].id + '>' + datas[i].groupName + '</option>';
+            }
+
+            $("#fenzu2").html(html);
+            form.render();
+        },
+        error: function (data) {
+            try {
+                layer.msg("请求异常");
+                return false;
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    });
+});
+
+var $ = layui.$, activeA = {
+    reload2: function () {
+        table.reload('datagrid2', {
+            where: {
+                "weixin_groups_id":$("#fenzu2").val() == null ? $("#fenzu1").val() : $("#fenzu2").val(),
+                "msgid" : $("#msgid") .val(),
+                "uids":getQueryString("uids")
+            }
+        });
+    }
+};
+
+$('.demoTableA .layui-btn').on('click', function () {
+    var type = $(this).data('type');
+    activeA[type] ? activeA[type].call(this) : '';
+});
+
+  });
+  
+  function info(authorizerAppid) {
+      layer.open({
+          title: "公众号详情",
+          type: 2,
+          maxmin: true,
+          area: ['95%', '95%'],
+          content: 'weixinUserinfoinfo.html?authorizerAppid=' + authorizerAppid,
+          // 下面这句是,添加页面关闭后,刷新本页面.
+          end: function () {
+              location.reload();
+          }
+      });
+  }
+  
+  var myChart = echarts.init(document.getElementById('mainAnaylsis'));
+  var option = {
+     title: {   text: '堆叠折线图'},
+      tooltip: {  trigger: 'axis' },
+      tooltip : {
+          show : true
+      },
+      grid: {       //直角坐标系内绘图网格
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+      },
+
+      toolbox: {     //工具栏
+          feature: {
+              saveAsImage: {}
+          }
+      },
+      legend : {
+          data : []
+      },
+      xAxis : [ {
+          type : 'category',
+          boundaryGap: false,
+          data : []
+      } ],
+      yAxis : [ {
+          type : 'value'
+      } ],
+      series : []
+  };
+  
+  
+  function init() {
+	  var postData ={"selectDays":$("#selectDays").val(),
+			  "msgid" : $("#msgid") .val(),
+			  "uids":getQueryString("uids")
+	  };
+	  
+	  $.ajax({
+	      type : "POST",
+	      url : ctxAppWeixin+"/getReportData",
+	      dataType : "json",
+	      data:postData,
+	      success : function(result) {
+	          
+	          //将从后台接收的json字符串转换成json对象
+	          var jsonobj = eval(result);
+	          //给图标标题赋值
+	          option.legend.data = jsonobj.legend;
+	          //读取横坐标值
+	          option.xAxis[0].data = jsonobj.axis;
+	          var series_arr = jsonobj.series;
+	          //驱动图表生成的数据内容，数组中每一项代表一个系列的特殊选项及数据
+	          for (var i = 0; i < series_arr.length; i++) {
+	              option.series[i] = result.series[i];
+	          }
+	          //过渡控制，隐藏loading（读取中）
+	          myChart.hideLoading();
+	           // 为echarts对象加载数据
+	          myChart.setOption(option);
+	      }
+	  });
+  }
+  
+  init();
+  
+  var myChart2 = echarts.init(document.getElementById('mainAnaylsis2'));
+  var   option = {
+             title : {
+                 text: '柱状图统计',
+                 subtext: '状图统计'
+             },
+             tooltip : {
+                 trigger: 'axis'
+             },
+             legend: {
+                 data:[]
+             },
+             toolbox: {
+                 show : true,
+                 feature : {
+                     mark : {show: true},
+                     dataView : {show: true, readOnly: false},
+                     magicType: {show: true, type: ['line', 'bar']},
+                     restore : {show: true},
+                     saveAsImage : {show: true}
+                 }
+             },
+             calculable : true,
+             xAxis : [
+                 {
+                     type : 'value',
+                     boundaryGap : [0, 0.01]
+                 }
+             ],
+             yAxis : [
+                 {
+                     type : 'category',
+                     data : ['图文阅读人数','图文总阅读次数','原文阅读人数','原文阅读次数','朋友圈阅读人数','朋友圈阅读次数','分享人数','分享次数','收藏人数','收藏次数']
+                 }
+             ],
+             series : [
+             ]
+         };
+  myChart2.setOption(option);
+  
+  function init2() {
+      var postData ={
+              "msgid" : $("#msgid") .val(),
+              "uids":getQueryString("uids")
+      };
+      
+      $.ajax({
+          type : "POST",
+          url : ctxAppWeixin+"/getReportData2",
+          dataType : "json",
+          data:postData,
+          success : function(result) {
+              
+              //将从后台接收的json字符串转换成json对象
+              var jsonobj = eval(result);
+              //给图标标题赋值
+              option.legend.data = jsonobj.legend;
+              //读取横坐标值
+            //  option.xAxis[0].data = jsonobj.axis;
+              var series_arr = jsonobj.series;
+              //驱动图表生成的数据内容，数组中每一项代表一个系列的特殊选项及数据
+              for (var i = 0; i < series_arr.length; i++) {
+                  option.series[i] = result.series[i];
+              }
+              //过渡控制，隐藏loading（读取中）
+              myChart2.hideLoading();
+               // 为echarts对象加载数据
+              myChart2.setOption(option);
+          }
+      });
+  }
+  
+  init2();
+
+</script>
+
+</body>
+
+</html>

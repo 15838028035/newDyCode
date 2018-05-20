@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+
+<mapper namespace="com.lj.cloud.secrity.dal.WeixinConfigMapper">
+    <resultMap id="weixinConfigResult" type="com.weixindev.micro.serv.common.bean.weixin.WeixinConfig">
+        <result property="id" column="id" jdbcType="INTEGER"   />
+        <result property="cfgName" column="cfg_name" jdbcType="VARCHAR"   />
+        <result property="cfgValue" column="cfg_value" jdbcType="VARCHAR"   />
+        <result property="remarks" column="remarks" jdbcType="VARCHAR"   />
+        <result property="cfgClass" column="cfg_class" jdbcType="VARCHAR"   />
+        <result property="createBy" column="create_by" jdbcType="INTEGER"   />
+        <result property="createByUname" column="create_By_UName" jdbcType="VARCHAR"   />
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"   />
+        <result property="updateBy" column="update_by" jdbcType="INTEGER"   />
+        <result property="updateByUname" column="update_By_Uname" jdbcType="VARCHAR"   />
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"   />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        <![CDATA[
+       
+            id ,
+            cfg_name ,
+            cfg_value ,
+            remarks ,
+            cfg_class ,
+            create_by ,
+            create_By_UName ,
+            create_date ,
+            update_by ,
+            update_By_Uname ,
+            update_date 
+        ]]>
+    </sql>
+
+   <select id="selectByPrimaryKey" resultMap="weixinConfigResult">
+     select 
+        <include refid="Base_Column_List"/>
+        
+            from weixin_config 
+            where 
+               id = #{id,jdbcType=INTEGER}
+            
+</select>
+
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+           delete from weixin_config where
+        id = #{id,jdbcType=INTEGER}
+    
+       </delete>
+
+ <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+        INSERT INTO weixin_config (
+         id, cfg_name, cfg_value, remarks, cfg_class, create_by, create_By_UName, create_date, update_by, update_By_Uname, update_date
+        ) VALUES (
+         #{id,jdbcType=INTEGER}, #{cfgName,jdbcType=VARCHAR}, #{cfgValue,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{cfgClass,jdbcType=VARCHAR}, #{createBy,jdbcType=INTEGER}, #{createByUname,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateByUname,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}        
+        )
+   
+</insert>
+
+ <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.weixin.WeixinConfig">
+          INSERT INTO weixin_config 
+             <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="cfgName != null" >
+                cfg_name,
+            </if>
+            <if test="cfgValue != null" >
+                cfg_value,
+            </if>
+            <if test="remarks != null" >
+                remarks,
+            </if>
+            <if test="cfgClass != null" >
+                cfg_class,
+            </if>
+            <if test="createBy != null" >
+                create_by,
+            </if>
+            <if test="createByUname != null" >
+                create_By_UName,
+            </if>
+            <if test="createDate != null" >
+                create_date,
+            </if>
+            <if test="updateBy != null" >
+                update_by,
+            </if>
+            <if test="updateByUname != null" >
+                update_By_Uname,
+            </if>
+            <if test="updateDate != null" >
+                update_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+                <if test="id != null" >
+                     #{id,jdbcType=INTEGER},
+                </if>
+                <if test="cfgName != null" >
+                     #{cfgName,jdbcType=VARCHAR},
+                </if>
+                <if test="cfgValue != null" >
+                     #{cfgValue,jdbcType=VARCHAR},
+                </if>
+                <if test="remarks != null" >
+                     #{remarks,jdbcType=VARCHAR},
+                </if>
+                <if test="cfgClass != null" >
+                     #{cfgClass,jdbcType=VARCHAR},
+                </if>
+                <if test="createBy != null" >
+                     #{createBy,jdbcType=INTEGER},
+                </if>
+                <if test="createByUname != null" >
+                     #{createByUname,jdbcType=VARCHAR},
+                </if>
+                <if test="createDate != null" >
+                     #{createDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="updateBy != null" >
+                     #{updateBy,jdbcType=INTEGER},
+                </if>
+                <if test="updateByUname != null" >
+                     #{updateByUname,jdbcType=VARCHAR},
+                </if>
+                <if test="updateDate != null" >
+                     #{updateDate,jdbcType=TIMESTAMP},
+                </if>
+        </trim>
+ </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.weixindev.micro.serv.common.bean.weixin.WeixinConfig">
+    
+        UPDATE weixin_config 
+     
+      <set >
+        <if test="cfgName != null and  cfgName != ''" >
+            cfg_name = #{cfgName,jdbcType=VARCHAR} ,
+        </if>
+        <if test="cfgValue != null and  cfgValue != ''" >
+            cfg_value = #{cfgValue,jdbcType=VARCHAR} ,
+        </if>
+        <if test="remarks != null and  remarks != ''" >
+            remarks = #{remarks,jdbcType=VARCHAR} ,
+        </if>
+        <if test="cfgClass != null and  cfgClass != ''" >
+            cfg_class = #{cfgClass,jdbcType=VARCHAR} ,
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+            create_by = #{createBy,jdbcType=INTEGER} ,
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+            create_By_UName = #{createByUname,jdbcType=VARCHAR} ,
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+            create_date = #{createDate,jdbcType=TIMESTAMP} ,
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+            update_by = #{updateBy,jdbcType=INTEGER} ,
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+            update_By_Uname = #{updateByUname,jdbcType=VARCHAR} ,
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+            update_date = #{updateDate,jdbcType=TIMESTAMP} ,
+        </if>
+
+     </set>
+        WHERE 
+            id = #{id,jdbcType=INTEGER}
+        
+    </update>
+   
+    <update id="updateByPrimaryKey" >
+
+        UPDATE weixin_config SET
+            cfg_name = #{cfgName} , cfg_value = #{cfgValue} , remarks = #{remarks} , cfg_class = #{cfgClass} , create_by = #{createBy} , create_By_UName = #{createByUname} , create_date = #{createDate} , update_by = #{updateBy} , update_By_Uname = #{updateByUname} , update_date = #{updateDate}  
+        WHERE 
+        id = #{id,jdbcType=INTEGER}
+         
+  
+</update>
+    
+    <select id="select" resultMap="weixinConfigResult">
+     select 
+        <include refid="Base_Column_List"/>
+       
+            from weixin_config WHERE 1=1  
+      
+                 and  id = #{id,jdbcType=INTEGER}
+                 and  cfg_name = #{cfgName,jdbcType=VARCHAR}
+                 and  cfg_value = #{cfgValue,jdbcType=VARCHAR}
+                 and  remarks = #{remarks,jdbcType=VARCHAR}
+                 and  cfg_class = #{cfgClass,jdbcType=VARCHAR}
+                 and  create_by = #{createBy,jdbcType=INTEGER}
+                 and  create_By_UName = #{createByUname,jdbcType=VARCHAR}
+                 and  create_date = #{createDate,jdbcType=TIMESTAMP}
+                 and  update_by = #{updateBy,jdbcType=INTEGER}
+                 and  update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+                 and  update_date = #{updateDate,jdbcType=TIMESTAMP}
+        
+    </select>
+      
+<select id="selectByExample" resultMap="weixinConfigResult" >
+     select 
+        <include refid="Base_Column_List"/>
+               from weixin_config WHERE 1=1  
+      
+        <if test="id != null and  id != ''" >
+               and   id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="cfgName != null and  cfgName != ''" >
+               and   cfg_name = #{cfgName,jdbcType=VARCHAR}
+        </if>
+        <if test="cfgValue != null and  cfgValue != ''" >
+               and   cfg_value = #{cfgValue,jdbcType=VARCHAR}
+        </if>
+        <if test="remarks != null and  remarks != ''" >
+               and   remarks = #{remarks,jdbcType=VARCHAR}
+        </if>
+        <if test="cfgClass != null and  cfgClass != ''" >
+               and   cfg_class = #{cfgClass,jdbcType=VARCHAR}
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+               and   create_by = #{createBy,jdbcType=INTEGER}
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+               and   create_By_UName = #{createByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+               and   create_date = #{createDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+               and   update_by = #{updateBy,jdbcType=INTEGER}
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+               and   update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+               and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+        </if>
+            
+  </select>
+
+<select id="selectByPageExample" resultType="java.util.HashMap" >
+     select 
+        id ,
+            cfg_name  as cfgName,
+            cfg_value as cfgValue,
+            cfg_class as cfgClass,
+             remarks ,
+           a.create_by as createBy ,
+            a.create_by_uName as createByUname  ,
+             date_format(a.create_date, '%Y-%m-%d %H:%i:%s' )  as createDate,
+             a.update_by as updateBy  ,
+            a.update_by_uName as updateByUname  ,
+           date_format(a.update_date, '%Y-%m-%d %H:%i:%s' )  as updateDate
+            
+               from weixin_config a WHERE 1=1  
+      
+        <if test="id != null and  id != ''" >
+               and   id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="cfgName != null and  cfgName != ''" >
+               and   cfg_name = #{cfgName,jdbcType=VARCHAR}
+        </if>
+        <if test="cfgValue != null and  cfgValue != ''" >
+               and   cfg_value = #{cfgValue,jdbcType=VARCHAR}
+        </if>
+        <if test="cfgClass != null and  cfgClass != ''" >
+               and   cfg_class = #{cfgClass,jdbcType=VARCHAR}
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+               and   create_by = #{createBy,jdbcType=INTEGER}
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+               and   create_By_UName = #{createByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+               and   create_date = #{createDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+               and   update_by = #{updateBy,jdbcType=INTEGER}
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+               and   update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+               and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+        </if>
+            
+  </select>
+
+
+</mapper>
+
+
+

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+
+<mapper namespace="com.lj.cloud.secrity.dal.SecPrivilegesConfigMapper">
+    <resultMap id="secPrivilegesConfigResult" type="com.weixindev.micro.serv.common.bean.secrity.SecPrivilegesConfig">
+   	  	<result property="id" column="id" jdbcType="INTEGER"   />
+   	  	<result property="secPrevilegesUrl" column="sec_previleges_url" jdbcType="VARCHAR"   />
+   	  	<result property="secPrevilegeModule" column="sec_previlege_module" jdbcType="VARCHAR"   />
+   	  	<result property="secParentId" column="sec_parent_id" jdbcType="INTEGER"   />
+   	  	<result property="menuName" column="menu_name" jdbcType="VARCHAR"   />
+   	  	
+    </resultMap>
+
+	<sql id="Base_Column_List">
+	    <![CDATA[
+	   
+        	id ,
+        	sec_previleges_url ,
+        	sec_previlege_module,
+        	sec_parent_id,
+        	menu_name
+	    ]]>
+	</sql>
+
+   <select id="selectByPrimaryKey" resultMap="secPrivilegesConfigResult">
+	 select 
+	    <include refid="Base_Column_List"/>
+	    
+	        from sec_privileges_config 
+	        where 
+		       id = #{id,jdbcType=INTEGER}
+			
+</select>
+
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+           delete from sec_privileges_config where
+        id = #{id,jdbcType=INTEGER}
+	
+       </delete>
+
+ <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+        INSERT INTO sec_privileges_config (
+         id, sec_previleges_url, sec_previlege_module,sec_parent_id,
+        	menu_name
+        ) VALUES (
+         #{id,jdbcType=INTEGER}, #{secPrevilegesUrl,jdbcType=VARCHAR}, #{secPrevilegeModule,jdbcType=VARCHAR},#{secParentId},#{menuName}  
+        )
+   
+</insert>
+
+ <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.secrity.SecPrivilegesConfig">
+          INSERT INTO sec_privileges_config 
+	         <trim prefix="(" suffix=")" suffixOverrides="," >
+	    	<if test="id != null" >
+        		id,
+     	 	</if>
+	    	<if test="secPrevilegesUrl != null" >
+        		sec_previleges_url,
+     	 	</if>
+	    	<if test="secPrevilegeModule != null" >
+        		sec_previlege_module,
+     	 	</if>
+     	 	<if test="secParentId != null" >
+        		sec_parent_id,
+     	 	</if>
+     	 	<if test="menuName!=null">
+     	 	    menu_name,
+     	 	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+
+	    		<if test="id != null" >
+        		     #{id,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="secPrevilegesUrl != null" >
+        		     #{secPrevilegesUrl,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="secPrevilegeModule != null" >
+        		     #{secPrevilegeModule,jdbcType=VARCHAR},
+     	 		</if>
+     	 		<if test="secParentId != null" >
+        		     #{secParentId},
+     	 	   </if>
+     	 	   <if test="menuName!=null">
+     	 	         #{menuName},
+     	 	</if>
+		</trim>
+ </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.weixindev.micro.serv.common.bean.secrity.SecPrivilegesConfig">
+    
+        UPDATE sec_privileges_config 
+     
+      <set >
+		<if test="secPrevilegesUrl != null and  secPrevilegesUrl != ''" >
+			sec_previleges_url = #{secPrevilegesUrl,jdbcType=VARCHAR} ,
+		</if>
+		<if test="secPrevilegeModule != null and  secPrevilegeModule != ''" >
+			sec_previlege_module = #{secPrevilegeModule,jdbcType=VARCHAR} ,
+		</if>
+          <if test="secParentId != null" >
+        		     sec_parent_id=#{secParentId},
+     	 	</if>
+     	 	<if test="menuName!=null">
+     	 	         menu_name=#{menuName},
+     	 	</if>
+	 </set>
+        WHERE 
+	        id = #{id,jdbcType=INTEGER}
+		
+    </update>
+   
+    <update id="updateByPrimaryKey" >
+
+        UPDATE sec_privileges_config SET
+	        sec_previleges_url = #{secPrevilegesUrl} , sec_previlege_module = #{secPrevilegeModule}, sec_parent_id=#{secParentId},  menu_name=#{menuName} 
+        WHERE 
+		id = #{id,jdbcType=INTEGER}
+		 
+  
+</update>
+    
+    <select id="select" resultMap="secPrivilegesConfigResult">
+	 select 
+    	<include refid="Base_Column_List"/>
+	   
+	        from sec_privileges_config WHERE 1=1  
+	  
+	      	     and  id = #{id,jdbcType=INTEGER}
+	      	     and  sec_previleges_url = #{secPrevilegesUrl,jdbcType=VARCHAR}
+	      	     and  sec_previlege_module = #{secPrevilegeModule,jdbcType=VARCHAR}
+		
+    </select>
+      
+<select id="selectByExample" resultMap="secPrivilegesConfigResult" >
+	 select 
+		<include refid="Base_Column_List"/>
+   	       	   from sec_privileges_config WHERE 1=1  
+	  
+		<if test="id != null and  id != ''" >
+	      	   and   id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="secPrevilegesUrl != null and  secPrevilegesUrl != ''" >
+	      	   and   sec_previleges_url = #{secPrevilegesUrl,jdbcType=VARCHAR}
+		</if>
+		<if test="secPrevilegeModule != null and  secPrevilegeModule != ''" >
+	      	   and   sec_previlege_module = #{secPrevilegeModule,jdbcType=VARCHAR}
+		</if>
+			
+  </select>
+
+<select id="selectByPageExample" resultType="java.util.HashMap" >
+	 select 
+		<include refid="Base_Column_List"/>
+   	       	   from sec_privileges_config WHERE 1=1  
+		
+		<if test="name!=null">
+		    and  meun_name '%${name}%'
+		</if>
+  </select>
+  
+  <select id="selectConfig" resultMap="secPrivilegesConfigResult">
+	  SELECT
+		sf.*
+	FROM
+		`sec_privileges_config` sf, sec_previlege_relation sr WHERE sr.sec_ag_id = sf.id AND sf.id=#{id}
+  </select>
+<select id="selectByQueryInfo" resultType="java.util.HashMap">
+select 
+		<include refid="Base_Column_List"/>
+   	       	   from sec_privileges_config WHERE 1=1  
+		
+		<if test="name!=null">
+		    and  meun_name '%${name}%'
+		</if>
+</select>
+</mapper>

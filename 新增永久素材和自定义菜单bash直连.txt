@@ -1,0 +1,42 @@
+1.新增图文素材:
+
+1-1.新增内容内图片永久素材
+curl -F media=@1058115197421373.jpg "https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=9_VEoMbTw1Q1ffXVbzz6XtiUR_QILsiJLTbxjQ9rnLllXyJ70S2vAlhqmALLMrZVWdFISLIiQv-Y-KGQOlioqEQJf_ESh_ilX6tULwuQdYMaGJooBSWappc259-9L8ON2r8CHpT5Gf-uMvN4UvQNPeAEDAXZ"
+
+{"url":"http:\/\/mmbiz.qpic.cn\/mmbiz_jpg\/N6QruC5sQdumOsN9E928YeArhHbdaFhIyVLjXGABJ6uWoVyvjpmAJ8axlSZicZ1uLmcKNcydlcTsnPicaiawWqFWg\/0"}
+
+1-2.新增封面图片永久素材
+curl -F media=@1094050830994600.png "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=9_EbRw05ekIjAEWK2k_Y7XZZkJuNGU4O2SNHp-zLdi6FUrqua5ta61G3RxLrbww8zI3591_A0iSvuiZV5kA5LLB4oNn-d2pTqrtnH38S9WVKvqULqIXI7r7u4Bx6YdH8573B-AHSHFK2GFEoCuAAGbAEDSSY&type=thumb"
+
+{"media_id":"UFyprEXBvieSOBZuNARuqV0EMV8H3JiRFUamYaIHpPI","url":"http:\/\/mmbiz.qpic.cn\/mmbiz_png\/N6QruC5sQdumOsN9E928YeArhHbdaFhIdavvuMZD9vepbK5Z6TSM9NRHG7Q76HS4ZxproSK74v0JMIxAEicSr8Q\/0?wx_fmt=png"}
+
+1-3.同步永久图文素材
+curl -i -X POST -H 'Content-type':'application/json' -d '{"articles": [{"title": "TITLE","thumb_media_id":"UFyprEXBvieSOBZuNARuqV0EMV8H3JiRFUamYaIHpPI","author": "AUTHOR","digest": "DIGEST","show_cover_pic": "0","content": "<img src=http://mmbiz.qpic.cn/mmbiz_jpg/N6QruC5sQdumOsN9E928YeArhHbdaFhIyVLjXGABJ6uWoVyvjpmAJ8axlSZicZ1uLmcKNcydlcTsnPicaiawWqFWg/0       />","content_source_url": "CONTENT_SOURCE_URL"}]}' https://api.weixin.qq.com/cgi-bin/material/add_news?access_token=9_EbRw05ekIjAEWK2k_Y7XZZkJuNGU4O2SNHp-zLdi6FUrqua5ta61G3RxLrbww8zI3591_A0iSvuiZV5kA5LLB4oNn-d2pTqrtnH38S9WVKvqULqIXI7r7u4Bx6YdH8573B-AHSHFK2GFEoCuAAGbAEDSSY
+
+{"media_id":"UFyprEXBvieSOBZuNARuqcN6vn-r50fkNcZI73aSlCo"}
+
+2.新增图片永久素材
+
+curl -F media=@1094050830994600.png "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=9_EbRw05ekIjAEWK2k_Y7XZZkJuNGU4O2SNHp-zLdi6FUrqua5ta61G3RxLrbww8zI3591_A0iSvuiZV5kA5LLB4oNn-d2pTqrtnH38S9WVKvqULqIXI7r7u4Bx6YdH8573B-AHSHFK2GFEoCuAAGbAEDSSY&type=image"
+
+{"media_id":"UFyprEXBvieSOBZuNARuqT8TY7tYz3jZ_863_64iHjI","url":"http:\/\/mmbiz.qpic.cn\/mmbiz_png\/N6QruC5sQdumOsN9E928YeArhHbdaFhIdavvuMZD9vepbK5Z6TSM9NRHG7Q76HS4ZxproSK74v0JMIxAEicSr8Q\/0?wx_fmt=png"}
+
+3.新增音频永久素材
+
+curl -F media=@1306084361349511.mp3 "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=9_EbRw05ekIjAEWK2k_Y7XZZkJuNGU4O2SNHp-zLdi6FUrqua5ta61G3RxLrbww8zI3591_A0iSvuiZV5kA5LLB4oNn-d2pTqrtnH38S9WVKvqULqIXI7r7u4Bx6YdH8573B-AHSHFK2GFEoCuAAGbAEDSSY&type=voice"
+
+{"media_id":"UFyprEXBvieSOBZuNARuqQTCE2_ca5REmV9UJ7BiuSE"}
+
+4.新增视频永久素材
+
+curl "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=9_EbRw05ekIjAEWK2k_Y7XZZkJuNGU4O2SNHp-zLdi6FUrqua5ta61G3RxLrbww8zI3591_A0iSvuiZV5kA5LLB4oNn-d2pTqrtnH38S9WVKvqULqIXI7r7u4Bx6YdH8573B-AHSHFK2GFEoCuAAGbAEDSSY&type=video" -F media=@1660076473685921.mp4 -F  description='{"title":"VIDEO_TITLE", "introduction":"INTRODUCTION"}'
+
+{"media_id":"UFyprEXBvieSOBZuNARuqRo81wzatH1NW18jWobmaXc"}
+
+
+终极 自定义菜单
+curl -i -X POST -H 'Content-type':'application/json' -d '{"button": [{ "type": "media_id", "name": "图文", "media_id": "UFyprEXBvieSOBZuNARuqcN6vn-r50fkNcZI73aSlCo" },{ "type": "media_id", "name": "图片", "media_id": "UFyprEXBvieSOBZuNARuqT8TY7tYz3jZ_863_64iHjI" },{"name": "音视频","sub_button": [{"type": "media_id", "name": "音频", "media_id": "UFyprEXBvieSOBZuNARuqQTCE2_ca5REmV9UJ7BiuSE"},{"type": "media_id", "name": "视频", "media_id": "UFyprEXBvieSOBZuNARuqRo81wzatH1NW18jWobmaXc"}]}] }' https://api.weixin.qq.com/cgi-bin/menu/create?access_token=9_EbRw05ekIjAEWK2k_Y7XZZkJuNGU4O2SNHp-zLdi6FUrqua5ta61G3RxLrbww8zI3591_A0iSvuiZV5kA5LLB4oNn-d2pTqrtnH38S9WVKvqULqIXI7r7u4Bx6YdH8573B-AHSHFK2GFEoCuAAGbAEDSSY
+
+{"errcode":0,"errmsg":"ok"}
+
+

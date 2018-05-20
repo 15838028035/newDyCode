@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="layui/css/layui.css" />
+		<link rel="stylesheet" href="src/css/base3d8d4c.css" />
+		<link rel="stylesheet" type="text/css" href="src/css/upload3a7b39.css" />
+		<title></title>
+	</head>
+
+	<body>
+		<div class="dialog ">
+			<div class="dialog_bd" style="padding: 15px 45px 93px">
+				<div>
+					<div class="img_crop_panel">
+						<div class="js_select_frame img_pick_panel inner_container_box side_l cell_layout">
+
+							<div class="inner_main">
+								<div class="img_pick_area">
+									<div class="sub_title_bar in_dialog">
+										<div class="upload_box r align_right">
+											<span class="upload_area webuploader-container"><a id="js_imageupload6847924656352133" class="btn btn_primary js_imageupload webuploader-pick" data-groupid="">本地上传</a><ul class="upload_file_box" style="display:none"></ul><div id="rt_rt_1cd1s5j4o4cng8ce4s7fo1b0k6" style="position: absolute; top: 0px; left: 0px; width: 106px; height: 32px; overflow: hidden; bottom: auto; right: auto;"><input type="file" multiple="multiple" accept="image/bmp,image/png,image/jpeg,image/jpg,image/gif" style="display: none;"><label style="opacity: 0; width: 100%; height: 100%; display: block; cursor: pointer; background: rgb(255, 255, 255);"></label></div></span>
+										</div>
+									</div>
+									<div class="img_pick_area_inner">
+										<div class="img_pick">
+											<ul class="group js_list img_list">
+
+												<!--
+												<li class="img_item js_imageitem" data-id="100000009" data-url="https://mmbiz.qpic.cn/mmbiz_jpg/P4jCY8PME8yxfottyD9qtOiagiaXWvyERzT0vNX8bYSM5vBbFBmxcRcmKxHRZHZNZvuDicn05sgPic8iathQFDqRlAA/0?wx_fmt=jpeg" data-oristatus="0" data-format="jpeg">
+													<label class="frm_checkbox_label img_item_bd selected">
+												        <div class="pic_box">
+												            <img class="pic js_pic" data-src="https://mmbiz.qpic.cn/mmbiz_jpg/P4jCY8PME8yxfottyD9qtOiagiaXWvyERzT0vNX8bYSM5vBbFBmxcRcmKxHRZHZNZvuDicn05sgPic8iathQFDqRlAA/0?wx_fmt=jpeg" src="https://mmbiz.qpic.cn/mmbiz_jpg/P4jCY8PME8yxfottyD9qtOiagiaXWvyERzT0vNX8bYSM5vBbFBmxcRcmKxHRZHZNZvuDicn05sgPic8iathQFDqRlAA/0?wx_fmt=jpeg" style="height: 117px;">
+												        </div>
+												        <span class="lbl_content"> 欢迎扫描.jpg</span>
+   
+												        <div class="selected_mask">
+												            <div class="selected_mask_inner"></div>
+												            <div class="selected_mask_icon"></div>
+												        </div>
+												    </label>
+												</li>-->
+											</ul>
+										</div>
+										<div class="js_pagebar"></div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<div></div>
+				</div>
+			</div>
+			<div class="dialog_ft">
+				<span style="" class=" btn btn_primary btn_input js_btn_p"><button type="button" class="js_btn" id="query" data-index="0">确定</button></span>
+				<span style="" class=" btn btn_default btn_input js_btn_p"><button type="button" class="js_btn" id="cancel" data-index="1">取消</button></span>
+			</div>
+		</div>
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery.cookie.js"></script>
+		<script src="js/js.js"></script>
+		<script src="layer/layer.js"></script>
+		<script src="layui/layui.js"></script>
+		<script type="text/javascript" src="src/js/me/menu.js"></script>
+		<script type="text/javascript">
+			
+			$(document).ready(function() {
+var acekeystoken = $.cookie('bearcktkaeskey');
+				$(window).on('load', function() {
+					$('.img_list').on('click', '.img_item', function() {
+						$(this).siblings().children('.img_item_bd').removeClass('selected')
+						$(this).children('.img_item_bd').addClass('selected')
+					})
+					$('#query').on('click', function() {
+						if($('.img_item_bd.selected').length == 0) {
+							layer.msg('请选择一个图片', {
+								time: 500, //20s后自动关闭
+							});
+							return false;
+						} else {
+							var the_id = $('.img_item_bd.selected').parent().attr('data-id');
+
+							var index2 = parent.layer.getFrameIndex(window.name)
+							parent.document.getElementById('imgSelectedId').value = the_id;
+							//
+							parent.layer.close(index2);
+							$(parent.document).find('.menu-list').find('.current').attr('data-action','key|2|'+the_id)
+							/*$(parent.document).find('#msgSender_media_2_2').prev().hide();
+							$(parent.document).find('#msgSender_media_2_2').show();*/
+							showImg(the_id);
+						}
+					})
+					$('#cancel').on('click', function() {
+						var index2 = parent.layer.getFrameIndex(window.name)
+						parent.layer.close(index2);
+					})
+
+					$.ajax({
+						type: 'get',
+						//url: 'datas/data_img.js',
+						'url':ctxAppSec+'/api/WeixinImg',
+						'data': {
+							offset: 1,
+							num: 10,
+							"Authorization": acekeystoken
+						},
+						'dataType': 'json',
+						success: function(data) {
+							console.log(data);
+
+							var obj = data.data;
+							//模拟数据插入
+							setTimeout(function() {
+								var count = obj.length;
+								if(count != 0) {
+									var html = '';
+									for(var j = 0; j < count; j++) {
+										html += '<li class="img_item js_imageitem" data-id="' + obj[j].id + '" data-url="" >';
+										html += '<label class="frm_checkbox_label img_item_bd">';
+										html += '<div class="pic_box">';
+										html += '<img class="pic js_pic"  src="' + obj[j].headImg + '" style="height: 117px;width:117px">';
+										html += '</div>';
+										html += '<span class="lbl_content"> ' + obj[j].title + '</span>';
+										html += '<div class="selected_mask">';
+										html += '<div class="selected_mask_inner"></div>';
+										html += '<div class="selected_mask_icon"></div>';
+										html += ' </div>';
+										html += '</label>';
+										html += '	</li>';
+									}
+									$('.img_list').append(html)
+								}
+							}, 30)
+
+						}
+					});
+				})
+			})
+			//显示图片方法
+		function showImg(theid){
+			$.ajax({
+		    	type:"get",
+		    	url:ctxAppSec+"/api/WeixinImg/showInfo/"+theid+"?Authorization="+acekeystoken,
+		    	dataType:"json",
+		    	success:function(data){
+		    		var data1=data.weixinImg;
+		    		var imgSrc=data1.headImg;
+		    		$(parent.document).find('#msgSender_media_2_2').find('.preview_img').attr('src',imgSrc)
+		    		$(parent.document).find('#msgSender_media_2_2').show()
+		    		$(parent.document).find('.js_imgArea').children('.tab_cont_cover').hide()
+		    	}
+		    	
+		    });
+		}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+
+<mapper namespace="com.lj.cloud.secrity.dal.WeixinReportArticleMapper">
+    <resultMap id="weixinReportArticleResult" type="com.weixindev.micro.serv.common.bean.report.WeixinReportArticle">
+   	  	<result property="id" column="id" jdbcType="INTEGER"   />
+   	  	<result property="msgid" column="msgid" jdbcType="VARCHAR"   />
+   	  	<result property="title" column="title" jdbcType="VARCHAR"   />
+   	  	<result property="statDate" column="stat_date" jdbcType="TIMESTAMP"   />
+   	  	<result property="targetUser" column="target_user" jdbcType="INTEGER"   />
+   	  	<result property="intPageReadUser" column="int_page_read_user" jdbcType="INTEGER"   />
+   	  	<result property="intPageReadCount" column="int_page_read_count" jdbcType="INTEGER"   />
+   	  	<result property="oriPageReadUser" column="ori_page_read_user" jdbcType="INTEGER"   />
+   	  	<result property="oriPageReadCount" column="ori_page_read_count" jdbcType="INTEGER"   />
+   	  	<result property="shareUser" column="share_user" jdbcType="INTEGER"   />
+   	  	<result property="shareCount" column="share_count" jdbcType="INTEGER"   />
+   	  	<result property="addToFavUser" column="add_to_fav_user" jdbcType="INTEGER"   />
+   	  	<result property="addToFavCount" column="add_to_fav_count" jdbcType="INTEGER"   />
+   	  	<result property="intPageFromSessionReadUser" column="int_page_from_session_read_user" jdbcType="INTEGER"   />
+   	  	<result property="intPageFromSessionReadCount" column="int_page_from_session_read_count" jdbcType="INTEGER"   />
+   	  	<result property="intPageFromHistMsgReadUser" column="int_page_from_hist_msg_read_user" jdbcType="INTEGER"   />
+   	  	<result property="intPageFromHistMsgReadCount" column="int_page_from_hist_msg_read_count" jdbcType="INTEGER"   />
+   	  	<result property="intPageFromFeedReadUser" column="int_page_from_feed_read_user" jdbcType="INTEGER"   />
+   	  	<result property="intPageFromFeedReadCount" column="int_page_from_feed_read_count" jdbcType="INTEGER"   />
+   	  	<result property="intPageFromFriendsReadUser" column="int_page_from_friends_read_user" jdbcType="INTEGER"   />
+   	  	<result property="intPageFromFriendsReadCount" column="int_page_from_friends_read_count" jdbcType="INTEGER"   />
+   	  	<result property="intPageFromOtherReadUser" column="int_page_from_other_read_user" jdbcType="INTEGER"   />
+   	  	<result property="intPageFromOtherReadCount" column="int_page_from_other_read_count" jdbcType="INTEGER"   />
+   	  	<result property="feedShareFromSessionUser" column="feed_share_from_session_user" jdbcType="INTEGER"   />
+   	  	<result property="feedShareFromSessionCnt" column="feed_share_from_session_cnt" jdbcType="INTEGER"   />
+   	  	<result property="feedShareFromFeedUser" column="feed_share_from_feed_user" jdbcType="INTEGER"   />
+   	  	<result property="feedShareFromFeedCnt" column="feed_share_from_feed_cnt" jdbcType="INTEGER"   />
+   	  	<result property="feedShareFromOtherUser" column="feed_share_from_other_user" jdbcType="INTEGER"   />
+   	  	<result property="eedShareFromOtherCnt" column="eed_share_from_other_cnt" jdbcType="INTEGER"   />
+   	  	<result property="weixinUserId" column="weixin_user_id" jdbcType="INTEGER"   />
+   	  	<result property="createBy" column="create_by" jdbcType="INTEGER"   />
+   	  	<result property="createByUname" column="create_By_UName" jdbcType="VARCHAR"   />
+   	  	<result property="createDate" column="create_date" jdbcType="TIMESTAMP"   />
+   	  	<result property="updateBy" column="update_by" jdbcType="INTEGER"   />
+   	  	<result property="updateByUname" column="update_By_Uname" jdbcType="VARCHAR"   />
+   	  	<result property="updateDate" column="update_date" jdbcType="TIMESTAMP"   />
+    </resultMap>
+
+	<sql id="Base_Column_List">
+	    <![CDATA[
+	   
+        	id ,
+        	msgid ,
+        	title ,
+        	stat_date ,
+        	target_user ,
+        	int_page_read_user ,
+        	int_page_read_count ,
+        	ori_page_read_user ,
+        	ori_page_read_count ,
+        	share_user ,
+        	share_count ,
+        	add_to_fav_user ,
+        	add_to_fav_count ,
+        	int_page_from_session_read_user ,
+        	int_page_from_session_read_count ,
+        	int_page_from_hist_msg_read_user ,
+        	int_page_from_hist_msg_read_count ,
+        	int_page_from_feed_read_user ,
+        	int_page_from_feed_read_count ,
+        	int_page_from_friends_read_user ,
+        	int_page_from_friends_read_count ,
+        	int_page_from_other_read_user ,
+        	int_page_from_other_read_count ,
+        	feed_share_from_session_user ,
+        	feed_share_from_session_cnt ,
+        	feed_share_from_feed_user ,
+        	feed_share_from_feed_cnt ,
+        	feed_share_from_other_user ,
+        	eed_share_from_other_cnt ,
+        	weixin_user_id ,
+        	create_by ,
+        	create_By_UName ,
+        	create_date ,
+        	update_by ,
+        	update_By_Uname ,
+        	update_date 
+	    ]]>
+	</sql>
+
+   <select id="selectByPrimaryKey" resultMap="weixinReportArticleResult">
+	 select 
+	    <include refid="Base_Column_List"/>
+	    
+	        from weixin_report_article 
+	        where 
+		       id = #{id,jdbcType=INTEGER}
+			
+</select>
+
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+           delete from weixin_report_article where
+        id = #{id,jdbcType=INTEGER}
+	
+       </delete>
+
+ <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+        INSERT INTO weixin_report_article (
+         id, msgid, title, stat_date, target_user, int_page_read_user, int_page_read_count, ori_page_read_user, ori_page_read_count, share_user, share_count, add_to_fav_user, add_to_fav_count, int_page_from_session_read_user, int_page_from_session_read_count, int_page_from_hist_msg_read_user, int_page_from_hist_msg_read_count, int_page_from_feed_read_user, int_page_from_feed_read_count, int_page_from_friends_read_user, int_page_from_friends_read_count, int_page_from_other_read_user, int_page_from_other_read_count, feed_share_from_session_user, feed_share_from_session_cnt, feed_share_from_feed_user, feed_share_from_feed_cnt, feed_share_from_other_user, eed_share_from_other_cnt, weixin_user_id, create_by, create_By_UName, create_date, update_by, update_By_Uname, update_date
+        ) VALUES (
+         #{id,jdbcType=INTEGER}, #{msgid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{statDate,jdbcType=TIMESTAMP}, #{targetUser,jdbcType=INTEGER}, #{intPageReadUser,jdbcType=INTEGER}, #{intPageReadCount,jdbcType=INTEGER}, #{oriPageReadUser,jdbcType=INTEGER}, #{oriPageReadCount,jdbcType=INTEGER}, #{shareUser,jdbcType=INTEGER}, #{shareCount,jdbcType=INTEGER}, #{addToFavUser,jdbcType=INTEGER}, #{addToFavCount,jdbcType=INTEGER}, #{intPageFromSessionReadUser,jdbcType=INTEGER}, #{intPageFromSessionReadCount,jdbcType=INTEGER}, #{intPageFromHistMsgReadUser,jdbcType=INTEGER}, #{intPageFromHistMsgReadCount,jdbcType=INTEGER}, #{intPageFromFeedReadUser,jdbcType=INTEGER}, #{intPageFromFeedReadCount,jdbcType=INTEGER}, #{intPageFromFriendsReadUser,jdbcType=INTEGER}, #{intPageFromFriendsReadCount,jdbcType=INTEGER}, #{intPageFromOtherReadUser,jdbcType=INTEGER}, #{intPageFromOtherReadCount,jdbcType=INTEGER}, #{feedShareFromSessionUser,jdbcType=INTEGER}, #{feedShareFromSessionCnt,jdbcType=INTEGER}, #{feedShareFromFeedUser,jdbcType=INTEGER}, #{feedShareFromFeedCnt,jdbcType=INTEGER}, #{feedShareFromOtherUser,jdbcType=INTEGER}, #{eedShareFromOtherCnt,jdbcType=INTEGER}, #{weixinUserId,jdbcType=INTEGER}, #{createBy,jdbcType=INTEGER}, #{createByUname,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateByUname,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}        
+        )
+   
+</insert>
+
+ <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinReportArticle">
+          INSERT INTO weixin_report_article 
+	         <trim prefix="(" suffix=")" suffixOverrides="," >
+	    	<if test="id != null" >
+        		id,
+     	 	</if>
+	    	<if test="msgid != null" >
+        		msgid,
+     	 	</if>
+	    	<if test="title != null" >
+        		title,
+     	 	</if>
+	    	<if test="statDate != null" >
+        		stat_date,
+     	 	</if>
+	    	<if test="targetUser != null" >
+        		target_user,
+     	 	</if>
+	    	<if test="intPageReadUser != null" >
+        		int_page_read_user,
+     	 	</if>
+	    	<if test="intPageReadCount != null" >
+        		int_page_read_count,
+     	 	</if>
+	    	<if test="oriPageReadUser != null" >
+        		ori_page_read_user,
+     	 	</if>
+	    	<if test="oriPageReadCount != null" >
+        		ori_page_read_count,
+     	 	</if>
+	    	<if test="shareUser != null" >
+        		share_user,
+     	 	</if>
+	    	<if test="shareCount != null" >
+        		share_count,
+     	 	</if>
+	    	<if test="addToFavUser != null" >
+        		add_to_fav_user,
+     	 	</if>
+	    	<if test="addToFavCount != null" >
+        		add_to_fav_count,
+     	 	</if>
+	    	<if test="intPageFromSessionReadUser != null" >
+        		int_page_from_session_read_user,
+     	 	</if>
+	    	<if test="intPageFromSessionReadCount != null" >
+        		int_page_from_session_read_count,
+     	 	</if>
+	    	<if test="intPageFromHistMsgReadUser != null" >
+        		int_page_from_hist_msg_read_user,
+     	 	</if>
+	    	<if test="intPageFromHistMsgReadCount != null" >
+        		int_page_from_hist_msg_read_count,
+     	 	</if>
+	    	<if test="intPageFromFeedReadUser != null" >
+        		int_page_from_feed_read_user,
+     	 	</if>
+	    	<if test="intPageFromFeedReadCount != null" >
+        		int_page_from_feed_read_count,
+     	 	</if>
+	    	<if test="intPageFromFriendsReadUser != null" >
+        		int_page_from_friends_read_user,
+     	 	</if>
+	    	<if test="intPageFromFriendsReadCount != null" >
+        		int_page_from_friends_read_count,
+     	 	</if>
+	    	<if test="intPageFromOtherReadUser != null" >
+        		int_page_from_other_read_user,
+     	 	</if>
+	    	<if test="intPageFromOtherReadCount != null" >
+        		int_page_from_other_read_count,
+     	 	</if>
+	    	<if test="feedShareFromSessionUser != null" >
+        		feed_share_from_session_user,
+     	 	</if>
+	    	<if test="feedShareFromSessionCnt != null" >
+        		feed_share_from_session_cnt,
+     	 	</if>
+	    	<if test="feedShareFromFeedUser != null" >
+        		feed_share_from_feed_user,
+     	 	</if>
+	    	<if test="feedShareFromFeedCnt != null" >
+        		feed_share_from_feed_cnt,
+     	 	</if>
+	    	<if test="feedShareFromOtherUser != null" >
+        		feed_share_from_other_user,
+     	 	</if>
+	    	<if test="eedShareFromOtherCnt != null" >
+        		eed_share_from_other_cnt,
+     	 	</if>
+	    	<if test="weixinUserId != null" >
+        		weixin_user_id,
+     	 	</if>
+	    	<if test="createBy != null" >
+        		create_by,
+     	 	</if>
+	    	<if test="createByUname != null" >
+        		create_By_UName,
+     	 	</if>
+	    	<if test="createDate != null" >
+        		create_date,
+     	 	</if>
+	    	<if test="updateBy != null" >
+        		update_by,
+     	 	</if>
+	    	<if test="updateByUname != null" >
+        		update_By_Uname,
+     	 	</if>
+	    	<if test="updateDate != null" >
+        		update_date,
+     	 	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+
+	    		<if test="id != null" >
+        		     #{id,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="msgid != null" >
+        		     #{msgid,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="title != null" >
+        		     #{title,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="statDate != null" >
+        		     #{statDate,jdbcType=TIMESTAMP},
+     	 		</if>
+	    		<if test="targetUser != null" >
+        		     #{targetUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageReadUser != null" >
+        		     #{intPageReadUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageReadCount != null" >
+        		     #{intPageReadCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="oriPageReadUser != null" >
+        		     #{oriPageReadUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="oriPageReadCount != null" >
+        		     #{oriPageReadCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="shareUser != null" >
+        		     #{shareUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="shareCount != null" >
+        		     #{shareCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="addToFavUser != null" >
+        		     #{addToFavUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="addToFavCount != null" >
+        		     #{addToFavCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageFromSessionReadUser != null" >
+        		     #{intPageFromSessionReadUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageFromSessionReadCount != null" >
+        		     #{intPageFromSessionReadCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageFromHistMsgReadUser != null" >
+        		     #{intPageFromHistMsgReadUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageFromHistMsgReadCount != null" >
+        		     #{intPageFromHistMsgReadCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageFromFeedReadUser != null" >
+        		     #{intPageFromFeedReadUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageFromFeedReadCount != null" >
+        		     #{intPageFromFeedReadCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageFromFriendsReadUser != null" >
+        		     #{intPageFromFriendsReadUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageFromFriendsReadCount != null" >
+        		     #{intPageFromFriendsReadCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageFromOtherReadUser != null" >
+        		     #{intPageFromOtherReadUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="intPageFromOtherReadCount != null" >
+        		     #{intPageFromOtherReadCount,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="feedShareFromSessionUser != null" >
+        		     #{feedShareFromSessionUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="feedShareFromSessionCnt != null" >
+        		     #{feedShareFromSessionCnt,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="feedShareFromFeedUser != null" >
+        		     #{feedShareFromFeedUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="feedShareFromFeedCnt != null" >
+        		     #{feedShareFromFeedCnt,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="feedShareFromOtherUser != null" >
+        		     #{feedShareFromOtherUser,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="eedShareFromOtherCnt != null" >
+        		     #{eedShareFromOtherCnt,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="weixinUserId != null" >
+        		     #{weixinUserId,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="createBy != null" >
+        		     #{createBy,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="createByUname != null" >
+        		     #{createByUname,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="createDate != null" >
+        		     #{createDate,jdbcType=TIMESTAMP},
+     	 		</if>
+	    		<if test="updateBy != null" >
+        		     #{updateBy,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="updateByUname != null" >
+        		     #{updateByUname,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="updateDate != null" >
+        		     #{updateDate,jdbcType=TIMESTAMP},
+     	 		</if>
+		</trim>
+ </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinReportArticle">
+    
+        UPDATE weixin_report_article 
+     
+      <set >
+		<if test="msgid != null and  msgid != ''" >
+			msgid = #{msgid,jdbcType=VARCHAR} ,
+		</if>
+		<if test="title != null and  title != ''" >
+			title = #{title,jdbcType=VARCHAR} ,
+		</if>
+		<if test="statDate != null " >
+			stat_date = #{statDate,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="targetUser != null and  targetUser != ''" >
+			target_user = #{targetUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageReadUser != null and  intPageReadUser != ''" >
+			int_page_read_user = #{intPageReadUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageReadCount != null and  intPageReadCount != ''" >
+			int_page_read_count = #{intPageReadCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="oriPageReadUser != null and  oriPageReadUser != ''" >
+			ori_page_read_user = #{oriPageReadUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="oriPageReadCount != null and  oriPageReadCount != ''" >
+			ori_page_read_count = #{oriPageReadCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="shareUser != null and  shareUser != ''" >
+			share_user = #{shareUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="shareCount != null and  shareCount != ''" >
+			share_count = #{shareCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="addToFavUser != null and  addToFavUser != ''" >
+			add_to_fav_user = #{addToFavUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="addToFavCount != null and  addToFavCount != ''" >
+			add_to_fav_count = #{addToFavCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageFromSessionReadUser != null and  intPageFromSessionReadUser != ''" >
+			int_page_from_session_read_user = #{intPageFromSessionReadUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageFromSessionReadCount != null and  intPageFromSessionReadCount != ''" >
+			int_page_from_session_read_count = #{intPageFromSessionReadCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageFromHistMsgReadUser != null and  intPageFromHistMsgReadUser != ''" >
+			int_page_from_hist_msg_read_user = #{intPageFromHistMsgReadUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageFromHistMsgReadCount != null and  intPageFromHistMsgReadCount != ''" >
+			int_page_from_hist_msg_read_count = #{intPageFromHistMsgReadCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageFromFeedReadUser != null and  intPageFromFeedReadUser != ''" >
+			int_page_from_feed_read_user = #{intPageFromFeedReadUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageFromFeedReadCount != null and  intPageFromFeedReadCount != ''" >
+			int_page_from_feed_read_count = #{intPageFromFeedReadCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageFromFriendsReadUser != null and  intPageFromFriendsReadUser != ''" >
+			int_page_from_friends_read_user = #{intPageFromFriendsReadUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageFromFriendsReadCount != null and  intPageFromFriendsReadCount != ''" >
+			int_page_from_friends_read_count = #{intPageFromFriendsReadCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageFromOtherReadUser != null and  intPageFromOtherReadUser != ''" >
+			int_page_from_other_read_user = #{intPageFromOtherReadUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="intPageFromOtherReadCount != null and  intPageFromOtherReadCount != ''" >
+			int_page_from_other_read_count = #{intPageFromOtherReadCount,jdbcType=INTEGER} ,
+		</if>
+		<if test="feedShareFromSessionUser != null and  feedShareFromSessionUser != ''" >
+			feed_share_from_session_user = #{feedShareFromSessionUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="feedShareFromSessionCnt != null and  feedShareFromSessionCnt != ''" >
+			feed_share_from_session_cnt = #{feedShareFromSessionCnt,jdbcType=INTEGER} ,
+		</if>
+		<if test="feedShareFromFeedUser != null and  feedShareFromFeedUser != ''" >
+			feed_share_from_feed_user = #{feedShareFromFeedUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="feedShareFromFeedCnt != null and  feedShareFromFeedCnt != ''" >
+			feed_share_from_feed_cnt = #{feedShareFromFeedCnt,jdbcType=INTEGER} ,
+		</if>
+		<if test="feedShareFromOtherUser != null and  feedShareFromOtherUser != ''" >
+			feed_share_from_other_user = #{feedShareFromOtherUser,jdbcType=INTEGER} ,
+		</if>
+		<if test="eedShareFromOtherCnt != null and  eedShareFromOtherCnt != ''" >
+			eed_share_from_other_cnt = #{eedShareFromOtherCnt,jdbcType=INTEGER} ,
+		</if>
+		<if test="weixinUserId != null and  weixinUserId != ''" >
+			weixin_user_id = #{weixinUserId,jdbcType=INTEGER} ,
+		</if>
+		<if test="createBy != null and  createBy != ''" >
+			create_by = #{createBy,jdbcType=INTEGER} ,
+		</if>
+		<if test="createByUname != null and  createByUname != ''" >
+			create_By_UName = #{createByUname,jdbcType=VARCHAR} ,
+		</if>
+		<if test="createDate != null and  createDate != ''" >
+			create_date = #{createDate,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="updateBy != null and  updateBy != ''" >
+			update_by = #{updateBy,jdbcType=INTEGER} ,
+		</if>
+		<if test="updateByUname != null and  updateByUname != ''" >
+			update_By_Uname = #{updateByUname,jdbcType=VARCHAR} ,
+		</if>
+		<if test="updateDate != null" >
+			update_date = #{updateDate,jdbcType=TIMESTAMP} ,
+		</if>
+
+	 </set>
+        WHERE 
+	        id = #{id,jdbcType=INTEGER}
+		
+    </update>
+   
+    <update id="updateByPrimaryKey" >
+
+        UPDATE weixin_report_article SET
+	        msgid = #{msgid} , title = #{title} , stat_date = #{statDate} , target_user = #{targetUser} , int_page_read_user = #{intPageReadUser} , int_page_read_count = #{intPageReadCount} , ori_page_read_user = #{oriPageReadUser} , ori_page_read_count = #{oriPageReadCount} , share_user = #{shareUser} , share_count = #{shareCount} , add_to_fav_user = #{addToFavUser} , add_to_fav_count = #{addToFavCount} , int_page_from_session_read_user = #{intPageFromSessionReadUser} , int_page_from_session_read_count = #{intPageFromSessionReadCount} , int_page_from_hist_msg_read_user = #{intPageFromHistMsgReadUser} , int_page_from_hist_msg_read_count = #{intPageFromHistMsgReadCount} , int_page_from_feed_read_user = #{intPageFromFeedReadUser} , int_page_from_feed_read_count = #{intPageFromFeedReadCount} , int_page_from_friends_read_user = #{intPageFromFriendsReadUser} , int_page_from_friends_read_count = #{intPageFromFriendsReadCount} , int_page_from_other_read_user = #{intPageFromOtherReadUser} , int_page_from_other_read_count = #{intPageFromOtherReadCount} , feed_share_from_session_user = #{feedShareFromSessionUser} , feed_share_from_session_cnt = #{feedShareFromSessionCnt} , feed_share_from_feed_user = #{feedShareFromFeedUser} , feed_share_from_feed_cnt = #{feedShareFromFeedCnt} , feed_share_from_other_user = #{feedShareFromOtherUser} , eed_share_from_other_cnt = #{eedShareFromOtherCnt} , weixin_user_id = #{weixinUserId} , create_by = #{createBy} , create_By_UName = #{createByUname} , create_date = #{createDate} , update_by = #{updateBy} , update_By_Uname = #{updateByUname} , update_date = #{updateDate}  
+        WHERE 
+		id = #{id,jdbcType=INTEGER}
+		 
+  
+</update>
+    
+    <select id="select" resultMap="weixinReportArticleResult">
+	 select 
+    	<include refid="Base_Column_List"/>
+	   
+	        from weixin_report_article WHERE 1=1  
+	  
+	      	     and  id = #{id,jdbcType=INTEGER}
+	      	     and  msgid = #{msgid,jdbcType=VARCHAR}
+	      	     and  title = #{title,jdbcType=VARCHAR}
+	      	     and  stat_date = #{statDate,jdbcType=TIMESTAMP}
+	      	     and  target_user = #{targetUser,jdbcType=INTEGER}
+	      	     and  int_page_read_user = #{intPageReadUser,jdbcType=INTEGER}
+	      	     and  int_page_read_count = #{intPageReadCount,jdbcType=INTEGER}
+	      	     and  ori_page_read_user = #{oriPageReadUser,jdbcType=INTEGER}
+	      	     and  ori_page_read_count = #{oriPageReadCount,jdbcType=INTEGER}
+	      	     and  share_user = #{shareUser,jdbcType=INTEGER}
+	      	     and  share_count = #{shareCount,jdbcType=INTEGER}
+	      	     and  add_to_fav_user = #{addToFavUser,jdbcType=INTEGER}
+	      	     and  add_to_fav_count = #{addToFavCount,jdbcType=INTEGER}
+	      	     and  int_page_from_session_read_user = #{intPageFromSessionReadUser,jdbcType=INTEGER}
+	      	     and  int_page_from_session_read_count = #{intPageFromSessionReadCount,jdbcType=INTEGER}
+	      	     and  int_page_from_hist_msg_read_user = #{intPageFromHistMsgReadUser,jdbcType=INTEGER}
+	      	     and  int_page_from_hist_msg_read_count = #{intPageFromHistMsgReadCount,jdbcType=INTEGER}
+	      	     and  int_page_from_feed_read_user = #{intPageFromFeedReadUser,jdbcType=INTEGER}
+	      	     and  int_page_from_feed_read_count = #{intPageFromFeedReadCount,jdbcType=INTEGER}
+	      	     and  int_page_from_friends_read_user = #{intPageFromFriendsReadUser,jdbcType=INTEGER}
+	      	     and  int_page_from_friends_read_count = #{intPageFromFriendsReadCount,jdbcType=INTEGER}
+	      	     and  int_page_from_other_read_user = #{intPageFromOtherReadUser,jdbcType=INTEGER}
+	      	     and  int_page_from_other_read_count = #{intPageFromOtherReadCount,jdbcType=INTEGER}
+	      	     and  feed_share_from_session_user = #{feedShareFromSessionUser,jdbcType=INTEGER}
+	      	     and  feed_share_from_session_cnt = #{feedShareFromSessionCnt,jdbcType=INTEGER}
+	      	     and  feed_share_from_feed_user = #{feedShareFromFeedUser,jdbcType=INTEGER}
+	      	     and  feed_share_from_feed_cnt = #{feedShareFromFeedCnt,jdbcType=INTEGER}
+	      	     and  feed_share_from_other_user = #{feedShareFromOtherUser,jdbcType=INTEGER}
+	      	     and  eed_share_from_other_cnt = #{eedShareFromOtherCnt,jdbcType=INTEGER}
+	      	     and  weixin_user_id = #{weixinUserId,jdbcType=INTEGER}
+	      	     and  create_by = #{createBy,jdbcType=INTEGER}
+	      	     and  create_By_UName = #{createByUname,jdbcType=VARCHAR}
+	      	     and  create_date = #{createDate,jdbcType=TIMESTAMP}
+	      	     and  update_by = #{updateBy,jdbcType=INTEGER}
+	      	     and  update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+	      	     and  update_date = #{updateDate,jdbcType=TIMESTAMP}
+		
+    </select>
+      
+<select id="selectByExample" resultMap="weixinReportArticleResult" >
+	 select 
+		<include refid="Base_Column_List"/>
+   	       	   from weixin_report_article WHERE 1=1  
+	  
+		<if test="id != null and  id != ''" >
+	      	   and   id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="msgid != null and  msgid != ''" >
+	      	   and   msgid = #{msgid,jdbcType=VARCHAR}
+		</if>
+		<if test="title != null and  title != ''" >
+	      	   and   title = #{title,jdbcType=VARCHAR}
+		</if>
+		<if test="statDate != null and  statDate != ''" >
+	      	   and   stat_date = #{statDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="targetUser != null and  targetUser != ''" >
+	      	   and   target_user = #{targetUser,jdbcType=INTEGER}
+		</if>
+		<if test="intPageReadUser != null and  intPageReadUser != ''" >
+	      	   and   int_page_read_user = #{intPageReadUser,jdbcType=INTEGER}
+		</if>
+		<if test="intPageReadCount != null and  intPageReadCount != ''" >
+	      	   and   int_page_read_count = #{intPageReadCount,jdbcType=INTEGER}
+		</if>
+		<if test="oriPageReadUser != null and  oriPageReadUser != ''" >
+	      	   and   ori_page_read_user = #{oriPageReadUser,jdbcType=INTEGER}
+		</if>
+		<if test="oriPageReadCount != null and  oriPageReadCount != ''" >
+	      	   and   ori_page_read_count = #{oriPageReadCount,jdbcType=INTEGER}
+		</if>
+		<if test="shareUser != null and  shareUser != ''" >
+	      	   and   share_user = #{shareUser,jdbcType=INTEGER}
+		</if>
+		<if test="shareCount != null and  shareCount != ''" >
+	      	   and   share_count = #{shareCount,jdbcType=INTEGER}
+		</if>
+		<if test="addToFavUser != null and  addToFavUser != ''" >
+	      	   and   add_to_fav_user = #{addToFavUser,jdbcType=INTEGER}
+		</if>
+		<if test="addToFavCount != null and  addToFavCount != ''" >
+	      	   and   add_to_fav_count = #{addToFavCount,jdbcType=INTEGER}
+		</if>
+		<if test="intPageFromSessionReadUser != null and  intPageFromSessionReadUser != ''" >
+	      	   and   int_page_from_session_read_user = #{intPageFromSessionReadUser,jdbcType=INTEGER}
+		</if>
+		<if test="intPageFromSessionReadCount != null and  intPageFromSessionReadCount != ''" >
+	      	   and   int_page_from_session_read_count = #{intPageFromSessionReadCount,jdbcType=INTEGER}
+		</if>
+		<if test="intPageFromHistMsgReadUser != null and  intPageFromHistMsgReadUser != ''" >
+	      	   and   int_page_from_hist_msg_read_user = #{intPageFromHistMsgReadUser,jdbcType=INTEGER}
+		</if>
+		<if test="intPageFromHistMsgReadCount != null and  intPageFromHistMsgReadCount != ''" >
+	      	   and   int_page_from_hist_msg_read_count = #{intPageFromHistMsgReadCount,jdbcType=INTEGER}
+		</if>
+		<if test="intPageFromFeedReadUser != null and  intPageFromFeedReadUser != ''" >
+	      	   and   int_page_from_feed_read_user = #{intPageFromFeedReadUser,jdbcType=INTEGER}
+		</if>
+		<if test="intPageFromFeedReadCount != null and  intPageFromFeedReadCount != ''" >
+	      	   and   int_page_from_feed_read_count = #{intPageFromFeedReadCount,jdbcType=INTEGER}
+		</if>
+		<if test="intPageFromFriendsReadUser != null and  intPageFromFriendsReadUser != ''" >
+	      	   and   int_page_from_friends_read_user = #{intPageFromFriendsReadUser,jdbcType=INTEGER}
+		</if>
+		<if test="intPageFromFriendsReadCount != null and  intPageFromFriendsReadCount != ''" >
+	      	   and   int_page_from_friends_read_count = #{intPageFromFriendsReadCount,jdbcType=INTEGER}
+		</if>
+		<if test="intPageFromOtherReadUser != null and  intPageFromOtherReadUser != ''" >
+	      	   and   int_page_from_other_read_user = #{intPageFromOtherReadUser,jdbcType=INTEGER}
+		</if>
+		<if test="intPageFromOtherReadCount != null and  intPageFromOtherReadCount != ''" >
+	      	   and   int_page_from_other_read_count = #{intPageFromOtherReadCount,jdbcType=INTEGER}
+		</if>
+		<if test="feedShareFromSessionUser != null and  feedShareFromSessionUser != ''" >
+	      	   and   feed_share_from_session_user = #{feedShareFromSessionUser,jdbcType=INTEGER}
+		</if>
+		<if test="feedShareFromSessionCnt != null and  feedShareFromSessionCnt != ''" >
+	      	   and   feed_share_from_session_cnt = #{feedShareFromSessionCnt,jdbcType=INTEGER}
+		</if>
+		<if test="feedShareFromFeedUser != null and  feedShareFromFeedUser != ''" >
+	      	   and   feed_share_from_feed_user = #{feedShareFromFeedUser,jdbcType=INTEGER}
+		</if>
+		<if test="feedShareFromFeedCnt != null and  feedShareFromFeedCnt != ''" >
+	      	   and   feed_share_from_feed_cnt = #{feedShareFromFeedCnt,jdbcType=INTEGER}
+		</if>
+		<if test="feedShareFromOtherUser != null and  feedShareFromOtherUser != ''" >
+	      	   and   feed_share_from_other_user = #{feedShareFromOtherUser,jdbcType=INTEGER}
+		</if>
+		<if test="eedShareFromOtherCnt != null and  eedShareFromOtherCnt != ''" >
+	      	   and   eed_share_from_other_cnt = #{eedShareFromOtherCnt,jdbcType=INTEGER}
+		</if>
+		<if test="weixinUserId != null and  weixinUserId != ''" >
+	      	   and   weixin_user_id = #{weixinUserId,jdbcType=INTEGER}
+		</if>
+		<if test="createBy != null and  createBy != ''" >
+	      	   and   create_by = #{createBy,jdbcType=INTEGER}
+		</if>
+		<if test="createByUname != null and  createByUname != ''" >
+	      	   and   create_By_UName = #{createByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="createDate != null and  createDate != ''" >
+	      	   and   create_date = #{createDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateBy != null and  updateBy != ''" >
+	      	   and   update_by = #{updateBy,jdbcType=INTEGER}
+		</if>
+		<if test="updateByUname != null and  updateByUname != ''" >
+	      	   and   update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="updateDate != null and  updateDate != ''" >
+	      	   and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+		</if>
+			
+  </select>
+
+<select id="selectByPageExample" resultType="java.util.HashMap" >
+	 select 
+             date_format(stat_date, '%Y-%m-%d' )  as stat_date,
+            sum(int_page_read_user) as int_page_read_user  ,
+            sum(int_page_read_count ) as int_page_read_count ,
+            sum(ori_page_read_user ) as ori_page_read_user ,
+           sum( ori_page_read_count ) as ori_page_read_count ,
+            sum(share_user ) as share_user,
+            sum(share_count ) as share_count ,
+           sum( add_to_fav_user ) as add_to_fav_user ,
+            sum(add_to_fav_count ) as add_to_fav_count ,
+            sum(int_page_from_session_read_user ) as int_page_from_session_read_user ,
+            sum(int_page_from_session_read_count) as int_page_from_session_read_count ,
+            sum(int_page_from_hist_msg_read_user ) as int_page_from_hist_msg_read_user ,
+            sum(int_page_from_hist_msg_read_count) as int_page_from_hist_msg_read_count ,
+           sum( int_page_from_feed_read_user ) as int_page_from_feed_read_user ,
+            sum(int_page_from_feed_read_count) as int_page_from_feed_read_count ,
+            sum(int_page_from_friends_read_user) as int_page_from_friends_read_user ,
+            sum(int_page_from_friends_read_count ) as int_page_from_friends_read_count,
+            sum(int_page_from_other_read_user) as int_page_from_other_read_user ,
+            sum(int_page_from_other_read_count) as int_page_from_other_read_count ,
+            sum(feed_share_from_session_user) as feed_share_from_session_user ,
+            sum(feed_share_from_session_cnt) as feed_share_from_session_cnt ,
+            sum(feed_share_from_feed_user) as feed_share_from_feed_user ,
+           sum( feed_share_from_feed_cnt) as feed_share_from_feed_cnt ,
+            sum(feed_share_from_other_user) as feed_share_from_other_user ,
+           sum( eed_share_from_other_cnt ) as eed_share_from_other_cnt
+            
+   	       	   from weixin_report_article a left join weixin_userinfo b
+               on a.weixin_user_id=b.id
+                WHERE 1=1  
+		
+         <if test="createDateBegin != null and createDateBegin != ''" >
+               <![CDATA[ and  stat_date >= str_to_date(#{createDateBegin,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEnd != null and createDateEnd != ''" >
+                <![CDATA[ and  stat_date <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+         <if test="msgid != null and  msgid != ''" >
+               and   msgid = #{msgid,jdbcType=VARCHAR}
+        </if>
+        <if test="ids != null and  ids != ''" >
+              and  b.weixin_groups_id in (${ids})
+        </if>
+         <if test="uids != null and  uids != ''" >
+              and  a.weixin_user_id in (${uids})
+        </if>
+		
+	group by stat_date
+order by stat_date desc
+			
+  </select>
+  
+  <select id="selectByPageExample2" resultType="java.util.HashMap" >
+     select 
+            a.id ,
+              a.msgid ,
+              a.title ,
+             date_format(  a.stat_date, '%Y-%m-%d' )  as stat_date,
+              a.target_user ,
+              a.int_page_read_user ,
+              a.int_page_read_count ,
+              a.ori_page_read_user ,
+              a.ori_page_read_count ,
+              a.share_user ,
+              a.share_count ,
+              a.add_to_fav_user ,
+              a.add_to_fav_count ,
+              a.int_page_from_session_read_user ,
+              a.int_page_from_session_read_count ,
+              a.int_page_from_hist_msg_read_user ,
+              a.int_page_from_hist_msg_read_count ,
+              a.int_page_from_feed_read_user ,
+              a.int_page_from_feed_read_count ,
+              a.int_page_from_friends_read_user ,
+              a.int_page_from_friends_read_count ,
+              a.int_page_from_other_read_user ,
+              a.int_page_from_other_read_count ,
+              a.feed_share_from_session_user ,
+              a.feed_share_from_session_cnt ,
+              a.feed_share_from_feed_user ,
+             a. feed_share_from_feed_cnt ,
+             a. feed_share_from_other_user ,
+              a.eed_share_from_other_cnt ,
+              b.nick_name,
+              a.weixin_user_id,
+              b.authorizerAppid
+            
+               from weixin_report_article a left join weixin_userinfo b
+               on a.weixin_user_id=b.id
+                WHERE 1=1  
+      
+       <if test="createDateBeginA != null " >
+               <![CDATA[ and  stat_date >= str_to_date(#{createDateBeginA,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEndA != null " >
+                <![CDATA[ and  stat_date <= str_to_date(#{createDateEndA,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="weixin_groups_id != null and  weixin_groups_id != ''" >
+               and   b.weixin_groups_id = #{weixin_groups_id,jdbcType=INTEGER}
+        </if>
+        <if test="msgid != null and  msgid != ''" >
+               and   a.msgid = #{msgid,jdbcType=VARCHAR}
+        </if>
+        <if test="ids != null and  ids != ''" >
+              and  b.weixin_groups_id in (${ids})
+        </if>
+         <if test="uids != null and  uids != ''" >
+              and  a.weixin_user_id in (${uids})
+        </if>
+        
+        order by stat_date desc
+            
+  </select>
+  
+  <select id="selectByPageExample3" resultType="java.util.HashMap" >
+     select 
+              sum(a.int_page_read_user) as int_page_read_user ,
+             sum(a.int_page_read_count) as int_page_read_count  ,
+            sum(int_page_read_user) as int_page_read_user  ,
+            sum(int_page_read_count ) as int_page_read_count ,
+            sum(ori_page_read_user ) as ori_page_read_user ,
+           sum( ori_page_read_count ) as ori_page_read_count ,
+            sum(share_user ) as share_user,
+            sum(share_count ) as share_count ,
+           sum( add_to_fav_user ) as add_to_fav_user ,
+            sum(add_to_fav_count ) as add_to_fav_count ,
+            sum(int_page_from_session_read_user ) as int_page_from_session_read_user ,
+            sum(int_page_from_session_read_count) as int_page_from_session_read_count ,
+            sum(int_page_from_hist_msg_read_user ) as int_page_from_hist_msg_read_user ,
+            sum(int_page_from_hist_msg_read_count) as int_page_from_hist_msg_read_count ,
+           sum( int_page_from_feed_read_user ) as int_page_from_feed_read_user ,
+            sum(int_page_from_feed_read_count) as int_page_from_feed_read_count ,
+            sum(int_page_from_friends_read_user) as int_page_from_friends_read_user ,
+            sum(int_page_from_friends_read_count ) as int_page_from_friends_read_count,
+            sum(int_page_from_other_read_user) as int_page_from_other_read_user ,
+            sum(int_page_from_other_read_count) as int_page_from_other_read_count ,
+            sum(feed_share_from_session_user) as feed_share_from_session_user ,
+            sum(feed_share_from_session_cnt) as feed_share_from_session_cnt ,
+            sum(feed_share_from_feed_user) as feed_share_from_feed_user ,
+           sum( feed_share_from_feed_cnt) as feed_share_from_feed_cnt ,
+            sum(feed_share_from_other_user) as feed_share_from_other_user ,
+           sum( eed_share_from_other_cnt ) as eed_share_from_other_cnt
+            
+               from weixin_report_article a left join weixin_userinfo b
+               
+               on a.weixin_user_id = b.id
+                WHERE 1=1  
+      
+       <if test="createDateBeginA != null" >
+               <![CDATA[ and  stat_date >= str_to_date(#{createDateBeginA,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEndA != null " >
+                <![CDATA[ and  stat_date <= str_to_date(#{createDateEndA,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="msgid != null and  msgid != ''" >
+               and   msgid = #{msgid,jdbcType=VARCHAR}
+        </if>
+	     <if test="ids != null and  ids != ''" >
+              and  b.weixin_groups_id in (${ids})
+        </if>
+         <if test="uids != null and  uids != ''" >
+              and  a.weixin_user_id in (${uids})
+        </if>
+        
+        order by stat_date desc
+            
+  </select>
+  
+  <select id="selectByPageExample4" resultType="java.util.HashMap" >
+       select 
+            TITLE, sum(a.int_page_read_count) as int_page_read_count  
+               from weixin_report_article a
+                WHERE 1=1  
+			GROUP BY TITLE
+			ORDER BY  int_page_read_count DESC
+			LIMIT 20
+  </select>
+  
+   <select id="selectByPageExample5" resultType="java.lang.Integer" >
+       select  count(distinct(TITLE))  as titleCounts
+               from weixin_report_article a
+                WHERE 1=1  
+  </select>
+
+
+</mapper>

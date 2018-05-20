@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ZH-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>大地影院微信批量管理系统</title>
+    <link rel="stylesheet" href="plugins/layui/css/layui.css">
+    <link rel="stylesheet" href="src/css/login.css">
+</head>
+
+<body>
+<div class="kit-login">
+    <div class="kit-login-bg"></div>
+    <div class="kit-login-wapper">
+        <h2 class="kit-login-slogan">欢迎使用 <br>大地管家</h2>
+        <div class="kit-login-form">
+            <h4 class="kit-login-title">登录</h4>
+            <form class="layui-form">
+                <div class="kit-login-row">
+                    <div class="kit-login-col">
+                        <i class="layui-icon">&#xe612;</i>
+                        <span class="kit-login-input">
+                <input type="text" name="loginName" id="loginName" lay-verify="required" placeholder="用户名/邮箱/手机号"/>
+              </span>
+                    </div>
+                    <div class="kit-login-col"></div>
+                </div>
+                <div class="kit-login-row">
+                    <div class="kit-login-col">
+                        <i class="layui-icon">&#xe64c;</i>
+                        <span class="kit-login-input">
+                <input type="password" name="password" id="password" lay-verify="required" placeholder="密码"/>
+              </span>
+                    </div>
+                    <div class="kit-login-col"></div>
+                </div>
+                <div class="kit-login-row">
+                    <div class="kit-login-col">
+                        <input type="checkbox" name="rememberMe" title="记住帐号" lay-skin="primary">
+                    </div>
+                </div>
+                <div class="kit-login-row">
+                    <button class="layui-btn kit-login-btn" lay-submit="submit" lay-filter="login_hash">登录</button>
+                </div>
+                <div class="kit-login-row" style="margin-bottom:0;">
+                    <a href="javascript:;" style="color: rgb(153, 153, 153); text-decoration: none; font-size: 13px;"
+                       id="forgot">忘记密码</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="plugins/polyfill.min.js"></script>
+<script src="plugins/layui/layui.js"></script>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="js/js.js"></script>
+<script>
+    layui.use(['layer', 'form'], function () {
+        var form = layui.form,
+            $ = layui.jquery;
+
+        $('#forgot').on('click', function () {
+            layer.msg('请联系管理员.');
+        });
+        //监听提交
+        form.on('submit(login_hash)', function (data) {
+            // layer.msg(JSON.stringify(data.field));
+
+            $.ajaxSetup({
+                contentType: "application/json; charset=utf-8"
+            });
+            var token = "";
+            var data = {username: $("#loginName").val(), password: $("#password").val()};
+            $.ajax({
+                url:ctxAppSec +  '/login',
+                method: 'POST',
+                data:JSON.stringify(data)
+            }).always(function(data, status, xhr) {
+                if(data.respCode == "1"){
+                    token = data.token;
+                    loginNo=data.loginNo;
+                    //console.log(token);
+                    $.cookie('bearcktkaeskey', token, { expires: 1, path: '/' });
+                    location.href = ctxApp + '/index.html?loginNo='+loginNo;
+                }else{
+                    //console.log(JSON.stringify(data, null, 4));
+                    alert("账号或密码输入不正确");
+                }
+            });
+
+            /*$.ajax({
+                url: ctxAppSec + '/api/SecAdminUser/doLogin',
+                data: {
+                    'loginiNo': $("#loginName").val(),
+                    'pwd': $("#password").val(),
+                    'imgCode': "1234"
+                },
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    if (data.respCode == '1') {
+                        location.href = ctxApp + '/index.html';
+                    } else {
+                        layer.msg(data.respMsg);
+                    }
+                },
+                error: function (data) {
+                    try {
+                        layer.msg("请求异常");
+                        return false;
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            });*/
+
+
+            /*  setTimeout(function(){
+                 location.href='/';
+             },1000); */
+
+            return false;
+        });
+    });
+</script>
+</body>
+
+</html>

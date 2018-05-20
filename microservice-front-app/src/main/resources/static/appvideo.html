@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="layui/css/layui.css" />
+		<link rel="stylesheet" href="src/css/base3d8d4c.css" />
+		<link rel="stylesheet" type="text/css" href="src/css/tooltip3a7b39.css" />
+		<link rel="stylesheet" type="text/css" href="src/css/index3c4bd4.css" />
+		<link rel="stylesheet" href="https://res.wx.qq.com/mpres/zh_CN/htmledition/comm_htmledition/style/base/lib3b07a1.css" />
+		<title></title>
+		<style type="text/css">
+			.media_dialog.richvideo_list {
+				overflow-y: auto;
+			}
+			
+			.richvideo_list>.richvideo_col.selected .play_mask {
+				display: block;
+			}
+			
+			.video_extra_info .icon_video_play {
+				background: url(src/images/weixin/base_z3b5429.png) 0 -5407px no-repeat;
+			}
+			
+		</style>
+	</head>
+
+	<div class="dialog">
+
+		<div class="dialog_bd" style="padding: 15px 45px 34px;">
+			<div class="dialog_media_container" style="height: 479px;">
+				<div class="sub_title_bar in_dialog">
+					<div class="search_bar dn">
+						<span class="frm_input_box search with_del append">
+                <a class="del_btn" href="javascript:"><i class="icon_search_del"></i>&nbsp;</a>
+                <a id="msgSearchBtn" href="javascript:" class="frm_input_append"><i class="icon16_common search_gray">搜索</i>&nbsp;</a>
+                <input id="msgSearchInput" type="text" placeholder="关键字" value="" class="frm_input">
+            </span>
+					</div>
+					<!--<div class="richvideo_create js_video_create">
+
+						<a class="btn btn_primary btn_add" target="_blank" href="/cgi-bin/appmsg?t=media/videomsg_edit&amp;action=video_edit&amp;type=15&amp;lang=zh_CN&amp;token=853432069">
+							<i class="icon14_common add_white"></i>新建视频 </a>
+					</div>-->
+				</div>
+				<div class="js_video_status js_video_content dn" style="display: block;">
+					<div class="richvideo_list media_dialog" id="js_videomsg_list">
+
+					</div>
+
+					<div class="js_video_status js_video_loading" style="display: none;">
+						<i class="icon_loading_small white">loading...</i>
+					</div>
+					<div class="js_video_status js_video_none dn">
+						<div class="no_media_wrp">
+							<p class="empty_tips js_empty_tips"></p>
+						</div>
+						<span class="vm_box"></span>
+					</div>
+
+					<div class="pagination_wrp pageNavigator js_pagebar" style="display: none;"></div>
+				</div>
+			</div>
+		</div>
+		<div class="dialog_ft">
+			<span style="" class="btn btn_primary btn_input js_btn_p"><button type="button" id="query" class="js_btn" data-index="0">确定</button></span>
+			<span style="" class=" btn btn_default btn_input js_btn_p"><button type="button" id="cancel" class="js_btn" data-index="1">取消</button></span>
+		</div>
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery.cookie.js"></script>
+		<script src="js/js.js"></script>
+		<script src="layer/layer.js"></script>
+		<script src="layui/layui.js"></script>
+		<script type="text/javascript" src="src/js/me/menu.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+
+				$(window).on('load', function() {
+					$('.js_video_content').on('click', '.richvideo_list>.richvideo_col', function() {
+						$(this).siblings().removeClass('selected')
+						$(this).addClass('selected')
+					})
+					$('#query').on('click', function() {
+						if($('.richvideo_list>.richvideo_col.selected').length == 0) {
+							layer.msg('请选择一个视频', {
+								time: 500, //20s后自动关闭
+							});
+							return false;
+						} else {
+							var the_id = $('.js_video_content').find('.richvideo_list>.richvideo_col.selected').attr('data-id');
+
+							var index2 = parent.layer.getFrameIndex(window.name)
+							parent.document.getElementById('vedioSelectedId').value = the_id;
+							//
+							parent.layer.close(index2);
+							$(parent.document).find('.menu-list').find('.current').attr('data-action','key|15|'+the_id)
+							/*$(parent.document).find('#msgSender_media_16_15').prev().hide();
+							$(parent.document).find('#msgSender_media_16_15').show();*/
+							showVideo(the_id)
+
+						}
+					})
+					$('#cancel').on('click', function() {
+						var index2 = parent.layer.getFrameIndex(window.name)
+						parent.layer.close(index2);
+					})
+
+					$.ajax({
+						type: 'get',
+						//url: 'datas/data_vedio.js',
+						'url':ctxAppSec + '/api/WeixinVideo',
+						'data': {
+							offset: 1,
+							num: 10,
+							"Authorization": acekeystoken
+						},
+						'dataType': 'json',
+						success: function(data) {
+							console.log(data);
+
+							var obj = data.data;
+							//模拟数据插入
+							setTimeout(function() {
+								var count = obj.length;
+								if(count != 0) {
+									var html = '';
+									for(var j = 0; j < count; j++) {
+										html += '<div class="richvideo_col"  data-id="' + obj[j].id + '">';
+										html += '	<div class="inner"><div >';
+										html += '	<div  class="richvideo with_msg_box Js_videomsg" >';
+										html += '	<div class="richvideo_content" style="z-index: 0">';
+										html += '	<h4 class="title">' + obj[j].title + '</h4>';
+										html += '	<div class="video_info">';
+										html += '	<em class="time">' + obj[j].createDate + '</em>';
+										html += '	<em class="res"></em></div>';
+										html += '	<div class="video_extra_info" data-seq="0">';
+										html += '	<img class="video_thumb" src="' + obj[j].headImg + '" alt="">';
+										html += '	<span class="video_length">' + obj[j].video_length + '</span>';
+										html += '	<div class="play_mask">';
+										html += '	<i class="icon_video_play"> </i>';
+										html += '	<span class="vm_box"></span>';
+										html += '	</div></div>';
+										html += '<div class="video_desc" title=' + obj[j].intro + '>' + obj[j].intro + '</div>';
+										html += '	</div>';
+										html += '	<div class="edit_mask appmsg_mask"><i class="icon_card_selected">已选择</i></div>';
+										html += '<div class="richvideo_msg_box"></div></div></div></div></div>';
+									}
+									$('#js_videomsg_list').append(html)
+								}
+							}, 30)
+
+						}
+					});
+				})
+			})
+			//显示视频方法
+		function showVideo(theid){
+			$.ajax({
+		    	type:"get",
+		    	url:ctxAppSec+"/api/WeixinVideo/showInfo/"+theid+"?Authorization="+acekeystoken,
+		    	dataType:"json",
+		    	success:function(data){
+		    		var data1=data.weixinVideo;
+		    		//var cover=data1.headImg;
+		    		var title=data1.title;
+		    		var time=data1.fileSize;
+		    		//$('#msgSender_media_16_15').find('.preview_video_hd').attr(src,'更新于'+time)
+		    		$(parent.document).find('#msgSender_media_16_15').find('.preview_video_length').html(time)
+		    		$(parent.document).find('#msgSender_media_16_15').find('.preview_video_title').html(title)
+		    		$(parent.document).find('#msgSender_media_16_15').show()
+		    		$(parent.document).find('.js_videoArea').children('.tab_cont_cover').hide()
+		    	}
+		    	
+		    });
+		}
+		</script>
+		</body>
+
+</html>

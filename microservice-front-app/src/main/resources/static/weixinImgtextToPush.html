@@ -1,0 +1,1174 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>图文编辑管理推送</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+    
+    <link rel="stylesheet" href="kindeditor/themes/default/default.css" />
+<script charset="utf-8" src="kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="kindeditor/lang/zh_CN.js"></script>
+
+<link href="jquery-ztree/3.5.12/css/zTreeStyle/zTreeStyle.min.css" rel="stylesheet" type="text/css"/>
+<script src="jquery-ztree/3.5.12/js/jquery.ztree.all-3.5.min.js" type="text/javascript"></script>
+
+<style type="text/css">
+        .ztree {
+        	overflow:auto;
+        	margin:0;
+        	_margin-top:10px;
+        	padding:10px 0 0 10px;
+        }
+        .layui-form-item{
+        	width: 100%;
+        	margin: 0 auto;
+        	padding-top: 75px;
+        }
+        .layui-input-block{
+        	margin: 0;
+        	padding: 0;
+        	width: 50%;
+        	float: left;
+        }
+        #weixinGroupsTree{
+        	float: left;
+        }
+		.layui-form-label {
+		    float: none;
+		    display: block;
+		    padding: 9px 15px;
+		    width: 80px;
+		    font-weight: 400;
+		    line-height: 20px;
+		    text-align: right;
+		}
+		.countBox{
+			margin-top: 150px;
+			width: 1200px;
+			margin: 0 auto;
+			background: #F5F5F5;
+		}
+		.ztree li {
+		    padding: 0;
+		    margin: 15px 0;
+		    list-style: none;
+		    line-height: 14px;
+		    text-align: left;
+		    white-space: nowrap;
+		    outline: 0;
+		}
+		.layui-input-block{
+			box-sizing: border-box;
+		}
+		.layui-form-item.topcount{
+			padding: 0 50px;
+			box-sizing: border-box;
+		}
+		#inputForm{
+			margin: 0 auto;
+			margin-top: 0px;
+			width: 100%;
+			padding-top: 30px;
+			background: #F5F5F5;
+			padding-bottom: 100px;
+		}
+		
+		        .body {
+            background: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        /*发送内容*/
+        .previewcountent {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            left: 0;
+            top: 0;
+            z-index: 9999;
+        }
+
+        .previewcountent .count {
+            padding: 20px;
+            width: 730px;
+            height: 600px;
+            background: #FFFFFF;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -240px;
+            margin-left: -365px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .previewcountent .head span {
+            font-size: 18px;
+        }
+
+        .previewcountent .head .closeBtn {
+            font-size: 45px;
+            float: right;
+            margin-top: -20px;
+            cursor: pointer;
+        }
+
+        .counttext {
+            width: 400px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+
+        .counttext input {
+            box-sizing: border-box;
+            width: 100%;
+            height: 35px;
+            padding: 0 10px;
+            margin: 10px 0;
+        }
+
+        .previewcountent .btnbox {
+            margin-top: 50px;
+            width: 100%;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .previewcountent .btnbox span {
+            width: 110px;
+            height: 35px;
+            text-align: center;
+            line-height: 35px;
+            margin: 0 15px;
+            background: none;
+            border: none;
+            border-radius: 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .previewcountent .btnbox .prsure {
+            background: #44b549;
+            color: #FFFFFF;
+        }
+
+        .previewcountent .btnbox .prcancel {
+            border: 1px solid #CCCCCC;
+            color: #333333;
+        }
+
+        /*底部*/
+        .centerboth {
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        .bottomBox {
+            width: 100%;
+            height: 95px;
+            background: #FFFFFF;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            border-top: 1px solid #CCCCCC;
+            z-index: 9999;
+        }
+
+        .bottomBox button {
+            background: none;
+            border: none;
+            width: 100px;
+            height: 35px;
+            margin: 0;
+            text-align: center;
+            line-height: 35px;
+            padding: 0;
+            margin: 0 15px;
+            cursor: pointer;
+        }
+
+        .bottomBox .save {
+            background: #009944;
+            border-radius: 5px;
+            overflow: hidden;
+            color: #FFFFFF;
+        }
+
+        .bottomBox .save_qf {
+            background: #CCCCCC;
+            color: #666666;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .wraper {
+            padding-bottom: 100px;
+        }
+
+        .wraper .mainBox {
+            width: 1200px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            position: relative;
+            padding: 0 250px;
+            box-sizing: border-box;
+        }
+
+        .titlecount {
+            width: 1200px;
+            margin: 0 auto;
+            height: 50px;
+            line-height: 50px;
+        }
+
+        .titlecount p {
+            color: #999999;
+        }
+
+        .titlecount .a {
+            color: #24EA2C !important;
+        }
+
+        .captical {
+            width: 100%;
+            height: 50px;
+            border: 1px solid #f5f5f5;
+            border-bottom: none;
+        }
+
+        .captical input {
+            width: 100%;
+            height: 100%;
+            padding-left: 15px;
+            box-sizing: border-box;
+            border: none;
+        }
+
+        #demo {
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .asideRight {
+            position: absolute;
+            width: 250px;
+            right: 0;
+            top: 0;
+            box-sizing: border-box;
+            padding: 15px;
+        }
+
+        /*右侧*/
+        .asideRight .title {
+            height: 35px;
+            line-height: 35px;
+            margin-bottom: 15px;
+        }
+
+        .sellist li {
+            padding-left: 15px;
+            line-height: 50px;
+            width: 100%;
+            height: 50px;
+            border: 1px solid #F5F5F5;
+            box-sizing: border-box;
+            border-bottom: none;
+            cursor: pointer;
+        }
+
+        .sellist li:nth-last-child(1) {
+            border-bottom: 1px solid #F5F5F5;
+        }
+
+        /*图片弹出层*/
+        .tppopbox, .sppopbox, .yinpinpop {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            display: none;
+        }
+
+        .tppopbox .countbox, .sppopbox .countbox, .yinpinpop .countbox {
+            width: 850px;
+            height: 540px;
+            background: #FFFFFF;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -270px;
+            margin-left: -425px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .tppopbox .clostbtn, .sppopbox .clostbtn, .yinpinpop .clostbtn {
+            float: right;
+            width: 30px;
+            height: 30px;
+            display: block;
+            cursor: pointer;
+            background: url(img/closebtn.png) no-repeat;
+            background-size: 22px 22px;
+            background-position: center center;
+            margin-top: 15px;
+            margin-right: 15px;
+        }
+
+        .tppopbox .countbox .tit, .sppopbox .countbox .tit, .yinpinpop .countbox .tit {
+            float: left;
+            font-size: 20px;
+            margin-left: 25px;
+            padding-top: 15px;
+        }
+
+        .tppopbox .upbtnbox, .sppopbox .upbtnbox, .yinpinpop .upbtnbox {
+            width: 100%;
+            height: 65px;
+            border-bottom: 1px solid #F5F5F5;
+            overflow: hidden;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .layui-btn {
+            background: none;
+            border: none;
+            width: 100px;
+            height: 35px;
+            margin: 0;
+            text-align: center;
+            line-height: 35px;
+            cursor: pointer;
+            border-radius: 5px;
+            overflow: hidden;
+            background: #009944;
+            color: #FFFFFF;
+        }
+
+        .upbtnbox button {
+            float: right;
+            margin-right: 50px;
+            margin-top: 15px;
+        }
+
+        .tppopbox {
+            overflow: hidden;
+        }
+
+        .imglistBox {
+            box-sizing: border-box;
+            padding: 25px;
+            overflow: hidden;
+            height: 360px;
+            overflow-y: auto;
+        }
+
+        .imglistBox li {
+            float: left;
+            width: 120px;
+            height: 155px;
+            border: 1px solid #F5F5F5;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .imglistBox li i {
+            display: block;
+            width: 120px;
+            height: 120px;
+        }
+
+        .imglistBox li i img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .imglistBox li .imgname {
+            line-height: 25px;
+            padding-left: 10px;
+        }
+
+        .imglistBox li:nth-child(6n) {
+            margin-right: 0;
+        }
+
+        .tppopbox .countbox .clostbox {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 25px;
+        }
+
+        .tppopbox .countbox .tit {
+            float: left;
+            font-size: 20px;
+            padding-top: 15px;
+        }
+
+        .twbtnBox button {
+            background: none;
+            border: none;
+            width: 100px;
+            height: 35px;
+            margin: 0;
+            text-align: center;
+            line-height: 35px;
+            padding: 0;
+            margin: 0 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .twbtnBox .surebtn {
+            background: #009944;
+            color: #FFFFFF;
+        }
+
+        .twbtnBox .cancelbtn {
+            background: #CCCCCC;
+            color: #666666;
+        }
+
+        .imglistBox li .pimg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            left: 0;
+            top: 0;
+            display: none;
+            padding-top: 50px;
+            box-sizing: border-box;
+            z-index: 90;
+        }
+
+        .imglistBox li .pimg img {
+            display: block;
+            margin-top: 150px;
+            margin: 0 auto;
+        }
+
+        .seltext {
+            float: left;
+            overflow: hidden;
+            font-size: 16px;
+            margin-left: 25px;
+            margin-top: 25px;
+        }
+
+        .seltext span.cur {
+            color: #009688;
+            border-bottom: 1px solid #009688;
+        }
+
+        .tableBox .count {
+            box-sizing: border-box;
+            padding: 25px;
+            overflow-y: auto;
+            height: 340px;
+            display: none;
+
+        }
+
+        .tableBox .count:nth-child(1) {
+            display: block;
+        }
+
+        .tableBox .count input {
+            width: 400px;
+            height: 30px;
+            border: 1px solid #F5F5F5;
+            margin-left: 50px;
+            padding: 0 10px;
+        }
+
+        .adyuyinbtn {
+            width: 100px;
+            height: 35px;
+            background: #009688;
+            border-radius: 10px;
+            overflow: hidden;
+            color: #FFFFFF;
+            text-align: center;
+            line-height: 35px;
+            float: right;
+        }
+
+        .addyuyin {
+            height: 30px;
+            border-bottom: 1px solid #F5F5F5;
+            border-left: none;
+            border-right: none;
+        }
+
+        .yinpinpop .tableBox .count {
+
+        }
+
+        .sideli * {
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .bootm * {
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .sehnmbtn {
+            display: inline-block;
+            padding: 5px 10px;
+            border: 1px solid #09BB07;
+            color: #09BB07;
+            border-radius: 5px;
+        }
+
+        .fabnukk {
+            background: #FCFCFC;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .fmk {
+            margin-top: 15px;
+        }
+
+        .fenchoose {
+            overflow: hidden;
+        }
+
+        .fenchoose li {
+            float: left;
+
+            border: 1px solid #E7E7EB;
+            margin-right: 15px;
+
+        }
+
+        .fenchoose li a {
+            display: block;
+            height: 100%;
+            background: #ffffff;
+            padding: 5px 10px;
+            color: #333333;
+        }
+
+        .zhaiyao textarea {
+            width: 550px;
+            height: 100px;
+        }
+
+        .zishulk {
+            width: 550px;
+            text-align: right;
+            color: #8D8D8D;
+        }
+
+        .yuanwen {
+            padding-top: 15px;
+        }
+
+        .yuanwen p {
+            margin-bottom: 15px;
+        }
+
+        .fmk h2 {
+            margin: 15px 0;
+        }
+
+        .zhaiyao h2 {
+            margin: 15px 0;
+        }
+
+        /*左侧*/
+        .sideli {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 250px;
+            box-sizing: border-box;
+            padding: 15px;
+        }
+
+        .sideli h2 {
+            height: 35px;
+            line-height: 35px;
+            margin-bottom: 15px;
+        }
+
+        .tuwenli li {
+            width: 100%;
+            border: 1px solid #F5F5F5;
+            margin-bottom: 10px;
+            position: relative;
+            background: #ffffff;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .tuwenli li.cur {
+            border: 2px solid #009944;
+        }
+
+        .tuwenli li:nth-child(1) .up {
+            display: none;
+        }
+
+        .tuwenli li:nth-last-child(2) .down {
+            display: none;
+        }
+
+        .tuwenli .addleftbtn {
+            position: relative;
+        }
+
+        .tuwenli .addleftbtn img {
+            display: block;
+            width: 100%;
+            height: 130px;
+        }
+
+        .ppsel {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.5);
+            width: 130px;
+            height: 120px;
+            left: 50%;
+            margin-left: -65px;
+            top: 100px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .ppsel ul li {
+            width: 130px;
+            height: 30px;
+            border: none;
+            text-align: center;
+            line-height: 30px;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            color: #FFFFFF;
+            cursor: pointer;
+        }
+
+        .tuwenli li:first-child .fuceng {
+            display: none !important;
+        }
+
+        .tuwenli li p {
+            position: absolute;
+            left: 0;
+            bottom: 35px;
+            z-index: 90;
+            width: 100%;
+            padding: 0 10px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+        }
+
+        .tuwenli li .fuceng {
+            position: absolute;
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            left: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 0 10px;
+            box-sizing: border-box;
+            z-index: 90;
+        }
+
+        .tuwenli li .fuceng a {
+            color: #FFFFFF;
+
+        }
+
+        .tuwenli li .fuceng a:last-child {
+            float: right;
+        }
+
+        .tuwenli li img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .tuwenli li .down {
+            margin-left: 10px;
+        }
+
+        .tuwenli li:first-child .down {
+            margin-left: 0;
+        }
+
+        #fmimgbox {
+            width: 145px;
+            height: 165px;
+        }
+
+        #fmimgbox img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .fuceng {
+            display: none;
+        }
+
+        .tuwenli li .img {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .tuwenli li .img img {
+            width: 100%;
+        }
+
+        .pli.two {
+            height: 99px;
+        }
+
+        .pli.two .plbbox {
+            height: 80px;
+        }
+
+        .tuwenli li .img {
+            position: relative;
+        }
+
+        .plbbox {
+            height: 130px;
+        }
+
+        .plbbox .zhao {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            left: 0;
+            top: 0;
+        }
+
+        .plbbox.two {
+            height: 80px;
+        }
+
+        .pli .plbbox.two .img img {
+            width: 80px;
+            height: 100%;
+            float: right;
+        }
+
+        .ctit {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: box;
+            display: -webkit-box;
+            line-clamp: 1;
+            box-orient: vertical;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            word-break: break-all;
+        }
+
+        .tuwenli .addleftbtn {
+            height: 99px !important;
+        }
+
+        .tuwenli .addleftbtn img {
+            display: block;
+            width: 100%;
+            height: 80px;
+        }
+
+        #yulan {
+            border: 1px solid #999;
+            color: #999999;
+        }
+    </style>
+    
+</head>
+    <body>
+    <form id="inputForm" class="layui-form" enctype="multipart/form-data" method="post"  action="">
+	<div class="countBox">
+	     <div class="layui-form-item topcount">
+	         
+	        <div class="layui-input-block table" > 
+	        	<label class="layui-form-label" style="width: 100%;text-align: left">公众号分组<i class="icon-refresh pull-right" onclick="refreshTree();"></i></label>
+	            <ul id="weixinGroupsTree" class="ztree"></ul> 
+	            <input name="selectIds" id="selectIds"  class="layui-input" type="hidden" > 
+	        </div>
+	        <div class="layui-input-block ">
+	        	<label class="layui-form-label" style="width: 100%;text-align: left">公众号列表</label>
+                    <table id="datagrid" class="layui-table" lay-filter="Grid" ></table>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block" style="text-align: center;width: 100%;">
+                        <span class="layui-btn" lay-button="" lay-filter="btnSend" id ="btnSend">发送</span>
+<!--                         <span class="layui-btn" lay-button="" lay-filter="btnSync" id ="btnSync">同步</span> -->
+                        <button class="layui-btn layui-btn-primary" id="yulan" type="button">预览</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+	        </div>
+	     </div>
+     </div>
+
+  
+  <!--预览-->
+<div class="previewcountent" style="display:none;">
+    <div class="count">
+        <p class="head"><span>发送预览</span><span class="closeBtn">×</span></p>
+        <div class="counttext">
+         <img lay-filter="gzhheaderimg" id="qrcodeUrlid" style="width: 200px;height: 200px;"></img>
+            <p>关注公众号后，才能接收图文消息预览</p>
+            <input type="text" placeholder="请输入微信号" id="nikenameid"/>
+            <p>预览功能仅用于公众号查看文章效果，不适用于公众传播，预览链接会在短期内失效</p>
+        </div>
+        
+        <div class="btnbox centerboth">
+            <span class="prsure">确定</span>
+            <span class="prcancel">取消</span>
+        </div>
+    </div>
+</div>
+</form>
+
+<script>
+var acekeystoken = $.cookie('bearcktkaeskey');
+if (acekeystoken == "") {
+    parent.location.href = ctxApp + '/login.html';
+}
+
+
+var table;
+
+layui.use(['laypage', 'table', 'element', 'layer','laydate'], function(){
+     table = layui.table;
+    var laydate = layui.laydate;
+    var ids = $("#selectIds").val();
+    console.log(ids);
+table.render({
+  elem: '#datagrid'
+  ,url:ctxAppSec+'/api/WeixinUserinfo?Authorization='+acekeystoken
+  ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+  
+  ,cols: [[
+   {type:'checkbox'},
+  {field:'id',title:'ID'},
+  {field:'nick_name',title:'公众号昵称'},
+  {field:'remarks',title:'注备'},
+  {field:'group_name',title:'公众号分组'}
+    
+  ]]
+,page: true
+,id: 'datagridTable'  
+});
+
+
+  
+});
+
+$("#btnSend").click(function(){
+    var     url =ctxAppWeixin+'/api/doExexcuteBatchSend';
+    var imgTextId = getQueryString("tempId");//模板ID
+    console.log(imgTextId);
+    
+    var table = layui.table;
+    var checkStatus = table.checkStatus('datagridTable');
+    var datas = checkStatus.data;
+    
+    var ids = "";
+    $.each(datas, function(index, item){
+         var id = item.authorizerAppid;
+         ids+=id+",";
+     });
+    
+    var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken};
+    
+    console.log(postData);
+    
+    //提交
+    $.ajax({
+        url: url,
+        data: postData,
+        type: "POST",
+        dataType: "json",
+        success: function(data){
+               layer.closeAll('loading');
+                 layer.alert(data.respMsg,{area: ['1000px', '300px']});
+                 return true;
+          },
+          error: function(data){
+              try {
+                 layer.msg("请求异常");
+                 return false;
+              }catch (e) {
+                 console.log(e);
+              }
+          }
+     });
+});
+
+
+$("#btnSync").click(function(){
+        var     url =ctxAppWeixin+'/api/doExexcuteBatchSync';
+        var imgTextId = getQueryString("tempId");//模板ID
+        console.log(imgTextId);
+        
+        var table = layui.table;
+        var checkStatus = table.checkStatus('datagridTable');
+        var datas = checkStatus.data;
+        
+        var ids = "";
+        $.each(datas, function(index, item){
+             var id = item.authorizerAppid;
+             ids+=id+",";
+         });
+        
+        var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken};
+        
+        console.log(postData);
+        
+        //提交
+        $.ajax({
+            url: url,
+            data: postData,
+            type: "POST",
+            dataType: "json",
+            success: function(data){
+                   layer.closeAll('loading');
+                     layer.alert(data.respMsg,{area: ['1000px', '300px']});
+                     return true;
+              },
+              error: function(data){
+                  try {
+                     layer.msg("请求异常");
+                     return false;
+                  }catch (e) {
+                     console.log(e);
+                  }
+              }
+         });
+});
+
+      function refreshTree(){
+    	  var url = ctxAppSec+ "/api/WeixinGroups/tree?Authorization="+acekeystoken;
+          $.getJSON(url,function(data){
+              $.fn.zTree.init($("#weixinGroupsTree"), setting, data).expandAll(true);
+          });
+      }
+      
+      var setting = {  
+    	        check: {  
+    	            enable: true  
+    	        },  
+    	        data: {  
+    	            simpleData: {  
+    	                enable: true  
+    	            }  
+    	        },  
+    	        callback: {  
+    	            onCheck: zTreeOnCheck  
+    	        },  
+    	        view: {  
+    	            selectedMulti: false  
+    	        }  
+    	    };  
+    	    setting.check.chkboxType = { "Y" : "s", "N" : "s" };  
+    	    //Y 属性定义 checkbox 被勾选后的情况；   
+    	    //N 属性定义 checkbox 取消勾选后的情况；   
+    	    //"p" 表示操作会影响父级节点；   
+    	    //"s" 表示操作会影响子级节点。  
+    	      
+    	    function zTreeOnCheck(event, treeId, treeNode) {  
+    	        //var checked = treeNode.checked;  
+    	        //console.log((treeNode?treeNode.name:"root") + "checked " +(checked?"true":"false"));  
+    	       // refreshLayers();  
+    	      //  clearCheckedOldNodes();
+    	      
+    	       var zTree = $.fn.zTree.getZTreeObj("weixinGroupsTree");
+    	       
+    	    	var id = treeNode.id == '0' ? '' :treeNode.id;
+                 
+                 var ids = [], nodes = zTree.getCheckedNodes(true);
+                 for(var i=0; i<nodes.length; i++) {
+                     ids.push(nodes[i].id);
+                 }
+                 
+                 console.log(ids);
+                 
+                 $("#selectIds").val(ids);
+                 
+                 console.log("post===" + $("#selectIds").val());
+                 var selectIds = $("#selectIds").val();
+                 var table = layui.table;
+                 table.reload('datagridTable', {  
+                     where: {  
+                         "ids": selectIds
+                     }  
+                   }); 
+                 
+                 //$("#reload").click();
+                 //console.log((treeNode?treeNode.name:"root") + "checked " +(checked?"true":"false"));  
+                 
+    	    };  
+    	    //刷新图层的显示情况  
+    	    var layers;  
+    	    function refreshLayers() {  
+    	        var zTree = $.fn.zTree.getZTreeObj("weixinGroupsTree");  
+    	        var changedNodes = zTree.getChangeCheckedNodes();  
+    	        for ( var i=0 ; i < changedNodes.length ; i++ ){  
+    	            var treeNode = changedNodes[i];  
+    	            layers = map.getLayersByName(treeNode.name);  
+    	            if(layers!=null && layers[0]!=null){  
+    	                layers[0].setVisibility(treeNode.checked);  
+    	            }  
+    	                  
+    	            console.log((treeNode?treeNode.name:"root") + "checked " +(treeNode.checked?"true":"false"));                 
+    	        }  
+    	    }  
+    	    //清理善后工作  
+    	    function clearCheckedOldNodes() {  
+    	        var zTree = $.fn.zTree.getZTreeObj("weixinGroupsTree"),  
+    	        nodes = zTree.getChangeCheckedNodes();  
+    	        for (var i=0, l=nodes.length; i<l; i++) {  
+    	            nodes[i].checkedOld = nodes[i].checked;  
+    	        }  
+    	    };        
+    	    $(document).ready(function(){  
+    	       /// $.fn.zTree.init($("#weixinGroupsTree"), setting, zNodes);  
+    	        
+    	        var url = ctxAppSec+ "/api/WeixinGroups/tree?Authorization="+acekeystoken;
+    	          $.getJSON(url,function(data){
+    	              $.fn.zTree.init($("#weixinGroupsTree"), setting, data).expandAll(true);
+    	          });
+    	    });  
+    	    
+    	    //预览
+    	    $('.closeBtn').on('click', function () {
+    	        $('.previewcountent').hide();
+    	    });
+    	    
+    	    $('.prsure').on('click', function () {
+    	    	 var imgTextId = getQueryString("tempId");//模板ID
+    	    	 var table = layui.table;
+    	         var checkStatus = table.checkStatus('datagridTable');
+    	         var datas = checkStatus.data;
+    	         
+    	         if(datas.length!=1 ){
+    	        	 layer.alert("请选择一条要预览的公众号");
+                     return false;
+    	         }
+    	         var ids = "";
+    	         $.each(datas, function(index, item){
+    	              ids = item.id;
+    	          });
+    	         
+    	    	 
+    	        $.ajax({
+    	            url: ctxAppWeixin + '/wxpreviewnew',
+    	            data: {"nike_name": $("#nikenameid").val(), "templateid": imgTextId,"uid":ids},
+    	            type: 'GET',
+    	            dataType: "json",
+    	            success: function (data) {
+    	                console.log(data);
+    	                if (data.respCode == 1) {
+    	                    $('.previewcountent').hide();
+    	                    alert("请在微信中预览");
+    	                } else {
+    	                    alert("请关注微信公众号或重新输入昵称");
+    	                }
+    	            }
+    	        });
+    	    });
+
+    	    $('.prcancel').on('click', function () {
+    	        $('.previewcountent').hide();
+    	    });
+    	    $("#yulan").click(function () {
+    	    	 var imgTextId = getQueryString("tempId");//模板ID
+                 var table = layui.table;
+                 var checkStatus = table.checkStatus('datagridTable');
+                 var datas = checkStatus.data;
+                 
+                 console.log("datas.length====" + datas.length);
+                 if(datas.length!=1){
+                     layer.alert("请选择一条要预览的公众号");
+                     return false;
+                 }
+    	        $(".previewcountent").show();
+    	        
+    	        var authorizerAppid = getQueryString("authorizerAppid");
+    	        var nowgroupIndex = -1;
+    	        
+    	        var authorizerAppid = "";
+                $.each(datas, function(index, item){
+                	authorizerAppid = item.authorizerAppid;
+                 });
+
+                var url = ctxAppWeixin + '/api/wxopen/get_authorizer_info?authorizerAppid=' + authorizerAppid + '&Authorization=' + acekeystoken;
+                
+               // url = 'http://weixin.xrtz.org:8050/weixin/api/wxopen/get_authorizer_info?authorizerAppid=' + authorizerAppid + '&Authorization=' + acekeystoken;
+    	        $.ajax({
+    	            url: url,
+    	            type: "get",
+    	            dataType: "json",
+    	            success: function (data) {
+    	                $("#qrcodeUrlid").attr("src", ctxAppSec+'/api/WeixinUserinfoQrcode_url/' + authorizerAppid + '?Authorization=' + acekeystoken);
+    	            },
+    	            error: function (data) {
+    	                try {
+    	                    layer.msg("请求异常");
+    	                    return false;
+    	                } catch (e) {
+    	                    console.log(e);
+    	                }
+    	            }
+    	        });
+    	    })
+</script>
+
+
+</body>
+</html>

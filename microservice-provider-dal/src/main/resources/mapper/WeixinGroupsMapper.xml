@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+
+<mapper namespace="com.lj.cloud.secrity.dal.WeixinGroupsMapper">
+    <resultMap id="weixinGroupsResult" type="com.weixindev.micro.serv.common.bean.weixin.WeixinGroups">
+   	  	<result property="id" column="id" jdbcType="INTEGER"   />
+   	  	<result property="remarks" column="remarks" jdbcType="VARCHAR"   />
+   	  	<result property="groupName" column="group_name" jdbcType="VARCHAR"   />
+   	  	<result property="createBy" column="create_by" jdbcType="INTEGER"   />
+   	  	<result property="createByUname" column="create_by_uName" jdbcType="VARCHAR"   />
+   	  	<result property="createDate" column="create_date" jdbcType="TIMESTAMP"   />
+   	  	<result property="updateBy" column="update_by" jdbcType="INTEGER"   />
+   	  	<result property="updateByUname" column="update_by_uName" jdbcType="VARCHAR"   />
+   	  	<result property="updateDate" column="update_date" jdbcType="TIMESTAMP"   />
+   	  	<result property="enableFlag" column="enable_flag" jdbcType="VARCHAR"   />
+   	  	<result property="parentId" column="parent_id" jdbcType="INTEGER"   />
+   	  	<result property="level" column="level" jdbcType="INTEGER"   />
+   	  	<result property="count" column="count(wu.id)" jdbcType="VARCHAR"/>
+    </resultMap>
+
+	<sql id="Base_Column_List">
+	    <![CDATA[
+	   
+        	id ,
+        	remarks ,
+        	group_name ,
+        	create_by ,
+        	create_by_uName ,
+        	create_date ,
+        	update_by ,
+        	update_by_uName ,
+        	update_date ,
+        	enable_flag ,
+        	parent_id ,
+        	level
+	    ]]>
+	</sql>
+
+   <select id="selectByPrimaryKey" resultMap="weixinGroupsResult">
+	 select 
+	    <include refid="Base_Column_List"/>
+	        from weixin_groups 
+	        where 
+		       id = #{id,jdbcType=INTEGER}
+    </select>
+
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from weixin_groups where
+        id = #{id,jdbcType=INTEGER}
+    </delete>
+
+ <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+        INSERT INTO weixin_groups (
+         id, remarks, group_name, create_by, create_by_uName, create_date, update_by, update_by_uName, update_date, enable_flag, parent_id,level
+        ) VALUES (
+         #{id,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, #{createBy,jdbcType=INTEGER}, #{createByUname,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateByUname,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{enableFlag,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, #{level,jdbcType=INTEGER}        
+        )
+   
+</insert>
+
+ <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.weixin.WeixinGroups">
+          INSERT INTO weixin_groups 
+	         <trim prefix="(" suffix=")" suffixOverrides="," >
+	    	<if test="id != null" >
+        		id,
+     	 	</if>
+	    	<if test="remarks != null" >
+        		remarks,
+     	 	</if>
+	    	<if test="groupName != null" >
+        		group_name,
+     	 	</if>
+	    	<if test="createBy != null" >
+        		create_by,
+     	 	</if>
+	    	<if test="createByUname != null" >
+        		create_by_uName,
+     	 	</if>
+	    	<if test="createDate != null" >
+        		create_date,
+     	 	</if>
+	    	<if test="updateBy != null" >
+        		update_by,
+     	 	</if>
+	    	<if test="updateByUname != null" >
+        		update_by_uName,
+     	 	</if>
+	    	<if test="updateDate != null" >
+        		update_date,
+     	 	</if>
+	    	<if test="enableFlag != null" >
+        		enable_flag,
+     	 	</if>
+	    	<if test="parentId != null" >
+        		parent_id,
+     	 	</if>
+     	 	<if test="level != null" >
+                level,
+            </if>
+     	 	
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+
+	    		<if test="id != null" >
+        		     #{id,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="remarks != null" >
+        		     #{remarks,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="groupName != null" >
+        		     #{groupName,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="createBy != null" >
+        		     #{createBy,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="createByUname != null" >
+        		     #{createByUname,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="createDate != null" >
+        		     #{createDate,jdbcType=TIMESTAMP},
+     	 		</if>
+	    		<if test="updateBy != null" >
+        		     #{updateBy,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="updateByUname != null" >
+        		     #{updateByUname,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="updateDate != null" >
+        		     #{updateDate,jdbcType=TIMESTAMP},
+     	 		</if>
+	    		<if test="enableFlag != null" >
+        		     #{enableFlag,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="parentId != null" >
+        		     #{parentId,jdbcType=INTEGER},
+     	 		</if>
+     	 		<if test="level != null" >
+                     #{level,jdbcType=INTEGER},
+                </if>
+     	 		
+		</trim>
+ </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.weixindev.micro.serv.common.bean.weixin.WeixinGroups">
+    
+        UPDATE weixin_groups 
+     
+      <set >
+		<if test="remarks != null and  remarks != ''" >
+			remarks = #{remarks,jdbcType=VARCHAR} ,
+		</if>
+		<if test="groupName != null and  groupName != ''" >
+			group_name = #{groupName,jdbcType=VARCHAR} ,
+		</if>
+		<if test="createBy != null " >
+			create_by = #{createBy,jdbcType=INTEGER} ,
+		</if>
+		<if test="createByUname != null and  createByUname != ''" >
+			create_by_uName = #{createByUname,jdbcType=VARCHAR} ,
+		</if>
+		<if test="createDate != null and  createDate != ''" >
+			create_date = #{createDate,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="updateBy != null and  updateBy != ''" >
+			update_by = #{updateBy,jdbcType=INTEGER} ,
+		</if>
+		<if test="updateByUname != null and  updateByUname != ''" >
+			update_by_uName = #{updateByUname,jdbcType=VARCHAR} ,
+		</if>
+		<if test="updateDate != null and  updateDate != ''" >
+			update_date = #{updateDate,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="enableFlag != null and  enableFlag != ''" >
+			enable_flag = #{enableFlag,jdbcType=VARCHAR} ,
+		</if>
+		<if test="parentId != null" >
+			parent_id = #{parentId,jdbcType=INTEGER} ,
+		</if>
+		<if test="level != null" >
+            level = #{level,jdbcType=INTEGER} ,
+        </if>
+
+	 </set>
+        WHERE 
+	         id = #{id,jdbcType=INTEGER}
+    </update>
+   
+    <update id="updateByPrimaryKey" >
+
+        UPDATE weixin_groups SET
+	        remarks = #{remarks} , group_name = #{groupName} , create_by = #{createBy} , create_by_uName = #{createByUname} , create_date = #{createDate} , update_by = #{updateBy} , update_by_uName = #{updateByUname} , update_date = #{updateDate} , enable_flag = #{enableFlag} , parent_id = #{parentId}  
+        WHERE 
+        	 id = #{id,jdbcType=INTEGER} 	        
+  
+</update>
+    
+    <select id="select" resultMap="weixinGroupsResult">
+	 select 
+    	<include refid="Base_Column_List"/>
+	   
+	        from weixin_groups WHERE 1=1  
+	  
+	      	     and  id = #{id,jdbcType=INTEGER}
+	      	     and  remarks = #{remarks,jdbcType=VARCHAR}
+	      	     and  group_name = #{groupName,jdbcType=VARCHAR}
+	      	     and  create_by = #{createBy,jdbcType=INTEGER}
+	      	     and  create_by_uName = #{createByUname,jdbcType=VARCHAR}
+	      	     and  create_date = #{createDate,jdbcType=TIMESTAMP}
+	      	     and  update_by = #{updateBy,jdbcType=INTEGER}
+	      	     and  update_by_uName = #{updateByUname,jdbcType=VARCHAR}
+	      	     and  update_date = #{updateDate,jdbcType=TIMESTAMP}
+	      	     and  enable_flag = #{enableFlag,jdbcType=VARCHAR}
+	      	     and  parent_id = #{parentId,jdbcType=INTEGER},
+	      	      level  = #{level,jdbcType=INTEGER}
+		
+    </select>
+      
+<select id="selectByExample" resultMap="weixinGroupsResult" >
+	 select 
+			wig.id ,
+        	wig.remarks ,
+        	group_name ,
+        	wig.create_by ,
+        	wig.create_by_uName ,
+        	wig.create_date ,
+        	wig.update_by ,
+        	wig.update_by_uName ,
+        	wig.update_date ,
+        	enable_flag ,
+        	parent_id ,
+        	level,
+        	count(wu.id)
+   	       	   from weixin_groups wig left join weixin_userinfo wu on wig.id = wu.weixin_groups_id
+   	       	    WHERE 1=1  
+	  
+		<if test="id != null and  id != ''" >
+	      	   and   wig.id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="remarks != null and  remarks != ''" >
+	      	   and   wig.remarks = #{remarks,jdbcType=VARCHAR}
+		</if>
+		<if test="groupName != null and  groupName != ''" >
+	      	   and   group_name = #{groupName,jdbcType=VARCHAR}
+		</if>
+		<if test="createBy != null and  createBy != ''" >
+	      	   and   wig.create_by = #{createBy,jdbcType=INTEGER}
+		</if>
+		<if test="createByUname != null and  createByUname != ''" >
+	      	   and   wig.create_by_uName = #{createByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="createDate != null and  createDate != ''" >
+	      	   and   wig.create_date = #{createDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateBy != null and  updateBy != ''" >
+	      	   and   wig.update_by = #{updateBy,jdbcType=INTEGER}
+		</if>
+		<if test="updateByUname != null and  updateByUname != ''" >
+	      	   and   wig.update_by_uName = #{updateByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="updateDate != null and  updateDate != ''" >
+	      	   and   wig.update_date = #{updateDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="enableFlag != null and  enableFlag != ''" >
+	      	   and   enable_flag = #{enableFlag,jdbcType=VARCHAR}
+		</if>
+		<if test="parentId != null and  parentId != ''" >
+	      	   and   parent_id = #{parentId,jdbcType=INTEGER}
+		</if>
+
+        
+		group by wig.id
+		order by parent_id ,wig.id
+			
+  </select>
+  
+  <select id="selectByPageExample" resultType="java.util.HashMap" >
+     select 
+       id ,
+            remarks ,
+            group_name as groupName ,
+            create_by as createBy ,
+            create_by_uName as createByUname  ,
+             date_format(create_date, '%Y-%m-%d %H:%i:%s' )  as createDate,
+            update_by as updateBy  ,
+            update_by_uName as updateByUname  ,
+           date_format(update_date, '%Y-%m-%d %H:%i:%s' )  as updateDate,
+            enable_flag  as enableFlag,
+            parent_id as parentId ,
+            level
+           from weixin_groups WHERE 1=1  
+      
+        <if test="id != null and  id != ''" >
+               and   id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="remarks != null and  remarks != ''" >
+               and   remarks = #{remarks,jdbcType=VARCHAR}
+        </if>
+        <if test="groupName != null and  groupName != ''" >
+               and   group_name = #{groupName,jdbcType=VARCHAR}
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+               and   create_by = #{createBy,jdbcType=INTEGER}
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+               and   create_by_uName = #{createByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+               and   create_date = #{createDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+               and   update_by = #{updateBy,jdbcType=INTEGER}
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+               and   update_by_uName = #{updateByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+               and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="enableFlag != null and  enableFlag != ''" >
+               and   enable_flag = #{enableFlag,jdbcType=VARCHAR}
+        </if>
+        <if test="parentId != null and  parentId != ''" >
+               and   parent_id = #{parentId,jdbcType=INTEGER}
+        </if>
+         <if test="createDateBegin != null and createDateBegin != ''" >
+               <![CDATA[ and  create_date >= str_to_date(#{createDateBegin,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEnd != null and createDateEnd != ''" >
+                <![CDATA[ and  create_date <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+         <if test="keyword != null and  keyword != 0" >
+             <![CDATA[  and  id <> #{id,jdbcType=INTEGER} ]]>
+        </if>
+            
+  </select>
+  
+  <select id="selectForMovie" resultMap="weixinGroupsResult" >
+               select  <include refid="Base_Column_List"/>  from weixin_groups where id not in (
+        select id   from weixin_groups where find_in_set(id, getChildLst(#{id,jdbcType=INTEGER}))
+            )
+        
+        order by parent_id ,id
+            
+  </select>
+
+</mapper>

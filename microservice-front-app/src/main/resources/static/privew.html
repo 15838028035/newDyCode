@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="telephone=no" name="format-detection" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>图文预览</title>
+
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="build/css/doc.css" media="all">
+
+    <!-- <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+    <title>Title</title>
+    <style>
+        .main{
+            width:1200px;
+            margin: 0 auto;
+        }
+        .main .count .title{
+            font-size:18px;
+            line-height: 30px;
+        }
+        .main .count .time{
+            width:100%;
+            text-align: right;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="count">
+            <p class="title"></p>
+            <p class="time"></p>
+            <div class="count_title"></div>
+        </div>
+    </div>
+</body>
+<script>
+var acekeystoken = $.cookie('bearcktkaeskey');
+if (acekeystoken == "") {
+    parent.location.href = ctxApp + '/login.html';
+}
+
+    var id=window.location.href.split("=")[1];
+    $.ajax({
+        url: ctxAppSec+'/api/WeixinImgtextItem/showInfoList',
+        data: {id:id,"Authorization":acekeystoken},
+        type: 'Get',
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            var pdata=data.list[0];
+            $('.title').html(pdata.title);
+            $('.time').html(pdata.createDate);
+            $('.count_title').html(pdata.articleContent);
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+
+<mapper namespace="com.lj.cloud.secrity.dal.AdminAuthortyMapper">
+   
+   <select id="getMenuList" resultType="java.util.Map">
+SELECT cn.id,cn.`sec_previleges_url`,cn.`menu_name`,cn.`sec_parent_id`,su.`user_name`,cn.image_path FROM ddwxmgcodes_db.`sec_admin_user` su
+			LEFT JOIN  ddwxmgcodes_db.`sec_groups` gr ON su.`sec_group_id`=gr.`id`
+			LEFT JOIN ddwxmgcodes_db.`sec_previlege_relation` re ON gr.`id`=re.`sec_ag_id`
+			LEFT JOIN ddwxmgcodes_db.`sec_privileges_config` cn ON  re.`sec_privilege_id`=cn.id
+	   WHERE su.`logini_no`=#{loginNo} AND re.state=1
+   </select>
+
+</mapper>

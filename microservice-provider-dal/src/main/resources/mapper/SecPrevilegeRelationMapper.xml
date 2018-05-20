@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+
+<mapper namespace="com.lj.cloud.secrity.dal.SecPrevilegeRelationMapper">
+    <resultMap id="secPrevilegeRelationResult" type="com.weixindev.micro.serv.common.bean.secrity.SecPrevilegeRelation">
+   	  	<result property="id" column="id" jdbcType="INTEGER"   />
+   	  	<result property="secAgId" column="sec_ag_id" jdbcType="INTEGER"   />
+   	  	<result property="secPrivilegeId" column="sec_privilege_id" jdbcType="INTEGER"   />
+   	  	<result property="state" column="state" jdbcType="INTEGER"   />
+    </resultMap>
+
+	<sql id="Base_Column_List">
+	    <![CDATA[
+	   
+        	id ,
+        	sec_ag_id ,
+        	sec_privilege_id 
+	    ]]>
+	</sql>
+
+   <select id="selectByPrimaryKey" resultMap="secPrevilegeRelationResult">
+	 select 
+	    <include refid="Base_Column_List"/>
+	    
+	        from sec_previlege_relation 
+	        where 
+		       id = #{id,jdbcType=INTEGER}
+			
+</select>
+
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+           delete from sec_previlege_relation where
+        id = #{id,jdbcType=INTEGER}
+	
+       </delete>
+
+ <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+        INSERT INTO sec_previlege_relation (
+         id, sec_ag_id, sec_privilege_id
+        ) VALUES (
+         #{id,jdbcType=INTEGER}, #{secAgId,jdbcType=INTEGER}, #{secPrivilegeId,jdbcType=INTEGER}        
+        )
+   
+</insert>
+
+ <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.secrity.SecPrevilegeRelation">
+          INSERT INTO sec_previlege_relation 
+	         <trim prefix="(" suffix=")" suffixOverrides="," >
+	    	<if test="id != null" >
+        		id,
+     	 	</if>
+	    	<if test="secAgId != null" >
+        		sec_ag_id,
+     	 	</if>
+	    	<if test="secPrivilegeId != null" >
+        		sec_privilege_id,
+     	 	</if>
+     	 	<if test="state != null" >
+        		state,
+     	 	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+
+	    		<if test="id != null" >
+        		     #{id,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="secAgId != null" >
+        		     #{secAgId,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="secPrivilegeId != null" >
+        		     #{secPrivilegeId,jdbcType=INTEGER},
+     	 		</if>
+     	 		<if test="state != null" >
+					 #{state,jdbcType=INTEGER} 
+				</if>	
+		</trim>
+ </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.weixindev.micro.serv.common.bean.secrity.SecPrevilegeRelation">
+    
+        UPDATE sec_previlege_relation 
+     
+      <set >
+		<if test="secAgId != null and  secAgId != ''" >
+			sec_ag_id = #{secAgId,jdbcType=INTEGER} ,
+		</if>
+		<if test="secPrivilegeId != null and  secPrivilegeId != ''" >
+			sec_privilege_id = #{secPrivilegeId,jdbcType=INTEGER} ,
+		</if>
+		<if test="state != null and  state != ''" >
+			state = #{state,jdbcType=INTEGER} ,
+		</if>
+
+	 </set>
+        WHERE 
+	        id = #{id,jdbcType=INTEGER}
+		
+    </update>
+   
+    <update id="updateByPrimaryKey" >
+
+        UPDATE sec_previlege_relation SET
+	        sec_ag_id = #{secAgId} , sec_privilege_id = #{secPrivilegeId}  
+        WHERE 
+		id = #{id,jdbcType=INTEGER}
+		 
+  
+</update>
+    
+    <select id="select" resultMap="secPrevilegeRelationResult">
+	 select 
+    	<include refid="Base_Column_List"/>
+	   
+	        from sec_previlege_relation WHERE 1=1  
+	  
+	      	     and  id = #{id,jdbcType=INTEGER}
+	      	     and  sec_ag_id = #{secAgId,jdbcType=INTEGER}
+	      	     and  sec_privilege_id = #{secPrivilegeId,jdbcType=INTEGER}
+		
+    </select>
+      
+<select id="selectByExample" resultMap="secPrevilegeRelationResult" >
+	 select 
+		<include refid="Base_Column_List"/>
+   	       	   from sec_previlege_relation WHERE 1=1  
+	  
+		<if test="id != null and  id != ''" >
+	      	   and   id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="secAgId != null and  secAgId != ''" >
+	      	   and   sec_ag_id = #{secAgId,jdbcType=INTEGER}
+		</if>
+		<if test="secPrivilegeId != null and  secPrivilegeId != ''" >
+	      	   and   sec_privilege_id = #{secPrivilegeId,jdbcType=INTEGER}
+		</if>
+		<if test="state != null and  state != ''" >
+	      	   and   state = #{state,jdbcType=INTEGER}
+		</if>
+			
+  </select>
+
+<select id="selectByPageExample" resultType="java.util.HashMap" >
+	 select 
+		<include refid="Base_Column_List"/>
+   	       	   from sec_previlege_relation WHERE 1=1  
+	  
+		<if test="id != null and  id != ''" >
+	      	   and   id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="secAgId != null and  secAgId != ''" >
+	      	   and   sec_ag_id = #{secAgId,jdbcType=INTEGER}
+		</if>
+		<if test="secPrivilegeId != null and  secPrivilegeId != ''" >
+	      	   and   sec_privilege_id = #{secPrivilegeId,jdbcType=INTEGER}
+		</if>
+		<if test="state != null and  state != ''" >
+	      	   and   state = #{state,jdbcType=INTEGER}
+		</if>
+			
+  </select>
+
+</mapper>

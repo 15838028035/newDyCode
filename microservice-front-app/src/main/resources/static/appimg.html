@@ -1,0 +1,416 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>图片列表</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="layui/css/layui.css"  media="all">
+    <link rel="stylesheet" href="src/css/base3d8d4c.css" />
+		<link rel="stylesheet" type="text/css" href="src/css/upload3a7b39.css" />
+    <script src="js/jquery-1.10.1.min.js"></script>
+   <script src="js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    <script src="layer/layer.js"></script>
+    <style>
+    	.flow-default{
+    		padding-left: 20px;
+    	}
+    	.liulimg{
+		 	width:162px;
+            height:162px;
+            position: relative;
+            float:left;
+            margin-right: 15px;
+            margin-bottom: 15px;
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+    	}
+        .liulimg img{
+            width: 100%;
+            height: 100%;   
+        }
+        .layui-flow-more{
+            margin: 0 auto;
+            display:block;
+            clear:both;
+        }
+        .liulimg .delbox{
+        	width: 100%;
+            position: absolute;
+           	bottom: 0px;
+           	right: 0px;
+           	height: 30px;
+           	background: rgba(0,0,0,0.5);
+           	z-index: 90;
+           	display: none;
+        }
+        .delbox .del{
+        	margin-right:8px;
+        	margin-top: 6px;
+        	display: block;
+        	width: 20px;
+        	height: 20px;
+        	float: right;
+        }
+        .delbox span img{
+        	display: block;
+        	width: 100%;
+        	height: 100%;
+        }
+        .delbox .yulan{
+        	margin-right:10px;
+        	margin-top: 2px;
+        	display: block;
+        	width: 28px;
+        	height: 28px;
+        	float: right;
+        }
+.previewcountent {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	left: 0;
+	top: 0;
+	z-index: 9999;
+}
+
+.previewcountent .count {
+	padding: 20px;
+	width: 730px;
+	height: 485px;
+	background: #FFFFFF;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-top: -240px;
+	margin-left: -365px;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.previewcountent .head span {
+	font-size: 18px;
+}
+
+.previewcountent .head .closeBtn {
+	font-size: 45px;
+	float: right;
+	margin-top: -20px;
+	cursor: pointer;
+}
+
+.counttext {
+	width: 400px;
+	margin: 0 auto;
+	margin-top: 100px;
+}
+
+.counttext input {
+	box-sizing: border-box;
+	width: 100%;
+	height: 35px;
+	padding: 0 10px;
+	margin: 10px 0;
+}
+
+.previewcountent .btnbox {
+	margin-top: 50px;
+	width: 100%;
+	overflow: hidden;
+	text-align: center;
+}
+
+.previewcountent .btnbox span {
+	width: 110px;
+	height: 35px;
+	text-align: center;
+	line-height: 35px;
+	margin: 0 15px;
+	background: none;
+	border: none;
+	border-radius: 5px;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.previewcountent .btnbox .prsure {
+	background: #44b549;
+	color: #FFFFFF;
+}
+
+.previewcountent .btnbox .prcancel {
+	border: 1px solid #CCCCCC;
+	color: #333333;
+}
+.images{
+	width:100%;
+	height:100%;
+}
+    </style>
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+
+<!--<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>图片</legend>
+</fieldset>-->
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>
+		<!--<button class="layui-btn layui-btn-normal" data-type="add" id="add">新建图片</button>-->
+       <!-- <button class="layui-btn layui-btn-normal" data-type="del" id="batch-del">批量删除</button>
+        <span>全选 &nbsp;<input type="checkbox" class="all" /></span>-->
+    </legend>
+</fieldset>
+<div style="width:100%;height: 450px;overflow: auto;">
+	<div class="flow-default img_pick" id="LAY_demo1">
+    
+	</div>
+</div>
+
+<div class="dialog_ft">
+	<span style="" class=" btn btn_primary btn_input js_btn_p"><button type="button" class="js_btn" id="query" data-index="0">确定</button></span>
+	<span style="" class=" btn btn_default btn_input js_btn_p"><button type="button" class="js_btn" id="cancel" data-index="1">取消</button></span>
+</div>
+<script src="layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+
+var acekeystoken = $.cookie('bearcktkaeskey');
+if (acekeystoken == "") {
+    parent.location.href = ctxApp + '/login.html';
+}
+
+    layui.use('flow', function(){
+        var flow = layui.flow;
+
+        flow.load({
+            elem: '#LAY_demo1' //流加载容器
+            ,scrollElem: '#LAY_demo1' //滚动条所在元素，一般不用填，此处只是演示需要。
+            ,done: function(page, next){ //执行下一页的回调
+                $.ajax({
+                    'url':ctxAppSec+'/api/WeixinImg',
+                    'data':{page:page,limit:20,"Authorization":acekeystoken},
+                    'dataType':'json',
+                    success:function(data){
+                        console.log(data);
+                        var obj=data.data;
+                        //模拟数据插入
+                        setTimeout(function(){
+                            var lis = [];
+
+                            var count=obj.length;
+                            for(var i = 0; i < count; i++){
+                                lis.push('<div class="liulimg" data-id="'+obj[i].id+'"><div class="img_item_bd ">	<div class="images"><img src="'+obj[i].headImg+'" class="imgList"/></div><div class="selected_mask"><div class="selected_mask_inner"></div><div class="selected_mask_icon"></div> </div> </div></div>');
+                            }
+                            /*layer.photos({
+                                photos: '#LAY_demo1'
+                                ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                            });*/
+                            //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                            //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                                next(lis.join(''), page<=data.count); //假设总页数为 10
+                           /* $(".liulimg").hover(function (){
+                                $(this).children('.delbox').show();
+                            },function (){
+                                $(this).children('.delbox').hide();
+                            });*/
+                            
+                            /*$('.yulan').click(function(){
+                            	var id=$(this).parent().parent().attr('data-id');
+                            	$('.previewcountent')
+                        		.show();
+                        	$('.previewcountent').data(
+                        		'id', id);
+                        	
+                            });*/
+                           /* layer.photos({
+                            	  photos: '.images'
+                            	  ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                            	}); */
+                            /*$('.prsure').on('click', function() {
+                    			var nike_name = $('#nikenameid').val();
+                    			var imgId = $('.previewcountent').data('id');
+                    			$.ajax({
+                    				url : ctxAppWeixin + '/wxImgPreview',
+                    				data : {
+                    					"nikeName" : nike_name,
+                    					"imgId" : imgId
+                    				},
+                    				type : 'GET',
+                    				dataType : "json",
+                    				success : function(data) {
+                    					console.log(data);
+                    					if (data.respCode == 1) {
+                    						$('.previewcountent').hide();
+                    						alert("请在微信中预览");
+                    					} else {
+                    						alert("请关注微信公众号或重新输入昵称");
+                    					}
+                    				}
+                    			});
+                    });*/
+                            $('.prcancel').on('click', function() {
+                            	$('#nikenameid').val('');
+                            	$('.previewcountent').hide();
+                    		});
+                    		$('.closeBtn').on('click', function() {
+                    			$('#nikenameid').val('');
+                    			$('.previewcountent').hide();
+                    		});
+                            //删除
+                            $(".del").click(function(){
+                                var id=$(this).parent().parent().attr('data-id');
+                                if(id>0){
+                                    del(id);
+                                }
+                            })
+                            function del(id) {
+                                layer.confirm('确定要删除？', {title: "系统提示", anim: 1, icon: 3, closeBtn: 0}, function (index) {
+                                    $.ajax({
+                                        url: ctxAppSec + '/api/WeixinImg/' + id +"?Authorization="+acekeystoken,
+                                        data: {"Authorization":acekeystoken},
+                                        type: "DELETE",
+                                        dataType: "json",
+                                        async: false,
+                                        success: function (data) {
+                                            layer.msg(data.respMsg,{},function(){location.reload()});
+                                        },
+                                        error: function (data) {
+                                            try {
+                                                layer.msg("请求异常");
+                                                return false;
+                                            } catch (e) {
+                                                console.log(e);
+                                            }
+                                        }
+                                    });
+
+                                    layer.alert("删除成功！", {title: "系统提示", icon: 1, closeBtn: 0}, function (index) {
+
+                                    });
+                                })
+                            }
+
+                        }, 500);
+
+                    }
+                })
+
+            }
+        });
+        //按屏加载图片
+//        flow.lazyimg({
+//            elem: '#LAY_demo3 img'
+//            ,scrollElem: '#LAY_demo3' //一般不用设置，此处只是演示需要。
+//        });
+
+    });
+    $('#add').on('click',function(){
+        layer.open({
+            title: "增加信息",
+            type: 2,
+            maxmin: true,
+            area: ['680px', '580px'],
+            content: 'weixinImgAdd.html',
+            // 下面这句是,添加页面关闭后,刷新本页面.
+            end: function () {
+                location.reload();
+            }
+        });
+    })
+    $('.img_pick').on('click', '.liulimg', function() {
+		$(this).siblings().children('.img_item_bd').removeClass('selected')
+		$(this).children('.img_item_bd').addClass('selected')
+		return false;
+	})
+	
+	$('#query').on('click', function() {
+						if($('.img_item_bd.selected').length == 0) {
+							layer.msg('请选择一个图片', {
+								time: 500, //20s后自动关闭
+							});
+							
+						} else {
+							var the_id = $('.img_item_bd.selected').parent().attr('data-id');
+
+							
+							parent.document.getElementById('imgSelectedId').value = the_id;
+							
+							$(parent.document).find('.menu-list').find('.current').attr('data-action','key|2|'+the_id)
+                            var index2 = parent.layer.getFrameIndex(window.name)
+                            //parent.layer.close(index2);
+                            parent.layer.closeAll()
+							showImg(the_id);
+
+						}
+						return false;
+					})
+					$('#cancel').on('click', function() {
+						var index2 = parent.layer.getFrameIndex(window.name)
+						parent.layer.close(index2);
+					})
+
+    $('#addGroup').on('click',function(){
+        layer.open({
+            title: "增加分组",
+            type: 2,
+            maxmin: true,
+            area: ['680px', '580px'],
+            content: 'weixinImgGroupsAdd.html',
+            // 下面这句是,添加页面关闭后,刷新本页面.
+            end: function () {
+                location.reload();
+            }
+        });
+    })
+
+    
+    //鼠标事件
+  /* $(".liulimg").hover(function (){  
+       $(this).children('.delbox').show();
+    },function (){  
+        $(this).children('.delbox').hide();
+    });*/
+    //显示图片方法
+	function showImg(theid){
+		$.ajax({
+	    	type:"get",
+	    	url:ctxAppSec+"/api/WeixinImg/showInfo/"+theid+"?Authorization="+acekeystoken,
+	    	dataType:"json",
+	    	success:function(data){
+	    		var data1=data.weixinImg;
+	    		var imgSrc=data1.headImg;
+	    		$(parent.document).find('#msgSender_media_2_2').find('.preview_img').attr('src',imgSrc)
+	    		$(parent.document).find('#msgSender_media_2_2').show()
+	    		$(parent.document).find('.js_imgArea').children('.tab_cont_cover').hide()
+	    		return false;
+	    	}
+	    	
+	    });
+	}
+</script>
+<script>
+	
+</script>
+<div class="previewcountent" style="display: none;">
+		<div class="count">
+			<p class="head">
+				<span>发送预览</span><span class="closeBtn">×</span>
+			</p>
+			<div class="counttext">
+				<p>关注公众号后，才能接收图文消息预览</p>
+				<input type="text" placeholder="请输入微信号/QQ号/手机号" id="nikenameid" />
+				<p>预览功能仅用于公众号查看文章效果，不适用于公众传播，预览链接会在短期内失效</p>
+			</div>
+			<div class="btnbox centerboth">
+				<span class="prsure">确定</span> <span class="prcancel">取消</span>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

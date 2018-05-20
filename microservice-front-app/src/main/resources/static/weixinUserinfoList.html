@@ -1,0 +1,469 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>管理</title>
+
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="build/css/doc.css" media="all">
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+
+    <style>
+        .nowidth .layui-form-label {
+            width: auto;
+        }
+    </style>
+</head>
+
+<body class="kit-doc">
+<div class="kit-doc-title">
+    <fieldset>
+        <legend><a name="blockquote">公众号列表</a></legend>
+    </fieldset>
+</div>
+<form class="layui-form">
+    <div class="layui-form-item nowidth">
+        <div class="layui-inline">
+            <label class="layui-form-label">关键字:</label>
+            <div class="layui-input-inline">
+                <input id="keyword" type="text" name="number" lay-verify="required|number" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">选择分组:</label>
+            <div class="layui-input-inline">
+                <select name="quiz1" lay-filter="quiz1" id="fenzu1">
+                </select>
+            </div>
+            <div class="layui-input-inline" id="fenzudiv2" style="display: none;">
+                <select name="quiz2" id="fenzu2">
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-inline demoTable" style="width: 350px;">
+                <span class="layui-btn" data-type="reload">搜索</span>
+                <span class="layui-btn" data-type="getCheckData">批量移动分组</span>
+                <span class="layui-btn" data-type="delCheckData">批量删除</span>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="Table">
+                <span class="layui-btn layui-btn-radius" data-type="add" id="add">
+                    <i class="layui-icon">&#xe608;</i>绑定公众号
+                </span>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<table id="datagrid" class="layui-table" lay-filter="Grid"></table>
+
+<script type="text/html" id="headimg">
+    <div style="height: 28px;text-align: center;width: 100%;"><img width="28px" src="{{d.head_img}}"></div>
+</script>
+
+<script type="text/html" id="accountTypetpl">
+    {{#  if(d.service_type_info === '0'){ }}
+    <span>订阅号</span>
+    {{# } else if(d.service_type_info === '1'){ }}
+    <span>升级订阅号</span>
+    {{# } else if(d.service_type_info === '2'){ }}
+    <span>服务号</span>
+    {{#  }}}
+</script>
+
+<script type="text/html" id="InfoTypetpl">
+    {{#  if(d.InfoType === 'unauthorized'){ }}
+    <span>取消授权</span>
+    {{# } else if(d.InfoType === 'updateauthorized'){ }}
+    <span>更新授权</span>
+    {{# } else if(d.InfoType === 'authorized'){ }}
+    <span>授权成功</span>
+    {{#  }}}
+</script>
+
+<script type="text/html" id="qrcode_urltpl">
+    <div style="height: 28px;text-align: center;width: 100%;"><img width="28px"
+                                                                   src="{{d.qrcode_url}}?token=25965475995565785"></div>
+</script>
+
+<!-- 数据操作监听事件 -->
+<script type="text/html" id="optTpl">
+    <button class="layui-btn layui-btn-edit layui-btn-xs" lay-event="update">移动分组</button>
+    <button class="layui-btn layui-btn-primary layui-btn-xs" lay-event="deleteone">删除</button>
+    <a href="javascript:;" data-url="http://www.bzon.cn" class="layui-btn layui-btn-primary layui-btn-xs info-btn"
+       lay-event="info">详情</a>
+    <button class="layui-btn layui-btn-edit layui-btn-xs" lay-event="selfmenu">自定义菜单</button>
+</script>
+
+<script>
+
+    var acekeystoken = $.cookie('bearcktkaeskey');
+    if (acekeystoken == "") {
+        parent.location.href = ctxApp + '/login.html';
+    }
+
+    layui.use(['laypage', 'table', 'element', 'layer', 'laydate'], function () {
+        var table = layui.table,
+            form = layui.form,
+            laydate = layui.laydate,
+            $ = layui.$;
+
+        //自定义事件
+        laydate.render({
+            elem: '#createDateEnd'
+            , trigger: 'click' //采用click弹出
+        });
+        laydate.render({
+            elem: '#createDateBegin'
+            , trigger: 'click' //采用click弹出
+        });
+
+        //时间戳的处理
+        layui.laytpl.toDateString = function (d, format) {
+            var date = new Date(d || new Date())
+                , ymd = [
+                this.digit(date.getFullYear(), 4)
+                , this.digit(date.getMonth() + 1)
+                , this.digit(date.getDate())
+            ]
+                , hms = [
+                this.digit(date.getHours())
+                , this.digit(date.getMinutes())
+                , this.digit(date.getSeconds())
+            ];
+
+            format = format || 'yyyy-MM-dd HH:mm:ss';
+
+            return format.replace(/yyyy/g, ymd[0])
+                .replace(/MM/g, ymd[1])
+                .replace(/dd/g, ymd[2])
+                .replace(/HH/g, hms[0])
+                .replace(/mm/g, hms[1])
+                .replace(/ss/g, hms[2]);
+        };
+
+//数字前置补零
+        layui.laytpl.digit = function (num, length, end) {
+            var str = '';
+            num = String(num);
+            length = length || 2;
+            for (var i = num.length; i < length; i++) {
+                str += '0';
+            }
+            return num < Math.pow(10, length) ? str + (num | 0) : num;
+        };
+
+        var selectedfenzuID = getQueryString("weixinGroupsId");
+        console.log(selectedfenzuID);
+
+        var tableLoadurl = selectedfenzuID == null||selectedfenzuID == "-1"?"":"weixinGroupsId="+selectedfenzuID+"&";
+
+        table.render({
+            elem: '#datagrid'
+            , url: ctxAppSec + '/api/WeixinUserinfo?'+tableLoadurl+'Authorization=' + acekeystoken
+            , cols: [[
+                {type: 'checkbox'},
+                {field: 'id', title: 'ID', width: '50'},
+                {field: 'nick_name', title: '公众号昵称', width: '100'},
+                {field: 'head_img', title: '公众号头像', templet: '#headimg', width: '100'},
+                {field: 'service_type_info', title: '账号类型', templet: '#accountTypetpl', width: '100'},
+                {field: 'InfoType', title: '授权状态', templet: '#InfoTypetpl', width: '100'},
+                {field: 'group_name', title: '账号分组', width: '100'},
+                //{field: 'create_By_UName', title: '添加人', width: '100'},
+                {
+                    field: 'create_date',
+                    title: '添加时间',
+                    templet: '<div>{{ layui.laytpl.toDateString(d.create_date) }}</div>',
+                    width: '200'
+                },
+                {field: 'opt', title: '操作', templet: '#optTpl', width: '300'}
+            ]]
+            , page: true
+            , initSort: {
+                field: 'id' //排序字段，对应 cols 设定的各字段名
+                , type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+            }
+            , request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                , limitName: 'limit' //每页数据量的参数名，默认：limit
+            }
+        });
+
+
+        table.on('tool(Grid)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            if (layEvent === 'deleteone') { //删除单个
+                var id = data.id;
+                layer.confirm('确定要删除？', {title: "系统提示", anim: 1, icon: 3, closeBtn: 0}, function (index) {
+
+                    $.ajax({
+                        url: ctxAppSec + '/api/WeixinUserinfo/' + id,
+                        data: {},
+                        type: "DELETE",
+                        dataType: "json",
+                        success: function (data) {
+                            layer.msg(data.respMsg);
+                            table.reload("datagrid");
+                        },
+                        error: function (data) {
+                            try {
+                                layer.msg("请刷新重试");
+                                return false;
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        }
+                    });
+
+                    /*layer.alert("删除成功！", {title: "系统提示", icon: 1, closeBtn: 0}, function (index) {
+                        //关闭删除窗口,并刷新table
+                        table.reload("datagrid");
+                    });*/
+                });
+            } else if (layEvent === 'update') { //移动分组
+                var authorizerAppid = data.authorizerAppid;
+                update(authorizerAppid);
+            }
+            else if (layEvent === 'info') { //详情
+                var authorizerAppid = data.authorizerAppid;
+                info(authorizerAppid);
+            }
+            else if (layEvent === 'selfmenu') { //自定义菜单
+                var authorizerAppid = data.authorizerAppid;
+                selfmenu(authorizerAppid);
+            }
+        });
+
+        var nowgroupIndex = -1;
+
+        $.ajax({
+            url: ctxAppSec + '/api/WeixinGroups/list?parentId=' + nowgroupIndex+'&Authorization='+acekeystoken,
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                var html = "<option value=\"\">请选分组</option>";
+
+                var datas = data;
+
+                for (var i = 0; i < datas.length; i++) {
+                    html += '<option value=' + datas[i].id + '>' + datas[i].groupName + '</option>';
+                }
+                $("#fenzu1").html(html);
+                form.render();
+            },
+            error: function (data) {
+                try {
+                    layer.msg("请刷新重试");
+                    return false;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+
+        //监听提交
+        form.on('select(quiz1)', function (data) {
+            console.log(data);
+            if (data.value == ""){
+                $("#fenzu2").html("");
+                $("#fenzudiv2").hide();
+                return false;
+            }
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinGroups/list?parentId=' + data.value+'&Authorization='+acekeystoken,
+                type: "get",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    if (data.length == 0) {
+                        $("#fenzudiv2").hide();
+                    }
+                    else {
+                        $("#fenzudiv2").show();
+                    }
+                    var html = "<option value=\"\">请选分组</option>";
+
+                    var datas = data;
+
+                    for (var i = 0; i < datas.length; i++) {
+                        html += '<option value=' + datas[i].id + '>' + datas[i].groupName + '</option>';
+                    }
+
+                    $("#fenzu2").html(html);
+                    form.render();
+                },
+                error: function (data) {
+                    try {
+                        layer.msg("请刷新重试");
+                        return false;
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            });
+        });
+
+        var $ = layui.$, active = {
+            reload: function () {
+                table.reload('datagrid', {
+                    where: {
+                        "keyword": $('#keyword').val(),
+                        "weixinGroupsId":$("#fenzu2").val() == "" ? $("#fenzu1").val() : $("#fenzu2").val()
+                    }
+                });
+            },
+            getCheckData: function () { //获取选中数据
+                var checkStatus = table.checkStatus('datagrid')
+                    , data = checkStatus.data;
+                if (data.length==0){
+                    layer.msg("请勾选需要移动分组的公众号");
+                    return false;
+                }
+                var weixininfoids = "";
+                for (var i = 0; i < data.length; i++) {
+                    if (i == data.length - 1) {
+                        weixininfoids += data[i].id;
+                    }
+                    else {
+                        weixininfoids += data[i].id + ',';
+                    }
+                }
+                //layer.alert(weixininfoids);
+                layer.open({
+                    title: "增加信息",
+                    type: 2,
+                    maxmin: true,
+                    area: ['680px', '580px'],
+                    content: 'weixinUserinfoUpdatesss.html?ids=' + weixininfoids,
+                    // 下面这句是,添加页面关闭后,刷新本页面.
+                    end: function () {
+                        location.reload();
+                    }
+                });
+            },
+            delCheckData: function () {
+                var checkStatus = table.checkStatus('datagrid')
+                    , data = checkStatus.data;
+                var weixininfoids = "";
+                console.log(data);
+                if (data.length==0){
+                    layer.msg("请勾选需要删除的公众号");
+                    return false;
+                }
+                for (var i = 0; i < data.length; i++) {
+                    if (i == data.length - 1) {
+                        weixininfoids += data[i].id;
+                    }
+                    else {
+                        weixininfoids += data[i].id + ',';
+                    }
+                }
+                $.ajax({
+                    url: ctxAppSec + '/api/WeixinUserinfo/batchDelete?movieUseIds=' + weixininfoids,
+                    type: "POST",
+                    data: {"Authorization": acekeystoken},
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        location.reload()
+                    },
+                    error: function (data) {
+                        try {
+                            layer.msg("请刷新重试");
+                            return false;
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    }
+                });
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
+
+    $('#add').on('click', function () {
+        layer.open({
+            title: "增加信息",
+            type: 2,
+            maxmin: true,
+            area: ['1200px', '600px'],
+            content: hostname + '/api/auth/goto_auth_url_show',
+            // 下面这句是,添加页面关闭后,刷新本页面.
+            end: function () {
+                location.reload();
+            }
+        });
+    })
+
+    function update(authorizerAppid) {
+        layer.open({
+            title: "增加信息",
+            type: 2,
+            maxmin: true,
+            area: ['680px', '580px'],
+            content: 'weixinUserinfoUpdate.html?authorizerAppid=' + authorizerAppid,
+            // 下面这句是,添加页面关闭后,刷新本页面.
+            end: function () {
+                location.reload();
+            }
+        });
+    }
+
+    function info(authorizerAppid) {
+        layer.open({
+            title: "公众号详情",
+            type: 2,
+            maxmin: true,
+            area: ['95%', '95%'],
+            content: 'weixinUserinfoinfo.html?authorizerAppid=' + authorizerAppid,
+            // 下面这句是,添加页面关闭后,刷新本页面.
+            end: function () {
+                location.reload();
+            }
+        });
+    }
+
+    function selfmenu(authorizerAppid) {
+        layer.open({
+            title: "自定义菜单",
+            type: 2,
+            maxmin: true,
+            area: ['100%', '100%'],
+            content: 'aaYls_editpage.html?authorizerAppid=' + authorizerAppid,
+            // 下面这句是,添加页面关闭后,刷新本页面.
+            end: function () {
+                location.reload();
+            }
+        });
+    }
+
+
+</script>
+
+</body>
+
+</html>

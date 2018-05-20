@@ -1,0 +1,188 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>菜单列表管理</title>
+
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+
+    <style>
+        body {
+            padding: 10px;
+        }
+
+        .mtop {
+            margin-top: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="demoTable">
+    创建时间：
+    <div class="layui-inline">
+        <input class="layui-input" name="keyword" id="createDateBegin" autocomplete="off">
+    </div>
+    <div class="layui-inline">
+        <input class="layui-input" name="keyword" id="createDateEnd" autocomplete="off">
+    </div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+</div>
+
+<div class="layui-btn-group Table mtop">
+    <button class="layui-btn" data-type="add" id="add">
+        <i class="layui-icon">&#xe608;</i>新增
+    </button>
+</div>
+<table id="datagrid" class="layui-table" lay-filter="Grid"></table>
+
+
+<!-- 数据操作监听事件 -->
+<script type="text/html" id="optTpl">
+    <button class="layui-btn layui-btn-edit layui-btn-xs" lay-event="update">编辑</button>
+    <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove">删除</button>
+</script>
+
+<script>
+    layui.use(['laypage', 'table', 'element', 'layer', 'laydate'], function () {
+        var table = layui.table;
+        var laydate = layui.laydate;
+
+        //自定义事件
+        laydate.render({
+            elem: '#createDateEnd'
+            , trigger: 'click' //采用click弹出
+        });
+        laydate.render({
+            elem: '#createDateBegin'
+            , trigger: 'click' //采用click弹出
+        });
+
+
+        table.render({
+            elem: '#datagrid'
+            , url: ctxAppSec + '/api/WeixinMenuItem'
+            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+
+            , cols: [[
+                {field: 'id', title: 'ID'},
+                {field: 'menuName', title: '菜单名称'},
+                {field: 'remarks', title: '备注'},
+                //{field:'createByUname',title:'创建人姓名'},
+                //{field:'createDate',title:'创建日期'},
+                //{field:'groupId',title:'分组ID'},
+                {field: 'opt', title: '操作', templet: '#optTpl'}
+
+            ]]
+            , page: true
+            , id: 'datagridTable'
+            , initSort: {
+                field: 'id' //排序字段，对应 cols 设定的各字段名
+                , type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+            }
+            , request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                , limitName: 'limit' //每页数据量的参数名，默认：limit
+            }
+        });
+
+
+        table.on('tool(Grid)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            if (layEvent === 'remove') { //编辑
+                var id = data.id;
+                layer.confirm('确定要删除？', {title: "系统提示", anim: 1, icon: 3, closeBtn: 0}, function (index) {
+
+                    $.ajax({
+                        url: ctxAppSec + '/api/WeixinMenuItem/' + id,
+                        data: {},
+                        type: "DELETE",
+                        dataType: "json",
+                        success: function (data) {
+                            layer.msg(data.respMsg);
+                            table.reload("datagridTable");
+                        },
+                        error: function (data) {
+                            try {
+                                layer.msg("请求异常");
+                                return false;
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        }
+                    });
+                });
+            } else if (layEvent === 'update') { //编辑
+                var id = data.id;
+                update(id);
+            }
+        });
+
+        var $ = layui.$, active = {
+            reload: function () {
+                table.reload('datagridTable', {
+                    where: {
+                        "createDateBegin": $.trim($('#createDateBegin').val()),
+                        "createDateEnd": $.trim($('#createDateEnd').val())
+                    }
+                });
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
+
+    $('#add').on('click', function () {
+        layer.open({
+            title: "增加信息",
+            type: 2,
+            maxmin: true,
+            area: ['100%', '100%'],
+            content: 'weixinMenuItemAdd.html',
+            // 下面这句是,添加页面关闭后,刷新本页面.
+            end: function () {
+                location.reload();
+            }
+        });
+    })
+
+    function update(id) {
+        layer.open({
+            title: "增加信息",
+            type: 2,
+            maxmin: true,
+            area: ['100%', '100%'],
+            content: 'weixinMenuItemAdd.html?id=' + id,
+            // 下面这句是,添加页面关闭后,刷新本页面.
+            end: function () {
+                location.reload();
+            }
+        });
+    }
+
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,452 @@
+﻿
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>音频管理</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="build/css/doc.css" media="all">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+<style>
+.previewcountent {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	left: 0;
+	top: 0;
+	z-index: 9999;
+}
+
+.previewcountent .count {
+	padding: 20px;
+	width: 730px;
+	height: 485px;
+	background: #FFFFFF;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-top: -240px;
+	margin-left: -365px;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.previewcountent .head span {
+	font-size: 18px;
+}
+
+.previewcountent .head .closeBtn {
+	font-size: 45px;
+	float: right;
+	margin-top: -20px;
+	cursor: pointer;
+}
+
+.counttext {
+	width: 400px;
+	margin: 0 auto;
+	margin-top: 100px;
+}
+
+.counttext input {
+	box-sizing: border-box;
+	width: 100%;
+	height: 35px;
+	padding: 0 10px;
+	margin: 10px 0;
+}
+
+.previewcountent .btnbox {
+	margin-top: 50px;
+	width: 100%;
+	overflow: hidden;
+	text-align: center;
+}
+
+.previewcountent .btnbox span {
+	width: 110px;
+	height: 35px;
+	text-align: center;
+	line-height: 35px;
+	margin: 0 15px;
+	background: none;
+	border: none;
+	border-radius: 5px;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.previewcountent .btnbox .prsure {
+	background: #44b549;
+	color: #FFFFFF;
+}
+
+.previewcountent .btnbox .prcancel {
+	border: 1px solid #CCCCCC;
+	color: #333333;
+}
+#categoryId {
+    background: url("img/md01@2x.png") no-repeat center right;
+    background-position: 95% 50%;
+    background-size: 8px auto;
+    width: 120px;
+}
+</style>
+</head>
+
+ <body class="kit-doc">
+<div class="kit-doc-title">
+    <fieldset>
+        <legend><a name="blockquote">音频管理列表</a></legend>
+    </fieldset>
+</div>
+ 创建时间：
+    <div class="layui-inline">
+        <input class="layui-input" name="createDateBegin" id="createDateBegin" autocomplete="off" placeholder="开始时间">
+    </div>
+    <div class="layui-inline">
+        <input class="layui-input" name="createDateEnd" id="createDateEnd" autocomplete="off" placeholder="结束时间">
+    </div>
+      分类
+        <div class="layui-inline">
+         <select name="categoryId" id="categoryId" lay-filter="categoryId"  class="layui-select" style="padding-right: 40px">
+      </select>
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+</div>
+
+<div class="layui-btn-group Table">
+    <button class="layui-btn" data-type="add" id="add">
+        <i class="layui-icon">&#xe608;</i>新增
+    </button>
+</div>
+<div class="layui-btn-group Table">
+    <button class="layui-btn" id="batchDelete">
+     		批量删除
+    </button>
+</div>
+<div class="previewcountent" style="display: none;">
+		<div class="count">
+			<p class="head">
+				<span>发送预览</span><span class="closeBtn">×</span>
+			</p>
+			<div class="counttext">
+				<p>关注公众号后，才能接收图文消息预览</p>
+				<input type="text" placeholder="请输入微信号" id="nikenameid" />
+				<p>预览功能仅用于公众号查看文章效果，不适用于公众传播，预览链接会在短期内失效</p>
+			</div>
+			<div class="btnbox centerboth">
+				<span class="prsure">确定</span> <span class="prcancel">取消</span>
+			</div>
+		</div>
+	</div>
+<table id="datagrid" class="layui-table" lay-filter="Grid" ></table>
+
+
+
+<!-- 数据操作监听事件 -->
+    <script type="text/html" id="optTpl">
+            <button class="layui-btn layui-btn-edit layui-btn-xs" lay-event="update">编辑</button>
+            <button class="layui-btn layui-btn-primary layui-btn-xs" lay-event="remove">删除</button>
+			<button class="layui-btn layui-btn layui-btn-xs" lay-event="send">同步/群发</button>
+    </script>
+    
+       <script type="text/html" id="headImgTpl">
+        <i class="layui-icon" lay-event="play" >&#xe652;</i> 
+    </script>
+    
+<script>
+
+
+var acekeystoken = $.cookie('bearcktkaeskey');
+if (acekeystoken == "") {
+    parent.location.href = ctxApp + '/login.html';
+}
+
+//initConfigSelect(vido_category,"categoryId", null);
+var table;
+layui.use(['laypage', 'table', 'element', 'layer','laydate','form'], function(){
+	  table = layui.table;
+	  var laydate = layui.laydate;
+
+	  initConfigSelect("audio_category","categoryId", null);
+	  
+	  
+	//自定义事件
+	  laydate.render({ 
+	    elem: '#createDateEnd'
+	    ,trigger: 'click' //采用click弹出
+	  });
+	  laydate.render({ 
+	        elem: '#createDateBegin'
+	        ,trigger: 'click' //采用click弹出
+	      });
+
+
+    table.render({
+        elem: '#datagrid'
+        ,url:ctxAppSec+'/api/WeixinAudio?Authorization='+acekeystoken
+        ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+
+        ,cols: [[
+            {type:'checkbox'},
+            {field:'id',title:'ID'},
+            {field:'title',title:'名称'},
+            {field:'createByUname',title:'上传管理员'},
+            {field:'createDate',title:'上传时间'},
+            {field:'file_size',title:'文件大小'},
+            {field:'audio_length',title:'音频时长'},
+            {field:'categoryId',title:'分类'},
+            {field:'headImg',title:'音频' ,templet: '#headImgTpl'},
+            {field: 'opt', title: '操作',templet: '#optTpl'}
+
+        ]]
+        ,page: true
+        ,id: 'datagridTable'
+        ,initSort: {
+            field: 'id' //排序字段，对应 cols 设定的各字段名
+            ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+        }
+        ,request: {
+            pageName: 'page' //页码的参数名称，默认：page
+            ,limitName: 'limit' //每页数据量的参数名，默认：limit
+        }
+    });
+  
+  table.on('tool(Grid)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+      var data = obj.data; //获得当前行数据
+      var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+   if(layEvent === 'remove'){ //编辑
+        var id = data.id;
+        layer.confirm('确定要删除？',{title: "系统提示",anim: 1,icon: 3,closeBtn: 0},function(index){
+        	
+        	 $.ajax({
+                 url: ctxAppSec+'/api/WeixinAudio/'+id+"?Authorization="+acekeystoken,
+                 data: {
+                	 "Authorization":acekeystoken
+                 },
+                 type: "DELETE",
+                 dataType: "json",
+                 success: function(data){
+                          layer.msg(data.respMsg);
+                          table.reload("datagridTable",{
+                           	where:{
+                           	  "createDateBegin":$("#createDateBegin").val(),
+                              "createDateEnd":$("#createDateEnd").val(),
+                           	},page: {
+                           	    curr: 1 //重新从第 1 页开始
+                           	  }
+                           });
+                   },
+                   error: function(data){
+                       try {
+                          layer.msg("请求异常");
+                          return false;
+                       }catch (e) {
+                          console.log(e);
+                       }
+                   }
+              });
+        	 
+            layer.alert("删除成功！",{title: "系统提示",icon: 1,closeBtn: 0},function(index){
+                //关闭删除窗口,并刷新table
+                table.reload("Load");
+            });
+        });
+      }else if(layEvent === 'update'){ //编辑
+    	  var id = data.id;
+    	  update(id);
+      }  else if(layEvent === 'play'){
+          var id = data.id;
+          var headImgPic = data.headImg;
+           
+           paly(headImgPic);
+       }else if(layEvent === 'send'){
+    	   var id = data.id;
+    	   
+    	   layer.open({
+               title: "群发",
+               type: 2,
+               maxmin: true,
+               area: ['100%', '100%'],
+               content: "weixinAudioSend.html?id=" + id,
+               // 下面这句是,添加页面关闭后,刷新本页面.
+               end: function () {
+                   //location.reload();
+               }
+           });
+    	   
+       }
+});
+
+ var $ = layui.$, active = {  
+          reload: function(){  
+            table.reload('datagridTable', {  
+              where: {
+            	  "createDateBegin":$.trim($('#createDateBegin').val()),
+                  "createDateEnd":$.trim($('#createDateEnd').val()),
+                  "categoryId": $('#categoryId').val()
+              }  
+            });  
+          }  
+    };  
+
+$('.demoTable .layui-btn').on('click', function(){  
+  var type = $(this).data('type');  
+  active[type] ? active[type].call(this) : '';  
+});  
+
+  
+});
+
+ 
+ 
+ $('#add').on('click',function(){
+	 var index=layer.open({
+         title: "增加信息",
+         type: 2,
+         maxmin: true,
+         area: ['680px', '580px'],
+         content: 'weixinAudioAdd.html',
+         // 下面这句是,添加页面关闭后,刷新本页面.
+         end: function () {
+                location.reload();
+         }
+         });
+         }) 
+ 
+ function update(id){
+	 layer.open({
+         title: "编辑",
+         type: 2,
+         maxmin: true,
+         area: ['680px', '580px'],
+         content: 'weixinAudioEdit.html?id='+id,
+         // 下面这句是,添加页面关闭后,刷新本页面.
+         end: function () {
+                location.reload();
+         }
+         }); 
+ }
+
+ function paly(headImgPic){
+     layer.open({
+         title: "查看",
+         type: 2,
+         maxmin: true,
+         area: ['680px', '580px'],
+         content: headImgPic,
+         // 下面这句是,添加页面关闭后,刷新本页面.
+         end: function () {
+                location.reload();
+         }
+         }); 
+ }
+
+ $('#batchDelete').on('click',function(){
+	   var checkStatus = table.checkStatus('datagridTable');
+	    var datas = checkStatus.data;
+	    
+	    var ids = "";
+	    $.each(datas, function(index, item){
+	         var id = item.id;
+	         ids+=id+",";
+	     });
+
+  // console.log(ids);
+   var     url =ctxAppSec+'/api/WeixinAudio/batchDelete';
+   var postData = {"ids":ids,"Authorization":acekeystoken};
+   //提交
+   if(ids==""){
+   	layer.msg("请选择");
+   	return;
+   }
+   $.ajax({
+       url: url,
+       data: postData,
+       type: "POST",
+       dataType: "json",
+       async: false,
+       success: function(data){
+              layer.closeAll('loading');
+                layer.msg(data.respMsg);
+                table.reload("datagridTable",{
+                	where:{
+                	    aaaaaa: 'xxx',
+                	    bbb: 'yyy'
+                	},page: {
+                	    curr: 1 //重新从第 1 页开始
+                	  }
+                });
+         },
+         error: function(data){
+             try {
+                layer.msg("请求异常");
+             }catch (e) {
+                console.log(e);
+             }
+         }
+    });
+})
+ $('.prsure').on('click', function () {
+    		    	    	 var videoId = getQueryString("tempId");//模板ID
+    		    	    	 var table = layui.table;
+    		    	         var checkStatus = table.checkStatus('datagridTable');
+    		    	         var datas = checkStatus.data;
+    		    	         var nike_name = $('#nikenameid').val();
+    		    	         
+    		    	         if(datas.length!=1 ){
+    		    	        	 layer.alert("请选择一条要预览的公众号");
+    		                     return false;
+    		    	         }
+    		    	         var ids = "";
+    		    	         $.each(datas, function(index, item){
+    		    	              ids = item.id;
+    		    	          });
+    		    	         
+    		    	    	 
+    		    	        $.ajax({
+    		    	            url: ctxAppWeixin + '/wxAudioPreview',
+    		    	            data: {"nikeName": nike_name, "audioId": audioId,"uid":ids},
+    		    	            type: 'GET',
+    		    	            dataType: "json",
+    		    	            success: function (data) {
+    		    	                console.log(data);
+    		    	                if (data.respCode == 1) {
+    		    	                    $('.previewcountent').hide();
+    		    	                    alert("请在微信中预览");
+    		    	                } else {
+    		    	                    alert("请关注微信公众号或重新输入昵称");
+    		    	                }
+    		    	            }
+    		    	        });
+    		    	    });
+ $('.prcancel').on('click', function() {
+	 	$('#nikenameid').val('');
+		$('.previewcountent').hide();
+	});
+	$('.closeBtn').on('click', function() {
+		$('#nikenameid').val('');
+		$('.previewcountent').hide();
+	});
+
+</script>
+
+</body>
+
+</html>

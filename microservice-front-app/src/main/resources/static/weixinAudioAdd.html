@@ -1,0 +1,194 @@
+﻿
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>音频管理</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+	<style>
+		.layui-form{
+			padding: 20px;
+		}
+		#upload{
+			display: block;
+		}
+		.amentit{
+			margin: 10px 0;
+			font-size: 12px;
+			color: #999;
+		}
+		#headImgPic{
+			height: 35px;
+			width: 50%;
+		}
+	</style>
+</head>
+
+    <body>
+    <form class="layui-form" action="">
+        <input name="Authorization" id="Authorization" autocomplete="off" class="layui-input" type="hidden"  >
+ 	 <div class="layui-form-item">
+    	<label class="layui-form-label">标题</label>
+    	<div class="layui-input-block">
+      <input name="title" id="title"  autocomplete="off" placeholder="请输入" class="layui-input" type="text" >
+    	</div>
+ 	 </div>
+ 	 <div class="layui-form-item">
+        <label class="layui-form-label">音频内容</label>
+        <div class="layui-input-block">
+          <input name="headImg" id="headImg"  autocomplete="off"  class="layui-input" type="hidden" >
+          <input name="fileSize" id="fileSize"  autocomplete="off"  class="layui-input" type="hidden" >
+          <video id="headImgPic"  controls="controls">  
+	        your browser does not support the video tag  
+	      </video>
+	      <p class="amentit">上传音频文件不能超过2M</p>
+          <button type="button" class="layui-btn" id="upload">
+          <i class="layui-icon">&#xe67c;</i>上传</button>
+<!--                 <img id="headImgPic"  style="width:200px; height:100px;" src=""/> -->
+              	
+        </div>
+     </div>
+ 	  <div class="layui-form-item">
+        <label class="layui-form-label">分类</label>
+        <div class="layui-input-block" id="categoryIds" >
+        </div>
+     </div>
+
+	<div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+   
+</form>
+
+<script>
+var acekeystoken = $.cookie('bearcktkaeskey');
+if (acekeystoken == "") {
+    parent.location.href = ctxApp + '/login.html';
+}
+
+  //initConfigSelect(audio_category,"categoryId", null);
+
+layui.use(['form', 'layedit', 'laydate','upload'], function(){
+	
+	var upload = layui.upload;
+	
+	 var form = layui.form
+	  ,layer = layui.layer
+	  ,layedit = layui.layedit
+	  ,laydate = layui.laydate;
+	 
+	var isUpload=false;
+    //执行上传
+    var uploadInst = upload.render({
+        elem: '#upload' //绑定元素
+        ,url: ctxApp+'/file/upload' //上传接口
+        ,method: 'POST'
+        ,accept: 'audio'
+        ,size:2048
+        ,before: function(obj){
+            layer.load();
+            isUpload=true;
+        }
+        ,done: function(res){//上传完毕回调
+            layer.closeAll('loading');
+            layer.msg(res.msg);
+            var result = ctxApp+"/" +res.imgUrl;
+            $("#headImg").val(result);
+            $("#headImgPic").attr("src",result);
+            
+            $("#fileSize").val(res.fileSizeName);
+        }
+        ,error: function(){//请求异常回调
+            layer.closeAll('loading');
+            layer.msg('网络异常，请稍后重试！');
+        }
+    });
+  
+
+  initConfigRadio(audio_category,"categoryId", "categoryIds");
+  
+  
+  form.render('radio'); //刷新select选择框渲染
+  
+  $("#id").val(getQueryString("id"));
+  
+  //监听提交
+  form.on('submit(demo1)', function(data){
+  /*   layer.alert(JSON.stringify(data.field), {
+      title: '最终的提交信息'
+    }) */
+    if(!isUpload){
+    	parent.layer.msg('请先上传视频');
+    	return;
+    }
+	  function trim(str){
+		  return str.replace(/(^\s*)|(\s*$)/g, "");
+		  }
+  
+    var title=$('#title').val();
+    if(typeof title=='string'){
+    	title=trim(title);
+    }
+    if(title==null||title==''){
+    	parent.layer.msg('请输入标题');
+    	return;
+    }
+    data.field.Authorization=acekeystoken;
+    var files = data.field;
+    var postType ="POST";
+    var url =ctxAppSec+'/api/WeixinAudio';
+    if(getQueryString("id")!=null){
+    	postType="PUT";
+    	url =ctxAppSec+'/api/WeixinAudio/'+getQueryString("id");
+    }
+    
+    //提交
+    $.ajax({
+        url: url,
+        data: files,
+        type: postType,
+        dataType: "json",
+        success: function(data){
+        	parent.parent.layer.msg(data.respMsg);
+                 var index = parent.layer.getFrameIndex(window.name);  
+                 parent.layer.close(index); 
+             	   layer.closeAll('loading');
+	     return true;
+          },
+          error: function(data){
+              try {
+                 layer.msg("请求异常");
+                 return false;
+              }catch (e) {
+                 console.log(e);
+              }
+          }
+     });
+    
+    return false;
+  });
+  
+});
+
+
+</script>
+
+</body>
+</html>

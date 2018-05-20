@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="layui/css/layui.css" />
+		<link rel="stylesheet" href="src/css/base3d8d4c.css" />
+		<link rel="stylesheet" type="text/css" href="src/css/tooltip3a7b39.css" />
+		<link rel="stylesheet" type="text/css" href="https://res.wx.qq.com/mpres/zh_CN/htmledition/comm_htmledition/style/page/menu/index3c4bd4.css" />
+		<link rel="stylesheet" href="" />
+
+		<title></title>
+		<style type="text/css">
+			.audio_dialog .audio_title {
+				width: 200px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="dialog audio_dialog">
+
+			<div class="dialog_bd" style="padding: 15px 45px 34px;">
+				<div id="audio_music_dialog_content" class="audio_music_dialog_content">
+					<div class="weui-desktop-tab weui-desktop-tab_title weui-desktop-tab_dialog title_tab">
+						<ul class="weui-desktop-tab__navs">
+							<li class="js_audio_tab_btn weui-desktop-tab__nav first js_top selected">
+								<a href="javascript:;">素材库</a>
+							</li>
+						</ul>
+					</div>
+					<div>
+						<div class="js_audio_block audio_box" style="">
+							<!--<div class="global_mod audio_box_hd float_layout gap_top" id="">
+								<p class="global_extra">
+									<a class="btn btn_primary btn_add jsPluginAudioNew" href="javascript:;"><i class="icon14_common add_white"></i>新建语音</a>
+								</p>
+							</div>-->
+							<div class="audio_box_bd audio_list_container" id="">
+								<div class="media_list_tips_wrp tips_global" style="display:none;">
+									<span class="tips">暂无素材</span>
+									<span class="vm_box"></span>
+								</div>
+								<div class="media_list_tips_wrp" style="display:none;">
+									<i class="icon_loading_small white">loading...</i>
+									<span class="vm_box"></span>
+								</div>
+								<div class="audio_list jsPluginAudioList">
+									<label class=" audio_item">
+									    <span class="lbl_content">
+									        <span class="audio_meta audio_title">名称</span>
+									        <span class="audio_meta audio_date">上传时间</span>
+									        <span class="audio_meta audio_length">文件大小</span>
+									        <span class="audio_meta audio_time">音频时长</span>
+									        
+									    </span>
+									</label>
+
+								</div>
+								
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="dialog_ft">
+				<span style="" class=" btn btn_primary btn_input js_btn_p"><button type="button" class=" js_btn" id="query" data-index="0">确定</button></span>
+				<span style="" class=" btn btn_default btn_input js_btn_p"><button type="button" class="js_btn" id="cancel" data-index="1">取消</button></span>
+			</div>
+		</div>
+		<script src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/jquery.cookie.js"></script>
+		<script src="js/js.js"></script>
+		<script src="layer/layer.js"></script>
+		<script src="layui/layui.js"></script>
+		<script type="text/javascript" src="src/me/menu.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+var acekeystoken = $.cookie('bearcktkaeskey');
+				$(window).on('load', function() {
+					$('.audio_list').on('click', '.audio_item', function() {
+						$(this).siblings().children('.icon_radio').removeClass('selected')
+						$(this).children('.icon_radio').addClass('selected')
+					})
+					$('#query').on('click', function() {//debugger;
+						if($('.icon_radio.selected').length == 0) {
+							layer.msg('请选择一个音频', {
+							    time: 500, //20s后自动关闭
+							  });
+							return false;
+						} else {
+							var the_id = $('.audio_list').find('.selected').parent('.audio_item').attr('data-id');
+							
+		
+							var index2 = parent.layer.getFrameIndex(window.name)
+							parent.document.getElementById('audioSelectedId').value = the_id;
+							//
+							parent.layer.close(index2);
+							$(parent.document).find('.menu-list').find('.current').attr('data-action','key|3|'+the_id)
+							$(parent.document).find('#msgSender_media_7_3').prev().hide();
+							$(parent.document).find('#msgSender_media_7_3').show();
+							showAudio(the_id)
+						}
+					})
+					$('#cancel').on('click', function() {
+						var index2 = parent.layer.getFrameIndex(window.name)
+						parent.layer.close(index2);
+					})
+				
+					$.ajax({
+						type: 'get',
+						//url: 'datas/data_audio.js',
+						'url':ctxAppSec+'/api/WeixinAudio',
+						'data': {
+							offset: 1,
+							num: 10,
+							"Authorization": acekeystoken
+						},
+						'dataType': 'json',
+						success: function(data) {
+							console.log(data);
+							
+							var obj = data.data;
+							//模拟数据插入
+							setTimeout(function() {
+								var count = obj.length;
+								if(count != 0) {
+									var html = '';
+									for(var j = 0; j < count; j++) {
+									
+										html+='<label class="frm_radio_label audio_item" data-id="'+obj[j].id+'">';
+									    html+='<i class="icon_radio "></i>';
+									    html+='<span class="lbl_content">';
+									     html+='   <span class="audio_meta audio_title">'+obj[j].title+'</span>';
+									     html+='   <span class="audio_meta audio_date">'+obj[j].createTime+'</span>';
+									    html+='    <span class="audio_meta audio_length">'+obj[j].file_size+'</span>';
+									     html+='    <span class="audio_meta audio_time">'+obj[j].video_length+'</span>';
+									    html+='    <span class="audio_meta audio_play jsPluginAudioPlay audio_default" id="pluginAudioPlay_'+j+'">';
+										 html+='       <div class="qqmusic_audio " id="wxAudioBox" data-aid="">';
+										html+='		    <a class="audio_switch" href="javascript:;" onclick="return false;" title="点击播放">';
+										html+='	        <i class="icon_qqmusic"></i>';
+										html+='		    </a>';
+										html+='		</div>';
+									    html+='    </span>';
+									   html+=' </span>';
+    									html+='<input type="radio" data-label="default.mp3" data-value="'+obj[j].id+'" data-index="0" class="frm_radio jsPluginAudioRadio js_audio_music_item_radio" id="checkbox1">';
+									html+='</label>';
+									}
+									$('.audio_list').append(html)
+								}
+							},30)
+							
+							}
+						});
+						})
+				})
+			//显示音频方法
+		function showAudio(theid){  
+			$.ajax({
+		    	type:"get",
+		    	url:ctxAppSec+"/api/WeixinAudio/showInfo/"+theid+"?Authorization="+acekeystoken,
+		    	dataType:"json",
+		    	success:function(data){
+		    		var data1=data.weixinAudio;
+		    		var time=data1.fileSize?data1.fileSize:'未知';
+		    		var title=data1.title;
+		    		$(parent.document).find('#msgSender_media_7_3').find('.preview_audio_title').html(title)
+		    		$(parent.document).find('#msgSender_media_7_3').find('.preview_audio_desc').html(time)
+		    		$(parent.document).find('#msgSender_media_7_3').show()
+		    		$(parent.document).find('.js_audioArea').children('.tab_cont_cover').hide()
+		    	}
+		    	
+		    });
+		}
+		</script>
+	</body>
+
+</html>

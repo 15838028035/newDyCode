@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+
+<mapper namespace="com.lj.cloud.secrity.dal.WeixinTaskRunLogMapper">
+    <resultMap id="weixinTaskRunLogResult" type="com.weixindev.micro.serv.common.bean.report.WeixinTaskRunLog">
+   	  	<result property="id" column="id" jdbcType="INTEGER"   />
+   	  	<result property="createDate" column="create_date" jdbcType="TIMESTAMP"   />
+   	  	<result property="updateDate" column="update_date" jdbcType="TIMESTAMP"   />
+   	  	<result property="logsDesc" column="logs_desc" jdbcType="VARCHAR"   />
+   	  	<result property="taskName" column="task_name" jdbcType="VARCHAR"   />
+    </resultMap>
+
+	<sql id="Base_Column_List">
+	    <![CDATA[
+	   
+        	id ,
+        	create_date ,
+        	update_date ,
+        	logs_desc ,
+        	task_name 
+	    ]]>
+	</sql>
+
+   <select id="selectByPrimaryKey" resultMap="weixinTaskRunLogResult">
+	 select 
+	    <include refid="Base_Column_List"/>
+	    
+	        from weixin_task_run_log 
+	        where 
+		       id = #{id,jdbcType=INTEGER}
+			
+</select>
+
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+           delete from weixin_task_run_log where
+        id = #{id,jdbcType=INTEGER}
+	
+       </delete>
+
+ <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+        INSERT INTO weixin_task_run_log (
+         id, create_date, update_date, logs_desc, task_name
+        ) VALUES (
+         #{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{logsDesc,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}        
+        )
+   
+</insert>
+
+ <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinTaskRunLog">
+          INSERT INTO weixin_task_run_log 
+	         <trim prefix="(" suffix=")" suffixOverrides="," >
+	    	<if test="id != null" >
+        		id,
+     	 	</if>
+	    	<if test="createDate != null" >
+        		create_date,
+     	 	</if>
+	    	<if test="updateDate != null" >
+        		update_date,
+     	 	</if>
+	    	<if test="logsDesc != null" >
+        		logs_desc,
+     	 	</if>
+	    	<if test="taskName != null" >
+        		task_name,
+     	 	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+
+	    		<if test="id != null" >
+        		     #{id,jdbcType=INTEGER},
+     	 		</if>
+	    		<if test="createDate != null" >
+        		     #{createDate,jdbcType=TIMESTAMP},
+     	 		</if>
+	    		<if test="updateDate != null" >
+        		     #{updateDate,jdbcType=TIMESTAMP},
+     	 		</if>
+	    		<if test="logsDesc != null" >
+        		     #{logsDesc,jdbcType=VARCHAR},
+     	 		</if>
+	    		<if test="taskName != null" >
+        		     #{taskName,jdbcType=VARCHAR},
+     	 		</if>
+		</trim>
+ </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinTaskRunLog">
+    
+        UPDATE weixin_task_run_log 
+     
+      <set >
+		<if test="createDate != null and  createDate != ''" >
+			create_date = #{createDate,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="updateDate != null and  updateDate != ''" >
+			update_date = #{updateDate,jdbcType=TIMESTAMP} ,
+		</if>
+		<if test="logsDesc != null and  logsDesc != ''" >
+			logs_desc = #{logsDesc,jdbcType=VARCHAR} ,
+		</if>
+		<if test="taskName != null and  taskName != ''" >
+			task_name = #{taskName,jdbcType=VARCHAR} ,
+		</if>
+
+	 </set>
+        WHERE 
+	        id = #{id,jdbcType=INTEGER}
+		
+    </update>
+   
+    <update id="updateByPrimaryKey" >
+
+        UPDATE weixin_task_run_log SET
+	        create_date = #{createDate} , update_date = #{updateDate} , logs_desc = #{logsDesc} , task_name = #{taskName}  
+        WHERE 
+		id = #{id,jdbcType=INTEGER}
+		 
+  
+</update>
+    
+    <select id="select" resultMap="weixinTaskRunLogResult">
+	 select 
+    	<include refid="Base_Column_List"/>
+	   
+	        from weixin_task_run_log WHERE 1=1  
+	  
+	      	     and  id = #{id,jdbcType=INTEGER}
+	      	     and  create_date = #{createDate,jdbcType=TIMESTAMP}
+	      	     and  update_date = #{updateDate,jdbcType=TIMESTAMP}
+	      	     and  logs_desc = #{logsDesc,jdbcType=VARCHAR}
+	      	     and  task_name = #{taskName,jdbcType=VARCHAR}
+		
+    </select>
+      
+<select id="selectByExample" resultMap="weixinTaskRunLogResult" >
+	 select 
+		<include refid="Base_Column_List"/>
+   	       	   from weixin_task_run_log WHERE 1=1  
+	  
+		<if test="id != null and  id != ''" >
+	      	   and   id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="createDate != null and  createDate != ''" >
+	      	   and   create_date = #{createDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateDate != null and  updateDate != ''" >
+	      	   and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="logsDesc != null and  logsDesc != ''" >
+	      	   and   logs_desc = #{logsDesc,jdbcType=VARCHAR}
+		</if>
+		<if test="taskName != null and  taskName != ''" >
+	      	   and   task_name = #{taskName,jdbcType=VARCHAR}
+		</if>
+			
+  </select>
+
+<select id="selectByPageExample" resultType="java.util.HashMap" >
+	 select 
+		<include refid="Base_Column_List"/>
+   	       	   from weixin_task_run_log WHERE 1=1  
+	  
+		<if test="id != null and  id != ''" >
+	      	   and   id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="createDate != null and  createDate != ''" >
+	      	   and   create_date = #{createDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateDate != null and  updateDate != ''" >
+	      	   and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="logsDesc != null and  logsDesc != ''" >
+	      	   and   logs_desc = #{logsDesc,jdbcType=VARCHAR}
+		</if>
+		<if test="taskName != null and  taskName != ''" >
+	      	   and   task_name = #{taskName,jdbcType=VARCHAR}
+		</if>
+			
+  </select>
+
+</mapper>

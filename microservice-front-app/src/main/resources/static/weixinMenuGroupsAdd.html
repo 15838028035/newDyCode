@@ -1,0 +1,153 @@
+﻿
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>weixinMenuGroups管理</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+
+</head>
+
+    <body>
+	<script id="demo" type="text/html">
+    <form class="layui-form" action="">
+             <div class="layui-form-item">
+        <label class="layui-form-label">分组名称</label>
+        <div class="layui-input-block">
+      <input name="groupName" id="groupName"  autocomplete="off" placeholder="请输入" class="layui-input" type="text" value={{d.weixinMenuGroups.groupName}}>
+        </div>
+     </div>
+
+ 	 <div class="layui-form-item">
+    	<label class="layui-form-label">备注</label>
+    	<div class="layui-input-block">
+      <input name="remarks" id="remarks"  autocomplete="off" placeholder="请输入" class="layui-input" type="text" value={{d.weixinMenuGroups.remarks}}>
+    	</div>
+ 	 </div>
+
+	<div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+   
+</form>
+</script>
+
+<div id="view"></div>
+
+<script>
+//第三步：渲染模版
+var dataTmp = { //数据
+}
+
+layui.use(['laytpl'], function(){
+  var laytpl = layui.laytpl;
+  var getTpl = demo.innerHTML
+  ,view = document.getElementById('view');
+  
+  var postType = "GET";
+  var url =ctxAppSec+'/api/WeixinMenuGroups/showInfo/0';
+  $("#id").val(getQueryString("id"));
+  if(getQueryString("id")!=null){
+      url =ctxAppSec+'/api/WeixinMenuGroups/showInfo/'+getQueryString("id");
+  }
+  
+  //登录
+  $.ajax({
+      url: url,
+      data: {},
+      type: postType,
+      dataType: "json",
+      async:'false',
+      success: function(data){
+          console.log(data);
+          dataTmp=data;
+          
+          laytpl(getTpl).render(dataTmp, function(html){
+                view.innerHTML = html;
+              });
+        },
+        error: function(data){
+            try {
+               layer.msg("请求异常");
+               return false;
+            }catch (e) {
+               console.log(e);
+            }
+        }
+   });
+  
+  
+});
+
+layui.use(['form', 'layedit', 'laydate'], function(){
+  var form = layui.form
+  ,layer = layui.layer
+  ,layedit = layui.layedit
+  ,laydate = layui.laydate;
+  
+  //创建一个编辑器
+  var editIndex = layedit.build('LAY_demo_editor');
+ 
+  
+  $("#id").val(getQueryString("id"));
+  
+  //监听提交
+  form.on('submit(demo1)', function(data){
+  /*   layer.alert(JSON.stringify(data.field), {
+      title: '最终的提交信息'
+    }) */
+    
+    var files = data.field;
+    var postType ="POST";
+    var url =ctxAppSec+'/api/WeixinMenuGroups';
+    if(getQueryString("id")!=null){
+    	postType="PUT";
+    	url =ctxAppSec+'/api/WeixinMenuGroups/'+getQueryString("id");
+    }
+    
+    //提交
+    $.ajax({
+        url: url,
+        data: files,
+        type: postType,
+        dataType: "json",
+        success: function(data){
+        	   layer.closeAll('loading');
+                 layer.msg(data.respMsg);
+	     return true;
+          },
+          error: function(data){
+              try {
+                 layer.msg("请求异常");
+                 return false;
+              }catch (e) {
+                 console.log(e);
+              }
+          }
+     });
+    
+    return false;
+  });
+  
+  
+});
+</script>
+
+</body>
+</html>

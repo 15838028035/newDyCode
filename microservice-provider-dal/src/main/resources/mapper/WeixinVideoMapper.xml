@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+
+<mapper namespace="com.lj.cloud.secrity.dal.WeixinVideoMapper">
+    <resultMap id="weixinVideoResult" type="com.weixindev.micro.serv.common.bean.weixin.WeixinVideo">
+        <result property="id" column="id" jdbcType="INTEGER"   />
+        <result property="title" column="title" jdbcType="VARCHAR"   />
+        <result property="headImg" column="headImg" jdbcType="VARCHAR"   />
+        <result property="mediaId" column="mediaId" jdbcType="VARCHAR"   />
+        <result property="categoryId" column="categoryId" jdbcType="VARCHAR"   />
+        <result property="intro" column="intro" jdbcType="VARCHAR"   />
+        <result property="seeType" column="seeType" jdbcType="VARCHAR"   />
+        <result property="msgType" column="msgType" jdbcType="VARCHAR"   />
+        <result property="createBy" column="create_by" jdbcType="INTEGER"   />
+        <result property="createByUname" column="create_By_UName" jdbcType="VARCHAR"   />
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"   />
+        <result property="updateBy" column="update_by" jdbcType="INTEGER"   />
+        <result property="updateByUname" column="update_By_Uname" jdbcType="VARCHAR"   />
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"   />
+        <result property="imgGroupId" column="img_group_id" jdbcType="INTEGER"   />
+        <result property="fileSize" column="file_size" jdbcType="VARCHAR"   />
+        <result property="videoLength" column="video_length" jdbcType="VARCHAR"   />
+        <result property="tag" column="tag" jdbcType="VARCHAR"   />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        <![CDATA[
+       
+          id ,
+            title ,
+            headImg ,
+            mediaId ,
+            categoryId ,
+            intro ,
+            seeType ,
+            msgType ,
+            create_by ,
+            create_By_UName ,
+            create_date ,
+            update_by ,
+            update_By_Uname ,
+            update_date ,
+            img_group_id ,
+            file_size ,
+            video_length ,
+            tag 
+        ]]>
+    </sql>
+
+   <select id="selectByPrimaryKey" resultMap="weixinVideoResult">
+     select 
+        <include refid="Base_Column_List"/>
+        
+            from weixin_video 
+            where 
+               id = #{id,jdbcType=INTEGER}
+            
+</select>
+
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+           delete from weixin_video where
+        id = #{id,jdbcType=INTEGER}
+    
+       </delete>
+
+ <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+       INSERT INTO weixin_video (
+         id, title, headImg, mediaId, categoryId, intro, seeType, msgType, create_by, create_By_UName, create_date, update_by, update_By_Uname, update_date, img_group_id, file_size, video_length, tag
+        ) VALUES (
+         #{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{mediaId,jdbcType=VARCHAR}, #{categoryId,jdbcType=VARCHAR}, #{intro,jdbcType=VARCHAR}, #{seeType,jdbcType=VARCHAR}, #{msgType,jdbcType=VARCHAR}, #{createBy,jdbcType=INTEGER}, #{createByUname,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateByUname,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{imgGroupId,jdbcType=INTEGER}, #{fileSize,jdbcType=VARCHAR}, #{videoLength,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}        
+        )
+   
+</insert>
+
+ <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.weixin.WeixinVideo">
+         INSERT INTO weixin_video 
+             <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="title != null" >
+                title,
+            </if>
+            <if test="headImg != null" >
+                headImg,
+            </if>
+            <if test="mediaId != null" >
+                mediaId,
+            </if>
+            <if test="categoryId != null" >
+                categoryId,
+            </if>
+            <if test="intro != null" >
+                intro,
+            </if>
+            <if test="seeType != null" >
+                seeType,
+            </if>
+            <if test="msgType != null" >
+                msgType,
+            </if>
+            <if test="createBy != null" >
+                create_by,
+            </if>
+            <if test="createByUname != null" >
+                create_By_UName,
+            </if>
+            <if test="createDate != null" >
+                create_date,
+            </if>
+            <if test="updateBy != null" >
+                update_by,
+            </if>
+            <if test="updateByUname != null" >
+                update_By_Uname,
+            </if>
+            <if test="updateDate != null" >
+                update_date,
+            </if>
+            <if test="imgGroupId != null" >
+                img_group_id,
+            </if>
+            <if test="fileSize != null" >
+                file_size,
+            </if>
+            <if test="videoLength != null" >
+                video_length,
+            </if>
+            <if test="tag != null" >
+                tag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+                <if test="id != null" >
+                     #{id,jdbcType=INTEGER},
+                </if>
+                <if test="title != null" >
+                     #{title,jdbcType=VARCHAR},
+                </if>
+                <if test="headImg != null" >
+                     #{headImg,jdbcType=VARCHAR},
+                </if>
+                <if test="mediaId != null" >
+                     #{mediaId,jdbcType=VARCHAR},
+                </if>
+                <if test="categoryId != null" >
+                     #{categoryId,jdbcType=VARCHAR},
+                </if>
+                <if test="intro != null" >
+                     #{intro,jdbcType=VARCHAR},
+                </if>
+                <if test="seeType != null" >
+                     #{seeType,jdbcType=VARCHAR},
+                </if>
+                <if test="msgType != null" >
+                     #{msgType,jdbcType=VARCHAR},
+                </if>
+                <if test="createBy != null" >
+                     #{createBy,jdbcType=INTEGER},
+                </if>
+                <if test="createByUname != null" >
+                     #{createByUname,jdbcType=VARCHAR},
+                </if>
+                <if test="createDate != null" >
+                     #{createDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="updateBy != null" >
+                     #{updateBy,jdbcType=INTEGER},
+                </if>
+                <if test="updateByUname != null" >
+                     #{updateByUname,jdbcType=VARCHAR},
+                </if>
+                <if test="updateDate != null" >
+                     #{updateDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="imgGroupId != null" >
+                     #{imgGroupId,jdbcType=INTEGER},
+                </if>
+                <if test="fileSize != null" >
+                     #{fileSize,jdbcType=VARCHAR},
+                </if>
+                <if test="videoLength != null" >
+                     #{videoLength,jdbcType=VARCHAR},
+                </if>
+                <if test="tag != null" >
+                     #{tag,jdbcType=VARCHAR},
+                </if>
+        </trim>
+ </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.weixindev.micro.serv.common.bean.weixin.WeixinVideo">
+    
+        UPDATE weixin_video 
+     
+      <set >
+      <if test="title != null and  title != ''" >
+            title = #{title,jdbcType=VARCHAR} ,
+        </if>
+        <if test="headImg != null and  headImg != ''" >
+            headImg = #{headImg,jdbcType=VARCHAR} ,
+        </if>
+        <if test="mediaId != null and  mediaId != ''" >
+            mediaId = #{mediaId,jdbcType=VARCHAR} ,
+        </if>
+        <if test="categoryId != null and  categoryId != ''" >
+            categoryId = #{categoryId,jdbcType=VARCHAR} ,
+        </if>
+        <if test="intro != null and  intro != ''" >
+            intro = #{intro,jdbcType=VARCHAR} ,
+        </if>
+        <if test="seeType != null and  seeType != ''" >
+            seeType = #{seeType,jdbcType=VARCHAR} ,
+        </if>
+        <if test="msgType != null and  msgType != ''" >
+            msgType = #{msgType,jdbcType=VARCHAR} ,
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+            create_by = #{createBy,jdbcType=INTEGER} ,
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+            create_By_UName = #{createByUname,jdbcType=VARCHAR} ,
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+            create_date = #{createDate,jdbcType=TIMESTAMP} ,
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+            update_by = #{updateBy,jdbcType=INTEGER} ,
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+            update_By_Uname = #{updateByUname,jdbcType=VARCHAR} ,
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+            update_date = #{updateDate,jdbcType=TIMESTAMP} ,
+        </if>
+        <if test="imgGroupId != null and  imgGroupId != ''" >
+            img_group_id = #{imgGroupId,jdbcType=INTEGER} ,
+        </if>
+        <if test="fileSize != null and  fileSize != ''" >
+            file_size = #{fileSize,jdbcType=VARCHAR} ,
+        </if>
+        <if test="videoLength != null and  videoLength != ''" >
+            video_length = #{videoLength,jdbcType=VARCHAR} ,
+        </if>
+        <if test="tag != null and  tag != ''" >
+            tag = #{tag,jdbcType=VARCHAR} ,
+        </if>
+     </set>
+        WHERE 
+            id = #{id,jdbcType=INTEGER}
+        
+    </update>
+   
+    <update id="updateByPrimaryKey" >
+
+       UPDATE weixin_video SET
+            title = #{title} , headImg = #{headImg} , mediaId = #{mediaId} , categoryId = #{categoryId} , intro = #{intro} , seeType = #{seeType} , msgType = #{msgType} , create_by = #{createBy} , create_By_UName = #{createByUname} , create_date = #{createDate} , update_by = #{updateBy} , update_By_Uname = #{updateByUname} , update_date = #{updateDate} , img_group_id = #{imgGroupId} , file_size = #{fileSize} , video_length = #{videoLength} , tag = #{tag}  
+        WHERE 
+        id = #{id,jdbcType=INTEGER}
+         
+  
+</update>
+    
+    <select id="select" resultMap="weixinVideoResult">
+     select 
+        <include refid="Base_Column_List"/>
+       
+            from weixin_video WHERE 1=1  
+       and  id = #{id,jdbcType=INTEGER}
+                   and  id = #{id,jdbcType=INTEGER}
+                 and  title = #{title,jdbcType=VARCHAR}
+                 and  headImg = #{headImg,jdbcType=VARCHAR}
+                 and  mediaId = #{mediaId,jdbcType=VARCHAR}
+                 and  categoryId = #{categoryId,jdbcType=VARCHAR}
+                 and  intro = #{intro,jdbcType=VARCHAR}
+                 and  seeType = #{seeType,jdbcType=VARCHAR}
+                 and  msgType = #{msgType,jdbcType=VARCHAR}
+                 and  create_by = #{createBy,jdbcType=INTEGER}
+                 and  create_By_UName = #{createByUname,jdbcType=VARCHAR}
+                 and  create_date = #{createDate,jdbcType=TIMESTAMP}
+                 and  update_by = #{updateBy,jdbcType=INTEGER}
+                 and  update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+                 and  update_date = #{updateDate,jdbcType=TIMESTAMP}
+                 and  img_group_id = #{imgGroupId,jdbcType=INTEGER}
+                 and  file_size = #{fileSize,jdbcType=VARCHAR}
+                 and  video_length = #{videoLength,jdbcType=VARCHAR}
+                 and  tag = #{tag,jdbcType=VARCHAR}
+        
+    </select>
+      
+<select id="selectByExample" resultMap="weixinVideoResult" >
+     select 
+        <include refid="Base_Column_List"/>
+               from weixin_video WHERE 1=1  
+      
+       <if test="id != null and  id != ''" >
+               and   id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="title != null and  title != ''" >
+               and   title = #{title,jdbcType=VARCHAR}
+        </if>
+        <if test="headImg != null and  headImg != ''" >
+               and   headImg = #{headImg,jdbcType=VARCHAR}
+        </if>
+        <if test="mediaId != null and  mediaId != ''" >
+               and   mediaId = #{mediaId,jdbcType=VARCHAR}
+        </if>
+        <if test="categoryId != null and  categoryId != ''" >
+               and   categoryId = #{categoryId,jdbcType=VARCHAR}
+        </if>
+        <if test="intro != null and  intro != ''" >
+               and   intro = #{intro,jdbcType=VARCHAR}
+        </if>
+        <if test="seeType != null and  seeType != ''" >
+               and   seeType = #{seeType,jdbcType=VARCHAR}
+        </if>
+        <if test="msgType != null and  msgType != ''" >
+               and   msgType = #{msgType,jdbcType=VARCHAR}
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+               and   create_by = #{createBy,jdbcType=INTEGER}
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+               and   create_By_UName = #{createByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+               and   create_date = #{createDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+               and   update_by = #{updateBy,jdbcType=INTEGER}
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+               and   update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+               and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="imgGroupId != null and  imgGroupId != ''" >
+               and   img_group_id = #{imgGroupId,jdbcType=INTEGER}
+        </if>
+        <if test="fileSize != null and  fileSize != ''" >
+               and   file_size = #{fileSize,jdbcType=VARCHAR}
+        </if>
+        <if test="videoLength != null and  videoLength != ''" >
+               and   video_length = #{videoLength,jdbcType=VARCHAR}
+        </if>
+        <if test="tag != null and  tag != ''" >
+               and   tag = #{tag,jdbcType=VARCHAR}
+        </if>
+        
+        order by id desc 
+            
+  </select>
+
+<select id="selectByPageExample" resultType="java.util.HashMap" >
+        select 
+       id ,
+            title ,
+            headImg ,
+            mediaId ,
+            categoryId ,
+            intro ,
+            seeType ,
+            msgType ,
+            
+           a.create_by as createBy ,
+            a.create_by_uName as createByUname  ,
+             date_format(a.create_date, '%Y-%m-%d %H:%i:%s' )  as createDate,
+             a.update_by as updateBy  ,
+            a.update_by_uName as updateByUname  ,
+           date_format(a.update_date, '%Y-%m-%d %H:%i:%s' )  as updateDate,
+            a.img_group_id ,
+            a.file_size ,
+            video_length ,
+            tag             
+               from weixin_video a WHERE 1=1  
+      
+       <if test="id != null and  id != ''" >
+               and   id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="title != null and  title != ''" >
+               and   title = #{title,jdbcType=VARCHAR}
+        </if>
+        <if test="headImg != null and  headImg != ''" >
+               and   headImg = #{headImg,jdbcType=VARCHAR}
+        </if>
+        <if test="mediaId != null and  mediaId != ''" >
+               and   mediaId = #{mediaId,jdbcType=VARCHAR}
+        </if>
+        <if test="categoryId != null and  categoryId != ''" >
+               and   categoryId = #{categoryId,jdbcType=VARCHAR}
+        </if>
+        <if test="intro != null and  intro != ''" >
+               and   intro = #{intro,jdbcType=VARCHAR}
+        </if>
+        <if test="seeType != null and  seeType != ''" >
+               and   seeType = #{seeType,jdbcType=VARCHAR}
+        </if>
+        <if test="msgType != null and  msgType != ''" >
+               and   msgType = #{msgType,jdbcType=VARCHAR}
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+               and   create_by = #{createBy,jdbcType=INTEGER}
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+               and   create_By_UName = #{createByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+               and   create_date = #{createDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+               and   update_by = #{updateBy,jdbcType=INTEGER}
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+               and   update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+               and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="imgGroupId != null and  imgGroupId != ''" >
+               and   img_group_id = #{imgGroupId,jdbcType=INTEGER}
+        </if>
+        <if test="fileSize != null and  fileSize != ''" >
+               and   file_size = #{fileSize,jdbcType=VARCHAR}
+        </if>
+        <if test="videoLength != null and  videoLength != ''" >
+               and   video_length = #{videoLength,jdbcType=VARCHAR}
+        </if>
+        <if test="tag != null and  tag != ''" >
+               and   tag = #{tag,jdbcType=VARCHAR}
+        </if>
+         <if test="createDateBegin != null and createDateBegin != ''" >
+               <![CDATA[ and  create_date >= str_to_date(#{createDateBegin,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEnd != null and createDateEnd != ''" >
+                <![CDATA[ and  create_date <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        
+       <if test="keyword != null and  keyword != ''" >
+                and ( title like concat(concat("%",#{keyword,jdbcType=VARCHAR}),"%")  )
+                
+        </if>
+        
+        order by a.id desc 
+            
+  </select>
+  
+  <delete id="deleteByIds" parameterType="java.lang.Integer">
+           delete from weixin_video where
+        id = in 
+    <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+       </delete>
+
+</mapper>
+
+

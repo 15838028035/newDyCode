@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>echarts 折线图demo</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+    
+     <script src="echats/echarts-all.js"></script>
+
+</head>
+
+    <body>
+     <div id="box" style="width: 600px;height:400px;"></div>
+     
+     <script>
+
+     var myChart = echarts.init(document.getElementById("box")); 
+     var    option = {
+
+    	        title: {   text: '折线图堆叠'},
+    	        tooltip: {  trigger: 'axis' },
+    	        legend: {     //图例组件
+    	            data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+    	        },
+
+    	        grid: {       //直角坐标系内绘图网格
+    	            left: '3%',
+    	            right: '4%',
+    	            bottom: '3%',
+    	            containLabel: true
+    	        },
+
+    	        toolbox: {     //工具栏
+    	            feature: {
+    	                saveAsImage: {}
+    	            }
+    	        },
+
+    	        xAxis: {       //直角坐标系 grid 中的 x 轴
+
+    	            type: 'category',
+    	            boundaryGap: false,
+    	            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+
+    	        },
+
+    	        yAxis: {       //直角坐标系 grid 中的 y 轴
+
+    	            type: 'value'
+
+    	        },
+
+    	        series: [      //系列列表
+
+    	            {
+
+    	                name: '邮件营销',
+
+    	                type: 'line',
+
+    	                stack: '总量',
+
+    	                data: [120, 132, 101, 134, 90, 230, 210]
+
+    	            },
+
+    	            {
+
+    	                name: '联盟广告',
+
+    	                type: 'line',
+
+    	                stack: '总量',
+
+    	                data: [220, 182, 191, 234, 290, 330, 310]
+
+    	            },
+
+    	            {
+
+    	                name: '视频广告',
+
+    	                type: 'line',
+
+    	                stack: '总量',
+
+    	                data: [150, 232, 201, 154, 190, 330, 410]
+
+    	            },
+
+    	            {
+
+    	                name: '直接访问',
+
+    	                type: 'line',
+
+    	                stack: '总量',
+
+    	                data: [320, 332, 301, 334, 390, 330, 320]
+
+    	            },
+
+    	            {
+
+    	                name: '搜索引擎',
+
+    	                type: 'line',
+
+    	                stack: '总量',
+
+    	                data: [820, 932, 901, 934, 1290, 1330, 1320]
+
+    	            }
+
+    	        ]
+
+    	    };
+    		                    
+    		                    
+     myChart.setOption(option);
+</script>
+
+</body>
+
+</html>

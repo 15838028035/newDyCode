@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>音频查看</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+
+</head>
+
+    <body>
+    <form class="layui-form" action="">
+        
+     <div class="layui-form-item">
+        <label class="layui-form-label">语音内容</label>
+        <div class="layui-input-block">
+                <video id="headImgPic"  controls="controls">  
+                your browser does not support the video tag  
+                </video>
+        </div>
+     </div>
+  </div>
+   
+</form>
+
+<script>
+
+layui.use(['form', 'layedit', 'laydate','upload'], function(){
+    var upload = layui.upload;
+    
+  var form = layui.form
+  ,layer = layui.layer
+  ,layedit = layui.layedit
+  ,laydate = layui.laydate;
+  
+  var postType = "GET";
+  var url =ctxAppSec+'/api/WeixinAudio/showInfo/'+getQueryString("id");
+  
+  //登录
+  $.ajax({
+      url: url,
+      data: {},
+      type: postType,
+      dataType: "json",
+      async:'false',
+      success: function(data){
+          console.log(data);
+          dataTmp=data;
+          $("#title").val(data.weixinAudio.title);
+          $("#headImgPic").attr("src",data.weixinAudio.headImgPic);
+          
+          initConfigRadio(audio_category,"categoryId", "categoryIds");
+          
+          var categoryId =  data.weixinAudio.categoryId;
+          $(":radio[name='categoryId'][value='" + categoryId + "']").prop("checked", "checked");
+          
+          form.render('radio'); //刷新select选择框渲染
+          
+        },
+        error: function(data){
+            try {
+               layer.msg("请求异常");
+               return false;
+            }catch (e) {
+               console.log(e);
+            }
+        }
+   });
+  
+});
+
+
+$("#close").click(function() {
+      var index = parent.layer.getFrameIndex(window.name);    
+         parent.layer.close(index);   
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+﻿
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>管理</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+    
+    <style>
+    .msgbox{
+        width:200px;
+        height:240px;
+        border:1px solid #ccc;
+        margin-top:10px;
+    }
+    
+    .headMsgBox{
+        height:100px;
+        border:1px solid #ccc;
+    }
+    .titleBox{
+        height:20px;
+    }
+    .optBox{
+     height:20px;
+    }
+    .optBox a{
+    color:blue
+    }
+    </style>
+
+</head>
+
+    <body>
+    <div id="itemList" class="float:left;width:22%;" >
+    
+    
+    </div>
+    
+<script>
+	
+	function initData() {
+		 var url =ctxAppSec+'/api/WeixinImgtextItem/showInfoList';
+	      var   imgTextId = getQueryString("imgTextId");
+	    $.ajax({
+	        url: url,
+	        data: {"imgTextId":imgTextId},
+	        type: "GET",
+	        dataType: "json",
+	        success: function(data){
+	            
+	            var html = "";
+	            
+	            var datas = data.list;
+	            
+	            for(var i=0; i< datas.length;i++){
+	                
+	                
+	                var headImg = datas[i].headImg;
+	                var title = datas[i].title;
+	                var editUrl = "";
+	                var deleteUrl = "";
+	                
+	                var id = datas[i].id;
+	                
+	                
+	                html+='<div class="msgbox">';
+		                html+='<div class="headMsgBox">';
+			                html+='<img src='+headImg + '/>' ;
+			            html+='</div>';
+			            html+='<div class="titleBox">';
+			                html+= '<h4 class="appmsg_title">' ;
+			                html+= title ;
+			                html+= '</h4>' ;
+		                html+='</div>';
+		                
+		                html+=' <div class="optBox">';
+			                html+= '<a href="javaScript:void(0)" onClick="ajaxEdit('+id+')">编辑</a> &nbsp;&nbsp;' 
+			                html+= '<a href="javaScript:void(0)" onClick="ajaxDelete('+id+')">删除</a>' 
+		                html+='</div>';
+		                
+		             html+='</div>';
+	            }
+	            
+	            $("#itemList").html(html);
+	          },
+	          error: function(data){
+	              try {
+	                 layer.msg("请求异常");
+	                 return false;
+	              }catch (e) {
+	                 console.log(e);
+	              }
+	          }
+	     });
+	 
+	};
+	
+	
+	initData();
+	
+	function ajaxEdit(id) {
+		
+		 layer.open({
+	         title: "增加信息",
+	         type: 2,
+	         maxmin: true,
+	         area: ['95%', '95%'],
+	         content: 'weixinImgtextItemEdit.html?id='+id,
+	         // 下面这句是,添加页面关闭后,刷新本页面.
+	         end: function () {
+	                location.reload();
+	         }
+	         }); 
+    }
+	
+	function ajaxDelete(id) {
+        layer.confirm('确定要删除？',{title: "系统提示",anim: 1,icon: 3,closeBtn: 0},function(index){
+        	
+             $.ajax({
+                 url: ctxAppSec+'/api/WeixinImgtextItem/'+id,
+                 data: {
+                 },
+                 type: "DELETE",
+                 dataType: "json",
+                 success: function(data){
+                          layer.msg(data.respMsg);
+                          window.location.reload();
+                   },
+                   error: function(data){
+                       try {
+                          layer.msg("请求异常");
+                          return false;
+                       }catch (e) {
+                          console.log(e);
+                       }
+                   }
+              });
+             
+        });
+	}
+
+</script>
+
+</body>
+
+</html>

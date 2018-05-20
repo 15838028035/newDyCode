@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<script type="text/javascript" src="js/jquery-1.10.1.min.js" ></script>
+		<title></title>
+		<style>
+			.body{
+				background: #FFFFFF;
+			}
+			*{box-sizing: border-box;}
+			*{margin: 0;padding: 0;font-size: 14px;}
+			/*发送内容*/
+			.previewcountent{
+				position: fixed;
+				width: 100%;
+				height: 100%;
+				background: rgba(0,0,0,0.5);
+				left: 0;
+				top: 0;
+				z-index: 9999;
+			}
+			.previewcountent .count{
+				padding: 20px;
+				width: 730px;
+				height: 485px;
+				background: #FFFFFF;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				margin-top: -240px;
+				margin-left: -365px;
+				border-radius: 5px;
+				overflow: hidden;
+			}
+			.previewcountent .head span{
+				font-size: 18px;
+			}
+			.previewcountent .head .closeBtn{
+			    font-size: 45px;
+			    float: right;
+			    margin-top: -20px;
+			    cursor: pointer;
+			}
+			.counttext{
+				width: 400px;
+				margin: 0 auto;
+				margin-top: 100px;
+			}
+			.counttext input{
+				box-sizing: border-box;
+				width: 100%;
+				height: 35px;
+				padding: 0 10px;
+				margin:10px 0;
+			}
+			.previewcountent .btnbox {
+				margin-top: 50px;
+				width: 100%;
+				overflow: hidden;
+				text-align: center;
+			}
+			.previewcountent .btnbox  span{
+				width: 110px;
+				height: 35px;
+				text-align: center;
+				line-height: 35px;
+				margin: 0 15px;
+				background: none;
+				border: none;
+				border-radius: 5px;
+				display: inline-block;
+				cursor: pointer;
+			}
+			.previewcountent .btnbox .prsure{
+				background: #44b549;
+				color: #FFFFFF;
+			}
+			.previewcountent .btnbox .prcancel{
+				border: 1px solid #CCCCCC;
+				color: #333333;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="previewcountent">
+			<div class="count">
+				<p class="head"><span>发送预览</span><span class="closeBtn">×</span></p>
+				<div class="counttext">
+					<p>关注公众号后，才能接收图文消息预览</p>
+					<input type="text" placeholder="请输入微信号" />
+					<p>预览功能仅用于公众号查看文章效果，不适用于公众传播，预览链接会在短期内失效</p>
+				</div>
+				<div class="btnbox centerboth">
+					<span class="prsure">确定</span>
+					<span class="prcancel">取消</span>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		$('.closeBtn').on('click',function(){
+			$('.previewcountent').hide();
+		});
+		$('.prsure').on('click',function(){
+			$('.previewcountent').hide();
+		});
+		$('.prcancel').on('click',function(){
+			$('.previewcountent').hide();
+		});
+	</script>
+</html>

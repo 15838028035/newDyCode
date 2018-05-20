@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>角色编辑记录</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+	<style>
+		.bgcolor{background: #f3f3f4;}
+		.admin_edit{
+			padding: 20px;
+		}
+		.edit_tit{
+			padding: 0 80px 0 20px;
+		    height: 42px;
+		    line-height: 42px;
+		    border-bottom: 1px solid #eee;
+		    font-size: 14px;
+		    color: #333;
+		    overflow: hidden;
+		    background-color: #F8F8F8;
+		    border-radius: 2px 2px 0 0;
+		    position: relative;
+		}
+		.wrap_count{
+			padding: 20px;
+			background: #f3f3f4;
+		}
+		.ipt_count{
+			padding: 20px;
+			background: #FFFFFF;
+		}
+		.ipt_box{
+			width: 100%;
+			padding: 20px 0;
+			border-bottom: 1px dashed #EBEBEB;
+			overflow: hidden;
+			line-height: 36px;
+		}
+		.ipt_box:nth-last-child(1){
+			border: none;
+		}
+		.ipt_box>span{
+			width: 16%;
+			float: left;
+			text-align: right;
+			margin-right: 5%;
+			font-weight: bold;
+			font-size: 12px;
+			color: #666;
+		}
+		.ipt_box p{
+			float: left;
+			width: 60%;
+			height: 36px;
+			overflow: hidden;
+		}
+		.ipt_box p input{
+			width: 100%;
+			border: 1px solid #e5e6e7;
+			height: 100%;
+			padding: 0 10px;
+			box-sizing: border-box;
+		}
+		.ipt_box p select{
+			width: 100%;
+			border: 1px solid #e5e6e7;
+			height: 100%;
+		}
+		.ipt_box p select{
+			color: #666;
+		}
+		.ipt_box p select option{
+			color: #666;
+		}
+		.saveBtn{
+			display: inline-block;
+		    padding: 6px 12px;
+		    margin-bottom: 0;
+		    font-size: 14px;
+		    font-weight: 400;
+		    line-height: 1.42857143;
+		    text-align: center;
+		    white-space: nowrap;
+		    vertical-align: middle;
+		    -ms-touch-action: manipulation;
+		    touch-action: manipulation;
+		    cursor: pointer;
+		    -webkit-user-select: none;
+		    -moz-user-select: none;
+		    -ms-user-select: none;
+		    user-select: none;
+		    background-image: none;
+		    border: 1px solid transparent;
+		    border-radius: 4px;
+		    background-color: #1ab394;
+		    border-color: #1ab394;
+		    color: #FFF;
+		    margin-left: 21%;
+		}
+　　		input:focus {
+		    border: 1px solid red !important;
+		}
+		.edit_tit .clsot_btn{
+			position: absolute;
+			right: 0;
+			top: 0;
+			width: 42px;
+			height: 42px;
+			cursor: pointer;
+			background: url(img/closebtn.png) no-repeat;
+			background-size: 16px 16px;
+			background-position: center center;
+		}
+		.ipt_box i{
+			line-height:16px;
+			display: inline-block;
+			line-height:auto;
+			color: red;
+			font-size: 24px;
+			float: left;
+			margin-left: 5px;
+			margin-top: 10px;
+		}
+		.ipt_box .selcheckBox{
+		    float: left;
+		    min-height: 1px;
+		    float: left;
+		    width:78%;
+		}
+		.ipt_box .selcheckBox tr{
+			width: 100%;
+			height: 36px;
+		}
+		.ipt_box .selcheckBox tr td{
+			padding: 0 10px;
+			box-sizing: border-box;
+			height: 36px;
+			border: 1px solid #e5e6e7;
+		}
+		.ipt_box .selcheckBox table{
+			border: 1px solid #EBEBEB;
+			width: 100%;
+		}
+		.ipt_box .selcheckBox table tr td:nth-child(1){
+			width: 20%;
+		}
+		.ipt_box .selcheckBox table tr td span{
+			margin-right: 5px;
+		}
+		.ipt_box .selcheckBox table tr td span input{
+			margin-right: 5px;
+		}
+	</style>
+</head>
+	<body class="bgcolor">
+	  <div class="admin_edit">
+	  		<div class="edit_tit">编辑记录<a class="clsot_btn" href="javascript:;"></a></div>
+	  		<div class="wrap_count">
+	  			<div class="ipt_count">
+	  				<div class="ipt_box">
+	  					<span>角色名称</span>
+	  					<p><input type="text" value="超级管理员组"/></p>
+	  					<i>*</i>
+	  				</div>
+		  			<div class="ipt_box">
+		  				<span>角色状态</span>
+		  				<div class="sel_role">
+		  					
+		  				</div>
+		  			</div>
+		  			<div class="ipt_box">
+		  				<span>角色权限</span>
+		  				<div class="selcheckBox">
+		  					<table>
+			  					<tr>
+			  						<td><span><input type="checkbox"/>活动记录</span></td>
+			  						<td>
+			  							<span><input type="checkbox"/>618抽奖记录</span>
+			  							
+			  						</td>
+			  					</tr>
+			  					<tr>
+			  						<td><span><input type="checkbox"/>权限管理</span></td>
+			  						<td>
+			  							<span><input type="checkbox"/>角色列表</span>
+			  							<span><input type="checkbox"/>管理员列表</span>
+			  						</td>
+			  					</tr>
+		  					</table>
+		  				</div>
+		  			</div>
+		  			<div class="ipt_box">
+		  				<button class="saveBtn">保存</button>
+		  			</div>
+	  			</div>
+	  		</div>
+	  </div>
+	</body>
+</html>

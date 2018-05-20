@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>大地管家</title>
+    <link rel="stylesheet" href="./plugins/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="./build/css/app.css" media="all">
+    <link rel="stylesheet" href="./build/css/themes/green.css" media="all">
+
+<script src="./js/jquery-1.10.1.min.js"></script>
+<script src="./plugins/layui/layui.js"></script>
+<script src="./js/jquery.cookie.js"></script>
+<script src="./js/js.js"></script>
+    <style>
+
+        .layui-nav .layui-nav-child i {
+            font-size: 12px;
+            width: 21px;
+            display: inline-block;
+        }
+        .layui-nav .layui-nav-child i img {
+            width: 17px;
+        }
+    </style>
+</head>
+
+<body class="kit-theme">
+<div class="layui-layout layui-layout-admin kit-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo layui-row">
+            <div class="layui-icon layui-col-md1" style="font-size: 35px; color: #1aad19;"><img width="100%"
+                                                                                                height="auto"
+                                                                                                src="img/gen.svg"></div>
+            <div class="layui-col-md11">
+                <a href="/" style="font-size: 20px; color: #4d4d4d;line-height: 20px;font-family: 微软雅黑;">大地管家</a>
+            </div>
+        </div>
+        <div class="layui-logo kit-logo-mobile">大地管家</div>
+        <ul class="layui-nav layui-layout-right kit-nav">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://m.zhengjinfan.cn/images/0.jpg" class="layui-nav-img"> <span id="loginNo"></span>>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" id="updatePassWord">修改密码</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="javascript:;" id="logout"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black kit-side">
+        <div class="layui-side-scroll">
+            <div class="kit-side-fold"><i class="fa fa-navicon" aria-hidden="true"></i></div>
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="kitNavbar" kit-navbar >
+                 <!--  <li class="layui-nav-item"  >
+                    <a class="" href="javascript:;" style="height: 75px;">
+                        <div class="layui-icon" style="margin: 5px auto 0px;" align="center"><img width="30px"
+                                                                                                  src="img/gongzhonghao.svg">
+                        </div>
+                        <div style="text-align: center;line-height: 20px;font-size: 14px;color: #797979;"> 公众号管理</div>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="javascript:;" kit-target
+                               data-options="{url:'weixinUserinfoList.html',icon:'',title:'公众号列表',id:'1001'}"><i><img
+                                    width="20px" src="img/gongzhonghaoliebiao.svg"></i><span>公众号列表</span></a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" kit-target
+                               data-options="{url:'weixinGroupsTreetableList.html',icon:'',title:'公众号分组管理',id:'1002'}"><i><img
+                                    width="20px" src="img/gongzhonghaofenzu.svg"></i><span> 分组管理</span></a>
+                        </dd> 
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;" style="height: 75px;">
+                        <div class="layui-icon" style="margin: 5px auto 0px;" align="center"><img width="30px"
+                                                                                                  src="img/sucaiguanli.svg">
+                        </div>
+                        <div style="text-align: center;line-height: 20px;font-size: 14px;color: #797979;"> 素材管理</div>
+                    </a>
+                    <dl class="layui-nav-child">
+                                                    <dd>
+                                                        <a href="javascript:;" kit-target><i><img width="20px" src="img/tuwenbianji.svg"></i><span> 图文编辑</span></a>
+                                                    </dd>
+                        <dd>
+                            <a href="javascript:;" kit-target
+                               data-options="{url:'weixinImgtextList.html',icon:'',title:'图文列表',id:'2002'}"><i><img
+                                    width="20px" src="img/tuwenliebiao.svg"></i><span> 图文列表</span></a>
+                        </dd>
+                                                    <dd>
+                                                        <a href="javascript:;" kit-target><i><img width="20px" src="img/tuwentuisong.svg"></i><span> 图文推送</span></a>
+                                                    </dd>
+                        <dd>
+                            <a href="javascript:;" kit-target
+                               data-options="{url:'weixinImgList.html',icon:'',title:'图片管理',id:'2004'}"><i><img
+                                    width="20px" src="img/tupianguanli.svg"></i><span> 图片管理</span></a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" kit-target
+                               data-options="{url:'weixinVideoList.html',icon:'',title:'视频管理',id:'2005'}"><i><img
+                                    width="20px" src="img/shipinguanli.svg"></i><span> 视频管理</span></a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" kit-target
+                               data-options="{url:'weixinAudioList.html',icon:'',title:'音频管理',id:'2006'}"><i><img
+                                    width="20px" src="img/yinpinguanli.svg"></i><span> 音频管理</span></a>
+                        </dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;" style="height: 75px;">
+                        <div class="layui-icon" style="margin: 5px auto 0px;" align="center"><img width="30px"
+                                                                                                  src="img/caidanguanli.svg">
+                        </div>
+                        <div style="text-align: center;line-height: 20px;font-size: 14px;color: #797979;"> 菜单管理</div>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="javascript:;" kit-target
+                               data-options="{url:'weixinMenuItemList.html',icon:'',title:'菜单模板',id:'3003'}"><i><img
+                                    width="20px" src="img/caidanmubanliebiao.svg"></i><span> 模板列表</span></a>
+                        </dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;" style="height: 75px;">
+                        <div class="layui-icon" style="margin: 5px auto 0px;" align="center"><img width="30px"
+                                                                                                  src="img/guanliyuanguanli.svg">
+                        </div>
+                        <div style="text-align: center;line-height: 20px;font-size: 14px;color: #797979;"> 管理员管理</div>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="javascript:;" kit-target
+                               data-options="{url:'secAdminUserList.html',icon:'',title:'管理员列表',id:'41'}"><i><img
+                                    width="20px" src="img/guanliyuanliebiao.svg"></i><span>管理员列表</span></a>
+                        </dd>
+                        <dd>
+                            <a href="javascript:;" kit-target
+                               data-options="{url:'secGroupsList.html',icon:'',title:'管理员分组管理',id:'42'}"><i><img
+                                    width="20px" src="img/guanliyuanfenzuguanli.svg"></i><span>管理员分组管理</span></a>
+                        </dd>
+                        <dd>
+                            <a href=javascript:; kit-target
+                               data-options="{url:'secAdminUserAdd.html',icon:'',title:'添加管理员',id:'43'}"><i><img
+                                    width="20px" src="img/tianjiaguanliyuan.svg"></i><span>添加管理员</span></a>
+                        </dd>
+                                                    <dd>
+                                                        <a href="javascript:;" kit-target><i><img width="20px" src="img/guanxianfenpei.svg"></i><span> 角色权限分配</span></a>
+                                                    </dd>
+                                                    <dd>
+                                                        <a href="javascript:;" kit-target><i><img width="20px" src="img/caozuolishi.svg"></i><span> 操作历史</span></a>
+                                                    </dd>
+                                                    <dd>
+                                                        <a href="javascript:;" kit-target><i><img width="20px" src="img/guanxianfenpei.svg"></i><span> 角色权限分配</span></a>
+                                                    </dd>
+                                                    <dd>
+                                                        <a href="javascript:;" kit-target><i><img width="20px" src="img/caozuolishi.svg"></i><span> 操作历史</span></a>
+                                                    </dd>
+                        <dd>
+                            <a href=javascript:; kit-target
+                               data-options="{url:'weixinConfigList.html',icon:'',title:'配置管理',id:'46'}"><i><img
+                                    width="20px" src="img/tianjiaguanliyuan.svg"></i><span>配置管理</span></a>
+                        </dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;" style="height: 75px;">
+                        <div class="layui-icon" style="margin: 5px auto 0px;" align="center"><img width="30px"
+                                                                                                  src="img/shujufenxi.svg">
+                        </div>
+                        <div style="text-align: center;line-height: 20px;font-size: 14px;color: #797979;"> 数据分析</div>
+                    </a>
+                    <dl class="layui-nav-child">
+                          <dd>
+                               <a href="javascript:;" kit-target><i><img width="20px" src="img/yonghufenxi.svg"></i><span>用户分析</span></a>
+                          </dd>
+                          <dd>
+                               <a href="javascript:;" kit-target data-options="{url:'weixinGroupsXTree.html',icon:'',title:'图文分析',id:'4004'}"><i><img
+                                    width="20px" src="img/tuwenfenxi.svg"></i><span>图文分析</span></a>
+                         </dd>
+
+                                <dd>
+                                      <a href="javascript:;" kit-target
+                               data-options="{url:'FansCountAll.html',icon:'',title:'用户分析',id:'4005'}"><i><img
+                                    width="20px" src="img/tuwenfenxi.svg"></i><span>用户分析</span></a>
+                        </dd>
+                    </dl>
+                </li>  -->
+
+		 
+            </ul>
+        </div>
+    </div>
+    <div class="layui-body" id="container">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">主体内容加载中,请稍等...</div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        2018---2028 &copy;
+    </div>
+</div>
+
+
+<script>
+    var message;
+    var element;
+    layui.config({
+        base: 'build/js/'
+    }).use(['app', 'message','element'], function () {
+        var app = layui.app,
+            $ = layui.jquery,
+            layer = layui.layer;
+            element = layui.element;
+        //将message设置为全局以便子页面调用
+        message = layui.message;
+       
+   
+   /*  $(function () { */
+        $.ajaxSetup({
+            contentType: "application/json; charset=utf-8"
+        });
+        //var token = getQueryString("uacesstk");
+        console.log($.cookie('bearcktkaeskey'));
+        //console.log(token);
+        var acekeystoken = $.cookie('bearcktkaeskey');
+        //var acekeystoken = token;
+        if (acekeystoken == "") {
+            location.href = ctxApp + '/login.html';
+        }
+        else {
+        	var url = window.location.search; 
+        	var loginNo = url.substring(url.lastIndexOf('=')+1, url.length);
+        	$("#loginNo").html(loginNo);
+            $.ajax({
+                url: ctxAppSec + '/api/getLeftMenuList?loginNo='+loginNo+'&Authorization='+acekeystoken,
+                //headers: {'Authorization': acekeystoken},
+                method: 'GET'
+            }).always(function (data, status, xhr) {
+            	console.log(data);
+                if (data.responseJSON) {
+                    console.log(JSON.stringify(data.responseJSON, null, 4));
+                    location.href = ctxApp + '/login.html';
+                }
+                else {
+                	var html="";
+                	menus=data.data;
+                	for(i=0;i<+menus.length;i++){
+                		if(menus[i].sec_parent_id==0){
+                			html+="<li class='layui-nav-item'>"+
+	                    	"<a class='li_a' href='javascript:;' style='height: 75px;'>"+
+	                        "<div class='layui-icon' style='margin: 5px auto 0px;' align='center'>"+
+	                        "<img width='30px'src='"+menus[i].image_path+"'>"+
+	                        "</div>"+
+	                        "<div style='text-align: center;line-height: 20px;font-size: 14px;color: #797979;'> "+menus[i].menu_name+"</div>"+
+		                    "<span class='layui-nav-more'></span></a><dl class='layui-nav-child'>"
+		                    console.log('--------------------')
+		                    for(m=0;m<menus.length;m++){
+		                    	if(menus[i].id==menus[m].sec_parent_id){
+		                    		html+=" "+
+				                        "<dd>"+
+				                           " <a href='javascript:;' kit-target data-options=\"{url:'"+menus[m].sec_previleges_url+"',icon:'',title:'"+menus[m].menu_name+"', id:"+m+"}\">"+
+				                          " <i><img width='20px' src='"+menus[m].image_path+"'></i><span>"+menus[m].menu_name+"</span></a>"+
+				                       " </dd>";
+		                    		console.log(menus[m].id)
+		                    		
+		                    	}
+		                    }
+		                    console.log('--------------------')
+		                    html+= "</dl></li>"
+                		}
+                	}
+                	html+="<span class='layui-nav-bar' style='top: 37.5px; height: 0px; opacity: 0;'></span>"
+                	$(".layui-nav-tree").html(html);
+                	console.log(menus);
+              
+                	
+                	 //主入口
+			        app.set({
+			            type: 'iframe'
+			        }).init();
+			        element.init();
+                	//element.render('nav');
+                	if(data.code==0){
+                		
+                	}
+                }
+            });
+        }
+        
+        
+        $("#logout").click(function () {
+            $.cookie('bearcktkaeskey',"");
+            location.href = ctxApp + '/login.html';
+        })
+        
+		$("#updatePassWord").click(function(){
+			var url = window.location.search; 
+        	var loginNo = url.substring(url.lastIndexOf('=')+1, url.length);
+			layer.open({
+                title: "增加信息",
+                type: 2,
+                maxmin: true,
+                area: ['680px', '580px'],
+                content: 'adminUpdatePassword.html?loginNo='+loginNo,
+                // 下面这句是,添加页面关闭后,刷新本页面.
+                end: function () {
+                    location.reload();
+                }
+            });
+		})
+  /*   }) */
+    
+    });
+</script>
+</body>
+
+</html>

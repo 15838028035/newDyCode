@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>管理</title>
+
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="build/css/doc.css" media="all">
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+
+    <style>
+        .layui-form-item .layui-input-inline {
+            float: left;
+            width: auto;
+            margin-right: 10px;
+        }
+        .layui-form-item .headimg_b {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .layui-form-item .headimg_b img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .layui-form-item .erweima {
+            width: 120px;
+            height: 120px;
+        }
+        .layui-form-item .erweima img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .layui-btn-xs {
+            height: 22px;
+            line-height: 20px;
+            padding: 0 5px;
+            font-size: 12px;
+            float: left;
+        }
+        .textbeizhu {
+            width: 250px;
+            height: 100px;
+            padding-left: 10px;
+            padding: 10px;
+        }
+        .baocun {
+            padding-left: 78px;
+        }
+        .layui-form-label {
+            color: #969696;
+        }
+    </style>
+
+</head>
+<body class="kit-doc">
+<div class="kit-doc-title">
+    <fieldset>
+        <legend><a name="blockquote">公众号详情</a></legend>
+    </fieldset>
+</div>
+
+<form class="layui-form">
+    <div class="layui-row">
+        <div class="layui-col-xs12">
+            <div class="layui-form-item layui-col-xs6">
+                <label class="layui-form-label">授权公众号:</label>
+                <div class="layui-input-inline">
+                    <p lay-filter="gzhnikename" style="line-height: 35px;" id="nikename"></p>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-col-xs6">
+                <label class="layui-form-label">公众号logo:</label>
+                <div class="layui-input-inline headimg_b">
+                    <img lay-filter="gzhheaderimg" id="headimg" width="200px"></img>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">主体名称:</label>
+                <div class="layui-input-inline">
+                    <p lay-filter="gzhnikename" style="line-height: 35px;" id="principal_nameid"></p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">公众号别名:</label>
+                <div class="layui-input-inline">
+                    <p lay-filter="gzhnikename" style="line-height: 35px;" id="aliasname"></p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态:</label>
+                <div class="layui-input-inline">
+                    <p lay-filter="gzhnikename" style="line-height: 35px;" id="infoTypeid"></p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">认证类型:</label>
+                <div class="layui-input-inline">
+                    <p lay-filter="gzhnikename" style="line-height: 35px;" id="verify_type_infoid"></p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">类型:</label>
+                <div class="layui-input-inline">
+                    <p lay-filter="gzhnikename" style="line-height: 35px;" id="serviceTypeInfoid"></p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">签名:</label>
+                <div class="layui-input-inline">
+                    <p lay-filter="gzhnikename" style="line-height: 35px;" id="signatureid"></p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">原始ID:</label>
+                <div class="layui-input-inline">
+                    <p lay-filter="gzhnikename" style="line-height: 35px;" id="userNameid"></p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">二维码:</label>
+                <div class="layui-input-inline erweima">
+                    <img lay-filter="gzhheaderimg" id="qrcodeUrlid" style=""></img>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">当前分组:</label>
+                <div class="layui-input-inline">
+                    <p lay-filter="gzhnikename" style="line-height: 35px;" id="nowfenzuid">港澳台</p>
+                </div>
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">
+                        <span id="fenzumoveBtn" class="layui-btn layui-btn-primary layui-btn-xs">移动分组</span></label>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">自定义菜单:</label>
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">
+                        <span id="selfmenuid" class="layui-btn layui-btn-primary layui-btn-xs">自定义菜单</span></label>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline">
+                    <textarea name="remarks" id="remarksid" autocomplete="off" class="layui-input textbeizhu" type="text"
+                              maxlength="50"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item baocun">
+                <label class="layui-form-label"><span class="layui-btn" id="sbbt">保存</span></label>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+
+<script>
+    var acekeystoken = $.cookie('bearcktkaeskey');
+    if (acekeystoken == "") {
+        parent.location.href = ctxApp + '/login.html';
+    }
+
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            layedit = layui.layedit;
+
+        var authorizerAppid = getQueryString("authorizerAppid");
+        var nowgroupIndex = -1;
+
+        $.ajax({
+            url: ctxAppWeixin + '/api/wxopen/get_authorizer_info?authorizerAppid=' + authorizerAppid + '&Authorization=' + acekeystoken,
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $("#nikename").text(data.nickName);
+                $("#aliasname").text(data.alias);
+
+                var verify_type_infoStr = data.verifyTypeInfo == -1 ? "未认证" : (data.verifyTypeInfo == 0 ? "微信认证" : (data.verifyTypeInfo == 1 ? "新浪微博认证" : (data.verifyTypeInfo == 2 ? "腾讯微博认证" : (data.verifyTypeInfo == 3 ? "已资质认证通过但还未通过名称认证" : (data.verifyTypeInfo == 4 ? "已资质认证通过、还未通过名称认证，但通过了新浪微博认证" : "已资质认证通过、还未通过名称认证，但通过了腾讯微博认证")))));
+                $("#verify_type_infoid").text(verify_type_infoStr);
+
+                $("#serviceTypeInfoid").text(data.serviceTypeInfo == 0 ? "订阅号" : (data.serviceTypeInfo == 1 ? "订阅号升级" : "服务号"));
+                $("#signatureid").text(data.signature);
+                $("#userNameid").text(data.userName);
+
+                $("#principal_nameid").text(data.principalName);
+
+                $("#qrcodeUrlid").attr("src", ctxAppSec + '/api/WeixinUserinfoQrcode_url/' + authorizerAppid + '?Authorization=' + acekeystoken);
+
+                $("#headimg").attr("src", data.headImg);
+
+            },
+            error: function (data) {
+                try {
+                    layer.msg("请刷新重试");
+                    return false;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+
+        $.ajax({
+            url: ctxAppSec + '/api/WeixinUserinfo/' + authorizerAppid + '?Authorization=' + acekeystoken,
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                var fenzustr = data.wg2_name == null ? data.wg1_name : (data.wg2_name + "-" + data.wg1_name);
+                $("#nowfenzuid").text(fenzustr);
+                $("#remarksid").val(data.remarks);
+
+                var infoTypeStr = data.InfoType == "unauthorized" ? "解除授权" : (data.infoType == "authorized" ? "授权成功" : "更新授权");
+                $("#infoTypeid").text(infoTypeStr);
+            },
+            error: function (data) {
+                try {
+                    layer.msg("请刷新重试");
+                    return false;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+
+        $.ajax({
+            url: ctxAppSec + '/api/WeixinGroups/list?parentId=' + nowgroupIndex + '&Authorization=' + acekeystoken,
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                var html = "<option value=\"\">请选分组</option>";
+
+                var datas = data;
+
+                for (var i = 0; i < datas.length; i++) {
+                    html += '<option value=' + datas[i].id + '>' + datas[i].groupName + '</option>';
+                }
+                $("#fenzu1").html(html);
+                form.render();
+            },
+            error: function (data) {
+                try {
+                    layer.msg("请刷新重试");
+                    return false;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+
+        //监听提交
+        form.on('select(quiz1)', function (data) {
+            console.log(data);
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinGroups/list?parentId=' + data.value + '&Authorization=' + acekeystoken,
+                type: "get",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    if (data.length == 0) {
+                        $("#fenzudiv2").hide();
+                    }
+                    else {
+                        $("#fenzudiv2").show();
+                    }
+                    var html = "";
+
+                    var datas = data;
+
+                    for (var i = 0; i < datas.length; i++) {
+                        html += '<option value=' + datas[i].id + '>' + datas[i].groupName + '</option>';
+                    }
+
+                    $("#fenzu2").html(html);
+                    form.render();
+                },
+                error: function (data) {
+                    try {
+                        layer.msg("请刷新重试");
+                        return false;
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            });
+        });
+
+        $("#fenzumoveBtn").click(function () {
+            layer.open({
+                title: "移动分组",
+                type: 2,
+                maxmin: true,
+                area: ['80%', '80%'],
+                content: 'weixinUserinfoUpdate.html?authorizerAppid=' + authorizerAppid,
+                // 下面这句是,添加页面关闭后,刷新本页面.
+                end: function () {
+                    location.reload();
+                }
+            });
+        });
+
+        $("#selfmenuid").click(function () {
+            layer.open({
+                title: "自定义菜单",
+                type: 2,
+                maxmin: true,
+                area: ['90%', '90%'],
+                content: 'aaYls_editpage.html?authorizerAppid=' + authorizerAppid,
+                // 下面这句是,添加页面关闭后,刷新本页面.
+                end: function () {
+                    location.reload();
+                }
+            });
+        });
+
+        $("#sbbt").click(function () {
+            var lastgroupid = $("#fenzu2").val() == null ? $("#fenzu1").val() : $("#fenzu2").val();
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinUserinfo/' + getQueryString("authorizerAppid"),
+                type: "PUT",
+                dataType: "json",
+                data: {weixinGroupsId: lastgroupid, remarks: $("#remarksid").val(), "Authorization": acekeystoken},
+                success: function (data) {
+                    console.log(data);
+                    if (data.respCode == 1) {
+                        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                        parent.layer.close(index);
+                    }
+                    else {
+                        layer.alert("请刷新重试")
+                    }
+                },
+                error: function (data) {
+                    try {
+                        layer.msg("请刷新重试");
+                        return false;
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            });
+        });
+    });
+
+</script>
+</body>
+</html>

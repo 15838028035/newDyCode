@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>公众号分组</title>
+
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="build/css/doc.css" media="all">
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+    <script src="layui-xtree/layui-xtree.js"></script>
+
+    <style>
+        iframe {
+            border: 1px solid #CECECE;
+
+        }
+        @media screen and (min-width: 1200px){
+            .layui-container {
+                width: 100%;
+            }
+        }
+        @media screen and (min-width: 992px){
+            .layui-container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="kit-doc">
+<div class="kit-doc-title">
+    <fieldset>
+        <legend><a name="blockquote">公众号分组</a></legend>
+    </fieldset>
+</div>
+
+<form class="layui-form">
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <div class="grid-demo grid-demo-bg1">
+                    <br><br>
+                    <div id="xtree3" class="xtree_contianer"></div>
+                </div>
+            </div>
+            <div class="layui-col-xs9">
+                <iframe name="articleFrame"  id="articleFrame" width="100%" height="1024px"  scrolling="yes"  src="weixinReportArticleAll.html" ></iframe>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+    var acekeystoken = $.cookie('bearcktkaeskey');
+    if (acekeystoken == "") {
+        parent.location.href = ctxApp + '/login.html';
+    }
+
+    //layui 的 form 模块是必须的
+    layui.use(['form'], function () {
+        var form = layui.form;
+
+        //3、最完整的参数用法
+        var xtree3 = new layuiXtree({
+            elem: 'xtree3'                  //必填三兄弟之老大
+            , form: form                    //必填三兄弟之这才是真老大
+            , data: ctxAppSec + '/api/WeixinGroups/layuiXtree?Authorization=' + acekeystoken //必填三兄弟之这也算是老大
+            , isopen: true  //加载完毕后的展开状态，默认值：true
+            , ckall: true    //启用全选功能，默认值：false
+            , ckallback: function () {
+            	  var oCks = xtree3.GetAllCheckBoxChecked(); //这是方法
+                  var ids = "";
+                  var uids = "";
+                  $.each(oCks, function(index, item){
+                       var id = item.value;
+                       
+                       console.log("id========="+id);
+                       
+                       if(id.startWith("uid_")){
+                           uids +=id.substring(4,id.length)+",";
+                       }else{
+                             ids+=id.substring(4,id.length)+",";
+                       } 
+                   });
+                  
+                  if (ids.endWith(",")){
+                      ids = ids.substring(0,ids.length-1);
+                 } 
+                  if (uids.endWith(",")){
+                      uids = uids.substring(0,uids.length-1);
+                 } 
+                  
+                 // console.log("uids==============="+uids);
+                 // console.log("ids=" +ids);
+                  
+                  var url = "weixinReportArticleAll.html?ids="+ids+"&uids="+uids;
+                  $("#articleFrame").attr("src",url);
+            } //全选框状态改变后执行的回调函数
+            , icon: {        //三种图标样式，更改几个都可以，用的是layui的图标
+                open: "&#xe625;"       //节点打开的图标
+                , close: "&#xe623;"    //节点关闭的图标
+                , end: "&#xe612;"      //末尾节点的图标
+            }
+            , color: {       //三种图标颜色，独立配色，更改几个都可以
+                open: "#EE9A00"        //节点图标打开的颜色
+                , close: "#EEC591"     //节点图标关闭的颜色
+                , end: "#828282"       //末级节点图标的颜色
+            }
+            , click: function (data) {  //节点选中状态改变事件监听，全选框有自己的监听事件
+              /*   console.log(data.elem); //得到checkbox原始DOM对象
+                console.log(data.elem.checked); //开关是否开启，true或者false
+                console.log(data.value); //开关value值，也可以通过data.elem.value得到
+                console.log(data.othis); //得到美化后的DOM对象 */
+                
+                var oCks = xtree3.GetAllCheckBoxChecked(); //这是方法
+                var ids = "";
+                var uids = "";
+                $.each(oCks, function(index, item){
+                     var id = item.value;
+                     
+                     console.log("id========="+id);
+                     
+                     if(id.startWith("uid_")){
+                    	 uids +=id.substring(4,id.length)+",";
+                     }else{
+                    	   ids+=id.substring(4,id.length)+",";
+                     } 
+                 });
+                
+                if (ids.endWith(",")){
+                    ids = ids.substring(0,ids.length-1);
+               } 
+                if (uids.endWith(",")){
+                	uids = uids.substring(0,uids.length-1);
+               } 
+                
+               // console.log("uids==============="+uids);
+               // console.log("ids=" +ids);
+                
+                var url = "weixinReportArticleAll.html?ids="+ids+"&uids="+uids;
+                $("#articleFrame").attr("src",url);
+            }
+        });
+    });
+
+
+</script>
+
+
+</body>
+
+</html>

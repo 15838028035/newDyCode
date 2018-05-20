@@ -1,0 +1,67 @@
+{
+	"selfMenuInfo":{
+		"version":"427522976",
+		"name":"test menu",
+		"buttons":[{
+			"name":"主菜单1",
+			"type":0,
+			"act_list":[],
+			"subButtons":[{
+				"name":"模拟微信1-1",
+				"act_list":[{
+					"type":5,
+					"value":"100000006"
+				}],
+				"type":1,
+				"subButtons":[]
+			},{
+				"name":"模拟微信1-1",
+				"type":1,
+				"url":"eee",
+				"subButtons":[]
+			}, {
+				"name":"模拟微信1-2",
+				"act_list":[{
+					"type":10,
+					"value":"100000006"
+				}],
+				"type":1,
+				"subButtons":[]
+			}]
+		}, {
+			"name":"主菜单2",
+			"type":0,
+			"act_list":[],
+			"subButtons":[{
+				"name":"子菜单名称",
+				"act_list":[{
+					"type":3,
+					"value":"100000011"
+				}],
+				"type":1,
+				"subButtons":[]
+			}]
+		}, {
+			"name":"主菜单3",
+			"type":0,
+			"act_list":[],
+			"subButtons":[{
+				"name":"模拟数据3-2",
+				"act_list":[{
+					"type":2,
+					"value":"100000009"
+				}],
+				"type":1,
+				"subButtons":[]
+			}, {
+				"name":"模拟数据3-1",
+				"act_list":[{
+					"type":2,
+					"value":"100000013"
+				}],
+				"type":1,
+				"subButtons":[]
+			}]
+		}]
+	}
+}

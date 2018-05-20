@@ -1,0 +1,531 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta
+	content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"
+	name="viewport" />
+<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1"
+	media="(device-height: 568px)" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta content="telephone=no" name="format-detection" />
+<meta http-equiv="Access-Control-Allow-Origin" content="*">
+<title>视频管理</title>
+
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="css/css.css">
+<link rel="stylesheet" href="build/css/doc.css" media="all">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="./js/jquery.cookie.js"></script>
+<script src="js/js.js"></script>
+
+<script src="layer/layer.js"></script>
+<script src="layui/layui.js"></script>
+<style>
+.previewcountent {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	left: 0;
+	top: 0;
+	z-index: 9999;
+}
+
+.previewcountent .count {
+	padding: 20px;
+	width: 730px;
+	height: 485px;
+	background: #FFFFFF;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-top: -240px;
+	margin-left: -365px;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.previewcountent .head span {
+	font-size: 18px;
+}
+
+.previewcountent .head .closeBtn {
+	font-size: 45px;
+	float: right;
+	margin-top: -20px;
+	cursor: pointer;
+}
+
+.counttext {
+	width: 400px;
+	margin: 0 auto;
+	margin-top: 100px;
+}
+
+.counttext input {
+	box-sizing: border-box;
+	width: 100%;
+	height: 35px;
+	padding: 0 10px;
+	margin: 10px 0;
+}
+
+.previewcountent .btnbox {
+	margin-top: 50px;
+	width: 100%;
+	overflow: hidden;
+	text-align: center;
+}
+
+.previewcountent .btnbox span {
+	width: 110px;
+	height: 35px;
+	text-align: center;
+	line-height: 35px;
+	margin: 0 15px;
+	background: none;
+	border: none;
+	border-radius: 5px;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.previewcountent .btnbox .prsure {
+	background: #44b549;
+	color: #FFFFFF;
+}
+
+.previewcountent .btnbox .prcancel {
+	border: 1px solid #CCCCCC;
+	color: #333333;
+}
+	#categoryId {
+		background: url("img/md01@2x.png") no-repeat center right;
+		background-position: 95% 50%;
+		background-size: 8px auto;
+	}
+
+	.twonewl {
+		margin-top: 20px;
+	}
+</style>
+</head>
+
+<body class="kit-doc">
+	<div class="kit-doc-title">
+		<fieldset>
+			<legend>
+				<a name="blockquote">视频管理列表</a>
+			</legend>
+		</fieldset>
+	</div>
+	<div class="previewcountent" style="display: none;">
+		<div class="count">
+			<p class="head">
+				<span>发送预览</span><span class="closeBtn">×</span>
+			</p>
+			<div class="counttext">
+				<p>关注公众号后，才能接收图文消息预览</p>
+				<input type="text" placeholder="请输入微信号" id="nikenameid" />
+				<p>预览功能仅用于公众号查看文章效果，不适用于公众传播，预览链接会在短期内失效</p>
+			</div>
+			<div class="btnbox centerboth">
+				<span class="prsure">确定</span> <span class="prcancel">取消</span>
+			</div>
+		</div>
+	</div>
+	<div class="demoTable">
+
+		创建时间：
+		<div class="layui-inline">
+			<input class="layui-input" name="createDateBegin"
+				id="createDateBegin" autocomplete="off" placeholder="开始时间">
+		</div>
+		<div class="layui-inline">
+			<input class="layui-input" name="createDateEnd" id="createDateEnd"
+				autocomplete="off" placeholder="结束时间">
+		</div>
+		标签分类
+		<div class="layui-inline .layui-form-select">
+			<select name="categoryId" id="categoryId" lay-filter="aihao"  class="layui-select" style="padding-right: 40px"></select>
+
+		</div>
+		标题
+		<div class="layui-inline">
+			<input type="text" class="layui-input" name="title" id="title" placeholder="标题">
+
+		</div>
+		<button class="layui-btn" data-type="reload">搜索</button>
+		<div class="layui-btn-group Table">
+    <button class="layui-btn" data-type="add" id="add">
+        <i class="layui-icon">&#xe608;</i>新增
+    </button>
+</div>
+<div class="layui-btn-group Table">
+    <button class="layui-btn" id="batchDelete">
+     		批量删除
+    </button>
+</div>
+</div>
+
+
+	<table id="datagrid" class="layui-table" lay-filter="Grid"></table>
+
+
+	<!-- 数据操作监听事件 -->
+	<script type="text/html" id="optTpl">
+            <button class="layui-btn layui-btn-edit layui-btn-xs" lay-event="update">编辑</button>
+            <button class="layui-btn layui-btn-primary layui-btn-xs" lay-event="remove">删除</button>
+			<button class="layui-btn layui-btn layui-btn-xs" lay-event="send">群发</button>
+    </script>
+
+	<script type="text/html" id="headImgTpl">
+        <i class="layui-icon" lay-event="play" >&#xe652;</i> 
+    </script>
+
+
+	<script>
+		var acekeystoken = $.cookie('bearcktkaeskey');
+		if (acekeystoken == "") {
+			parent.location.href = ctxApp + '/login.html';
+		}
+		Date.prototype.format = function (fmt) { //author: meizz   
+		    var o = {  
+		        "M+": this.getMonth() + 1, //月份   
+		        "d+": this.getDate(), //日   
+		        "H+": this.getHours(), //小时   
+		        "m+": this.getMinutes(), //分   
+		        "s+": this.getSeconds(), //秒   
+		        "q+": Math.floor((this.getMonth() + 3) / 3), //季度   
+		        "S": this.getMilliseconds() //毫秒   
+		    };  
+		    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));  
+		    for (var k in o)  
+		    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));  
+		    return fmt;  
+		} 
+		initForList("categoryId", null)
+		
+		var table;
+
+		layui.use(
+						[ 'laypage', 'table', 'element', 'layer', 'laydate' ],
+						function() {
+							table = layui.table;
+							var laydate = layui.laydate;
+			
+							var now = new Date().format("yyyy-MM-dd");
+							var createDateBegin='';
+							
+							//自定义事件
+							var createDateEnd="1900-1-1";
+							 laydate.render({ 
+							        elem: '#createDateBegin'
+							        ,max: now
+							        ,trigger: 'click' //采用click弹出
+						        	,done: function(value, date, endDate){
+						        		createDateBegin=value;
+						    	    }   
+							  });
+							  laydate.render({ 
+								    elem: '#createDateEnd'
+								    ,min:createDateBegin
+								    ,trigger: 'click' //采用click弹出
+								    ,done: function(value, date, endDate){
+								    	createDateEnd=value;
+								    }
+								  });
+
+                            table.render({
+                                elem : '#datagrid',
+                                url : ctxAppSec
+                                + '/api/WeixinVideo?Authorization='
+                                + acekeystoken,
+                                cellMinWidth : 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+
+                                ,
+                                cols : [ [ {
+                                    type : 'checkbox'
+                                }, {
+                                    field : 'id',
+                                    title : 'ID'
+                                }, {
+                                    field : 'title',
+                                    title : '标题'
+                                }, {
+                                    field : 'createByUname',
+                                    title : '上传管理员    '
+                                }, {
+                                    field : 'createDate',
+                                    title : '上传时间'
+                                }, {
+                                    field : 'file_size',
+                                    title : '文件大小'
+                                },
+                                    // 	{field:'video_length',title:'视频时长'},
+                                    {
+                                        field : 'tag',
+                                        title : '标签'
+                                    }, {
+                                        field : 'headImg',
+                                        title : '视频',
+                                        templet : '#headImgTpl'
+
+                                    }, {
+                                        field : 'opt',
+                                        title : '操作',
+                                        templet : '#optTpl'
+                                    }
+
+                                ] ],
+                                page : true,
+                                id : 'datagridTable',
+                                initSort : {
+                                    field : 'id' //排序字段，对应 cols 设定的各字段名
+                                    ,
+                                    type : 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+                                },
+                                request : {
+                                    pageName : 'page' //页码的参数名称，默认：page
+                                    ,
+                                    limitName : 'limit' //每页数据量的参数名，默认：limit
+                                }
+                            });
+
+                            table.on('tool(Grid)',function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+												var data = obj.data; //获得当前行数据
+												var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+												if (layEvent === 'remove') { //编辑
+													var id = data.id;
+													layer.confirm('确定要删除？',{
+																		title : "系统提示",
+																		anim : 1,
+																		icon : 3,
+																		closeBtn : 0
+																	},
+																	function(index) {$.ajax({
+																					url : ctxAppSec
+																							+ '/api/WeixinVideo/'
+																							+ id
+																							+ "?Authorization="
+																							+ acekeystoken,
+																					data : {
+																						"Authorization" : acekeystoken
+																					},
+																					type : "DELETE",
+																					dataType : "json",
+																					success : function(data) {
+																						layer
+																								.msg(data.respMsg);
+																						table
+																								.reload(
+																										"datagridTable",
+																										{
+																											where : {
+																												"createDateBegin" : $(
+																														"#createDateBegin")
+																														.val(),
+																												"createDateEnd" : $(
+																														"#createDateEnd")
+																														.val(),
+																												"categoryId" : $(
+																														"#categoryId")
+																														.val(),
+																												"title":$("#title").val()
+																											},
+																											page : {
+																												curr : 1
+																											//重新从第 1 页开始
+																											}
+																										});
+																					},
+																					error : function(
+																							data) {
+																						try {
+																							layer
+																									.msg("请求异常");
+																							return false;
+																						} catch (e) {
+																							console
+																									.log(e);
+																						}
+																					}
+																				});
+
+																		layer.alert("删除成功！",{title : "系统提示",
+																							icon : 1,
+																							closeBtn : 0
+																						},
+																						function(
+																								index) {
+																							//关闭删除窗口,并刷新table
+																							table.reload("Load");
+																						});
+																	});
+												} else if (layEvent === 'update') { //编辑
+													var id = data.id;
+													update(id);
+												} else if (layEvent === 'play') {
+													var id = data.id;
+													var headImgPic = data.headImg;
+
+													paly(headImgPic);
+												} else if (layEvent == 'send') {
+													var id = data.id;
+													layer
+															.open({
+																title : "群发",
+																type : 2,
+																maxmin : true,
+																area : [
+																		'100%',
+																		'100%' ],
+																content : "weixinVideoSend.html?id="
+																		+ id,
+																// 下面这句是,添加页面关闭后,刷新本页面.
+																end : function() {
+																	//location.reload();
+																}
+															});
+												} 
+
+											});
+
+							var $ = layui.$, active = {
+								reload : function() {
+									table.reload('datagridTable', {
+										where : {
+											"createDateBegin" : $.trim($(
+													'#createDateBegin').val()),
+											"createDateEnd" : $.trim($(
+													'#createDateEnd').val()),
+											"tag" : $("#categoryId").val(),
+											"title":$.trim($("#title").val())
+										}
+									});
+								}
+							};
+
+							$('.demoTable .layui-btn').on('click', function() {
+								var type = $(this).data('type');
+								active[type] ? active[type].call(this) : '';
+							});
+
+						});
+
+		$('#batchDelete').on('click', function() {
+			var checkStatus = table.checkStatus('datagridTable');
+			var datas = checkStatus.data;
+
+			var ids = "";
+			$.each(datas, function(index, item) {
+				var id = item.id;
+				ids += id + ",";
+			});
+
+			// console.log(ids);
+			var url = ctxAppSec + '/api/WeixinVideo/batchDelete';
+			var postData = {
+				"ids" : ids,
+				"Authorization" : acekeystoken
+			};
+			if (ids == "") {
+				layer.msg("请选择");
+				return;
+			}
+			//提交
+			$.ajax({
+				url : url,
+				data : postData,
+				type : "POST",
+				dataType : "json",
+				async : false,
+				success : function(data) {
+					layer.closeAll('loading');
+					layer.msg(data.respMsg);
+					table.reload("datagridTable", {
+						where : {
+							aaaaaa : 'xxx',
+							bbb : 'yyy'
+						},
+						page : {
+							curr : 1
+						//重新从第 1 页开始
+						}
+					});
+				},
+				error : function(data) {
+					try {
+						layer.msg("请求异常");
+					} catch (e) {
+						console.log(e);
+					}
+				}
+			});
+		})
+
+		$('#add').on('click', function() {
+			layer.open({
+				title : "增加信息",
+				type : 2,
+				maxmin : true,
+				area : [ '680px', '580px' ],
+				content : 'weixinVideoAdd.html',
+				// 下面这句是,添加页面关闭后,刷新本页面.
+				end : function() {
+					location.reload();
+				}
+			});
+		})
+
+		function update(id) {
+			layer.open({
+				title : "增加信息",
+				type : 2,
+				maxmin : true,
+				area : [ '680px', '580px' ],
+				content : 'weixinVideoEdit.html?id=' + id,
+				// 下面这句是,添加页面关闭后,刷新本页面.
+				end : function() {
+					location.reload();
+				}
+			});
+		}
+
+		function view(id) {
+			layer.open({
+				title : "查看信息",
+				type : 2,
+				maxmin : true,
+				area : [ '680px', '580px' ],
+				content : 'weixinVideoView.html?id=' + id,
+				// 下面这句是,添加页面关闭后,刷新本页面.
+				end : function() {
+					location.reload();
+				}
+			});
+		}
+
+		function paly(headImgPic) {
+			layer.open({
+				title : "查看信息",
+				type : 2,
+				maxmin : true,
+				area : [ '680px', '580px' ],
+				content : headImgPic,
+				// 下面这句是,添加页面关闭后,刷新本页面.
+				end : function() {
+					location.reload();
+				}
+			});
+
+		}
+	</script>
+
+</body>
+
+</html>

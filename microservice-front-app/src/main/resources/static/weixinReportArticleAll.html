@@ -1,0 +1,374 @@
+﻿
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>图文分析全部</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+    
+      <script src="echats/echarts-all.js"></script>
+
+<style>
+    *{
+        margin: 0 auto;
+    }
+    
+    #simpleCount div{
+      /*  float:left;*/
+        text-align:center;
+        /*width:20%;*/
+    }
+    body {
+        padding: 20px;
+        padding-left: 210px;
+    }
+    .layui-nav-tree {
+        left: 0;
+    }
+    .tuwentop h1 {
+        font-size: 38px;
+        padding: 10px 0 0 0;
+    }
+    .tuwentop p:first-child {
+        color: #999999;
+    }
+    .tuwentop p {
+        font-size: 14px;
+        padding: 3px 0;
+        color: #353535;
+    }
+    .layui-form-label {
+        width: auto;
+    }
+    #form2 {
+        padding: 20px 0;
+        margin-top: 10px;
+        border-top: 1px solid #E5E5E5;
+    }
+    .yuedtit {
+        padding: 10px 0;
+        border-top: 1px solid #E5E5E5;
+    }
+    iframe {
+        border: 1px solid #E5E5E5;
+        padding: 20px;
+    }
+    #navtree{
+	 z-index:9999;
+	 overflow:auto;
+}
+	ul{bottom: 0; top: 0;z-index: 9999;}
+	.main{margin-left: 200px; position: absolute; right: 0; left: 0;}
+	.main #view1{width: 93%; position: relative;}
+	.main > button{margin-left: 20px; margin-top: 20px;      position: absolute;  z-index: 99999;}
+	.layui-layer-tips .layui-layer-content{
+		background-color: transparent;
+	}
+
+    .fixdtop {
+        position: fixed !important;
+    }
+
+    .layui-layer-tips {
+        position: fixed !important;
+    }
+    @media screen and (min-width: 1200px){
+        .layui-container {
+            width: 100%;
+        }
+
+    }
+ </style>
+ <script type="text/javascript">
+			//为了保证不出现一闪而过的菜单栏, 放在了前面进行加载这段代码
+			$().ready(() => {
+				var a = $('.dynamic-navigation');			
+				localStorage.getItem('nav-status') == 1 ? (
+					$('.dynamic-navigation').attr("tg", "1").css('left', '-200px'),
+					$('.layui-layer-tips').css('left', '89px')
+				) : (
+					console.log(localStorage.getItem('nav-status'))
+				);
+				
+			});
+		</script>
+</head>
+
+    <body>
+    <div class="main dynamic-navigation">
+			<button class="layui-btn layui-btn-primary fixdtop"><i class="layui-icon">&#xe68e;</i></button>
+			<div id="view1"></div>
+		</div>
+		<div>
+		<ul class="layui-nav layui-nav-tree dynamic-navigation" lay-filter="demo" id="navtree" style="position: fixed;">
+</ul>
+		</div>
+     <div id="simpleCount" style="width: 100%;height:120px;">
+        <div class="tuwentop layui-col-xs3" id="newUser">
+            <p>图文阅读次数</p>    
+            <h1 id="rate11"></h1>
+            <p>日<span id="rate21"></span></p>
+            <p>周<span id="rate31"></span></p>
+            <p>月<span id="rate41"></span></p>
+        </div>
+        <div class="tuwentop layui-col-xs3" id="cancelUser">
+            <p>原文阅读次数</p>
+            <h1 id="rate12"></h1>
+            <p>日<span id="rate22"></span></p>
+            <p>周<span id="rate32"></span></p>
+            <p>月<span id="rate42"></span></p>
+        </div>
+        <div class="tuwentop layui-col-xs3" id="netGrowth">
+            <p>分享转发次数</p>
+            <h1 id="rate13"></h1>
+           <p>日<span id="rate23"></span></p>
+            <p>周<span id="rate33"></span></p>
+             <p>月<span id="rate43"></span></p>
+        </div>
+        <div class="tuwentop layui-col-xs3" id="netGrowth">
+            <p>微信收藏人数</p>
+            <h1 id="rate14"></h1>
+            <p>日<span id="rate24"></span></p>
+            <p>周<span id="rate34"></span></p>
+             <p>月<span id="rate44"></span></p>
+        </div>
+    </div>
+    
+
+<table id="datagrid" class="layui-table" lay-filter="Grid" ></table>
+
+<form class="layui-form" id="form2">
+    <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-xs4" style="width: 300px;">
+            <label class="layui-form-label">请选择:</label>
+            <div class="layui-input-inline">
+                <select name="selectDays" id="selectDays"  id="selectDays">
+                    <option value="30">最近30天</option>
+                    <option value="20">最近20天</option>
+                    <option value="10">最近10天</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline layui-col-xs2">
+            <div class="layui-input-inline demoTable3" style="width: 350px;">
+                <span class="layui-btn" data-type="reload3" id="reload3" onClick="init()">搜索</span>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<h3 class="yuedtit">阅读量趋势图</h3>
+<div id="mainAnaylsis"  style="width:100%;height:300px;">
+
+</div>
+
+<h3 class="yuedtit">全部图文信息</h3>
+   <iframe name="viewFrame"  id="viewFrame" width="100%" height="1024px"  scrolling="yes"  src="" ></iframe>
+     
+     <script>
+
+     var acekeystoken = $.cookie('bearcktkaeskey');
+     if (acekeystoken == "") {
+         parent.location.href = ctxApp + '/login.html';
+     }
+
+     $("#viewFrame").attr("src","weixinReportArticleList.html?ids="+getQueryString("ids")+"&uids="+getQueryString("uids"));
+  var url = url =ctxAppWeixin+'/api/WeixinReportArticle/showInfo3';
+  
+  $.ajax({
+      url: url,
+      data: {"ids":getQueryString("ids"),"uids":getQueryString("uids")},
+      type: "get",
+      dataType: "json",
+      async:'false',
+      success: function(data){
+          console.log(data);
+          dataTmp=data;
+          $("#rate11").text(data.rate11);
+          $("#rate12").text(data.rate12);
+          $("#rate13").text(data.rate13);
+          $("#rate14").text(data.rate14);
+          
+          $("#rate21").text(data.rate21+"%");
+          $("#rate22").text(data.rate22+"%");
+          $("#rate23").text(data.rate23+"%");
+          $("#rate24").text(data.rate24+"%");
+          
+          $("#rate31").text(data.rate31+"%");
+          $("#rate32").text(data.rate32+"%");
+          $("#rate33").text(data.rate33+"%");
+          $("#rate34").text(data.rate34+"%");
+          
+          $("#rate41").text(data.rate41+"%");
+          $("#rate42").text(data.rate42+"%");
+          $("#rate43").text(data.rate43+"%");
+          $("#rate44").text(data.rate44+"%");
+          
+        },
+        error: function(data){
+            try {
+               layer.msg("请求异常");
+               return false;
+            }catch (e) {
+               console.log(e);
+            }
+        }
+   });
+
+  layui.use(['laypage', 'table', 'element', 'layer'], function(){
+      var table = layui.table;
+      var form = layui.form;
+      
+      form.render();
+  });
+  
+  var myChart = echarts.init(document.getElementById('mainAnaylsis'));
+  var option = {
+     title: {
+         text: ''
+     },
+      tooltip: {  trigger: 'axis' },
+      tooltip : {
+          show : true
+      },
+      grid: {       //直角坐标系内绘图网格
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+      },
+
+      toolbox: {     //工具栏
+          feature: {
+              saveAsImage: {}
+          }
+      },
+      legend : {
+          data : []
+      },
+      xAxis : [ {
+          type : 'category',
+          boundaryGap: false,
+          data : []
+      } ],
+      yAxis : [ {
+          type : 'value'
+      } ],
+      series : []
+  };
+  
+  
+  function init() {
+      var postData ={"selectDays":$("#selectDays").val(),
+              "msgid" : $("#msgid") .val() ,
+              "ids":getQueryString("ids"),
+              "uids":getQueryString("uids")
+      };
+      
+      $.ajax({
+          type : "POST",
+          url : ctxAppWeixin+"/getReportData",
+          dataType : "json",
+          data:postData,
+          success : function(result) {
+              
+              //将从后台接收的json字符串转换成json对象
+              var jsonobj = eval(result);
+              //给图标标题赋值
+              option.legend.data = jsonobj.legend;
+              //读取横坐标值
+              option.xAxis[0].data = jsonobj.axis;
+              var series_arr = jsonobj.series;
+              //驱动图表生成的数据内容，数组中每一项代表一个系列的特殊选项及数据
+              for (var i = 0; i < series_arr.length; i++) {
+                  option.series[i] = result.series[i];
+              }
+              //过渡控制，隐藏loading（读取中）
+              myChart.hideLoading();
+               // 为echarts对象加载数据
+              myChart.setOption(option);
+          }
+      });
+  }
+  
+  init();
+  layui.use(['element', 'layer'], () => {
+		var element = layui.element;
+		element.init();
+		
+		$('body').on('click', '.main>button', () => {
+			var a = $('.dynamic-navigation');
+			var b = $('.layui-layer-tips');
+			a && (a.attr("tg") ? (a.animate({
+				left: 0,
+				opacity: "show"
+			}, 500), a.removeAttr("tg"), b.animate({
+				left: 289,
+				opacity: "show"
+			}, 500)) : (a.animate({
+				left: -200,
+				opacity: "show"
+			}, 500), a.attr("tg", "1"), b.animate({
+				left: 89,
+				opacity: "show"
+			}, 500)));
+			
+			//分开写了
+			a && (a.attr("tg") ? (
+				localStorage.setItem('nav-status', 1)
+			) : (
+				localStorage.setItem('nav-status', 0)
+			));
+			
+		});
+		
+		layer.tips('点我试试^_^', '.main>button', {
+		  	tips: [2, 'red'],
+		  	time: 0
+		});
+		
+		$.get(ctxAppSec+'/api/WeixinGroups/layuiXtree?Authorization=', 
+				function(obj){
+			var li='';
+			for(var i=0;i<obj.length;i++){
+				 var groupName=obj[i].title;
+				 var groupId=obj[i].value.substr(4);
+				 var users=obj[i].data;
+				 li+='<li class="layui-nav-item">'
+					   +'<a href="javascript:;">'+groupName+'</a>';
+				 for(var x=0;x<users.length;x++){
+					 var username=users[x].title;
+					 var userid=users[x].value.substr(4);
+					 li+='<dl class="layui-nav-child">'
+					 	  +'<dd><a href="weixinReportArticleAll.html?ids='+userid+'">'+username+'</a></dd>'
+					 	  +'</dl>';
+				 }
+				   li+='</li>';
+			}
+			$('#navtree').html(li);
+			element.init();
+          });
+		
+	})
+ 
+
+</script>
+
+</body>
+
+</html>

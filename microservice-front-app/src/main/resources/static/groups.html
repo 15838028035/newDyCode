@@ -1,0 +1,356 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>角色编辑记录</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+		<style>
+			.bgcolor{background: #f3f3f4;}
+			.admin_edit{
+				padding: 20px;
+			}
+			.edit_tit{
+				padding: 0 80px 0 20px;
+				height: 42px;
+				line-height: 42px;
+				border-bottom: 1px solid #eee;
+				font-size: 14px;
+				color: #333;
+				overflow: hidden;
+				background-color: #F8F8F8;
+				border-radius: 2px 2px 0 0;
+				position: relative;
+			}
+			.wrap_count{
+				padding: 20px;
+				background: #f3f3f4;
+			}
+			.ipt_count{
+				padding: 20px;
+				background: #FFFFFF;
+			}
+			.ipt_box{
+				width: 100%;
+				padding: 20px 0;
+				border-bottom: 1px dashed #EBEBEB;
+				overflow: hidden;
+				line-height: 36px;
+			}
+			.ipt_box:nth-last-child(1){
+				border: none;
+			}
+			.ipt_box>span{
+				width: 16%;
+				float: left;
+				text-align: right;
+				margin-right: 5%;
+				font-weight: bold;
+				font-size: 12px;
+				color: #666;
+			}
+			.ipt_box p{
+				float: left;
+				width: 60%;
+				height: 36px;
+				overflow: hidden;
+			}
+			.ipt_box p input{
+				width: 100%;
+				border: 1px solid #e5e6e7;
+				height: 100%;
+				padding: 0 10px;
+				box-sizing: border-box;
+			}
+			.ipt_box p select{
+				width: 100%;
+				border: 1px solid #e5e6e7;
+				height: 100%;
+			}
+			.ipt_box p select{
+				color: #666;
+			}
+			.ipt_box p select option{
+				color: #666;
+			}
+			.saveBtn{
+				display: inline-block;
+				padding: 6px 12px;
+				margin-bottom: 0;
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 1.42857143;
+				text-align: center;
+				white-space: nowrap;
+				vertical-align: middle;
+				-ms-touch-action: manipulation;
+				touch-action: manipulation;
+				cursor: pointer;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				background-image: none;
+				border: 1px solid transparent;
+				border-radius: 4px;
+				background-color: #1ab394;
+				border-color: #1ab394;
+				color: #FFF;
+				margin-left: 21%;
+			}
+			　　		input:focus {
+				border: 1px solid red !important;
+			}
+			.edit_tit .clsot_btn{
+				position: absolute;
+				right: 0;
+				top: 0;
+				width: 42px;
+				height: 42px;
+				cursor: pointer;
+				background: url(img/closebtn.png) no-repeat;
+				background-size: 16px 16px;
+				background-position: center center;
+			}
+			.ipt_box i{
+				line-height:16px;
+				display: inline-block;
+				line-height:auto;
+				color: red;
+				font-size: 24px;
+				float: left;
+				margin-left: 5px;
+				margin-top: 10px;
+			}
+			.ipt_box .selcheckBox{
+				float: left;
+				min-height: 1px;
+				float: left;
+				width:78%;
+			}
+			.ipt_box .selcheckBox tr{
+				width: 100%;
+				height: 36px;
+			}
+			.ipt_box .selcheckBox tr td{
+				padding: 0 10px;
+				box-sizing: border-box;
+				height: 36px;
+				border: 1px solid #e5e6e7;
+			}
+			.ipt_box .selcheckBox table{
+				border: 1px solid #EBEBEB;
+				width: 100%;
+			}
+			.ipt_box .selcheckBox table tr td:nth-child(1){
+				width: 20%;
+			}
+			.ipt_box .selcheckBox table tr td span{
+				margin-right: 5px;
+			}
+			.ipt_box .selcheckBox table tr td span input{
+				margin-right: 5px;
+			}
+
+			.selcheckBox label {
+				padding-right: 10px;
+				display: inline-block;
+				min-width: 120px;
+			}
+			.selcheckBox label input {
+				margin-right: 5px;
+			}
+
+			.ipt_box input {
+				height: 36px;
+				border-radius: 3px;
+				padding: 0 5px;
+				background: #f5f5f5;
+				border: 1px solid #f5f5f5;
+			}
+		</style>
+</head>
+	<body class="bgcolor">
+	  <div class="admin_edit">
+	  		
+	  		<div class="wrap_count">
+	  			<div class="ipt_count">
+	  				<div class="ipt_box" id="ipt_box">
+	  					<span>分组名称</span>
+	  					<p><input type="text" value="超级管理员组"/></p>
+	  					<i>*</i>
+	  				</div>
+		  			<div class="ipt_box">
+		  				<span>组别权限</span>
+		  				<div class="selcheckBox" id="selcheckBoxQX">
+		  					
+		  				</div>
+		  			</div>
+		  			<div class="ipt_box" id="from">
+		  				<button class="saveBtn">保存</button>
+		  			</div>
+	  			</div>
+	  		</div>
+	  </div>
+	</body>
+	<script>
+	var acekeystoken = $.cookie('bearcktkaeskey');
+	if (acekeystoken == "") {
+	    parent.location.href = ctxApp + '/login.html';
+	}
+	
+	layui.use(['laytpl'], function () {
+		 $("#id").val(getQueryString("id"));
+		 var url ="";
+		 if (getQueryString("id") != null) {
+	            url = ctxAppSec + '/api/SecGroupData/' + getQueryString("id") + '?Authorization=' + acekeystoken;
+	        }
+		  $.ajax({
+	            url: url,
+	            data: {},
+	            type: "get",
+	            dataType: "json",
+	            async: 'false',
+	            success: function (data) {
+	                console.log(data.respData);
+	                dataTmp = data;
+
+	                var datas = dataTmp.respData;
+	                var li = "";
+	                var html = "";
+	                
+	                 for (var i = 0; i < datas.length; i++) {
+	                	 //alert(datas[i].menu_name);
+	                	 var checkboxName = datas[i].menu_name;
+	                	 var flag=datas[i].flag;
+	                	 var checked='checked';
+	                	 var input_checkbox="";
+	                	 if(flag=='true'){
+	                		 input_checkbox = " <label> <input id='tag_id_" + datas[i].id + "' type='checkbox' lay-skin='primary' title='" + datas[i].menu_name + "' name='checkId' value='" + datas[i].id + "' checked="+checked+"   />"+checkboxName+"</label>";
+	                    
+	                	 }
+	                	 if(flag=='false'){
+	                		 input_checkbox = " <label> <input id='tag_id_" + datas[i].id + "' type='checkbox' lay-skin='primary' title='" + datas[i].menu_name + "' name='checkId' value='" + datas[i].id + "'/>"+checkboxName+"</label>";
+		                 	
+	                	 }
+	                     html += input_checkbox;
+	                } 
+	                $("#selcheckBoxQX").html(html);
+	            },
+	            error: function (data) {
+	                try {
+	                    layer.msg("请求异常");
+	                    return false;
+	                } catch (e) {
+	                    console.log(e);
+	                }
+	            }
+	        });
+
+		  url = ctxAppSec + '/api/SecGroups/' + getQueryString("id") + '?Authorization=' + acekeystoken;
+			$.ajax({
+		        url:url ,
+		        data: {},
+		        type: "get",
+		        dataType: "json",
+		        async: 'false',
+		        success: function (data) {
+		            dataTmp = data;
+		            var html = "";
+		            
+		                 var input_checkbox = ' <input type="text" value="'+dataTmp.groupName+'"  disabled="disabled"/>';
+		                 html += input_checkbox;
+		            $("#ipt_box").html(html);
+		        },
+		        error: function (data) {
+		            try {
+		                layer.msg("请求异常");
+		                return false;
+		            } catch (e) {
+		                console.log(e);
+		            }
+		        }
+		    });
+			
+			$(".saveBtn").click(function(){
+				var obj = document.getElementsByName("checkId");
+			    check_val = [];
+			    for(k in obj){
+			        if(obj[k].checked)
+			            check_val.push(obj[k].value);
+			    }
+				
+			   /*  var params = {  
+			    		urids:check_val 
+			         };   */
+			    var params = 'urids=' + check_val.join(",")
+			    //alert(JSON.stringify(params))
+				//alert(JSON.stringify(params));
+				 url = ctxAppSec + '/api/SecGroupsUrl/' + getQueryString("id") + '?Authorization=' + acekeystoken;
+			            var html = "";
+			            var groupName="";
+				$.ajax({
+			        url:url ,
+			        data: params,
+			        type: "PUT",
+			        dataType: "json",
+			        async: 'false',
+			        success: function (data) {
+			          /*   groupName=data.groupName;
+			           
+			            //groupName
+			           
+			           
+			                 var input_checkbox = ' <input type="text" value="'+groupName+'"  disabled="disabled"/>';
+			                 html += input_checkbox;
+			            
+			            $("#ipt_box").html(html); 
+			             */
+			            var index = parent.layer.getFrameIndex(window.name);  
+			            parent.layer.close(index); 
+			        	   layer.closeAll('loading');
+			                 layer.msg(data.respMsg);
+				     return true;
+			        },
+			        error: function (data) {
+			            try {
+			                layer.msg("请求异常");
+			                return false;
+			            } catch (e) {
+			                console.log(e);
+			            }
+			        }
+			    });
+				
+				
+			})
+			
+			
+			
+			
+			
+			
+	});
+	 
+        
+
+	
+	
+	
+	</script>
+	
+</html>

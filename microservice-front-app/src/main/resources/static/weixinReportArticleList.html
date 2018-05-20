@@ -1,0 +1,218 @@
+﻿
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>图文分析</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+
+</head>
+
+    <body>
+<div class="demoTable">
+
+        统计时间：
+        <div class="layui-inline">
+            <input class="layui-input" name="createDateBegin"
+                id="createDateBegin" autocomplete="off" placeholder="开始时间">
+        </div>
+        <div class="layui-inline">
+            <input class="layui-input" name="createDateEnd" id="createDateEnd"
+                autocomplete="off" placeholder="结束时间">
+        </div>
+
+        <button class="layui-btn" data-type="reload">搜索</button>
+    </div>
+
+<table id="datagrid" class="layui-table" lay-filter="Grid" ></table>
+
+<div class="demoTableA">
+
+       单片图文统计时间：
+        <div class="layui-inline">
+            <input class="layui-input" name="createDateBeginA"
+                id="createDateBeginA" autocomplete="off" placeholder="开始时间">
+        </div>
+        <div class="layui-inline">
+            <input class="layui-input" name="createDateEndA" id="createDateEndA"
+                autocomplete="off" placeholder="结束时间">
+        </div>
+
+        <button class="layui-btn" data-type="reloadA">搜索</button>
+    </div>
+
+<table id="datagridA" class="layui-table" lay-filter="GridA" ></table>
+   <script type="text/html" id="optTpl">
+            <button class="layui-btn layui-btn-view layui-btn-xs" lay-event="view">详情</button>
+    </script>
+    
+     <iframe name="viewFrame" style="display:none" id="viewFrame" width="100%" height="1024px"  scrolling="yes" marginheight="0" marginwidth="0" src="" ></iframe>
+    
+<script>
+var acekeystoken = $.cookie('bearcktkaeskey');
+if (acekeystoken == "") {
+    parent.location.href = ctxApp + '/login.html';
+}
+
+layui.use(['laypage', 'table', 'element', 'layer','laydate'], function(){
+	  var table = layui.table;
+	  var laydate = layui.laydate;
+	  
+	//自定义事件
+	  laydate.render({ 
+	    elem: '#createDateEnd'
+	    ,trigger: 'click' //采用click弹出
+	  });
+	  laydate.render({ 
+	        elem: '#createDateBegin'
+	        ,trigger: 'click' //采用click弹出
+	      });
+	  
+
+  table.render({
+    elem: '#datagrid'
+    ,url:ctxAppWeixin+'/api/WeixinReportArticle?Authorization='+ acekeystoken+"&ids="+getQueryString("ids")+"&uids="+getQueryString("uids")
+    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+    
+    ,cols: [[
+	{field:'stat_date',title:'日期'},
+	{field:'int_page_read_user',title:'图文阅读人数'},
+	{field:'int_page_read_count',title:'图文阅读次数'},
+	{field:'int_page_from_session_read_user',title:'公众号会话阅读人数'},
+    {field:'int_page_from_session_read_count',title:'公众号会话阅读次数'},
+	{field:'share_user',title:'分享的人数'},
+	{field:'share_count',title:'分享的次数'},
+	{field:'int_page_from_feed_read_user',title:'朋友圈阅读人数'},
+	{field:'int_page_from_feed_read_count',title:'朋友圈阅读次数'},
+	{field:'feed_share_from_session_user',title:'分享转发人数'},
+	{field:'feed_share_from_session_cnt',title:'分享转发次数'},
+	{field:'feed_share_from_feed_user',title:'朋友圈转发朋友圈人数'},
+	{field:'feed_share_from_feed_cnt',title:'朋友圈转发朋友圈次数'},
+	{field:'add_to_fav_user',title:'收藏人数'},
+    {field:'add_to_fav_count',title:'收藏次数'}
+      
+    ]]
+  ,page: true
+  ,id: 'datagridTable'  
+  ,initSort: {  
+      field: 'stat_date' //排序字段，对应 cols 设定的各字段名  
+     ,type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序  
+            }  
+  ,request: {  
+     pageName: 'page' //页码的参数名称，默认：page  
+    ,limitName: 'limit' //每页数据量的参数名，默认：limit  
+        }
+  });
+
+ var $ = layui.$, active = {  
+          reload: function(){  
+            table.reload('datagridTable', {  
+              where: {  
+            	  "createDateBegin" : $("#createDateBegin") .val(),
+            	  "createDateEnd" : $("#createDateEnd") .val(),
+            	  "ids":getQueryString("ids"),
+            	  "uids":getQueryString("uids")
+              }  
+            });  
+          }  
+    };  
+
+$('.demoTable .layui-btn').on('click', function(){  
+  var type = $(this).data('type');  
+  active[type] ? active[type].call(this) : '';  
+});  
+
+
+//自定义事件
+laydate.render({ 
+  elem: '#createDateEndA'
+  ,trigger: 'click' //采用click弹出
+});
+laydate.render({ 
+      elem: '#createDateBeginA'
+      ,trigger: 'click' //采用click弹出
+    });
+
+
+table.render({
+    elem: '#datagridA'
+    ,url:ctxAppWeixin+'/api/WeixinReportArticle2?Authorization='+ acekeystoken+"&ids="+getQueryString("ids")+"&uids="+getQueryString("uids")
+    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+    
+    ,cols: [[
+             {field:'id',title:'id'},
+    {field:'title',title:'标题'},
+    {field:'stat_date',title:'日期'},
+    {field:'target_user',title:'送达人数'},
+    {field:'int_page_read_user',title:'图文阅读人数'},
+    {field:'share_user',title:'分享的人数'},
+    {field:'nick_name',title:'公众账号'},
+    {field: 'opt', title: '操作',templet: '#optTpl'}
+    ]]
+  ,page: true
+  ,id: 'datagridTableA'  
+  ,initSort: {  
+      field: 'stat_date' //排序字段，对应 cols 设定的各字段名  
+     ,type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序  
+            }  
+  ,request: {  
+     pageName: 'page' //页码的参数名称，默认：page  
+    ,limitName: 'limit' //每页数据量的参数名，默认：limit  
+        }
+  });
+  
+table.on('tool(GridA)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+    var data = obj.data; //获得当前行数据
+    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+ 
+     if(layEvent === 'view'){ //编辑
+        var id = data.id;
+        view(id);
+    } 
+});
+
+ var $ = layui.$, activeA = {  
+          reloadA: function(){  
+            table.reload('datagridTableA', {  
+              where: {  
+                  "createDateBeginA" : $("#createDateBeginA") .val(),
+                  "createDateEndA" : $("#createDateEndA") .val(),
+                  "ids":getQueryString("ids"),
+                  "uids":getQueryString("uids")
+              }  
+            });  
+          }  
+    };  
+
+$('.demoTableA .layui-btn').on('click', function(){  
+  var type = $(this).data('type');  
+  activeA[type] ? activeA[type].call(this) : '';  
+});  
+
+  
+});
+
+function view(id){
+	$("#viewFrame").css("display","block");
+	$("#viewFrame").attr("src",ctxApp+"/WeixinReportArticleView.html?id="+id+"&uids="+getQueryString("uids"));
+}
+
+</script>
+
+</body>
+
+</html>

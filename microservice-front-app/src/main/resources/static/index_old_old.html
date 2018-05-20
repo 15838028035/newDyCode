@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>首页</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/css.css">
+    <script>
+        (function(global){
+            function remChange(){
+                document.documentElement.style.fontSize=20*document.documentElement.clientWidth/1024+'px';
+            }
+            remChange();
+            global.addEventListener('resize',remChange,false);
+        })(window);
+    </script>
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/js.js"></script>
+    <script src="js/regular.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+
+</head>
+
+   <body>
+    <div class="layui-layout-admin">
+        <!--头部-->
+        <div class="layui-header layui-bg-white layui-bottom">
+            <div class="layui-main">
+                <div class="admin-login-box">
+                    <a class="logo" style="left: 0;" href="/">
+                        <span style="font-size: 22px;">BeginnerAdmin</span>
+                    </a>
+                </div>
+                <ul class="layui-nav admin-header-item">
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">清除缓存</a>
+                    </li>
+                    <li class="layui-nav-item" id="pay">
+                        <a href="javascript:;">捐赠我</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">浏览网站</a>
+                    </li>
+                    <li class="layui-nav-item" id="video1">
+                        <a href="javascript:;">视频</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;" class="admin-header-user">
+                            <img src="images/0.jpg" />
+                            <span>beginner</span>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a href="javascript:;"><i class="fa fa-user-circle" aria-hidden="true"></i> 个人信息</a>
+                            </dd>
+                            <dd>
+                                <a href="javascript:;"><i class="fa fa-gear" aria-hidden="true"></i> 设置</a>
+                            </dd>
+                            <dd id="lock">
+                                <a href="javascript:;">
+                                    <i class="fa fa-lock" aria-hidden="true" style="padding-right: 3px;padding-left: 1px;"></i> 锁屏 (Alt+L)
+                                </a>
+                            </dd>
+                            <dd>
+                                <a href="login.html"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!--左侧-->
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="hbkNavbar">
+                    <li class="layui-nav-item">
+                        <a href="upmGroupsList.html">影院分组管理</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="secGroupsList.html">影院分组管理</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="">公众号码列表</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="">菜单管理</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="">素材管理</a>
+                    </li>
+                     <li class="layui-nav-item">
+                        <a href="">数据监控-用户</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="">监控管理-图文数据</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                            <dd><a href="secAdminUserList.html">管理员列表</a></dd>
+                            <dd><a href="">角色列表</a></dd>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="">操作记录</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!--中间主体-->
+        <div class="layui-body" id="container">
+            <div class="layui-tab" lay-filter="tabs" lay-allowClose="true">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">首页</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">首页内容</div>
+                </div>
+            </div>
+        </div>
+
+        <!--底部-->
+        <div class="layui-footer">
+            <center>权所有&copy;联系电话</center>
+        </div>
+    </div>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function(){
+        var element = layui.element;
+        element.on('nav(hbkNavbar)',function(elem){
+            /*使用DOM操作获取超链接的自定义data属性值*/
+            var options = eval('('+elem.context.children[0].dataset.options+')');
+            var url = options.url;
+            var title = options.title;
+            element.tabAdd('tabs',{
+                title : title,
+                content : '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>',
+                id : '111'
+            });
+        });
+        /*使用下面的方式需要引用jquery*/
+       /* $('.layui-nav-child a').click(function () {
+            var options = eval('('+$(this).data('options')+')');
+            var url = options.url;
+            var title = options.title;
+            element.tabAdd('tabs',{
+                title : title,
+                content : '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>'
+            });
+        });*/
+    });
+    
+    $(function(){
+        
+        $("#logout").click(function(){
+           
+           //登录
+           $.ajax({
+               url: ctxAppSec+'/upmUser/doLoginOutJsonP',
+               data: {
+               },
+               type: "get",
+               dataType: "jsonp",
+               jsonp: "jsonpCallback",//服务端用于接收callback调用的function名的参数 
+               success: function(data){
+                 // layer.closeAll('loading');
+                     if(data.respCode=='1'){
+                        location.href = ctxApp+'/login.html';
+                        
+                     }else{
+                        layer.msg(data.respMsg);
+                     }
+                 },
+                 error: function(data){
+                     try {
+                        layer.msg("请求异常");
+                        return false;
+                     }catch (e) {
+                        console.log(e);
+                     }
+                 }
+            });
+        });
+    });
+        
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>echarts 柱状图 demo</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+    
+     <script src="echats/echarts-all.js"></script>
+
+</head>
+
+    <body>
+    <p id="mainAnaylsis" style="width: 750px;height:500px;"></p>
+     
+     <script>
+
+     var myChart = echarts.init(document.getElementById('mainAnaylsis'));
+     var   option = {
+    		    title : {
+    		        text: '世界人口总量',
+    		        subtext: '数据来自网络'
+    		    },
+    		    tooltip : {
+    		        trigger: 'axis'
+    		    },
+    		    legend: {
+    		        data:['2011年', '2012年']
+    		    },
+    		    toolbox: {
+    		        show : true,
+    		        feature : {
+    		            mark : {show: true},
+    		            dataView : {show: true, readOnly: false},
+    		            magicType: {show: true, type: ['line', 'bar']},
+    		            restore : {show: true},
+    		            saveAsImage : {show: true}
+    		        }
+    		    },
+    		    calculable : true,
+    		    xAxis : [
+    		        {
+    		            type : 'value',
+    		            boundaryGap : [0, 0.01]
+    		        }
+    		    ],
+    		    yAxis : [
+    		        {
+    		            type : 'category',
+    		            data : ['巴西','印尼','美国','印度','中国','世界人口(万)']
+    		        }
+    		    ],
+    		    series : [
+    		        {
+    		            name:'2011年',
+    		            type:'bar',
+    		            data:[18203, 23489, 29034, 104970, 131744, 630230]
+    		        },
+    		        {
+    		            name:'2012年',
+    		            type:'bar',
+    		            data:[19325, 23438, 31000, 121594, 134141, 681807]
+    		        }
+    		    ]
+    		};
+     myChart.setOption(option);
+     </script>
+
+</body>
+
+</html>

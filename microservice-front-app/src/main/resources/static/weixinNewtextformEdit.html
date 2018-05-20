@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>编辑图文</title>
+
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="build/css/doc.css" media="all">
+
+    <!-- <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    <!-- 配置文件 -->
+    <script type="text/javascript" src="ueditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" charset="utf-8" src="ueditor/lang/zh-cn/zh-cn.js"></script>
+
+    <link type="text/css" href="ueditor/themes/default/css/ueditor.css" rel="stylesheet"/>
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+    <style>
+        .body {
+            background: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        /*发送内容*/
+        .previewcountent {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            left: 0;
+            top: 0;
+            z-index: 9999;
+        }
+
+        .previewcountent .count {
+            padding: 20px;
+            width: 730px;
+            height: 485px;
+            background: #FFFFFF;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-top: -240px;
+            margin-left: -365px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .previewcountent .head span {
+            font-size: 18px;
+        }
+
+        .previewcountent .head .closeBtn {
+            font-size: 45px;
+            float: right;
+            margin-top: -20px;
+            cursor: pointer;
+        }
+
+        .counttext {
+            width: 400px;
+            margin: 0 auto;
+            margin-top: 100px;
+        }
+
+        .counttext input {
+            box-sizing: border-box;
+            width: 100%;
+            height: 35px;
+            padding: 0 10px;
+            margin: 10px 0;
+        }
+
+        .previewcountent .btnbox {
+            margin-top: 50px;
+            width: 100%;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .previewcountent .btnbox span {
+            width: 110px;
+            height: 35px;
+            text-align: center;
+            line-height: 35px;
+            margin: 0 15px;
+            background: none;
+            border: none;
+            border-radius: 5px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .previewcountent .btnbox .prsure {
+            background: #44b549;
+            color: #FFFFFF;
+        }
+
+        .previewcountent .btnbox .prcancel {
+            border: 1px solid #CCCCCC;
+            color: #333333;
+        }
+
+        /*底部*/
+        .centerboth {
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        .bottomBox {
+            width: 100%;
+            height: 60px;
+            background: #FFFFFF;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            border-top: 1px solid #CCCCCC;
+            z-index: 9999;
+        }
+
+        .bottomBox button {
+            background: none;
+            border: none;
+            width: 100px;
+            height: 35px;
+            margin: 0;
+            text-align: center;
+            line-height: 35px;
+            padding: 0;
+            margin: 0 15px;
+            cursor: pointer;
+        }
+
+        .bottomBox .save {
+            background: #009944;
+            border-radius: 5px;
+            overflow: hidden;
+            color: #FFFFFF;
+        }
+
+        .bottomBox .save_qf {
+            background: #CCCCCC;
+            color: #666666;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .wraper {
+            padding-bottom: 60px;
+        }
+
+        .wraper .mainBox {
+            width: 1200px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            position: relative;
+            padding: 0 250px;
+            box-sizing: border-box;
+        }
+
+        .titlecount {
+            width: 1200px;
+            margin: 0 auto;
+            height: 50px;
+            line-height: 50px;
+        }
+
+        .titlecount p {
+            color: #999999;
+        }
+
+        .titlecount .a {
+            color: #24EA2C !important;
+        }
+
+        .captical {
+            width: 100%;
+            height: 50px;
+            border: 1px solid #f5f5f5;
+            border-bottom: none;
+        }
+
+        .captical input {
+            width: 100%;
+            height: 100%;
+            padding-left: 15px;
+            box-sizing: border-box;
+            border: none;
+        }
+
+        #demo {
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .asideRight {
+            position: absolute;
+            width: 250px;
+            right: 0;
+            top: 0;
+            box-sizing: border-box;
+            padding: 15px;
+        }
+
+        /*右侧*/
+        .asideRight .title {
+            height: 35px;
+            line-height: 35px;
+            margin-bottom: 15px;
+        }
+
+        .sellist li {
+            padding-left: 15px;
+            line-height: 50px;
+            width: 100%;
+            height: 50px;
+            border: 1px solid #F5F5F5;
+            box-sizing: border-box;
+            border-bottom: none;
+            cursor: pointer;
+        }
+
+        .sellist li:nth-last-child(1) {
+            border-bottom: 1px solid #F5F5F5;
+        }
+
+        /*图片弹出层*/
+        .tppopbox, .sppopbox, .yinpinpop {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            display: none;
+        }
+
+        .tppopbox .countbox, .sppopbox .countbox, .yinpinpop .countbox {
+            width: 850px;
+            height: 540px;
+            background: #FFFFFF;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -270px;
+            margin-left: -425px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .tppopbox .clostbtn, .sppopbox .clostbtn, .yinpinpop .clostbtn {
+            float: right;
+            width: 30px;
+            height: 30px;
+            display: block;
+            cursor: pointer;
+            background: url(img/closebtn.png) no-repeat;
+            background-size: 22px 22px;
+            background-position: center center;
+            margin-top: 5px;
+            margin-right: 0px;
+        }
+        .twbtnBox {
+            padding-top: 20px;
+        }
+
+        .tppopbox .countbox .tit, .sppopbox .countbox .tit, .yinpinpop .countbox .tit {
+            float: left;
+            font-size: 20px;
+            margin-left: 25px;
+            padding-top: 15px;
+        }
+
+        .tppopbox .upbtnbox, .sppopbox .upbtnbox, .yinpinpop .upbtnbox {
+            width: 100%;
+            height: 65px;
+            border-bottom: 1px solid #F5F5F5;
+            overflow: hidden;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .layui-btn {
+            background: none;
+            border: none;
+            width: 100px;
+            height: 35px;
+            margin: 0;
+            text-align: center;
+            line-height: 35px;
+            cursor: pointer;
+            border-radius: 5px;
+            overflow: hidden;
+            background: #009944;
+            color: #FFFFFF;
+        }
+
+        .upbtnbox button {
+            float: right;
+            margin-right: 50px;
+            margin-top: 15px;
+        }
+
+        .tppopbox {
+            overflow: hidden;
+        }
+
+        .imglistBox {
+            box-sizing: border-box;
+            padding: 25px;
+            overflow: hidden;
+            height: 415px;
+            overflow-y: auto;
+        }
+
+        .imglistBox li {
+            float: left;
+            width: 120px;
+            height: 155px;
+            border: 1px solid #F5F5F5;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .imglistBox li i {
+            display: block;
+            width: 120px;
+            height: 120px;
+        }
+
+        .imglistBox li i img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .imglistBox li .imgname {
+            line-height: 25px;
+            padding-left: 10px;
+        }
+
+        .imglistBox li:nth-child(6n) {
+            margin-right: 0;
+        }
+
+        .tppopbox .countbox .clostbox {
+            height: 40px;
+            line-height: 40px;
+            padding: 0 25px;
+        }
+
+        .tppopbox .countbox .tit {
+            float: left;
+            font-size: 20px;
+            padding-top: 0px;
+            margin-left: 0;
+        }
+        .twbtnBox button {
+            background: none;
+            border: none;
+            width: 100px;
+            height: 35px;
+            margin: 0;
+            text-align: center;
+            line-height: 35px;
+            padding: 0;
+            margin: 0 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .twbtnBox {
+            padding-top: 20px;
+        }
+        .twbtnBox .surebtn {
+            background: #009944;
+            color: #FFFFFF;
+        }
+
+        .twbtnBox .cancelbtn {
+            background: #CCCCCC;
+            color: #666666;
+        }
+
+        .imglistBox li .pimg {
+            position: absolute;
+            width: 120px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            left: 0;
+            top: 0;
+            display: none;
+            padding-top: 50px;
+            box-sizing: border-box;
+            z-index: 90;
+        }
+
+        .imglistBox li .pimg img {
+            display: block;
+            margin-top: 150px;
+            margin: 0 auto;
+        }
+
+        .seltext {
+            float: left;
+            overflow: hidden;
+            font-size: 16px;
+            margin-left: 25px;
+            margin-top: 25px;
+        }
+
+        .seltext span.cur {
+            color: #009688;
+            border-bottom: 1px solid #009688;
+        }
+
+        .tableBox .count {
+            box-sizing: border-box;
+            padding: 25px;
+            overflow-y: auto;
+            height: 340px;
+            display: none;
+
+        }
+
+        .tableBox .count:nth-child(1) {
+            display: block;
+        }
+
+        .tableBox .count input {
+            width: 400px;
+            height: 30px;
+            border: 1px solid #F5F5F5;
+            margin-left: 50px;
+            padding: 0 10px;
+        }
+
+        .adyuyinbtn {
+            width: 100px;
+            height: 35px;
+            background: #009688;
+            border-radius: 10px;
+            overflow: hidden;
+            color: #FFFFFF;
+            text-align: center;
+            line-height: 35px;
+            float: right;
+        }
+
+        .addyuyin {
+            height: 30px;
+            border-bottom: 1px solid #F5F5F5;
+            border-left: none;
+            border-right: none;
+        }
+
+        .yinpinpop .tableBox .count {
+
+        }
+
+        .sideli * {
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .bootm * {
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .sehnmbtn {
+            display: inline-block;
+            padding: 5px 10px;
+            border: 1px solid #09BB07;
+            color: #09BB07;
+            border-radius: 5px;
+        }
+
+        .fabnukk {
+            background: #FCFCFC;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .fmk {
+            margin-top: 15px;
+        }
+
+        .fenchoose {
+            overflow: hidden;
+        }
+
+        .fenchoose li {
+            float: left;
+
+            border: 1px solid #E7E7EB;
+            margin-right: 15px;
+
+        }
+
+        .fenchoose li a {
+            display: block;
+            height: 100%;
+            background: #ffffff;
+            padding: 5px 10px;
+            color: #333333;
+        }
+
+        .zhaiyao textarea {
+            width: 550px;
+            height: 100px;
+        }
+
+        .zishulk {
+            width: 550px;
+            text-align: right;
+            color: #8D8D8D;
+        }
+
+        .yuanwen {
+            padding-top: 15px;
+        }
+
+        .yuanwen p {
+            margin-bottom: 15px;
+        }
+
+        .fmk h2 {
+            margin: 15px 0;
+        }
+
+        .zhaiyao h2 {
+            margin: 15px 0;
+        }
+
+        /*左侧*/
+        .sideli {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 250px;
+            box-sizing: border-box;
+            padding: 15px;
+        }
+
+        .sideli h2 {
+            height: 35px;
+            line-height: 35px;
+            margin-bottom: 15px;
+        }
+
+        .tuwenli li {
+            width: 100%;
+            border: 1px solid #F5F5F5;
+            margin-bottom: 10px;
+            position: relative;
+            background: #ffffff;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .tuwenli li.cur {
+            border: 2px solid #009944;
+        }
+
+        .tuwenli li:nth-child(1) .up {
+            display: none;
+        }
+
+        .tuwenli li:nth-last-child(2) .down {
+            display: none;
+        }
+
+        .tuwenli .addleftbtn {
+            position: relative;
+        }
+
+        .tuwenli .addleftbtn img {
+            display: block;
+            width: 100%;
+            height: 130px;
+        }
+
+        .ppsel {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.5);
+            width: 130px;
+            height: 120px;
+            left: 50%;
+            margin-left: -65px;
+            top: 100px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .ppsel ul li {
+            width: 130px;
+            height: 30px;
+            border: none;
+            text-align: center;
+            line-height: 30px;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            color: #FFFFFF;
+            cursor: pointer;
+        }
+
+        .tuwenli li:first-child .fuceng {
+            display: none !important;
+        }
+
+        .tuwenli li p {
+            position: absolute;
+            left: 0;
+            bottom: 35px;
+            z-index: 90;
+            width: 100%;
+            padding: 0 10px;
+            box-sizing: border-box;
+            color: #FFFFFF;
+        }
+
+        .tuwenli li .fuceng {
+            position: absolute;
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            left: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 0 10px;
+            box-sizing: border-box;
+            z-index: 90;
+        }
+
+        .tuwenli li .fuceng a {
+            color: #FFFFFF;
+
+        }
+
+        .tuwenli li .fuceng a:last-child {
+            float: right;
+        }
+
+        .tuwenli li img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .tuwenli li .down {
+            margin-left: 10px;
+        }
+
+        .tuwenli li:first-child .down {
+            margin-left: 0;
+        }
+
+        #fmimgbox {
+            width: 145px;
+
+        }
+
+        #fmimgbox img {
+            width: 100%;
+            height: 145px;
+        }
+
+        .fuceng {
+            display: none;
+        }
+
+        .tuwenli li .img {
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .tuwenli li .img img {
+            width: 100%;
+        }
+
+        .pli.two {
+            height: 99px;
+        }
+
+        .pli.two .plbbox {
+            height: 80px;
+        }
+
+        .tuwenli li .img {
+            position: relative;
+        }
+
+        .plbbox {
+            height: 130px;
+        }
+
+        .plbbox .zhao {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            left: 0;
+            top: 0;
+        }
+
+        .plbbox.two {
+            height: 80px;
+        }
+
+        .pli .plbbox.two .img img {
+            width: 80px;
+            height: 100%;
+            float: right;
+        }
+
+        .ctit {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: box;
+            display: -webkit-box;
+            line-clamp: 1;
+            box-orient: vertical;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            word-break: break-all;
+        }
+
+        .tuwenli .addleftbtn {
+            height: 99px !important;
+        }
+
+        .tuwenli .addleftbtn img {
+            display: block;
+            width: 100%;
+            height: 80px;
+        }
+
+        #yulan {
+            border: 1px solid #999;
+            color: #999999;
+        }
+        .tuwenli li:hover .fuceng{display: block;}
+        .fenchoose ul {
+            padding-bottom: 5px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="kit-doc" style="background-color: #F5F5F5;">
+<form id="formId">
+    <div class="wraper">
+        <div class="titlecount">
+            <p>编辑图文信息</p>
+        </div>
+        <div class="mainBox">
+            <div class="sideli">
+                <h2>图文列表</h2>
+                <div class="tuwenli">
+                    <ul class="pili">
+
+                    </ul>
+                </div>
+            </div>
+
+            <div class="countent">
+                <div class="captical"><input id="catit" placeholder="请输入标题" name="title"/></div>
+                <div class="captical"><input id="author" placeholder="请输入作者" name="author"/></div>
+              <input name="articleContent" id="articleContent"  type="hidden">
+                <script type="text/pain" id="deitor" name="articleContentEditor"></script>
+                <div class="bootm">
+                    <div class="yuanwen">
+                        <p>原文链接<input id="originUrl" style="width: 400px;height: 35px;margin-left: 20px;"
+                                      name="originUrl" type="text"></p>
+                        <p>原创：未声明</p>
+                        <a class="sehnmbtn" href="#"><label><input name="yuanchuang" value="1"
+                                                                   type="checkbox">申明原创</label></a>
+
+                        <div class="fabnukk">
+                            <p>发布样式编辑</p>
+                            <div class="fmk">
+                                <h2>封面</h2>
+                                <div class="fenchoose">
+                                    <ul>
+                                        <li class="selimg"><a href="#">从图片库选择</a></li>
+                                    </ul>
+                                    <div id="fmimgbox" class="fmimgbox"></div>
+                                </div>
+                            </div>
+
+                            <div class="zhaiyao">
+                                <h2>摘要</h2>
+                                <div class="">
+                                    <textarea id="intro" name="intro"></textarea>
+                                    <p class="zishulk"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="asideRight">
+                <p class="title">多媒体</p>
+                <ul class="sellist">
+                    <li class="twBtnpop"><i><img/></i><span>图片</span></li>
+                  <!--   <li class="spBtnpop"><i><img/></i><span>视频</span></li>
+                    <li class="ypBtnpop"><i><img/></i><span>音频</span></li> -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="imgTextId" id="imgTextId">
+    <input type="hidden" name="Authorization" id="Authorization">
+    <div class="bottomBox centerboth">
+        <button class="save" id="saveBtn" type="button">保存</button>
+      <!--   <button class="layui-btn layui-btn-primary" id="yulan" type="button">预览</button> -->
+        <button class="save_qf" type="button">保存并群发</button>
+    </div>
+
+</form>
+<!----------------------------------------图片弹出层--------------------------------------->
+<div class="tppopbox" id="tppopbox">
+    <div class="countbox">
+        <div class="clostbox">
+            <span class="tit">选择图片</span>
+            <span class="clostbtn"></span>
+        </div>
+        <!--<div class="upbtnbox"><button type="button" class="layui-btn" id="upimgbtn">本地上传</button></div>-->
+        <div class="imglistBox">
+            <ul id="imglists">
+                <li>
+                    <p class="pimg"><img src="img/iconright.png"/></p>
+                    <i><img src="img/kf01.png"/></i>
+                    <p class="imgname">perpng</p>
+                </li>
+            </ul>
+        </div>
+        <div class="twbtnBox centerboth">
+            <button class="surebtn" id="sureImg">确定</button>
+            <button class="cancelbtn">取消</button>
+        </div>
+    </div>
+</div>
+<!--封面图-->
+<div class="tppopbox fengmian" id="fengmian">
+    <div class="countbox">
+        <div class="clostbox">
+            <span class="tit">选择图片</span>
+            <span class="clostbtn"></span>
+        </div>
+        <!--<div class="upbtnbox"><button type="button" class="layui-btn" id="upimgbtn">本地上传</button></div>-->
+        <div class="imglistBox">
+            <ul id="fmimglists">
+                <li>
+                    <p class="pimg"><img src="img/iconright.png"/></p>
+                    <i><img src="img/kf01.png"/></i>
+                    <p class="imgname">perpng</p>
+                </li>
+            </ul>
+        </div>
+        <div class="twbtnBox centerboth">
+            <button class="surebtn" id="sureImg1">确定</button>
+            <button class="cancelbtn">取消</button>
+        </div>
+    </div>
+</div>
+<!--
+    作者：offline
+    时间：2018-04-26
+    描述：视频弹窗
+-->
+<div class="sppopbox">
+    <div class="countbox">
+        <div class="clostbox">
+            <span class="tit">选择视频</span>
+            <span class="clostbtn"></span>
+        </div>
+        <div class="tableBOx">
+
+
+        </div>
+        <div class="upbtnbox">
+            <div class="seltext">
+                <span>选择素材</span>
+                <span>视频连接</span>
+            </div>
+            <!--<button type="button" class="layui-btn" id="upimgbtn1">本地上传</button>-->
+        </div>
+        <div class="tableBox">
+            <div class="count cur">
+                <div class="imglistBox">
+                    <ul id="vediolists">
+                        <li>
+                            <p class="pimg"><img src="img/iconright.png"/></p>
+                            <i><img src="img/kf01.png"/></i>
+                            <p class="imgname">perpng</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="count">
+                <div><span>视频/图文网址</span><input placeholder="支持插入微信公众号文章链接、视频详情页链接和腾讯视频链接"/></div>
+            </div>
+        </div>
+        <div class="twbtnBox centerboth">
+            <button class="surebtn" id="vediosure">确定</button>
+            <button class="cancelbtn">取消</button>
+        </div>
+    </div>
+</div>
+<div class="yinpinpop">
+    <div class="countbox">
+        <div class="clostbox">
+            <span class="tit">选择音频</span>
+            <span class="clostbtn"></span>
+        </div>
+        <div class="tableBOx">
+
+
+        </div>
+        <div class="upbtnbox">
+            <div class="seltext">
+                <span>选择素材</span>
+                <span>视频连接</span>
+            </div>
+            <!--<button type="button" class="layui-btn" id="upimgbtn1">+新建语音</button>-->
+        </div>
+        <div class="tableBox">
+            <div class="count cur">
+                <div class="imglistBox">
+                    <ul id="audiolists">
+                        <li>
+                            <p class="pimg"><img src="img/iconright.png"/></p>
+                            <i><img src="img/kf01.png"/></i>
+                            <p class="imgname">perpng</p>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="twbtnBox centerboth">
+            <button class="surebtn" id="audiosure">确定</button>
+            <button class="cancelbtn">取消</button>
+        </div>
+    </div>
+</div>
+<!--预览-->
+<div class="previewcountent" style="display:none;">
+    <div class="count">
+        <p class="head"><span>发送预览</span><span class="closeBtn">×</span></p>
+        <div class="counttext">
+            <p>关注公众号后，才能接收图文消息预览</p>
+            <input type="text" placeholder="请输入微信号" id="nikenameid"/>
+            <p>预览功能仅用于公众号查看文章效果，不适用于公众传播，预览链接会在短期内失效</p>
+        </div>
+        <div class="btnbox centerboth">
+            <span class="prsure">确定</span>
+            <span class="prcancel">取消</span>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+$('.cancelbtn').click(function(){
+	$('.clostbtn').click();
+})
+
+	layui.use(['layer'], function() {
+		var layer = layui.layer;
+		var $ = layui.$;
+    var acekeystoken = $.cookie('bearcktkaeskey');
+    if (acekeystoken == "") {
+        parent.location.href = ctxApp + '/login.html';
+    }
+
+    $(document).ready(function () {
+        var acekeystoken = $.cookie('bearcktkaeskey');
+        console.log("acekeystoken================" + acekeystoken);
+        $("#Authorization").val(acekeystoken);//设置token
+    });
+
+    var tempId = window.location.href.split("=")[1];
+    tempId = tempId.replace('#', '');
+    $("#imgTextId").val(tempId);
+    var loding = layer.load();
+
+    $.ajax({
+        url: ctxAppSec + '/api/WeixinImgtextItem/showInfoList',
+        data: {imgTextId: tempId, "Authorization": acekeystoken},
+        type: 'get',
+        dataType: "json",
+        success: function (data) {
+            layer.close(loding);
+
+            var obj = data.list;
+            var length = obj.length;
+            var html = '';
+            for (var i = 0; i < length; i++) {
+                if (i == 0) {
+                    html += '<li class="pli cur" id="' + obj[i].id + '" index="' + i + '">'
+                } else {
+                    html += '<li class="pli" id="' + obj[i].id + '" index="' + i + '">'
+                }
+                if (i == 0) {
+                    html += '<div class="plbbox">'
+                } else {
+                    html += '<div class="plbbox two">'
+                }
+                html += '<div class="img"><p class="zhao"></P><img src="' + obj[i].headImg + '" alt=""></div>'
+                html += '<p class="ctit">' + obj[i].title + '</p>'
+                html += '</div>'
+                html += '<div class="fuceng">'
+                html += '<a class="up" href="#">上移</a>';
+                html += '<a class="delcount" href="javascript:;">删除</a>'
+                html += '</div>'
+                html += '</li>'
+            }
+            html += '<li class="pli addleftbtn"> <a href="#"><img src="img/add.png"/></a> </li>';
+
+            $("ul.pili").html(html);
+            $('#catit').val(obj[0].title);
+            $('#author').val(obj[0].author);
+          
+            console.log("AAAAAAAAAAAAAAAAAAAA=" +obj[0].articleContent);
+            
+            ue.addListener('ready', function (editor) {
+            	console.log("AAAAAAAAAAAAAAAAAAAA=" +obj[0].articleContent);
+            	  ue.setContent(obj[0].articleContent);
+            	//  ue.execCommand('insertHtml', obj[0].articleContent);
+            });
+            
+         // ue.execCommand('insertHtml', obj[0].articleContent);
+            
+            //ue.setContent(obj[0].articleContent);
+          /*  debugger;*/
+            $('#originUrl').val(obj[0].originUrl);
+          //  $('#fmimgbox').append('<img src="' + obj[0].headImg + '"/>');
+            $('#fmimgbox').html('<input type="hidden" name="headImg" value="' +obj[0].headImg + '"/><img src="' +obj[0].headImg + '"/>');
+            $('#intro').val(obj[0].intro);
+
+            $('form').append('<input  type="hidden" value="' + obj[0].id + '" name="id"/>');
+
+
+
+
+        }
+    });
+    
+    var ue = UE.getEditor('deitor', {
+   toolbars:[
+           [
+   'fullscreen', 'source', '|', 'undo', 'redo', '|',
+   'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+   'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+   'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
+   'directionalityltr', 'directionalityrtl', 'indent', '|',
+   'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+    '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
+    'emotion', 'scrawl', 'pagebreak', 'template', 'background', '|',
+   'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
+   'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
+    'preview', 'searchreplace', 'drafts','help'
+        ]
+    ]
+           });
+
+    getImg();
+    getAudio();
+    getVedio();
+    getFmimg();
+    
+
+
+	
+    
+
+//上移
+            $('body').on('click', '.up', function () {
+                var id = $(this).parent().parent().attr('id');
+                var fromId = $(this).parent().parent().prev('li').attr('id');
+                
+                console.log("id="+id +",idb="+fromId);
+                
+                if(id==undefined || id=="" || fromId==undefined || fromId==""){
+                	layer.msg("请先进行保存操作");
+                	return false;
+                }
+                
+              
+                var title = $("#catit").val();
+                var content = ue.getContent();
+                var headImg = $("input[name='headImg']").val();
+                if (title == '') {
+                    layer.msg("请将标题填写完整");
+                    return false;
+                }
+                if (content == '') {
+                    layer.msg("请将正文填写完整");
+                    return false;
+                }
+                if (headImg == '' || headImg==undefined) {
+                    layer.msg("请上传封面图");
+                    return false;
+                }
+                if ($("#imgTextId").val() == '') {
+                    layer.msg("获取素材ID为空");
+                    return false;
+                }
+
+                
+                $.ajax({
+                    url: ctxAppSec + '/api/WeixinImgtextItem/moveFromAToB',
+                    data: {a: id, b: fromId, "Authorization": acekeystoken},
+                    type: 'post',
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        location.reload();
+
+                    }
+                });
+            })
+            //删除
+           
+            $('body').on('click', '.delcount', function () {
+                var id = $(this).parent().parent().attr('id');
+                var _this = $(this);
+                if (id > 0) {
+                    $.ajax({
+                        url: ctxAppSec + '/api/WeixinImgtextItem/batchDelete/?id=' + id + "&Authorization=" + acekeystoken,
+                        data: $('#formId').serialize(),
+                        type: 'delete',
+                        dataType: "json",
+                        success: function (data) {
+                            console.log(data);
+                            layer.msg(data.respMsg);
+                            console.log(111111);
+                            _this.closest('li').remove();
+
+                        }
+                    });
+                } else {
+                    _this.closest('li').remove();
+                    $('.plbbox:eq(0)').trigger('click')
+                }
+            });
+
+
+          /*  $('.tuwenli li').hover(function () {
+                $(this).find('.fuceng').show();
+            }, function () {
+                $(this).find('.fuceng').hide();
+            });*/
+
+    $('.save_qf').click(function () {
+        var id = $('form').find('input[name="id"]').val();
+        var title = $("#catit").val();
+        var content = ue.getContent();
+        var headImg = $("input[name='headImg']").val();
+        if (title == '') {
+            layer.msg("请将标题填写完整");
+            return false;
+        }
+        if (content == '') {
+            layer.msg("请将正文填写完整");
+            return false;
+        }
+        
+        if (headImg == '' || headImg==undefined) {
+            layer.msg("请上传封面图");
+            return false;
+        }
+        
+        $("#imgTextId").val(tempId);
+        if ($("#imgTextId").val() == '') {
+            layer.msg("系统错误");
+            return false;
+        }
+        
+        var articleContent =  ue.getContent();
+        
+        $("#articleContent").val(articleContent);
+
+        $("#Authorization").val($.cookie('bearcktkaeskey'));//设置token
+        
+        var articleContent =  ue.getContent();
+        $("#articleContent").val(articleContent);
+
+        if (id > 0) {
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinImgtextItem/createOrUpdate/' + id,
+                data: $('#formId').serialize(),
+                type: 'post',
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    layer.msg(data.respMsg);
+
+                    layer.open({
+                        title: "添加",
+                        type: 2,
+                        maxmin: true,
+                        area: ['100%', '100%'],
+                        content: "weixinImgtextToPush.html?tempId=" + tempId,
+                        // 下面这句是,添加页面关闭后,刷新本页面.
+                        end: function () {
+                            //location.reload();
+                        }
+                    });
+
+                }
+            });
+        } else {
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinImgtextItem/createOrUpdate/0',
+                data: $('#formId').serialize(),
+                type: 'post',
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    layer.msg(data.respMsg);
+
+                    var length = $('.tuwenli ul .pli').length;
+                    if (length >= 2) {
+                        $('.tuwenli ul .pli').eq(length - 2).attr('id', data.dataCode);
+                    } else {
+                        $('.tuwenli ul .pli').eq(length - 2).attr('id', data.dataCode);
+                    }
+                    layer.open({
+                        title: "添加",
+                        type: 2,
+                        maxmin: true,
+                        area: ['100%', '100%'],
+                        content: "weixinImgtextToPush.html?tempId=" + tempId,
+                        // 下面这句是,添加页面关闭后,刷新本页面.
+                        end: function () {
+                            //location.reload();
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+
+    //点击切换图层
+    $('body').on('click', '.plbbox', function () { 
+        var id = $(this).parent().attr('id');
+        $(this).parent().addClass('cur').siblings().removeClass('cur');
+        if (id > 0) {
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinImgtextItem/showInfo/' + id,
+                data: {"Authorization": acekeystoken},
+                type: 'get',
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    var obj = data.weixinImgtextItem;
+
+                    $('#catit').val(obj.title);
+                    $('#author').val(obj.author);
+                   ue.setContent("");
+                    ue.execCommand('insertHtml', obj.articleContent);
+                    $('#originUrl').val(obj.originUrl);
+                    $('#fmimgbox').html('');
+                   // $('#fmimgbox').append('<img src="' + obj.headImg + '"/>');
+                    $('#fmimgbox').append('<input type="hidden" name="headImg" value="' + obj.headImg + '"/><img src="' + obj.headImg + '"/>');
+                    $('#intro').val(obj.intro);
+                    $('form').find('input[name="id"]').remove();
+                    $('form').append('<input  type="hidden" value="' + obj.id + '" name="id"/>');
+
+                }
+            });
+        }else {
+        	//var title=$('.pli.cur').find('.ctit').html();
+        	//var author=$('.pli.cur').attr('data-author');
+        	//var cover= $('.pli.cur').find('.img').attr('src');
+        	
+            //成功后清空表单内容
+            $("input").val("");
+            $("textarea").val("");
+            $("check").val("");
+            ue.setContent('');
+           // ue.execCommand('insertHtml', '');
+            $('#fmimgbox').html('');
+
+            $('input[name="id"]').remove();
+            toShowContent('catit')
+            toShowContent('author')
+            toShowContent('ue')
+           	toShowContent('originUrl')
+            toShowContent('intro')
+          	toShowContent('cover')
+            return false;
+        }
+    })
+
+    
+    function toShowContent(className){
+    	if(className=='ue'){
+    		if($('.cur').attr('data-'+className)){
+    			ue.setContent($('.cur').attr('data-'+className))
+    		}
+    	}else if(className=='cover' && $('.cur').attr('data-cover')){
+    		var _src=$('.cur').attr('data-cover');
+            $('#fmimgbox').html('<input type="hidden" name="headImg" value="'+_src+'"><img src="'+_src+'">');
+            	
+    	}else{
+   
+    		$('#'+className).val($('.cur').attr('data-'+className))
+    	}
+    }
+	ue.addListener("blur",function(){
+        var arr =(UE.getEditor('deitor').getContent());
+  		if(!$('.cur').attr('id')){
+  			$('.tuwenli ul .cur').attr('data-ue',arr)
+  		}
+  	})
+    $('#catit').keyup(function () {
+        var length = $('.tuwenli ul .cur').length;
+        if (length == 0) {
+        	$('.tuwenli ul .pli').eq(0).find('.ctit').html($(this).val())
+            $('.tuwenli ul .pli').eq(0).attr('data-catit',$(this).val());
+        } else {
+        	$('.tuwenli ul .cur').find('.ctit').html($(this).val())
+            $('.tuwenli ul .cur').attr('data-catit',$(this).val())
+        }
+    })
+    $('#author').blur(function(){
+    	 $('.tuwenli ul .cur').attr('data-author',$(this).val())
+    })
+    $('#originUrl').blur(function(){
+    	 $('.tuwenli ul .cur').attr('data-originUrl',$(this).val())
+    })
+    $('#intro').blur(function(){
+    	 $('.tuwenli ul .cur').attr('data-intro',$(this).val())
+    })
+
+
+    //打开图片弹窗
+    $('.twBtnpop').click(function () {
+        $('#tppopbox').show();
+    })
+    //关闭图片弹窗
+    $('.clostbtn').click(function () {
+        $('.tppopbox').hide();
+        $('.sppopbox').hide();
+        $('.yinpinpop').hide();
+    })
+    //上传图片
+    layui.use('upload', function () {
+        var upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#upimgbtn' //绑定元素
+            , url: '/upload/' //上传接口
+            , done: function (res) {
+                //上传完毕回调
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
+    });
+
+    $('.spBtnpop').click(function () {
+        $('.sppopbox').show();
+    })
+    $('.ypBtnpop').click(function () {
+        $('.yinpinpop').show();
+    })
+    //视频切换
+    $('.sppopbox .seltext span').click(function () {
+        $(this).addClass('cur').siblings().removeClass('cur');
+        var index = $(this).index();
+        $('.sppopbox .tableBox .count').eq(index).show().siblings().hide();
+    })
+
+    //音频
+    $('.yinpinpop .seltext span').click(function () {
+        $(this).addClass('cur').siblings().removeClass('cur');
+        var index = $(this).index();
+        $('.yinpinpop .tableBox .count').eq(index).show().siblings().hide();
+    })
+    //
+
+    $('.selimg').click(function () {
+        $('#fengmian').show();
+    });
+
+    //获取图片
+function getImg() {
+    	layui.use('flow', function(){
+            var flow = layui.flow;
+
+            flow.load({
+    	elem: '#imglists' //流加载容器
+            ,done: function(page, next){ //执行下一页的回调
+                $.ajax({
+                    'url':ctxAppSec+'/api/WeixinImg',
+                    'data':{page:page,limit:20,"Authorization":acekeystoken},
+                    'dataType':'json',
+                    success:function(data){
+    	
+    	
+      /*  $.ajax({
+            url: ctxAppSec + '/api/WeixinImg',
+            data: {offset: 1, limit: 1000, "Authorization": acekeystoken},
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+            	*/
+                var obj = data.data;
+                var lis=[];
+                layui.each(obj, function(a, b){
+                    lis.push('<li>'
+	                    		+'<p class="pimg"><img src="img/iconright.png"/></p>'
+	                    		+'<i><img src="' + b.headImg + '"/></i>'
+	                    		+'<p class="imgname">perpng</p>'
+                    		+'</li>');
+                  }); 
+                    next(lis.join(''), page<data.count/20); 
+                
+                
+                //选择图片
+
+                $('body .imglistBox ul li').on('click',function () {
+                	if ($(this).hasClass('cur')) {
+                        $(this).removeClass('cur');
+                    } else {
+                        $(this).addClass('cur');
+                    }
+                    $(this).children('.pimg').toggle();
+                });
+                
+            },
+            error: function (data) {
+                try {
+                    layer.msg("请求异常");
+                    return false;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+      }
+    })
+   })
+ }
+
+    
+
+    //获取视频
+    function getVedio() {
+        $.ajax({
+            url: ctxAppSec + '/api/WeixinVideo',
+            data: {offset: 1, limit: 1000, "Authorization": acekeystoken},
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                var obj = data.data;
+                console.log(obj)
+                var html = '';
+                $.each(obj, function (a, b) {
+                    html += '<li>';
+                    html += '<p class="pimg"><img src="img/iconright.png"/></p>';
+                    html += '<i><video style="width: 120px;height: 155px;" class="srcimg" src="' + b.headImg + '"></video></i>'
+                    html += '<p class="imgname">' + b.title + '</p>'
+                    html += '</li>'
+                })
+                $("#vediolists").html(html);
+
+                $('.imglistBox ul li').click(function () {
+                    if ($(this).hasClass('cur')) {
+                        $(this).removeClass('cur');
+                    } else {
+                        $(this).addClass('cur');
+                    }
+                });
+                $('.imglistBox ul li').click(function () {
+                    //alert(111);
+                    $(this).children('.pimg').toggle();
+                });
+
+            },
+            error: function (data) {
+                try {
+                    layer.msg("请求异常");
+                    return false;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+    }
+
+    //获取音频
+    function getAudio() {
+        $.ajax({
+            url: ctxAppSec + '/api/WeixinAudio',
+            data: {offset: 1, limit: 1000, "Authorization": acekeystoken},
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                var obj = data.data;
+                console.log(obj)
+                var html = '';
+                $.each(obj, function (a, b) {
+                    html += '<li>';
+                    html += '<p class="pimg"><img src="img/iconright.png"/></p>';
+                    html += '<i><audio src="' + b.headImg + '"></audio></i>'
+                    html += '<p class="imgname">' + b.title + '</p>'
+                    html += '</li>'
+                })
+                $("#audiolists").html(html);
+
+                $('.imglistBox ul li').click(function () {
+                    if ($(this).hasClass('cur')) {
+                        $(this).removeClass('cur');
+                    } else {
+                        $(this).addClass('cur');
+                    }
+                });
+                $('.imglistBox ul li').click(function () {
+                    //alert(111);
+                    $(this).children('.pimg').toggle();
+                });
+
+            },
+            error: function (data) {
+                try {
+                    layer.msg("请求异常");
+                    return false;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+    }
+
+
+    function getFmimg() {
+    	layui.use('flow', function(){
+            var flow = layui.flow;
+
+            flow.load({
+    	elem: '#fmimglists' //流加载容器
+            ,done: function(page, next){ //执行下一页的回调
+                $.ajax({
+                    'url':ctxAppSec+'/api/WeixinImg',
+                    'data':{page:page,limit:20,"Authorization":acekeystoken},
+                    'dataType':'json',
+                    success:function(data){
+    	
+    	
+      /*  $.ajax({
+            url: ctxAppSec + '/api/WeixinImg',
+            data: {offset: 1, limit: 1000, "Authorization": acekeystoken},
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+            	*/
+                var obj = data.data;
+                var lis=[];
+                layui.each(obj, function(a, b){
+                    lis.push('<li>'
+	                    		+'<p class="pimg"><img src="img/iconright.png"/></p>'
+	                    		+'<i><img src="' + b.headImg + '"/></i>'
+	                    		+'<p class="imgname">perpng</p>'
+                    		+'</li>');
+                  }); 
+                    next(lis.join(''), page<data.count/20); 
+                
+                
+                //选择图片
+
+                $('.imglistBox ul li').on('click',function () {
+                    $(this).addClass('cur').siblings().removeClass('cur')
+                    $(this).children('.pimg').show();
+                    $(this).siblings().children('.pimg').hide();
+                });
+
+
+            },
+            error: function (data) {
+                try {
+                    layer.msg("请求异常");
+                    return false;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+      }
+    })
+   })
+ }
+
+
+
+    //左侧点击按钮
+    $('.spbtn').click(function () {
+        $('.sppopbox').show();
+    });
+    $('.ypbtn').click(function () {
+        $('.yinpinpop').show();
+    });
+    $('.tpbtn').click(function () {
+        $('.tppopbox').show();
+    });
+    var str = '<li class="pli two">'
+    str += '<div class="plbbox "><div class="img"><p class="zhao"></P><img src="" alt=""></div>'
+    str += '<p class="ctit">标题</p></div>'
+    str += '<div class="fuceng">'
+    //    str+='<a class="up" href="#">上移</a> <a class="down" href="#">下移</a>';
+    str += '<a href="javascript:;" class="delcount">删除</a>'
+    str += '</div>'
+    str += '</li>'
+
+    $('body').on('click', '.addleftbtn', function () {
+    	if($('.tuwenli').find('.pli').length>=8){
+    		layer.tips('最多只能添加7个图文消息', '.addleftbtn', {
+			  tips: [3, '#999'],
+			  time: 1500
+			});
+    		return false;	
+    	}
+	    	
+    	
+        var id = $('form').find('input[name="id"]').val();
+        var title = $("#catit").val();
+        var content = ue.getContent();
+        var headImg = $("input[name='headImg']").val();
+        if (title == '') {
+            layer.msg("请将标题填写完整");
+            return false;
+        }
+        if (content == '') {
+            layer.msg("请将正文填写完整");
+            return false;
+        }
+        if (headImg == '') {
+            layer.msg("请上传封面图");
+            return false;
+        }
+        if ($("#imgTextId").val() == '') {
+            layer.msg("获取素材ID为空");
+            return false;
+        }
+
+        $("#Authorization").val($.cookie('bearcktkaeskey'));//设置token
+
+        if (id > 0) {
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinImgtextItem/createOrUpdate/' + id,
+                data: $('#formId').serialize(),
+                type: 'post',
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    $('.addleftbtn').before(str);
+                    $('.tuwenli li').hover(function () {
+                        $(this).find('.fuceng').show();
+                    }, function () {
+                        $(this).find('.fuceng').hide();
+                    });
+
+                    //成功后清空表单内容
+                    $("input").val("");
+                    ue.setContent('');
+                    ue.execCommand('insertHtml','');
+                    $("textarea").val("");
+                    $("check").val("");
+                    $('#fmimgbox').html('');
+
+                    $('input[name="id"]').remove();
+                    $("#imgTextId").val(tempId);
+                    $('.addleftbtn').prev('li').addClass('cur').siblings().removeClass('cur');
+                }
+            });
+        } else {
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinImgtextItem/createOrUpdate/0',
+                data: $('#formId').serialize(),
+                type: 'post',
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    $('.addleftbtn').before(str);
+                    $('.tuwenli li').hover(function () {
+                        $(this).find('.fuceng').show();
+                    }, function () {
+                        $(this).find('.fuceng').hide();
+                    });
+
+                    //成功后清空表单内容
+                    $("input").val("");
+                    ue.setContent('');
+                    ue.execCommand('insertHtml', '');
+                    $("textarea").val("");
+                    $("check").val("");
+                    $('#fmimgbox').html('');
+
+                    $('input[name="id"]').remove();
+                    $("#imgTextId").val(tempId);
+                    $('.addleftbtn').prev('li').addClass('cur').siblings().removeClass('cur');
+                    $('.tuwenli ul .cur').find('.fuceng').html('<a class="up" href="#">上移</a><a href="javascript:;" class="delcount">删除</a>');
+                }
+            });
+        }
+    });
+
+
+    $('.tuwenli li').hover(function () {
+        $(this).children('.fuceng').show();
+    }, function () {
+        $(this).children('.fuceng').hide();
+    });
+
+
+    $('#sureImg').click(function () {
+        var imgArr = [];
+        var imgstr = $('#imglists').find('li[class=cur]');
+        for (var i = 0; i < imgstr.length; i++) {
+            var igstr = imgstr.eq(i).find('img').eq(1).attr('src');
+            imgArr.push(igstr);
+        }
+        console.log(imgArr);
+        for (var j = 0; j < imgArr.length; j++) {
+            ue.execCommand('insertHtml', '<img src="' + imgArr[j] + '"/>');
+        }
+        $('.tppopbox').hide();
+    });
+
+    $('#vediosure').click(function () {
+        var imgArr = [];
+        var imgstr = $('#vediolists').find('li[class=cur]');
+
+        for (var i = 0; i < imgstr.length; i++) {
+            var igstr = imgstr.eq(i).find('video').attr('src');
+            imgArr.push(igstr);
+        }
+        console.log(imgArr);
+        for (var j = 0; j < imgArr.length; j++) {
+            ue.execCommand('insertHtml', '<video src="' + imgArr[j] + '" controls="controls"></video>');
+        }
+        $('.sppopbox').hide();
+    });
+
+
+    $('#audiosure').click(function () {
+        var imgArr = [];
+        var imgstr = $('#audiolists').find('li[class=cur]');
+        //alert(imgstr.length);
+        for (var i = 0; i < imgstr.length; i++) {
+            var igstr = imgstr.eq(i).find('audio').attr('src');
+            imgArr.push(igstr);
+        }
+        console.log(imgArr);
+        for (var j = 0; j < imgArr.length; j++) {
+            ue.execCommand('insertHtml', '<audio src="' + imgArr[j] + '" controls="controls"></audio>');
+        }
+        $('.yinpinpop').hide();
+    });
+
+    //封面图
+    $('#sureImg1').click(function () {
+        var imgArr = [];
+        var imgstr = $('#fmimglists').find('li[class=cur]');
+        for (var i = 0; i < imgstr.length; i++) {
+            var igstr = imgstr.eq(i).find('img').eq(1).attr('src');
+            imgArr.push(igstr);
+        }
+        console.log(imgArr);
+        $('#fmimgbox').html('');
+        for (var j = 0; j < imgArr.length; j++) {
+            $('#fmimgbox').append('<input type="hidden" name="headImg" value="' + imgArr[j] + '"/><img src="' + imgArr[j] + '"/>');
+
+            var length = $('.tuwenli ul .cur').length;
+            if (length == 0) {
+                $('.tuwenli ul .pli').eq(0).find('.img').children('img').attr("src", imgArr[j]);
+            } else {
+            	 $('.tuwenli ul .cur').attr('data-cover',imgArr[j])
+                $('.tuwenli ul .cur').find('.img').children('img').attr("src", imgArr[j]);
+            }
+
+        }
+        $('#fengmian').hide();
+    });
+
+    //提交
+
+    $('#saveBtn').click(function () {
+
+
+        var id = $('form').find('input[name="id"]').val();
+        var title = $("#catit").val();
+        var content = ue.getContent();
+        var headImg = $("input[name='headImg']").val();
+        if (title == '') {
+            layer.msg("请将标题填写完整");
+            return false;
+        }
+        if (content == '') {
+            layer.msg("请将正文填写完整");
+            return false;
+        }
+        
+        if (headImg == '' || headImg==undefined) {
+            layer.msg("请上传封面图");
+            return false;
+        }
+        
+        $("#imgTextId").val(tempId);
+        if ($("#imgTextId").val() == '') {
+            layer.msg("系统错误");
+            return false;
+        }
+        
+        var articleContent =  ue.getContent();
+        
+        $("#articleContent").val(articleContent);
+        
+        $("#Authorization").val($.cookie('bearcktkaeskey'));//设置token
+
+        if (id > 0) {
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinImgtextItem/createOrUpdate/' + id,
+                data: $('#formId').serialize(),
+                type: 'post',
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    layer.msg(data.respMsg);
+
+
+                }
+            });
+        } else {
+
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinImgtextItem/createOrUpdate/0',
+                data: $('#formId').serialize(),
+                type: 'post',
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    layer.msg(data.respMsg);
+
+                    var length = $('.tuwenli ul .cur').length;
+                    if (length == 0) {
+                        $('.tuwenli ul .pli').eq(0).attr('id', data.dataCode);
+                    } else {
+                        $('.tuwenli ul .cur').attr('id', data.dataCode);
+                    }
+                    $('.tuwenli ul .cur').find('.fuceng').html('<a class="up" href="#">上移</a><a href="javascript:;" class="delcount">删除</a>');
+                }
+            });
+        }
+
+    })
+
+    //删除
+    /*$('.delcount').click(function () {
+        var id = $(this).parent().parent('li').attr('id');
+
+        var Authorization = $.cookie('bearcktkaeskey');
+
+     
+        if (id > 0) {
+            $.ajax({
+                url: ctxAppSec + '/api/WeixinImgtextItem/batchDelete/?id=' + id + "&Authorization=" + Authorization,
+                data: $('#formId').serialize(),
+                type: 'delete',
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    layer.msg(data.respMsg);
+
+                    $(this).parent().parent().remove();
+
+                }
+            });
+        } else {
+            $(this).parent().parent().remove();
+        }
+
+    });*/
+    //预览
+    $('.closeBtn').on('click', function () {
+        $('.previewcountent').hide();
+    });
+    /*$('.prsure').on('click',function(){
+    	var Authorization =  $.cookie('bearcktkaeskey');
+    	
+        $.ajax({
+            url: hostname+'/getopenidbyqqmobilewx',
+            data: {"nike_name":$("#nikenameid").val(),"templateid":$("#imgTextId").val(),"Authorization":Authorization},
+            type: 'GET',
+            dataType: "text",
+            success: function (data) {
+                console.log(data);
+                if (data == "success"){
+                    $('.previewcountent').hide();
+                    alert("请在微信中预览");
+                }else {
+                    alert("请关注微信公众号或重新输入昵称");
+                }
+            }
+        });
+    });*/
+
+    $('.prsure').on('click', function () {
+        $.ajax({
+            url: ctxAppWeixin + '/wxpreviewnew',
+            data: {"nike_name": $("#nikenameid").val(), "templateid": $("#imgTextId").val()},
+            type: 'GET',
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.respCode == 1) {
+                    $('.previewcountent').hide();
+                    alert("请在微信中预览");
+                } else {
+                    alert("请关注微信公众号或重新输入昵称");
+                }
+            }
+        });
+    });
+
+    $('.prcancel').on('click', function () {
+        $('.previewcountent').hide();
+    });
+    $("#yulan").click(function () {
+        $(".previewcountent").show();
+    })
+   
+		
+	
+	});
+</script>
+</html>

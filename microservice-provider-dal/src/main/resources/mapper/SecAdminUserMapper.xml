@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+
+<mapper namespace="com.lj.cloud.secrity.dal.SecAdminUserMapper">
+    <resultMap id="secAdminUserResult" type="com.weixindev.micro.serv.common.bean.secrity.SecAdminUser">
+        <result property="id" column="id" jdbcType="INTEGER"   />
+        <result property="loginiNo" column="logini_no" jdbcType="VARCHAR"   />
+        <result property="mobile" column="mobile" jdbcType="VARCHAR"   />
+        <result property="pwd" column="pwd" jdbcType="VARCHAR"   />
+        <result property="qq" column="qq" jdbcType="VARCHAR"   />
+        <result property="weixinNo" column="weixinNo" jdbcType="VARCHAR"   />
+        <result property="userName" column="user_name" jdbcType="VARCHAR"   />
+        <result property="lastLoginDate" column="last_login_date" jdbcType="TIMESTAMP"   />
+        <result property="lastLoginIp" column="last_login_ip" jdbcType="VARCHAR"   />
+        <result property="headImg" column="headImg" jdbcType="VARCHAR"   />
+        <result property="createByUname" column="create_By_UName" jdbcType="VARCHAR"   />
+        <result property="createBy" column="create_by" jdbcType="INTEGER"   />
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"   />
+        <result property="updateBy" column="update_by" jdbcType="INTEGER"   />
+        <result property="updateByUname" column="update_By_Uname" jdbcType="VARCHAR"   />
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"   />
+        <result property="enableFlag" column="enable_flag" jdbcType="VARCHAR"   />
+        <result property="secGroupId" column="sec_group_id" jdbcType="INTEGER"   />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        <![CDATA[
+       
+            id ,
+            logini_no ,
+            mobile ,
+            pwd ,
+            qq ,
+            weixinNo ,
+            user_name ,
+            last_login_date ,
+            last_login_ip ,
+            headImg ,
+            create_By_UName ,
+            create_by ,
+            create_date ,
+            update_by ,
+            update_By_Uname ,
+            update_date ,
+            enable_flag ,
+            sec_group_id 
+        ]]>
+    </sql>
+
+   <select id="selectByPrimaryKey" resultMap="secAdminUserResult">
+     select 
+        <include refid="Base_Column_List"/>
+        
+            from sec_admin_user 
+            where 
+               id = #{id,jdbcType=INTEGER}
+            
+      
+    </select>
+
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+   
+        delete from sec_admin_user where
+        id = #{id,jdbcType=INTEGER}
+    
+   
+    </delete>
+
+ <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+        INSERT INTO sec_admin_user (
+         id, logini_no, mobile, pwd, qq, weixinNo, user_name, last_login_date, last_login_ip, headImg, create_By_UName, create_by, create_date, update_by, update_By_Uname, update_date, enable_flag, sec_group_id
+        ) VALUES (
+         #{id,jdbcType=INTEGER}, #{loginiNo,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, #{weixinNo,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{lastLoginDate,jdbcType=TIMESTAMP}, #{lastLoginIp,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{createByUname,jdbcType=VARCHAR}, #{createBy,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateByUname,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{enableFlag,jdbcType=VARCHAR}, #{secGroupId,jdbcType=INTEGER}        
+        )
+   
+</insert>
+
+ <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.secrity.SecAdminUser">
+          INSERT INTO sec_admin_user 
+             <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="loginiNo != null" >
+                logini_no,
+            </if>
+            <if test="mobile != null" >
+                mobile,
+            </if>
+            <if test="pwd != null" >
+                pwd,
+            </if>
+            <if test="qq != null" >
+                qq,
+            </if>
+            <if test="weixinNo != null" >
+                weixinNo,
+            </if>
+            <if test="userName != null" >
+                user_name,
+            </if>
+            <if test="lastLoginDate != null" >
+                last_login_date,
+            </if>
+            <if test="lastLoginIp != null" >
+                last_login_ip,
+            </if>
+            <if test="headImg != null" >
+                headImg,
+            </if>
+            <if test="createByUname != null" >
+                create_By_UName,
+            </if>
+            <if test="createBy != null" >
+                create_by,
+            </if>
+            <if test="createDate != null" >
+                create_date,
+            </if>
+            <if test="updateBy != null" >
+                update_by,
+            </if>
+            <if test="updateByUname != null" >
+                update_By_Uname,
+            </if>
+            <if test="updateDate != null" >
+                update_date,
+            </if>
+            <if test="enableFlag != null" >
+                enable_flag,
+            </if>
+            <if test="secGroupId != null" >
+                sec_group_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+                <if test="id != null" >
+                     #{id,jdbcType=INTEGER},
+                </if>
+                <if test="loginiNo != null" >
+                     #{loginiNo,jdbcType=VARCHAR},
+                </if>
+                <if test="mobile != null" >
+                     #{mobile,jdbcType=VARCHAR},
+                </if>
+                <if test="pwd != null" >
+                     #{pwd,jdbcType=VARCHAR},
+                </if>
+                <if test="qq != null" >
+                     #{qq,jdbcType=VARCHAR},
+                </if>
+                <if test="weixinNo != null" >
+                     #{weixinNo,jdbcType=VARCHAR},
+                </if>
+                <if test="userName != null" >
+                     #{userName,jdbcType=VARCHAR},
+                </if>
+                <if test="lastLoginDate != null" >
+                     #{lastLoginDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="lastLoginIp != null" >
+                     #{lastLoginIp,jdbcType=VARCHAR},
+                </if>
+                <if test="headImg != null" >
+                     #{headImg,jdbcType=VARCHAR},
+                </if>
+                <if test="createByUname != null" >
+                     #{createByUname,jdbcType=VARCHAR},
+                </if>
+                <if test="createBy != null" >
+                     #{createBy,jdbcType=INTEGER},
+                </if>
+                <if test="createDate != null" >
+                     #{createDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="updateBy != null" >
+                     #{updateBy,jdbcType=INTEGER},
+                </if>
+                <if test="updateByUname != null" >
+                     #{updateByUname,jdbcType=VARCHAR},
+                </if>
+                <if test="updateDate != null" >
+                     #{updateDate,jdbcType=TIMESTAMP},
+                </if>
+                <if test="enableFlag != null" >
+                     #{enableFlag,jdbcType=VARCHAR},
+                </if>
+                <if test="secGroupId != null" >
+                     #{secGroupId,jdbcType=INTEGER},
+                </if>
+        </trim>
+ </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.weixindev.micro.serv.common.bean.secrity.SecAdminUser">
+    
+        UPDATE sec_admin_user 
+     
+      <set >
+        <if test="loginiNo != null and  loginiNo != ''" >
+            logini_no = #{loginiNo,jdbcType=VARCHAR} ,
+        </if>
+        <if test="mobile != null and  mobile != ''" >
+            mobile = #{mobile,jdbcType=VARCHAR} ,
+        </if>
+        <if test="pwd != null and  pwd != ''" >
+            pwd = #{pwd,jdbcType=VARCHAR} ,
+        </if>
+        <if test="qq != null and  qq != ''" >
+            qq = #{qq,jdbcType=VARCHAR} ,
+        </if>
+        <if test="weixinNo != null and  weixinNo != ''" >
+            weixinNo = #{weixinNo,jdbcType=VARCHAR} ,
+        </if>
+        <if test="userName != null and  userName != ''" >
+            user_name = #{userName,jdbcType=VARCHAR} ,
+        </if>
+        <if test="lastLoginDate != null and  lastLoginDate != ''" >
+            last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP} ,
+        </if>
+        <if test="lastLoginIp != null and  lastLoginIp != ''" >
+            last_login_ip = #{lastLoginIp,jdbcType=VARCHAR} ,
+        </if>
+        <if test="headImg != null and  headImg != ''" >
+            headImg = #{headImg,jdbcType=VARCHAR} ,
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+            create_By_UName = #{createByUname,jdbcType=VARCHAR} ,
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+            create_by = #{createBy,jdbcType=INTEGER} ,
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+            create_date = #{createDate,jdbcType=TIMESTAMP} ,
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+            update_by = #{updateBy,jdbcType=INTEGER} ,
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+            update_By_Uname = #{updateByUname,jdbcType=VARCHAR} ,
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+            update_date = #{updateDate,jdbcType=TIMESTAMP} ,
+        </if>
+        <if test="enableFlag != null and  enableFlag != ''" >
+            enable_flag = #{enableFlag,jdbcType=VARCHAR} ,
+        </if>
+        <if test="secGroupId != null and  secGroupId != ''" >
+            sec_group_id = #{secGroupId,jdbcType=INTEGER} ,
+        </if>
+
+     </set>
+        WHERE 
+            id = #{id,jdbcType=INTEGER}
+    </update>
+   
+    <update id="updateByPrimaryKey" >
+
+        UPDATE sec_admin_user SET
+            logini_no = #{loginiNo} , mobile = #{mobile} , pwd = #{pwd} , qq = #{qq} , weixinNo = #{weixinNo} , user_name = #{userName} , last_login_date = #{lastLoginDate} , last_login_ip = #{lastLoginIp} , headImg = #{headImg} , create_By_UName = #{createByUname} , create_by = #{createBy} , create_date = #{createDate} , update_by = #{updateBy} , update_By_Uname = #{updateByUname} , update_date = #{updateDate} , enable_flag = #{enableFlag} , sec_group_id = #{secGroupId}  
+        WHERE 
+            id = #{id,jdbcType=INTEGER}             
+  
+</update>
+    
+    <select id="select" resultMap="secAdminUserResult">
+     select 
+        <include refid="Base_Column_List"/>
+       
+            from sec_admin_user WHERE 1=1  
+      
+                 and  id = #{id,jdbcType=INTEGER}
+                 and  logini_no = #{loginiNo,jdbcType=VARCHAR}
+                 and  mobile = #{mobile,jdbcType=VARCHAR}
+                 and  pwd = #{pwd,jdbcType=VARCHAR}
+                 and  qq = #{qq,jdbcType=VARCHAR}
+                 and  weixinNo = #{weixinNo,jdbcType=VARCHAR}
+                 and  user_name = #{userName,jdbcType=VARCHAR}
+                 and  last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP}
+                 and  last_login_ip = #{lastLoginIp,jdbcType=VARCHAR}
+                 and  headImg = #{headImg,jdbcType=VARCHAR}
+                 and  create_By_UName = #{createByUname,jdbcType=VARCHAR}
+                 and  create_by = #{createBy,jdbcType=INTEGER}
+                 and  create_date = #{createDate,jdbcType=TIMESTAMP}
+                 and  update_by = #{updateBy,jdbcType=INTEGER}
+                 and  update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+                 and  update_date = #{updateDate,jdbcType=TIMESTAMP}
+                 and  enable_flag = #{enableFlag,jdbcType=VARCHAR}
+                 and  sec_group_id = #{secGroupId,jdbcType=INTEGER}
+        
+    </select>
+    
+      
+<select id="selectByExample" resultMap="secAdminUserResult" >
+     select 
+        <include refid="Base_Column_List"/>
+               from sec_admin_user WHERE 1=1  
+      
+        <if test="id != null " >
+               and   id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="loginiNo != null and  loginiNo != ''" >
+               and   logini_no = #{loginiNo,jdbcType=VARCHAR}
+        </if>
+        <if test="mobile != null and  mobile != ''" >
+               and   mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="pwd != null and  pwd != ''" >
+               and   pwd = #{pwd,jdbcType=VARCHAR}
+        </if>
+        <if test="qq != null and  qq != ''" >
+               and   qq = #{qq,jdbcType=VARCHAR}
+        </if>
+        <if test="weixinNo != null and  weixinNo != ''" >
+               and   weixinNo = #{weixinNo,jdbcType=VARCHAR}
+        </if>
+        <if test="userName != null and  userName != ''" >
+               and   user_name = #{userName,jdbcType=VARCHAR}
+        </if>
+        <if test="lastLoginDate != null and  lastLoginDate != ''" >
+               and   last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="lastLoginIp != null and  lastLoginIp != ''" >
+               and   last_login_ip = #{lastLoginIp,jdbcType=VARCHAR}
+        </if>
+        <if test="headImg != null and  headImg != ''" >
+               and   headImg = #{headImg,jdbcType=VARCHAR}
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+               and   create_By_UName = #{createByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+               and   create_by = #{createBy,jdbcType=INTEGER}
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+               and   create_date = #{createDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+               and   update_by = #{updateBy,jdbcType=INTEGER}
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+               and   update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+               and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="enableFlag != null and  enableFlag != ''" >
+               and   enable_flag = #{enableFlag,jdbcType=VARCHAR}
+        </if>
+        <if test="secGroupId != null and  secGroupId != ''" >
+               and   sec_group_id = #{secGroupId,jdbcType=INTEGER}
+        </if>
+        
+         <if test="createDateBegin != null and createDateBegin != ''" >
+               <![CDATA[ and   create_date >= str_to_date(#{createDateBegin,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEnd != null and createDateEnd != ''" >
+                <![CDATA[ and   create_date <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        
+         <if test="keyword != null and  keyword != ''" >
+                and ( mobile like concat(concat("%",#{keyword,jdbcType=VARCHAR}),"%") or weixinNo like concat(concat("%",#{keyword,jdbcType=VARCHAR}),"%")
+                or logini_no like concat(concat("%",#{keyword,jdbcType=VARCHAR}),"%"))
+        </if>
+        
+            
+  </select>
+  
+  <select id="findAdminUserQuery" resultMap="secAdminUserResult">
+  	select * from sec_admin_user WHERE 1=1
+  		AND logini_no=#{loginNo,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <select id="selectByExampleQuery" resultMap="secAdminUserResult" >
+     select 
+        <include refid="Base_Column_List"/>
+               from sec_admin_user WHERE 1=1  
+      
+        <if test="id != null " >
+               and   id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="loginiNo != null and  loginiNo != ''" >
+               and   logini_no = #{loginiNo,jdbcType=VARCHAR}
+        </if>
+        <if test="mobile != null and  mobile != ''" >
+               and   mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="pwd != null and  pwd != ''" >
+               and   pwd = #{pwd,jdbcType=VARCHAR}
+        </if>
+        <if test="qq != null and  qq != ''" >
+               and   qq = #{qq,jdbcType=VARCHAR}
+        </if>
+        <if test="weixinNo != null and  weixinNo != ''" >
+               and   weixinNo = #{weixinNo,jdbcType=VARCHAR}
+        </if>
+        <if test="userName != null and  userName != ''" >
+               and   user_name = #{userName,jdbcType=VARCHAR}
+        </if>
+        <if test="lastLoginDate != null and  lastLoginDate != ''" >
+               and   last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="lastLoginIp != null and  lastLoginIp != ''" >
+               and   last_login_ip = #{lastLoginIp,jdbcType=VARCHAR}
+        </if>
+        <if test="headImg != null and  headImg != ''" >
+               and   headImg = #{headImg,jdbcType=VARCHAR}
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+               and   create_By_UName = #{createByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+               and   create_by = #{createBy,jdbcType=INTEGER}
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+               and   create_date = #{createDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+               and   update_by = #{updateBy,jdbcType=INTEGER}
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+               and   update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+               and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="enableFlag != null and  enableFlag != ''" >
+               and   enable_flag = #{enableFlag,jdbcType=VARCHAR}
+        </if>
+        <if test="secGroupId != null and  secGroupId != ''" >
+               and   sec_group_id = #{secGroupId,jdbcType=INTEGER}
+        </if>
+        
+         <if test="createDateBegin != null and createDateBegin != ''" >
+               <![CDATA[ and   create_date >= str_to_date(#{createDateBegin,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEnd != null and createDateEnd != ''" >
+                <![CDATA[ and   create_date <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        
+         <if test="keyword != null and  keyword != ''" >
+                and ( mobile like concat(concat("%",#{keyword,jdbcType=VARCHAR}),"%") or weixinNo like concat(concat("%",#{keyword,jdbcType=VARCHAR}),"%")
+                )
+        </if>
+        
+            
+  </select>
+  
+  <select id="selectByPageExample"  resultType="java.util.HashMap" >
+     select   u.id ,
+            u.logini_no as loginiNo,
+            u.mobile ,
+            u.pwd ,
+            u.qq ,
+            u.weixinNo ,
+            u.user_name ,
+            u.last_login_date ,
+            u.last_login_ip as lastLoginIp,
+            u.headImg ,
+            u.create_By_UName as createByUname ,
+            u.create_by as createBy ,
+            date_format(u.create_date, '%Y-%m-%d %H:%i:%s' )  as createDate,
+            u.update_by ,
+            u.update_By_Uname as updateByUname ,
+            date_format(u.update_date, '%Y-%m-%d %H:%i:%s' )  as updateDate,
+            u.enable_flag as enableFlag,
+            u.sec_group_id as secGroupId ,
+            g.group_name as secGroupName
+               from sec_admin_user u  left join sec_groups g
+               on u.sec_group_id = g.id
+               WHERE 1=1  
+      
+        <if test="id != null " >
+               and   u.id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="loginiNo != null and  loginiNo != ''" >
+               and   u.logini_no = #{loginiNo,jdbcType=VARCHAR}
+        </if>
+        <if test="mobile != null and  mobile != ''" >
+               and   u.mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="pwd != null and  pwd != ''" >
+               and   u.pwd = #{pwd,jdbcType=VARCHAR}
+        </if>
+        <if test="qq != null and  qq != ''" >
+               and   u.qq = #{qq,jdbcType=VARCHAR}
+        </if>
+        <if test="weixinNo != null and  weixinNo != ''" >
+               and   u.weixinNo = #{weixinNo,jdbcType=VARCHAR}
+        </if>
+        <if test="userName != null and  userName != ''" >
+               and   u.user_name = #{userName,jdbcType=VARCHAR}
+        </if>
+        <if test="lastLoginDate != null and  lastLoginDate != ''" >
+               and   u.last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="lastLoginIp != null and  lastLoginIp != ''" >
+               and   u.last_login_ip = #{lastLoginIp,jdbcType=VARCHAR}
+        </if>
+        <if test="headImg != null and  headImg != ''" >
+               and   u.headImg = #{headImg,jdbcType=VARCHAR}
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+               and   u.create_By_UName = #{createByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+               and   u.create_by = #{createBy,jdbcType=INTEGER}
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+               and   u.create_date = #{createDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+               and   u.update_by = #{updateBy,jdbcType=INTEGER}
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+               and   u.update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+               and   u.update_date = #{updateDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="enableFlag != null and  enableFlag != ''" >
+               and   u.enable_flag = #{enableFlag,jdbcType=VARCHAR}
+        </if>
+        <if test="secGroupId != null and  secGroupId != ''" >
+               and   u.sec_group_id = #{secGroupId,jdbcType=INTEGER}
+        </if>
+        
+         <if test="createDateBegin != null and createDateBegin != ''" >
+               <![CDATA[ and   u.create_date >= str_to_date(#{createDateBegin,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEnd != null and createDateEnd != ''" >
+                <![CDATA[ and   u.create_date <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        
+         <if test="keyword != null and  keyword != ''" >
+                and ( u.mobile like concat(concat("%",#{keyword,jdbcType=VARCHAR}),"%") or u.weixinNo like concat(concat("%",#{keyword,jdbcType=VARCHAR}),"%")
+                or u.logini_no like concat(concat("%",#{keyword,jdbcType=VARCHAR}),"%"))
+        </if>
+        
+            
+  </select>
+  
+  
+    <update id="updateBySecGroupId" parameterType="java.util.HashMap">
+    
+        UPDATE sec_admin_user 
+     
+      <set >
+        <if test="updateBy != null and  updateBy != ''" >
+            update_by = #{updateBy,jdbcType=INTEGER} ,
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+            update_By_Uname = #{updateByUname,jdbcType=VARCHAR} ,
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+            update_date = #{updateDate,jdbcType=TIMESTAMP} ,
+        </if>
+        <if test="secGroupIdDefault != null" >
+            sec_group_id = #{secGroupIdDefault,jdbcType=INTEGER} ,
+        </if>
+
+     </set>
+        WHERE 
+            sec_group_id = #{secGroupId,jdbcType=INTEGER}
+    </update>
+
+</mapper>

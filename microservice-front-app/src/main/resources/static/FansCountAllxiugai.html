@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>总用户统计</title>
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="layui/layui.js"></script>
+<script src="./js/jquery.cookie.js"></script>
+<script src="js/js.js"></script>
+<script src="echats/echarts (3).js"></script>
+<script src="echats/china.js"></script>
+<link rel="stylesheet" href="layui/css/layui.css">
+<style>
+/*
+#simpleCount div {
+	margin-top:20px;
+	float: left;
+	text-align: center;
+	width: 33%;
+}
+
+#pies div {
+	float: left;
+	margin-top: 100px;
+	width: 33%;
+	height: 400px;
+}
+
+#map {
+	position: absolute;
+	margin-top: 600px;
+	width: 45%;
+	height: 600px;
+}
+
+#bar {
+	position: absolute;
+	margin-top: 530px;
+	right: 20px;
+	width: 48%;
+	height: 700px;
+	float: right;
+}
+
+#userList {
+	width:80%;
+	margin: 1300px auto;
+}
+
+#lineTable {
+	width: 100%;
+	height:500px;
+}
+.layui-table{
+	overflow: visible; !*防止下拉框显示不出来*!
+}
+
+.layui-row{
+	 margin-left:100px;
+}
+#form2{
+	!*position:absolute;*!
+}
+#form2 input{
+ 	z-index:999;
+ 	width:100px;
+	position:absolute;
+	top:-76px;
+	left:550px;
+}
+.layui-form-selected{
+ 	width:100px;
+	position:absolute;
+	top:-76px;
+	left:550px;
+}
+#reload3{
+ z-index:999;
+	position:absolute;
+
+	top:-90px;
+	left:800px;
+}
+#selectDays{
+	width:100px;
+}
+#dayInput input{
+	z-index:999;
+ 	width:100px;
+	padding:0;
+	position:absolute;
+	top:0px;
+	left:260px;
+}
+#dayInput i{
+ 	z-index:999;
+	padding:0;
+	position:absolute;
+	top:20px;
+	left:330px;
+}
+#dayInput .layui-anim{
+ 	z-index:999;
+	padding:0;
+	position:absolute;
+	top:45px;
+	left:-120px;
+    right:-220px;
+}*/
+
+#lineTable {
+	width: 100%;
+	height:500px;
+}
+body {
+	padding: 20px;
+}
+.tuwentop {
+	text-align: center;
+}
+.tuwentop h1 {
+	font-size: 24px;
+	padding: 10px 0 0 0;
+}
+.tuwentop p:first-child {
+	color: #999999;
+}
+.tuwentop p {
+	font-size: 14px;
+	padding: 3px 0;
+	color: #353535;
+}
+.yuedtit {
+	padding: 10px 0;
+	border-top: 1px solid #E5E5E5;
+}
+#navtree{
+	 z-index:9999;
+	 overflow:auto;
+}
+	ul{bottom: 0; top: 0;z-index: 9999;}
+	.main{margin-left: 200px; position: absolute; right: 0; left: 0;}
+	.main #view1{width: 93%; position: relative;}
+	.main > button{margin-left: 20px; margin-top: 20px;      position: absolute;  z-index: 99999;}
+	.layui-layer-tips .layui-layer-content{
+		background-color: transparent;
+	}
+#pies {
+	overflow: hidden;
+}
+#pies>div {
+	margin-top: 20px;
+	height: 400px;
+	border: 1px solid #e5e5e5;
+}
+
+#map {
+	margin-top: 30px;
+	width: 100%;
+	height: 400px;
+}
+
+#bar {
+	margin-top: 20px;
+	width: 100%;
+	height: 500px;
+}
+
+#userList {
+	width:100%;
+	margin: 20px auto;
+}
+.dino {
+	display: none;
+}
+
+</style>
+<script type="text/javascript">
+			//为了保证不出现一闪而过的菜单栏, 放在了前面进行加载这段代码
+			$().ready(() => {
+				var a = $('.dynamic-navigation');			
+				localStorage.getItem('nav-status') == 1 ? (
+					$('.dynamic-navigation').attr("tg", "1").css('left', '-200px'),
+					$('.layui-layer-tips').css('left', '89px')
+				) : (
+					console.log(localStorage.getItem('nav-status'))
+				);
+				
+			});
+		</script>
+</head>
+<div></div>
+<body>
+<div class="main dynamic-navigation">
+			<button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe68e;</i></button>
+			<div id="view1"></div>
+		</div>
+		<div>
+		<ul class="layui-nav layui-nav-tree dynamic-navigation" lay-filter="demo" id="navtree" style="position: fixed;">
+		</ul>
+		</div>
+	<div id="simpleCount" style="width: 100%; height: 200px;">
+		<div class="tuwentop layui-col-xs4" id="newUser">
+			<p>新关注人数</p>
+			<h1 id="newUserNum">-</h1>
+			<p class="day">日:</p>
+			<p class="week">周:</p>
+			<p class="month">月:</p>
+		</div>
+		<div class="tuwentop layui-col-xs4" id="cancelUser">
+			<p>取消关注人数</p>
+			<h1 id="cancelUserNum">-</h1>
+			<p class="day">日:</p>
+			<p class="week">周:</p>
+			<p class="month">月:</p>
+		</div>
+		<div class="tuwentop layui-col-xs4" id="netGrowth">
+			<p>净增关注人数</p>
+			<h1 id="netGrowthNum">-</h1>
+			<p class="day">日</p>
+			<p class="week">周</p>
+			<p class="month">月</p>
+		</div>
+	</div>
+
+
+<form class="layui-form" id="form2">
+
+    <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-xs3" style="width: 200px;" id="dayInput">
+            <label class="layui-form-label dino"></label>
+
+        <div class="layui-inline" id="dayInput">
+            <label class="layui-form-label dino"></label>
+
+            <div class="layui-input-inline">
+                <select name="selectDays" id="selectDays"  id="selectDays">
+                    <option value="30">最近30天</option>
+                    <option value="20">最近20天</option>
+                    <option value="10">最近10天</option>
+                </select>
+            </div>
+        </div>
+			</div>
+        <div class="layui-inline j layui-col-xs4">
+            <div class="layui-input-inline demoTable3" style="width: 350px;">
+                <span class="layui-btn" data-type="reload3" id="reload3" onClick="change()">搜索</span>
+            </div>
+        </div>
+    </div>
+</form>
+
+	<h3 class="yuedtit">趋势图</h3>
+	<div id="lineTable"></div>
+
+	<div id="countTable">
+	</div>
+
+	<div id="pies">
+		<div class="layui-col-xs4" id="sexCount"></div>
+		<div class="layui-col-xs4" id="langCount"></div>
+		<div class="layui-col-xs4" id="sourceCount"></div>
+	</div>
+	<div id="mapCount">
+		<div id="map"></div>
+		<div id="bar"></div>
+	</div>
+	<div id="userList">
+		
+	</div>
+	<script type="text/html" id="optTpl">
+			 <a href="FansCountOne.html?id={{d.user_id}}" class="layui-table-link">详细信息</a>
+    </script>
+	<script type="text/javascript">
+	var acekeystoken = $.cookie('bearcktkaeskey');
+	if (acekeystoken == "") {
+		parent.location.href = ctxApp + '/login.html';
+	}
+	var ids=getQueryString('ids');
+	var uid=getQueryString('uid');
+	 Date.prototype.toLocaleString = function() {
+         return this.getFullYear() + "年" + (this.getMonth() + 1) + "月" + this.getDate() + "日 ";
+   };
+	layui.use(['table','form'], function(){
+		  var table = layui.table;
+		  var form=layui.form;
+		  form.render();
+		  //第一个实例
+		  table.render({
+		    elem: '#countTable'
+		    ,url: ctxAppWeixin+'/api/count/tableCount?day=30&ids='+ids //数据接口
+		    ,page: true //开启分页
+		    ,cols: [[ //表头
+		      {field: 'create_time', title: '时间', sort: true,align:'center'}
+		      ,{field: 'new_fans', title: '新关注人数',align:'center'}
+		      ,{field: 'cancel', title: '取消关注人数',align:'center'}
+		      ,{field: 'net_growth', title: '净增关注人数',align:'center'} 
+		      ,{field: 'count', title: '累计关注人数',align:'center'}
+		      ]]
+		  ,request: {  
+			     pageName: 'page' //页码的参数名称，默认：page  
+			    ,limitName: 'limit' //每页数据量的参数名，默认：limit  
+			    }
+		  });
+		  
+		  
+		  table.render({
+			    elem: '#userList'
+			    ,url: ctxAppWeixin+'/api/count/userTableCount?day=30&ids='+ids //数据接口
+			    ,page: true //开启分页
+			    ,cols: [[ //表头
+			      {field: 'user_id', title: '公众号ID', sort: true,align:'center'}
+			      ,{field: 'nike_name', title: '公众号昵称',align:'center'}
+			      ,{field: 'count', title: '粉丝数',align:'center'}
+			      ,{field: 'male', title: '男粉丝',align:'center'} 
+			      ,{field: 'female', title: '女粉丝',align:'center'}
+			      ,{field: 'chinese', title: '国内粉丝',align:'center'}
+			      ,{field: 'not_chinese', title: '国外粉丝',align:'center'}
+			      ,{field: 'new_fans', title: '新增',align:'center'}
+			      ,{field: 'cancel', title: '取消',align:'center'}
+			      ,{title : '详细信息',templet : '#optTpl'}
+			    ]]
+			  ,request: {  
+				     pageName: 'page' //页码的参数名称，默认：page  
+				    ,limitName: 'limit' //每页数据量的参数名，默认：limit  
+				    }
+			  
+			});
+		  
+		});
+	
+	
+	 getData(30);
+		 function getData(day){
+			 var url=ctxAppWeixin+'/api/count/allFansCount';
+			 var data={day:30,ids:ids};
+			$.get(url,data,function(obj){
+				lineTable(echarts,obj);
+				sexCount(echarts,obj);
+				langCount(echarts,obj);
+				sourceCount(echarts,obj);
+				getMapData(echarts,day);
+				simpleCount(obj);
+				//['公众号搜索','公众号文章广告','名片分享','扫描二维码','图文页内名称点击','图文页右上角菜单','支付后关注','朋友圈广告','其他']
+			});
+		 }
+	function simpleCount(obj){
+		console.log(obj);
+		var newUserNum=0;
+		var cancelUserNum=0;
+		var lastDayUserNum=0;
+		var lastDaycancelUser=0;
+		var lastDaynetGrowth=0;
+		var endDayUserNum=0;
+		var endDaycancelUser=0;
+		var endDaynetGrowth=0;
+		var lastDay=0;
+		var endDay=0;
+		
+		var lastWeekParas={newUser:0,cancelUser:0,netGrowth:0};
+		var thisWeekParas={newUser:0,cancelUser:0,netGrowth:0};
+		
+		var lastMonthParas={newUser:0,cancelUser:0,netGrowth:0};
+		var thisMonthParas={newUser:0,cancelUser:0,netGrowth:0};
+		var lastWeekBeginTime=endDay-24*60*60*1000*14;
+		var lastWeekEndTime=endDay-24*60*60*1000*7;
+		
+		for(var i=0;i<obj.length;i++){
+			if(obj[i].createTime>lastWeekBeginTime&&obj[i].createTime<lastWeekEndTime){
+				lastWeekParas.newUser+=obj[i].newFans;
+				lastWeekParas.cancelUser+=obj[i].cancel;
+			}
+			if(obj[i].createTime>lastWeekEndTime){
+				thisWeekParas.newUser+=obj[i].newFans;
+				thisWeekParas.cancelUser+=obj[i].cancel;
+			}
+			if(obj[i].createTime>lastDay){
+				lastDay=endDay;
+				endDay=obj[i].createTime;
+			}
+		}
+		lastWeekParas.netGrowth=lastWeekParas.newUser-lastWeekParas.cancelUser;
+		thisWeekParas.netGrowth=thisWeekParas.newUser-thisWeekParas.cancelUser;
+		for(var i=0;i<obj.length;i++){
+			newUserNum+=obj[i].newFans;
+			cancelUserNum+=obj[i].cancel;
+			if(obj[i].createTime==lastDay){
+				lastDayUserNum+=obj[i].newFans;
+				lastDaycancelUser+=obj[i].cancel;
+			}
+			if(obj[i].createTime==endDay){
+				endDayUserNum+=obj[i].newFans;
+				endDaycancelUser+=obj[i].cancel;
+			}
+		}
+		lastDaynetGrowth=lastDayUserNum-lastDaycancelUser;
+		endDaynetGrowth=endDayUserNum-endDaycancelUser;
+		if(lastDayUserNum==0){
+			$("#newUser .day").html('日:0%');
+		}else{
+			$("#newUser .day").html('日:'+((endDayUserNum/lastDayUserNum-1).toFixed(2)*100)+'%');
+		}
+		if(lastDaycancelUser==0){
+			$("#cancelUser .day").html('日:0%');
+		}else{
+			$("#cancelUser .day").html('日:'+((endDaycancelUser/lastDaycancelUser-1).toFixed(2)*100)+'%');
+		}
+		if(lastDaynetGrowth==0){
+			$("#netGrowth .day").html('日:0%');
+		}else{
+			$("#netGrowth .day").html('日:'+(endDaynetGrowth/lastDaynetGrowth-1).toFixed(2)*100+'%');
+		}
+		if(lastWeekParas.newUser==0){
+			$("#newUser .week").html('周:0%');
+		}else{
+			$("#newUser .week").html('周:'+(((thisWeekParas.newUser/lastWeekParas.newUser-1)*100).toFixed(2))+'%');
+		}
+		if(lastWeekParas.cancelUser==0){
+			$("#cancelUser .week").html('周:0%');
+		}else{
+			$("#cancelUser .week").html((thisWeekParas.cancelUser/lastWeekParas.cancelUser-1)*100+'%');
+		}
+		if(lastWeekParas.netGrowth==0){
+			$("#netGrowth .week").html('周:0%');
+		}else{
+			$("#netGrowth .week").html('周:'+((thisWeekParas.netGrowth/lastWeekParas.netGrowth-1)*100)+'%');
+		}
+		$('#newUserNum').html(newUserNum);
+	    $('#cancelUserNum').html(cancelUserNum);
+	    $('#netGrowthNum').html(newUserNum-cancelUserNum);
+	    var url=ctxAppWeixin+'/api/count/getMonthAllState?ids='+ids;
+	   $.get(url,function(obj){
+		   var lastMonthEndTime=endDay-24*60*60*1000*30;
+			var lastMonthParams ={newUser:0,cancelUser:0,netGrowth:0};
+			var lastMonthBeginTime=endDay-24*60*60*1000*60;
+			var thisMonthParams ={newUser:0,cancelUser:0,netGrowth:0};
+			for(var i=0;i<obj.length;i++){
+				if(obj[i].createTime>lastMonthBeginTime&&obj[i].createTime<lastMonthEndTime){
+					lastMonthParams.newUser+=obj[i].newFans;
+					lastMonthParams.cancelUser+=obj[i].cancel;
+				}
+				if(obj[i].createTime>lastMonthEndTime){
+					thisMonthParams.newUser+=obj[i].newFans;
+					thisMonthParams.cancelUser+=obj[i].cancel;
+				}
+			}
+			lastMonthParams.netGrowth=lastWeekParas.newUser-lastWeekParas.cancelUser;
+			thisMonthParams.netGrowth=thisWeekParas.newUser-thisWeekParas.cancelUser;
+			if(lastMonthParams.newUser==0){
+				$("#newUser .month").html('月:0%');
+			}else{
+				$("#newUser .month").html('月:'+((thisMonthParams.newUser/lastMonthParams.newUser-1)*100)+'%');
+			}
+			if(lastMonthParams.cancelUser==0){
+				$("#cancelUser .month").html('月:0%');
+			}else{
+				$("#cancelUser .month").html('月:'+((thisMonthParams.cancelUser/lastMonthParams.cancelUser-1)*100)+'%');
+			}
+			if(lastMonthParams.netGrowth==0){
+				$("#netGrowth .month").html('月:0%');
+			}else{
+				$("#netGrowth .month").html(('月:'+(thisMonthParams.netGrowth/lastMonthParams.netGrowth-1)*100)+'%');
+			}
+	});	
+	}
+	 function lineTable(ec,data){
+		 var e=echarts.getInstanceById ($("#lineTable").attr('_echarts_instance_'));
+		 if(e!=null){
+			 e.dispose();
+		 }
+		 var gsmgc=document.getElementById('lineTable');
+		 var count=[];
+		 var dates=[];
+		 var newUser=[];
+		 var cancelUser=[];
+		 var netGrowthUser=[];
+		for(var i=0;i<data.length;i++){
+			var unixTimestamp = new Date(data[i].createTime);
+			commonTime = unixTimestamp.toLocaleString();
+			dates.push(commonTime);
+			count.push(data[i].count);
+			cancelUser.push(data[i].cancel);
+			newUser.push(data[i].newFans);
+			netGrowthUser.push(data[i].netGrowth);
+		}
+				var mcharts=ec.init(gsmgc);
+
+			      mcharts.setOption({
+					    title: {
+					        text: ''
+					    },
+					    tooltip: {
+					        trigger: 'axis'
+					    },
+					    legend: {
+					        data:['新关注人数','取消关注人数','净增关注人数','累积关注人数'],
+					        left:'10%'
+					    },
+					    grid: {
+					        left: '5%',
+					        right: '5%',
+					        bottom: '3%',
+					        containLabel: true
+					    },
+					    toolbox: {
+					        feature: {
+					            saveAsImage: {}
+					        }
+					    },
+					    xAxis: {
+					        type: 'category',
+					        boundaryGap: false,
+					        data: dates
+					    },
+					    yAxis: {
+					        type: 'value'
+					    },
+					    series: [
+					        {
+					            name:'新关注人数',
+					            type:'line',
+					            stack: '总量',
+					            data:newUser
+					        },
+					        {
+					            name:'取消关注人数',
+					            type:'line',
+					            stack: '总量',
+					            data:cancelUser
+					        },
+					        {
+					            name:'净增关注人数',
+					            type:'line',
+					            stack: '总量',
+					            data:netGrowthUser
+					        },
+					        {
+					            name:'累积关注人数',
+					            type:'line',
+					            stack: '总量',
+					            data:count
+					        },
+					    ]
+					});
+		 }
+	 
+	 function sexCount(ec,data){
+		 var mcharts= ec.init(document.getElementById('sexCount'));
+		 var male=0;
+		 var female=0;
+		 for(var i=0;i<data.length;i++){
+			 male+=data[i].male;
+			 female+=data[i].female;
+		 }
+		 var option = {
+				    title : {
+				        text: '性别统计',
+				        x:'center'
+				    },
+				    tooltip : {
+				        trigger: 'item',
+				        formatter: "{a} <br/>{b} : {c}<br/> {d}%"
+				    },
+				    legend: {
+				        orient: 'vertical',
+				        left: 'left',
+				        data: ['男','女']
+				    },
+				    series : [
+				        {
+				            name: '性别统计',
+				            type: 'pie',
+				            radius : '55%',
+				            center: ['50%', '60%'],
+				            data:[
+				                {value:male, name:'男'},
+				                {value:female, name:'女'},
+				            ],
+				            itemStyle: {
+				                emphasis: {
+				                    shadowBlur: 10,
+				                    shadowOffsetX: 0,
+				                    shadowColor: 'rgba(0, 0.5)'
+				                }
+				            }
+				        }
+				    ]
+				};
+		 mcharts.setOption(option);
+	 }
+	 
+	 function langCount(ec,data){
+		 var langCh=0;
+		 var langOther=0;
+		 for(var i=0;i<data.length;i++){
+			 langCh+=data[i].langCh;
+			 langOther=data[i].langOther;
+		 }
+		 var gsmgc=document.getElementById('langCount');
+
+		 var mcharts=ec.init(gsmgc);
+
+
+		 var option = {
+				 title: {
+				        text: '语言统计'
+				        ,x:'center'
+				    },
+		     tooltip: {
+		         trigger: 'item',
+		         formatter: "{a} <br/>{b}: {c}</br> {d}%"
+		     },
+		     legend: {
+		         orient: 'vertical',
+		         x: 'left',
+		         data:['简体中文','其他']
+		     },
+		     series: [
+		         {
+		             name:'语言统计',
+		             type:'pie',
+		             radius: ['50%', '70%'],
+		             avoidLabelOverlap: false,
+		             label: {
+		                 normal: {
+		                     show: false,
+		                     position: 'center'
+		                 },
+		                 emphasis: {
+		                     show: true,
+		                     textStyle: {
+		                         fontSize: '30',
+		                         fontWeight: 'bold'
+		                     }
+		                 }
+		             },
+		             labelLine: {
+		                 normal: {
+		                     show: false
+		                 }
+		             },
+		             data:[
+		                 {value:langCh, name:'简体中文'},
+		                 {value:langOther, name:'其他'},
+		             ]
+		         }
+		     ]
+		 };
+
+
+		      mcharts.setOption(option);
+		 }
+	 
+	 
+	 function sourceCount(ec,data){
+	
+		 var gsmgc=document.getElementById('sourceCount');
+		 var mcharts=ec.init(gsmgc);
+		 
+		var addSceneAccountMigration=0;
+		var addCircleFriends=0;
+		var addSceneOthers=0;
+		var addScenePaid=0;
+		var addSceneProfileCard=0
+		var addSceneProfileItem=0;
+		var addSceneQrCode=0;
+		var addSceneSearch=0;
+		var addSceneprofileLink=0
+		for(var i=0;i<data.length;i++){
+			if(data[i].addSceneAccountMigration){
+				addSceneAccountMigration+=data[i].addSceneAccountMigration;
+			}
+			if(data[i].addCircleFriends){
+				addCircleFriends+=data[i].addCircleFriends;
+			}
+			if(data[i].addSceneOthers){
+				addSceneOthers+=data[i].addSceneOthers;
+			}
+			if(data[i].addScenePaid){
+				addScenePaid+=data[i].addScenePaid;
+			}
+			if(data[i].addSceneProfileCard){
+				addSceneProfileCard+=data[i].addSceneProfileCard;
+			}
+			if(data[i].addSceneProfileItem){
+				addSceneProfileItem+=data[i].addSceneProfileItem;
+			}
+			if(data[i].addSceneQrCode){
+				addSceneQrCode+=data[i].addSceneQrCode;
+			}
+			if(data[i].addSceneSearch){
+				addSceneSearch+=data[i].addSceneSearch;
+			}
+			if(data[i].addSceneprofileLink){
+				addSceneprofileLink+=data[i].addSceneprofileLink;
+			}
+			
+		}
+		var sourceArray=[];
+		sourceArray.push(addSceneAccountMigration);
+		sourceArray.push(addCircleFriends);
+		sourceArray.push(addSceneOthers);
+		sourceArray.push(addScenePaid);
+		sourceArray.push(addSceneProfileCard);
+		sourceArray.push(addSceneProfileItem);
+		sourceArray.push(addSceneQrCode);
+		sourceArray.push(addSceneSearch);
+		sourceArray.push(addSceneprofileLink);
+		
+		var min=Math.min.apply( Math, sourceArray );
+		var max=Math.max.apply( Math, sourceArray )+5;
+		
+		var data=[];
+		if(addSceneAccountMigration){
+			data.push({value:addSceneAccountMigration, name:'公众号文章广告'});
+		}
+		if(addCircleFriends){
+			data.push({value:addCircleFriends, name:'朋友圈广告'});
+		}
+		if(addSceneOthers){
+			data.push({value:addSceneOthers, name:'其他'});
+		}
+		if(addScenePaid){
+			data.push({value:addScenePaid, name:'支付后关注'});
+		}
+		if(addSceneProfileCard){
+			data.push({value:addSceneProfileCard, name:'名片分享'});
+		}
+		if(addSceneProfileItem){
+			data.push({value:addSceneProfileItem, name:'图文页右上角菜单'});
+		}
+		if(addSceneQrCode){
+			data.push({value:addSceneQrCode, name:'扫描二维码'});
+		}
+		if(addSceneSearch){
+			data.push({value:addSceneSearch, name:'公众号搜索'});
+		}
+		if(addSceneprofileLink){
+			data.push({value:addSceneprofileLink, name:'图文页内名称点击'});
+		}
+		 option = {
+				    backgroundColor: '#2c343c',
+
+				    title: {
+				        text: '关注来源',
+				        left: 'center',
+				        top: 20,
+				        textStyle: {
+				            color: '#ccc'
+				        }
+				    },
+
+				    tooltip : {
+				        trigger: 'item',
+				        formatter: "{a} <br/>{b} : {c}</br> {d}%"
+				    },
+
+				    visualMap: {
+				        show: false,
+				        min: min,
+				        max: max,
+				        inRange: {
+				            colorLightness: [0, 1]
+				        }
+				    },
+				    series : [
+				        {
+				        	
+				            name:'关注来源',
+				            type:'pie',
+				            radius : '55%',
+				            center: ['50%', '50%'],
+				            data:data.sort(function (a, b) { return a.value - b.value; }),
+				            roseType: 'radius',
+				            label: {
+				                normal: {
+				                    textStyle: {
+				                        color: 'rgba(255, 255, 255, 0.3)'
+				                    }
+				                }
+				            },
+				            labelLine: {
+				                normal: {
+				                    lineStyle: {
+				                        color: 'rgba(255, 255, 255, 0.3)'
+				                    },
+				                    smooth: 0.2,
+				                    length: 10,
+				                    length2: 20
+				                }
+				            },
+				            itemStyle: {
+				                normal: {
+				                    color: '#c23531',
+				                    shadowBlur: 200,
+				                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+				                }
+				            },
+
+				            animationType: 'scale',
+				            animationEasing: 'elasticOut',
+				            animationDelay: function (idx) {
+				                return Math.random() * 200;
+				            }
+				        }
+				    ]
+				};
+
+
+		      mcharts.setOption(option);
+		 }
+	 
+	 function getMapData(echarts,day){
+		var url=ctxAppWeixin+'/api/count/positionCount?ids='+ids;
+		var postData={day:day};
+		$.get(url,postData,function(obj){
+			mapCount(echarts,obj);
+			bar(echarts,obj);
+		});
+	 }
+	 function mapCount(ec,obj){
+		 var gsmgc=document.getElementById('map');
+		 var mcharts=ec.init(gsmgc);
+		 var data = [
+		     {name: '海门', value: 0},
+		     {name: '鄂尔多斯', value: 0},
+		     {name: '招远', value: 0},
+		     {name: '舟山', value: 0},
+		     {name: '齐齐哈尔', value: 0},
+		     {name: '盐城', value: 0},
+		     {name: '赤峰', value: 0},
+		     {name: '青岛', value: 0},
+		     {name: '乳山', value: 0},
+		     {name: '金昌', value: 0},
+		     {name: '泉州', value: 0},
+		     {name: '莱西', value: 0},
+		     {name: '日照', value: 0},
+		     {name: '胶南', value: 0},
+		     {name: '南通', value: 0},
+		     {name: '拉萨', value: 0},
+		     {name: '云浮', value: 0},
+		     {name: '梅州', value: 0},
+		     {name: '文登', value: 0},
+		     {name: '上海', value: 0},
+		     {name: '攀枝花', value: 0},
+		     {name: '威海', value: 0},
+		     {name: '承德', value: 0},
+		     {name: '厦门', value: 0},
+		     {name: '汕尾', value: 0},
+		     {name: '潮州', value: 0},
+		     {name: '丹东', value: 0},
+		     {name: '太仓', value: 0},
+		     {name: '曲靖', value: 0},
+		     {name: '烟台', value: 0},
+		     {name: '福州', value: 0},
+		     {name: '瓦房店', value: 0},
+		     {name: '即墨', value: 0},
+		     {name: '抚顺', value: 0},
+		     {name: '玉溪', value: 0},
+		     {name: '张家口', value: 0},
+		     {name: '阳泉', value: 0},
+		     {name: '莱州', value: 0},
+		     {name: '湖州', value: 0},
+		     {name: '汕头', value: 0},
+		     {name: '昆山', value: 0},
+		     {name: '宁波', value: 0},
+		     {name: '湛江', value: 0},
+		     {name: '揭阳', value: 0},
+		     {name: '荣成', value: 0},
+		     {name: '连云港', value: 0},
+		     {name: '葫芦岛', value: 0},
+		     {name: '常熟', value: 0},
+		     {name: '东莞', value: 0},
+		     {name: '河源', value: 0},
+		     {name: '淮安', value: 0},
+		     {name: '泰州', value: 0},
+		     {name: '南宁', value: 0},
+		     {name: '营口', value: 0},
+		     {name: '惠州', value: 0},
+		     {name: '江阴', value: 0},
+		     {name: '蓬莱', value: 0},
+		     {name: '韶关', value: 0},
+		     {name: '嘉峪关', value: 0},
+		     {name: '广州', value: 0},
+		     {name: '延安', value: 0},
+		     {name: '太原', value: 0},
+		     {name: '清远', value: 0},
+		     {name: '中山', value: 0},
+		     {name: '昆明', value: 0},
+		     {name: '寿光', value: 0},
+		     {name: '盘锦', value: 0},
+		     {name: '长治', value: 0},
+		     {name: '深圳', value: 0},
+		     {name: '珠海', value: 0},
+		     {name: '宿迁', value: 0},
+		     {name: '咸阳', value: 0},
+		     {name: '铜川', value: 0},
+		     {name: '平度', value: 0},
+		     {name: '佛山', value: 0},
+		     {name: '海口', value: 0},
+		     {name: '江门', value: 0},
+		     {name: '章丘', value: 0},
+		     {name: '肇庆', value: 0},
+		     {name: '大连', value: 0},
+		     {name: '临汾', value: 0},
+		     {name: '吴江', value: 0},
+		     {name: '石嘴山', value: 0},
+		     {name: '沈阳', value: 0},
+		     {name: '苏州', value: 0},
+		     {name: '茂名', value: 0},
+		     {name: '嘉兴', value: 0},
+		     {name: '长春', value: 0},
+		     {name: '胶州', value: 0},
+		     {name: '银川', value: 0},
+		     {name: '张家港', value: 0},
+		     {name: '三门峡', value: 0},
+		     {name: '锦州', value: 0},
+		     {name: '南昌', value: 0},
+		     {name: '柳州', value: 0},
+		     {name: '三亚', value: 0},
+		     {name: '自贡', value: 0},
+		     {name: '吉林', value: 0},
+		     {name: '阳江', value: 0},
+		     {name: '泸州', value: 0},
+		     {name: '西宁', value: 0},
+		     {name: '宜宾', value: 0},
+		     {name: '呼和浩特', value: 0},
+		     {name: '成都', value: 0},
+		     {name: '大同', value: 0},
+		     {name: '镇江', value: 0},
+		     {name: '桂林', value: 0},
+		     {name: '张家界', value: 0},
+		     {name: '宜兴', value: 0},
+		     {name: '北海', value: 0},
+		     {name: '西安', value: 0},
+		     {name: '金坛', value: 0},
+		     {name: '东营', value: 0},
+		     {name: '牡丹江', value: 0},
+		     {name: '遵义', value: 0},
+		     {name: '绍兴', value: 0},
+		     {name: '扬州', value: 0},
+		     {name: '常州', value: 0},
+		     {name: '潍坊', value: 0},
+		     {name: '重庆', value: 0},
+		     {name: '台州', value: 0},
+		     {name: '南京', value: 0},
+		     {name: '滨州', value: 0},
+		     {name: '贵阳', value: 0},
+		     {name: '无锡', value: 0},
+		     {name: '本溪', value: 0},
+		     {name: '克拉玛依', value: 0},
+		     {name: '渭南', value: 0},
+		     {name: '马鞍山', value: 0},
+		     {name: '宝鸡', value: 0},
+		     {name: '焦作', value: 0},
+		     {name: '句容', value: 0},
+		     {name: '北京', value: 0},
+		     {name: '徐州', value: 0},
+		     {name: '衡水', value: 0},
+		     {name: '包头', value: 0},
+		     {name: '绵阳', value: 0},
+		     {name: '乌鲁木齐', value: 0},
+		     {name: '枣庄', value: 0},
+		     {name: '杭州', value: 0},
+		     {name: '淄博', value: 0},
+		     {name: '鞍山', value: 0},
+		     {name: '溧阳', value: 0},
+		     {name: '库尔勒', value: 0},
+		     {name: '安阳', value: 0},
+		     {name: '开封', value: 0},
+		     {name: '济南', value: 0},
+		     {name: '德阳', value: 0},
+		     {name: '温州', value: 0},
+		     {name: '九江', value: 0},
+		     {name: '邯郸', value: 0},
+		     {name: '临安', value: 0},
+		     {name: '兰州', value: 0},
+		     {name: '沧州', value: 0},
+		     {name: '临沂', value: 0},
+		     {name: '南充', value: 0},
+		     {name: '天津', value: 0},
+		     {name: '富阳', value: 0},
+		     {name: '泰安', value: 0},
+		     {name: '诸暨', value: 0},
+		     {name: '郑州', value: 0},
+		     {name: '哈尔滨', value: 0},
+		     {name: '聊城', value: 0},
+		     {name: '芜湖', value: 0},
+		     {name: '唐山', value: 0},
+		     {name: '平顶山', value: 0},
+		     {name: '邢台', value: 0},
+		     {name: '德州', value: 0},
+		     {name: '济宁', value: 0},
+		     {name: '荆州', value: 0},
+		     {name: '宜昌', value: 0},
+		     {name: '义乌', value: 0},
+		     {name: '丽水', value: 0},
+		     {name: '洛阳', value: 0},
+		     {name: '秦皇岛', value: 0},
+		     {name: '株洲', value: 0},
+		     {name: '石家庄', value: 0},
+		     {name: '莱芜', value: 0},
+		     {name: '常德', value: 0},
+		     {name: '保定', value: 0},
+		     {name: '湘潭', value: 0},
+		     {name: '金华', value: 0},
+		     {name: '岳阳', value: 0},
+		     {name: '长沙', value: 0},
+		     {name: '衢州', value: 0},
+		     {name: '廊坊', value: 0},
+		     {name: '菏泽', value: 0},
+		     {name: '合肥', value: 0},
+		     {name: '武汉', value: 0},
+		     {name: '大庆', value: 0}
+		];
+		 for(var i=0;i<obj.length;i++){
+				var cityName=obj[i].city;
+				var cityNum=obj[i].num;
+				for(x=0;x<data.length;x++){
+					if(data[x].name==cityName){
+						data[x].value+=cityNum;
+					}
+				}
+			}
+		 
+		var geoCoordMap = {
+		    '海门':[121.15,31.89],
+		    '鄂尔多斯':[109.781327,39.608266],
+		    '招远':[120.38,37.35],
+		    '舟山':[122.207216,29.985295],
+		    '齐齐哈尔':[123.97,47.33],
+		    '盐城':[120.13,33.38],
+		    '赤峰':[118.87,42.28],
+		    '青岛':[120.33,36.07],
+		    '乳山':[121.52,36.89],
+		    '金昌':[102.188043,38.520089],
+		    '泉州':[118.58,24.93],
+		    '莱西':[120.53,36.86],
+		    '日照':[119.46,35.42],
+		    '胶南':[119.97,35.88],
+		    '南通':[121.05,32.08],
+		    '拉萨':[91.11,29.97],
+		    '云浮':[112.02,22.93],
+		    '梅州':[116.1,24.55],
+		    '文登':[122.05,37.2],
+		    '上海':[121.48,31.22],
+		    '攀枝花':[101.718637,26.582347],
+		    '威海':[122.1,37.5],
+		    '承德':[117.93,40.97],
+		    '厦门':[118.1,24.46],
+		    '汕尾':[115.375279,22.786211],
+		    '潮州':[116.63,23.68],
+		    '丹东':[124.37,40.13],
+		    '太仓':[121.1,31.45],
+		    '曲靖':[103.79,25.51],
+		    '烟台':[121.39,37.52],
+		    '福州':[119.3,26.08],
+		    '瓦房店':[121.979603,39.627114],
+		    '即墨':[120.45,36.38],
+		    '抚顺':[123.97,41.97],
+		    '玉溪':[102.52,24.35],
+		    '张家口':[114.87,40.82],
+		    '阳泉':[113.57,37.85],
+		    '莱州':[119.942327,37.177017],
+		    '湖州':[120.1,30.86],
+		    '汕头':[116.69,23.39],
+		    '昆山':[120.95,31.39],
+		    '宁波':[121.56,29.86],
+		    '湛江':[110.359377,21.270708],
+		    '揭阳':[116.35,23.55],
+		    '荣成':[122.41,37.16],
+		    '连云港':[119.16,34.59],
+		    '葫芦岛':[120.836932,40.711052],
+		    '常熟':[120.74,31.64],
+		    '东莞':[113.75,23.04],
+		    '河源':[114.68,23.73],
+		    '淮安':[119.15,33.5],
+		    '泰州':[119.9,32.49],
+		    '南宁':[108.33,22.84],
+		    '营口':[122.18,40.65],
+		    '惠州':[114.4,23.09],
+		    '江阴':[120.26,31.91],
+		    '蓬莱':[120.75,37.8],
+		    '韶关':[113.62,24.84],
+		    '嘉峪关':[98.289152,39.77313],
+		    '广州':[113.23,23.16],
+		    '延安':[109.47,36.6],
+		    '太原':[112.53,37.87],
+		    '清远':[113.01,23.7],
+		    '中山':[113.38,22.52],
+		    '昆明':[102.73,25.04],
+		    '寿光':[118.73,36.86],
+		    '盘锦':[122.070714,41.119997],
+		    '长治':[113.08,36.18],
+		    '深圳':[114.07,22.62],
+		    '珠海':[113.52,22.3],
+		    '宿迁':[118.3,33.96],
+		    '咸阳':[108.72,34.36],
+		    '铜川':[109.11,35.09],
+		    '平度':[119.97,36.77],
+		    '佛山':[113.11,23.05],
+		    '海口':[110.35,20.02],
+		    '江门':[113.06,22.61],
+		    '章丘':[117.53,36.72],
+		    '肇庆':[112.44,23.05],
+		    '大连':[121.62,38.92],
+		    '临汾':[111.5,36.08],
+		    '吴江':[120.63,31.16],
+		    '石嘴山':[106.39,39.04],
+		    '沈阳':[123.38,41.8],
+		    '苏州':[120.62,31.32],
+		    '茂名':[110.88,21.68],
+		    '嘉兴':[120.76,30.77],
+		    '长春':[125.35,43.88],
+		    '胶州':[120.03336,36.264622],
+		    '银川':[106.27,38.47],
+		    '张家港':[120.555821,31.875428],
+		    '三门峡':[111.19,34.76],
+		    '锦州':[121.15,41.13],
+		    '南昌':[115.89,28.68],
+		    '柳州':[109.4,24.33],
+		    '三亚':[109.511909,18.252847],
+		    '自贡':[104.778442,29.33903],
+		    '吉林':[126.57,43.87],
+		    '阳江':[111.95,21.85],
+		    '泸州':[105.39,28.91],
+		    '西宁':[101.74,36.56],
+		    '宜宾':[104.56,29.77],
+		    '呼和浩特':[111.65,40.82],
+		    '成都':[104.06,30.67],
+		    '大同':[113.3,40.12],
+		    '镇江':[119.44,32.2],
+		    '桂林':[110.28,25.29],
+		    '张家界':[110.479191,29.117096],
+		    '宜兴':[119.82,31.36],
+		    '北海':[109.12,21.49],
+		    '西安':[108.95,34.27],
+		    '金坛':[119.56,31.74],
+		    '东营':[118.49,37.46],
+		    '牡丹江':[129.58,44.6],
+		    '遵义':[106.9,27.7],
+		    '绍兴':[120.58,30.01],
+		    '扬州':[119.42,32.39],
+		    '常州':[119.95,31.79],
+		    '潍坊':[119.1,36.62],
+		    '重庆':[106.54,29.59],
+		    '台州':[121.420757,28.656386],
+		    '南京':[118.78,32.04],
+		    '滨州':[118.03,37.36],
+		    '贵阳':[106.71,26.57],
+		    '无锡':[120.29,31.59],
+		    '本溪':[123.73,41.3],
+		    '克拉玛依':[84.77,45.59],
+		    '渭南':[109.5,34.52],
+		    '马鞍山':[118.48,31.56],
+		    '宝鸡':[107.15,34.38],
+		    '焦作':[113.21,35.24],
+		    '句容':[119.16,31.95],
+		    '北京':[116.46,39.92],
+		    '徐州':[117.2,34.26],
+		    '衡水':[115.72,37.72],
+		    '包头':[110,40.58],
+		    '绵阳':[104.73,31.48],
+		    '乌鲁木齐':[87.68,43.77],
+		    '枣庄':[117.57,34.86],
+		    '杭州':[120.19,30.26],
+		    '淄博':[118.05,36.78],
+		    '鞍山':[122.85,41.12],
+		    '溧阳':[119.48,31.43],
+		    '库尔勒':[86.06,41.68],
+		    '安阳':[114.35,36.1],
+		    '开封':[114.35,34.79],
+		    '济南':[117,36.65],
+		    '德阳':[104.37,31.13],
+		    '温州':[120.65,28.01],
+		    '九江':[115.97,29.71],
+		    '邯郸':[114.47,36.6],
+		    '临安':[119.72,30.23],
+		    '兰州':[103.73,36.03],
+		    '沧州':[116.83,38.33],
+		    '临沂':[118.35,35.05],
+		    '南充':[106.110698,30.837793],
+		    '天津':[117.2,39.13],
+		    '富阳':[119.95,30.07],
+		    '泰安':[117.13,36.18],
+		    '诸暨':[120.23,29.71],
+		    '郑州':[113.65,34.76],
+		    '哈尔滨':[126.63,45.75],
+		    '聊城':[115.97,36.45],
+		    '芜湖':[118.38,31.33],
+		    '唐山':[118.02,39.63],
+		    '平顶山':[113.29,33.75],
+		    '邢台':[114.48,37.05],
+		    '德州':[116.29,37.45],
+		    '济宁':[116.59,35.38],
+		    '荆州':[112.239741,30.335165],
+		    '宜昌':[111.3,30.7],
+		    '义乌':[120.06,29.32],
+		    '丽水':[119.92,28.45],
+		    '洛阳':[112.44,34.7],
+		    '秦皇岛':[119.57,39.95],
+		    '株洲':[113.16,27.83],
+		    '石家庄':[114.48,38.03],
+		    '莱芜':[117.67,36.19],
+		    '常德':[111.69,29.05],
+		    '保定':[115.48,38.85],
+		    '湘潭':[112.91,27.87],
+		    '金华':[119.64,29.12],
+		    '岳阳':[113.09,29.37],
+		    '长沙':[113,28.21],
+		    '衢州':[118.88,28.97],
+		    '廊坊':[116.7,39.53],
+		    '菏泽':[115.480656,35.23375],
+		    '合肥':[117.27,31.86],
+		    '武汉':[114.31,30.52],
+		    '大庆':[125.03,46.58]
+		};
+
+		var convertData = function (data) {
+		    var res = [];
+		    for (var i = 0; i < data.length; i++) {
+		        var geoCoord = geoCoordMap[data[i].name];
+		        if (geoCoord) {
+		            res.push({
+		                name: data[i].name,
+		                value: geoCoord.concat(data[i].value)
+		            });
+		        }
+		    }
+		    return res;
+		};
+		option = {
+		    backgroundColor: '#404a59',
+		    title: {
+		        text: '地域分布',
+		        left: 'center',
+		        textStyle: {
+		            color: '#fff'
+		        }
+		    },
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: function (params) {
+		        	var value=params.data.value[2];
+		        	var name=params.data.name;
+		        	 return name+':'+value+'人';
+		        	}
+		    },
+		    legend: {
+		        orient: 'vertical',
+		        y: 'bottom',
+		        x:'right',
+		        textStyle: {
+		            color: '#fff'
+		        }
+		    },
+		    geo: {
+		        map: 'china',
+		        label: {
+		            emphasis: {
+		                show: false
+		            }
+		        },
+		        roam: true,
+		        itemStyle: {
+		            normal: {
+		                areaColor: '#323c48',
+		                borderColor: '#111'
+		            },
+		            emphasis: {
+		                areaColor: '#2a333d'
+		            }
+		        }
+		    },
+		    series : [
+		        {
+		            name: '用户数量',
+		            type: 'scatter',
+		            coordinateSystem: 'geo',
+		            data: convertData(data),
+		            symbolSize: 15,
+		            label: {
+		                normal: {
+		                    formatter: '{b}',
+		                    position: 'right',
+		                    show: false
+		                },
+		                emphasis: {
+		                    show: true
+		                }
+		            },
+		            itemStyle: {
+		                normal: {
+		                    color: '#ddb926'
+		                }
+		            }
+		        },
+		        {
+		            name: 'Top 5',
+		            type: 'effectScatter',
+		            coordinateSystem: 'geo',
+		            data: convertData(data.sort(function (a, b) {
+		                return b.value - a.value;
+		            }).slice(0, 5)),
+		            symbolSize: 15,
+		            showEffectOn: 'render',
+		            rippleEffect: {
+		                brushType: 'stroke'
+		            },
+		            hoverAnimation: true,
+		            label: {
+		                normal: {
+		                    formatter: '{b}',
+		                    position: 'right',
+		                    show: true
+		                }
+		            },
+		            itemStyle: {
+		                normal: {
+		                    color: '#f4e925',
+		                    shadowBlur: 10,
+		                    shadowColor: '#333'
+		                }
+		            },
+		            zlevel: 1
+		        }
+		    ]
+		};
+		      mcharts.setOption(option);
+		 }
+	 
+	 function bar(ec,obj){
+		 var gsmgc=document.getElementById('bar');
+		 var mcharts=ec.init(gsmgc);
+
+		 var geoCoord=[];
+		 for(var i=0;i<obj.length;i++){
+				geoCoord.push({'city':obj[i].city,'value':obj[i].num});
+		 }
+		 geoCoord.sort(function(a,b){
+			 return a.value > b.value ? -1 : 1;
+		 });
+		 geoCoord=geoCoord.slice(0,20);
+		 geoCoord.sort(function(a,b){
+			 return a.value > b.value ? 1 : -1;
+		 });
+		 var citys=[];
+		 var datas=[];
+		 for(var i=0;i<geoCoord.length;i++){
+			 citys.push(geoCoord[i].city);
+			 datas.push(geoCoord[i].value);
+		 }
+		 option = {
+			 title: {
+			        text: 'top 20',
+			        left: 'center'
+			 },
+		     tooltip : {
+		         trigger: 'axis',
+		         axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+		             type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+		         }
+		     },
+		     grid: {
+		         left: '0%',
+		         right: '4%',
+		         bottom: '3%',
+		         containLabel: true
+		     },
+		     xAxis:  {
+		         type: 'value'
+		     },
+		     yAxis: {
+		         type: 'category',
+		         data: citys
+		     },
+		     series: [
+		         {
+		             name: '人数',
+		             type: 'bar',
+		             label: {
+		                 normal: {
+		                     show: true,
+		                     position: 'insideRight'
+		                 }
+		             },
+		             data:datas
+		         }
+		     ]
+		 };
+		  mcharts.setOption(option);
+
+	 }
+	 function change(){
+		var day=$("#selectDays").val();
+		var data={day:day,ids:ids};
+		var	url=ctxAppWeixin+'/api/count/allFansCount';
+		$.get(url,data,function(obj){
+		lineTable(echarts,obj);
+		simpleCount(obj);
+	 })
+	 }
+	 layui.use(['element', 'layer'], () => {
+			var element = layui.element;
+			element.init();
+			
+			$('body').on('click', '.main>button', () => {
+				var a = $('.dynamic-navigation');
+				var b = $('.layui-layer-tips');
+				a && (a.attr("tg") ? (a.animate({
+					left: 0,
+					opacity: "show"
+				}, 500), a.removeAttr("tg"), b.animate({
+					left: 289,
+					opacity: "show"
+				}, 500)) : (a.animate({
+					left: -200,
+					opacity: "show"
+				}, 500), a.attr("tg", "1"), b.animate({
+					left: 89,
+					opacity: "show"
+				}, 500)));
+				
+				//分开写了
+				a && (a.attr("tg") ? (
+					localStorage.setItem('nav-status', 1)
+				) : (
+					localStorage.setItem('nav-status', 0)
+				));
+				
+			});
+			
+			layer.tips('点我试试^_^', '.main>button', {
+			  	tips: [2, 'red'],
+			  	time: 0
+			});
+			
+			$.get(ctxAppSec+'/api/WeixinGroups/layuiXtree?Authorization=', 
+					function(obj){
+				var li='';
+				for(var i=0;i<obj.length;i++){
+					 var groupName=obj[i].title;
+					 var groupId=obj[i].value.substr(4);
+					 var users=obj[i].data;
+					 li+='<li class="layui-nav-item">'
+						   +'<a href="javascript:;">'+groupName+'</a>';
+					 for(var x=0;x<users.length;x++){
+						 var username=users[x].title;
+						 var userid=users[x].value.substr(4);
+						 li+='<dl class="layui-nav-child">'
+						 	  +'<dd><a href="FansCountOne.html?id='+userid+'">'+username+'</a></dd>'
+						 	  +'</dl>';
+					 }
+					   li+='</li>';
+				}
+				$('#navtree').html(li);
+				element.init();
+	            });
+			
+		})
+	 /*
+	 
+	 
+	 
+	 <li class="layui-nav-item layui-nav-itemed">
+	    <a href="javascript:;">默认展开</a>
+	    <dl class="layui-nav-child">
+	      <dd><a href="javascript:;">选项1</a></dd>
+	    </dl>
+	  </li>
+	  */
+	 </script>
+
+	<script type="text/javascript">
+	 
+	 </script>
+</body>
+</html>

@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lj.cloud.secrity.dal.WeixinFansInfoMapper">
+	<resultMap id="weixinFansInfoResult"
+		type="com.weixindev.micro.serv.common.bean.report.WeixinFansInfo">
+		<result property="id" column="id" jdbcType="INTEGER" />
+		<result property="subscribe" column="subscribe" jdbcType="INTEGER" />
+		<result property="openid" column="openid" jdbcType="VARCHAR" />
+		<result property="nickname" column="nickname" jdbcType="VARCHAR" />
+		<result property="sex" column="sex" jdbcType="INTEGER" />
+		<result property="city" column="city" jdbcType="VARCHAR" />
+		<result property="country" column="country" jdbcType="VARCHAR" />
+		<result property="province" column="province" jdbcType="VARCHAR" />
+		<result property="language" column="language" jdbcType="VARCHAR" />
+		<result property="subscribeTime" column="subscribe_time"
+			jdbcType="TIMESTAMP" />
+		<result property="unionid" column="unionid" jdbcType="VARCHAR" />
+		<result property="groupid" column="groupid" jdbcType="INTEGER" />
+		<result property="subscribeScene" column="subscribe_scene"
+			jdbcType="VARCHAR" />
+		<result property="createTime" column="create_time" jdbcType="TIMESTAMP" />
+		<result property="updateTime" column="update_time" jdbcType="TIMESTAMP" />
+		<result property="userId" column="user_id" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">    
+	    <![CDATA[
+	   
+        	id ,
+        	subscribe ,
+        	openid ,
+        	nickname ,
+        	sex ,
+        	city ,
+        	country ,
+        	province ,
+        	language ,
+        	subscribe_time ,
+        	unionid ,
+        	groupid ,
+        	subscribe_scene ,
+        	create_time ,
+        	update_time ,
+        	user_id
+	    ]]>
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="weixinFansInfoResult">
+		select
+		<include refid="Base_Column_List" />
+
+		from weixin_fans_info
+		where
+		id = #{id,jdbcType=INTEGER}
+
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		weixin_fans_info where
+		id = #{id,jdbcType=INTEGER}
+
+	</delete>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+		INSERT
+		INTO weixin_fans_info (
+		id, subscribe, openid, nickname, sex, city,
+		country, province, language,
+		subscribe_time, unionid, groupid,
+		subscribe_scene, create_time,
+		update_time,user_id
+		) VALUES (
+		#{id,jdbcType=INTEGER}, #{subscribe,jdbcType=INTEGER},
+		#{openid,jdbcType=VARCHAR},
+		#{nickname,jdbcType=VARCHAR},
+		#{sex,jdbcType=INTEGER},
+		#{city,jdbcType=VARCHAR},
+		#{country,jdbcType=VARCHAR},
+		#{province,jdbcType=VARCHAR},
+		#{language,jdbcType=VARCHAR},
+		#{subscribeTime,jdbcType=TIMESTAMP},
+		#{unionid,jdbcType=VARCHAR},
+		#{groupid,jdbcType=INTEGER},
+		#{subscribeScene,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{updateTime,jdbcType=TIMESTAMP},#{userId,jdbcType=INTEGER}
+		)
+
+	</insert>
+
+	<insert id="insertSelective"
+		parameterType="com.weixindev.micro.serv.common.bean.report.WeixinFansInfo">
+		INSERT INTO weixin_fans_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="subscribe != null">
+				subscribe,
+			</if>
+			<if test="openid != null">
+				openid,
+			</if>
+			<if test="nickname != null">
+				nickname,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="country != null">
+				country,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="subscribeTime != null">
+				subscribe_time,
+			</if>
+			<if test="unionid != null">
+				unionid,
+			</if>
+			<if test="groupid != null">
+				groupid,
+			</if>
+			<if test="subscribeScene != null">
+				subscribe_scene,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="subscribe != null">
+				#{subscribe,jdbcType=INTEGER},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="nickname != null">
+				#{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=INTEGER},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="country != null">
+				#{country,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="subscribeTime != null">
+				#{subscribeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="unionid != null">
+				#{unionid,jdbcType=VARCHAR},
+			</if>
+			<if test="groupid != null">
+				#{groupid,jdbcType=INTEGER},
+			</if>
+			<if test="subscribeScene != null">
+				#{subscribeScene,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.weixindev.micro.serv.common.bean.report.WeixinFansInfo">
+
+		UPDATE weixin_fans_info
+
+		<set>
+			<if test="subscribe != null and  subscribe != ''">
+				subscribe = #{subscribe,jdbcType=INTEGER} ,
+			</if>
+			<if test="openid != null and  openid != ''">
+				openid = #{openid,jdbcType=VARCHAR} ,
+			</if>
+			<if test="nickname != null and  nickname != ''">
+				nickname = #{nickname,jdbcType=VARCHAR} ,
+			</if>
+			<if test="sex != null and  sex != ''">
+				sex = #{sex,jdbcType=INTEGER} ,
+			</if>
+			<if test="city != null and  city != ''">
+				city = #{city,jdbcType=VARCHAR} ,
+			</if>
+			<if test="country != null and  country != ''">
+				country = #{country,jdbcType=VARCHAR} ,
+			</if>
+			<if test="province != null and  province != ''">
+				province = #{province,jdbcType=VARCHAR} ,
+			</if>
+			<if test="language != null and  language != ''">
+				language = #{language,jdbcType=VARCHAR} ,
+			</if>
+			<if test="subscribeTime != null and  subscribeTime != ''">
+				subscribe_time = #{subscribeTime,jdbcType=TIMESTAMP} ,
+			</if>
+			<if test="unionid != null and  unionid != ''">
+				unionid = #{unionid,jdbcType=VARCHAR} ,
+			</if>
+			<if test="groupid != null and  groupid != ''">
+				groupid = #{groupid,jdbcType=INTEGER} ,
+			</if>
+			<if test="subscribeScene != null and  subscribeScene != ''">
+				subscribe_scene = #{subscribeScene,jdbcType=VARCHAR} ,
+			</if>
+			<if test="createTime != null and  createTime != ''">
+				create_time = #{createTime,jdbcType=TIMESTAMP} ,
+			</if>
+			<if test="updateTime != null and  updateTime != ''">
+				update_time = #{updateTime,jdbcType=TIMESTAMP} ,
+			</if>
+			<if test="userId != null and  userId != ''">
+				userId = #{userId,jdbcType=INTEGER} ,
+			</if>
+
+		</set>
+		WHERE
+		id = #{id,jdbcType=INTEGER}
+
+	</update>
+
+	<update id="updateByPrimaryKey">
+
+		UPDATE weixin_fans_info SET
+		subscribe = #{subscribe} ,
+		openid = #{openid} , nickname = #{nickname} , sex =
+		#{sex} , city =
+		#{city} , country = #{country} , province =
+		#{province} , language =
+		#{language} , subscribe_time =
+		#{subscribeTime} , unionid = #{unionid}
+		, groupid = #{groupid} ,
+		subscribe_scene = #{subscribeScene} ,
+		create_time = #{createTime} ,
+		update_time = #{updateTime}
+		,user_id=#{userId}
+		WHERE
+		id = #{id,jdbcType=INTEGER}
+
+
+	</update>
+
+	<select id="select" resultMap="weixinFansInfoResult">
+		select
+		<include refid="Base_Column_List" />
+
+		from weixin_fans_info WHERE 1=1
+
+		and id = #{id,jdbcType=INTEGER}
+		and
+		subscribe = #{subscribe,jdbcType=INTEGER}
+		and openid =
+		#{openid,jdbcType=VARCHAR}
+		and nickname = #{nickname,jdbcType=VARCHAR}
+		and sex = #{sex,jdbcType=INTEGER}
+		and city = #{city,jdbcType=VARCHAR}
+		and country = #{country,jdbcType=VARCHAR}
+		and province =
+		#{province,jdbcType=VARCHAR}
+		and language =
+		#{language,jdbcType=VARCHAR}
+		and subscribe_time =
+		#{subscribeTime,jdbcType=TIMESTAMP}
+		and unionid =
+		#{unionid,jdbcType=VARCHAR}
+		and groupid = #{groupid,jdbcType=INTEGER}
+		and subscribe_scene = #{subscribeScene,jdbcType=VARCHAR}
+		and
+		create_time = #{createTime,jdbcType=TIMESTAMP}
+		and update_time =
+		#{updateTime,jdbcType=TIMESTAMP}
+		and user_id=#{userId,jdbcType=INTEGER}
+
+	</select>
+
+	<select id="selectByExample" resultMap="weixinFansInfoResult">
+		select
+		<include refid="Base_Column_List" />
+		from weixin_fans_info WHERE 1=1
+
+		<if test="id != null and  id != ''">
+			and id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="subscribe != null and  subscribe != ''">
+			and subscribe = #{subscribe,jdbcType=INTEGER}
+		</if>
+		<if test="openid != null and  openid != ''">
+			and openid = #{openid,jdbcType=VARCHAR}
+		</if>
+		<if test="nickname != null and  nickname != ''">
+			and nickname = #{nickname,jdbcType=VARCHAR}
+		</if>
+		<if test="sex != null and  sex != ''">
+			and sex = #{sex,jdbcType=INTEGER}
+		</if>
+		<if test="city != null and  city != ''">
+			and city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="country != null and  country != ''">
+			and country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null and  province != ''">
+			and province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="language != null and  language != ''">
+			and language = #{language,jdbcType=VARCHAR}
+		</if>
+		<if test="subscribeTime != null and  subscribeTime != ''">
+			and subscribe_time = #{subscribeTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="unionid != null and  unionid != ''">
+			and unionid = #{unionid,jdbcType=VARCHAR}
+		</if>
+		<if test="groupid != null and  groupid != ''">
+			and groupid = #{groupid,jdbcType=INTEGER}
+		</if>
+		<if test="subscribeScene != null and  subscribeScene != ''">
+			and subscribe_scene = #{subscribeScene,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime != null and  createTime != ''">
+			and create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateTime != null and  updateTime != ''">
+			and update_time = #{updateTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="userId != null and  userId != ''">
+			and user_id = #{userId,jdbcType=INTEGER}
+		</if>
+
+	</select>
+
+	<select id="selectByPageExample" resultType="java.util.HashMap">
+		select
+		<include refid="Base_Column_List" />
+		from weixin_fans_info WHERE 1=1
+
+		<if test="id != null and  id != ''">
+			and id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="subscribe != null and  subscribe != ''">
+			and subscribe = #{subscribe,jdbcType=INTEGER}
+		</if>
+		<if test="openid != null and  openid != ''">
+			and openid = #{openid,jdbcType=VARCHAR}
+		</if>
+		<if test="nickname != null and  nickname != ''">
+			and nickname = #{nickname,jdbcType=VARCHAR}
+		</if>
+		<if test="sex != null and  sex != ''">
+			and sex = #{sex,jdbcType=INTEGER}
+		</if>
+		<if test="city != null and  city != ''">
+			and city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="country != null and  country != ''">
+			and country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null and  province != ''">
+			and province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="language != null and  language != ''">
+			and language = #{language,jdbcType=VARCHAR}
+		</if>
+		<if test="subscribeTime != null and  subscribeTime != ''">
+			and subscribe_time = #{subscribeTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="unionid != null and  unionid != ''">
+			and unionid = #{unionid,jdbcType=VARCHAR}
+		</if>
+		<if test="groupid != null and  groupid != ''">
+			and groupid = #{groupid,jdbcType=INTEGER}
+		</if>
+		<if test="subscribeScene != null and  subscribeScene != ''">
+			and subscribe_scene = #{subscribeScene,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime != null and  createTime != ''">
+			and create_time = #{createTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateTime != null and  updateTime != ''">
+			and update_time = #{updateTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="userId != null and  userId != ''">
+			and user_id = #{userId,jdbcType=INTEGER}
+		</if>
+
+	</select>
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into weixin_fans_info
+		(
+		subscribe,
+		openid,
+		sex,
+		city,
+		country,
+		province,
+		language,
+		subscribe_time,
+		unionid,
+		groupid,
+		subscribe_scene,
+		create_time,
+		update_time,
+		user_id,
+		)
+		values
+		<foreach collection="list" index="index" item="weixinFansAllCount"
+			separator=",">
+			(
+			#{weixinFansAllCount.subscribe,jdbcType=INTEGER},
+			#{weixinFansAllCount.openid,jdbcType=VARCHAR},
+			#{weixinFansAllCount.sex,jdbcType=INTEGER},
+			#{weixinFansAllCount.city,jdbcType=VARCHAR},
+			#{weixinFansAllCount.country,jdbcType=VARCHAR},
+			#{weixinFansAllCount.province,jdbcType=VARCHAR},
+			#{weixinFansAllCount.language,jdbcType=VARCHAR},
+			#{weixinFansAllCount.subscribeTime,jdbcType=TIMESTAMP},
+			#{weixinFansAllCount.unionid,jdbcType=VARCHAR},
+			#{weixinFansAllCount.groupid,jdbcType=INTEGER},
+			#{weixinFansAllCount.subscribeScene,jdbcType=VARCHAR},
+			#{weixinFansAllCount.createTime,jdbcType=TIMESTAMP},
+			#{weixinFansAllCount.updateTime,jdbcType=TIMESTAMP},
+			#{weixinFansAllCount.userId,jdbcType=INTEGER}
+			)
+		</foreach>
+	</insert>
+	<select id="selectPositionByTime" parameterType="map" resultType="map">
+		<![CDATA[	
+		SELECT
+		a.city,COUNT(1) num
+		FROM
+		weixin_fans_info a left join weixin_userinfo b
+		on a.user_id=b.id
+		WHERE country='中国'
+		and TO_DAYS(NOW()) - TO_DAYS(create_time) <= #{day}
+		]]>
+		<if test="ids != null and ids != '' and ids!='null'"  >
+         and b.weixin_groups_id in (${ids}) 
+         </if>
+		
+		GROUP BY city
+	</select>
+	<select id="selectPositionByUidAndTime" parameterType="map" resultType="map">
+		<![CDATA[	
+		SELECT
+		city,COUNT(1) num
+		FROM
+		weixin_fans_info
+		WHERE country='中国'
+		and user_id=#{#uid}
+		and TO_DAYS(NOW()) - TO_DAYS(create_time) <= #{day}
+		GROUP BY city
+		]]>
+	</select>
+	
+	<select id="selecCountAllFans" resultType="java.lang.Integer">
+        <![CDATA[   
+        SELECT
+        COUNT(1) num
+        FROM
+        weixin_fans_info
+        WHERE country='中国'
+        ]]>
+    </select>
+</mapper>

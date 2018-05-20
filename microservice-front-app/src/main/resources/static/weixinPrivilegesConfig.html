@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>权限分配管理</title>
+
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="build/css/doc.css" media="all">
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+    <script src="layui-xtree/layui-xtree.js"></script>
+
+    <style>
+        .layui-form-checkbox span {
+            width: 80px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="kit-doc">
+<div class="kit-doc-title">
+    <fieldset>
+        <legend><a name="blockquote">权限分配</a></legend>
+    </fieldset>
+</div>
+
+<form class="layui-form">
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-xs6">
+                <div class="grid-demo grid-demo-bg1">
+
+
+                    <br><br>
+                    <h2>选择需要配置权限的管理员或分组</h2><br><br>
+                    <div id="xtree3" class="xtree_contianer"></div>
+
+                    <!-- <h2>提供的四种方法</h2>
+                    <h3>下面事件作用于demo3，输出为console.log();</h3>
+                    <h3>demo宽度适合与F12左右分屏</h3>
+                    <div class="div-btns">
+                        <input type="button" id="btn1" value="获取全部[选中的][末级节点]原checkbox DOM对象，返回Array"
+                               class="layui-btn layui-btn-fluid"/>
+                    </div>
+                    <div class="div-btns">
+                        <input type="button" id="btn2" value="获取全部原checkbox DOM对象，返回Array"
+                               class="layui-btn layui-btn-fluid"/>
+                    </div>
+                    <div class="div-btns">
+                        <input type="button" id="btn3" value="更新数据，重新渲染" class="layui-btn layui-btn-fluid"/>
+                    </div>
+                    <div class="div-btns">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">value值</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="txt1" placeholder="如：jd1.1" autocomplete="off"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <input type="button" id="btn4" value="通过value值找父级DOM对象，顶级节点与错误值均返回null"
+                               class="layui-btn layui-btn-fluid"/>
+                    </div>-->
+
+
+                </div>
+            </div>
+            <div class="layui-col-xs6">
+                <div class="grid-demo">
+                    <br><br>
+                    <h2>分配权限</h2><br><br>
+                    <div class="layui-form-item layui-row">
+                        <label class="layui-form-label" style="width: 150px">微信公众号管理:</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="like[write]" title="公众号列表">
+                            <input type="checkbox" name="like[read]" title="分组管理">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 150px;">素材管理:</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="like[write]" title="图文列表">
+                            <input type="checkbox" name="like[read]" title="图片管理">
+                            <input type="checkbox" name="like[read]" title="视频管理">
+                            <input type="checkbox" name="like[read]" title="音频管理">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 150px;">菜单管理:</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="like[write]" title="模板管理">
+                            <input type="checkbox" name="like[read]" title="列表管理">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 150px; padding: 9px 15px 40px 15px;">管理员管理:</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="like[write]" title="管理员列表">
+                            <input type="checkbox" name="like[read]" title="分组管理">
+                            <input type="checkbox" name="like[read]" title="添加管理员">
+                            <input type="checkbox" name="like[read]" title="权限分配">
+                            <input type="checkbox" name="like[read]" title="配置管理">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 150px;">数据分析:</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="like[write]" title="图文分析">
+                            <input type="checkbox" name="like[read]" title="粉丝分析">
+                        </div>
+                    </div>
+
+                    <br><br>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="text-align: center; margin-left: 0px;">
+                            <span class="layui-btn" lay-filter="save">保存</span>
+                            <span class="layui-btn layui-btn-primary" lay-filter="reset">重置</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script type="text/javascript">
+
+    var acekeystoken = $.cookie('bearcktkaeskey');
+    if (acekeystoken == "") {
+        parent.location.href = ctxApp + '/login.html';
+    }
+
+    //layui 的 form 模块是必须的
+    layui.use(['form'], function () {
+        var form = layui.form;
+
+        //3、最完整的参数用法
+        var xtree3 = new layuiXtree({
+            elem: 'xtree3'                  //必填三兄弟之老大
+            , form: form                    //必填三兄弟之这才是真老大
+            , data: ctxAppSec + '/api/weixinSecGroupusers?Authorization=' + acekeystoken //必填三兄弟之这也算是老大
+            , isopen: true  //加载完毕后的展开状态，默认值：true
+            , ckall: true    //启用全选功能，默认值：false
+            , ckallback: function () {
+            } //全选框状态改变后执行的回调函数
+            , icon: {        //三种图标样式，更改几个都可以，用的是layui的图标
+                open: "&#xe625;"       //节点打开的图标
+                , close: "&#xe623;"    //节点关闭的图标
+                , end: "&#xe612;"      //末尾节点的图标
+            }
+            , color: {       //三种图标颜色，独立配色，更改几个都可以
+                open: "#EE9A00"        //节点图标打开的颜色
+                , close: "#EEC591"     //节点图标关闭的颜色
+                , end: "#828282"       //末级节点图标的颜色
+            }
+            , click: function (data) {  //节点选中状态改变事件监听，全选框有自己的监听事件
+                console.log(data.elem); //得到checkbox原始DOM对象
+                console.log(data.elem.checked); //开关是否开启，true或者false
+                console.log(data.value); //开关value值，也可以通过data.elem.value得到
+                console.log(data.othis); //得到美化后的DOM对象
+            }
+        });
+
+        //提供的方法们
+
+        //获取全部[选中的][末级节点]原checkbox DOM对象，返回Array
+        document.getElementById('btn1').onclick = function () {
+
+            var oCks = xtree3.GetChecked(); //这是方法
+
+            for (var i = 0; i < oCks.length; i++) {
+                console.log(oCks[i].value);
+            }
+        }
+
+        //获取全部原checkbox DOM对象，返回Array
+        document.getElementById('btn2').onclick = function () {
+
+            var oCks = xtree3.GetAllCheckBox(); //这是方法
+
+            for (var i = 0; i < oCks.length; i++) {
+                console.log(oCks[i].value);
+            }
+        }
+
+        //更新数据，重新渲染
+        document.getElementById('btn3').onclick = function () {
+            xtree3.render();
+        }
+
+        //通过value值找父级DOM对象，顶级节点与错误值均返回null
+        document.getElementById('btn4').onclick = function () {
+
+            var oCks = xtree3.GetParent(document.getElementById('txt1').value);  //这是方法
+
+            if (oCks != null) { //如果返回的对象不为null，则获取到父节点了，如果为null，说明这个值对应的节点是一级节点或是值错误
+                console.log(oCks.value);
+            }
+            else {
+                console.log('无父级节点或value值错误');
+            }
+
+        }
+
+
+    });
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,232 @@
+﻿
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>视频管理</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+	<style>
+		.layui-form{ 
+			padding:20px;
+		}
+		#upload{
+			display: block;
+		}
+		#headImgPic{
+			background:#F5F5F5;
+		}
+		.amentit{
+			margin: 10px 0;
+			font-size: 12px;
+			color: #999;
+		}
+	</style>
+</head>
+
+    <body>
+    <form class="layui-form" action="">
+        <input name="Authorization" id="Authorization" autocomplete="off" class="layui-input" type="hidden"  >       
+ 	 <div class="layui-form-item">
+    	<label class="layui-form-label">标题</label>
+    	<div class="layui-input-block">
+      <input name="title" id="title"  autocomplete="off" placeholder="请输入" class="layui-input" type="text" >
+    	</div>
+ 	 </div>
+ 	 <div class="layui-form-item">
+        <label class="layui-form-label">视频</label>
+        <div class="layui-input-block">
+          	<input name="headImg" id="headImg"  autocomplete="off"  class="layui-input" type="hidden" >
+           <input name="fileSize" id="fileSize"  autocomplete="off"  class="layui-input" type="hidden" >
+            <video id="headImgPic"  controls="controls">  
+			    your browser does not support the video tag  
+			</video>
+			<p class="amentit">上传视频文件不能超过10M</p>
+          	<button type="button" class="layui-btn" id="upload"><i class="layui-icon">&#xe67c;</i>选择文件</button> 
+        </div>
+     </div>
+ 	
+     <div class="layui-form-radio">
+        <label class="layui-form-label">标签</label>
+        <div class="layui-input-radio" id="tags">
+        <input type="radio" name="tag" value="电影" title="电影">
+        <input type="radio" name="tag" value="电视剧" title="电视剧">
+        <input type="radio" name="tag" value="动漫" title="动漫">
+        <input type="radio" name="tag" value="新闻" title="新闻">
+        <input type="radio" name="tag" value="娱乐" title="娱乐">
+        <input type="radio" name="tag" value="综艺" title="综艺">
+        <input type="radio" name="tag" value="搞笑" title="搞笑">
+        <input type="radio" name="tag" value="体育" title="体育">
+        <input type="radio" name="tag" value="音乐" title="音乐">
+        <input type="radio" name="tag" value="舞蹈" title="舞蹈">
+       <input type="radio" name="tag" value="广场舞" title="广场舞">
+        <input type="radio" name="tag" value="少儿" title="少儿">
+        <input type="radio" name="tag" value="游戏" title="游戏">
+        <input type="radio" name="tag" value="财经" title="财经">
+        <input type="radio" name="tag" value="军事" title="军事">
+        <input type="radio" name="tag" value="美食" title="美食">
+        <input type="radio" name="tag" value="生活" title="生活">
+        <input type="radio" name="tag" value="时尚" title="时尚">
+        <input type="radio" name="tag" value="育儿" title="育儿">
+        <input type="radio" name="tag" value="旅游" title="旅游">
+        <input type="radio" name="tag" value="汽车" title="汽车">
+        <input type="radio" name="tag" value="纪录片" title="纪录片">
+        <input type="radio" name="tag" value="教育" title="教育">
+        <input type="radio" name="tag" value="文化历史" title="文化历史">
+        <input type="radio" name="tag" value="数码" title="数码">
+        <input type="radio" name="tag" value="科学" title="科学">
+        <input type="radio" name="tag" value="科技" title="科技">
+        <input type="radio" name="tag" value="其他" title="其他">
+        </div>
+     </div>
+ 	 <div class="layui-form-item">
+    	<label class="layui-form-label">介绍语</label>
+    	<div class="layui-input-block">
+       <textarea name="intro" id="intro" class="layui-textarea"  ></textarea>   
+    	</div>
+ 	 </div>
+ 	 <div class="layui-form-item">
+    	<label class="layui-form-label">留言类型</label>
+    	<div class="layui-input-block">
+        <input name="seeType" value="1" title="所有人可留言" checked="checked" type="radio">
+      <input name="seeType" value="0" title="仅关注后可留言" type="radio">
+    	</div>
+ 	 </div>
+
+	<div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+   
+</form>
+
+
+<script>
+var acekeystoken = $.cookie('bearcktkaeskey');
+if (acekeystoken == "") {
+    parent.location.href = ctxApp + '/login.html';
+}
+
+layui.use(['form', 'layedit', 'laydate','upload'], function(){
+	var upload = layui.upload;
+	isUpload=false;
+    //执行上传
+    var uploadInst = upload.render({
+        elem: '#upload' //绑定元素
+        ,url: ctxApp+'/file/upload' //上传接口
+        ,method: 'POST'
+        ,accept: 'video'
+        ,size:10240
+        ,before: function(obj){
+            layer.load();
+        }
+        ,done: function(res){//上传完毕回调
+            layer.closeAll('loading');
+            layer.msg(res.msg);
+            var result = ctxApp+"/" +res.imgUrl;
+            $("#headImg").val(result);
+            $("#headImgPic").attr("src",result);
+            $("#fileSize").val(res.fileSizeName);
+        }
+        ,error: function(){//请求异常回调
+            layer.closeAll('loading');
+            layer.msg('网络异常，请稍后重试！');
+        }
+    });
+    
+	
+  var form = layui.form
+  ,layer = layui.layer
+  ,layedit = layui.layedit
+  ,laydate = layui.laydate;
+  
+  $("#id").val(getQueryString("id"));
+  
+
+  
+  form.render('radio'); //刷新select选择框渲染
+  form.render('select'); //刷新select选择框渲染
+  form.render('checkbox'); //刷新select选择框渲染
+  
+  //监听提交
+  form.on('submit(demo1)', function(data){
+  /*   layer.alert(JSON.stringify(data.field), {
+      title: '最终的提交信息'
+    }) */
+	   if(!isUpload){
+	    	parent.layer.msg('请先上传视频');
+	    	return;
+	    }
+	  function trim(str){
+		  return str.replace(/(^\s*)|(\s*$)/g, "");
+		  }
+  
+    var title=$('#title').val();
+    if(typeof title=='string'){
+    	title=trim(title);
+    }
+    if(title==null||title==''){
+    	parent.layer.msg('请输入标题');
+    	return;
+    }
+    console.log(data);
+    data.field.Authorization=acekeystoken;
+    var files = data.field;
+    console.log(files);
+    var postType ="POST";
+    var url =ctxAppSec+'/api/WeixinVideo';
+    if(getQueryString("id")!=null){
+    	postType="PUT";
+    	url =ctxAppSec+'/api/WeixinVideo/'+getQueryString("id");
+    }
+    
+    //提交
+    $.ajax({
+        url: url,
+        data: files,
+        type: postType,
+        dataType: "json",
+        success: function(data){
+        	parent.parent.layer.msg(data.respMsg);
+            var index = parent.layer.getFrameIndex(window.name);  
+            parent.layer.close(index); 
+        	   layer.closeAll('loading');
+	     return true;
+          },
+          error: function(data){
+              try {
+                 layer.msg("请求异常");
+                 return false;
+              }catch (e) {
+                 console.log(e);
+              }
+          }
+     });
+    
+    return false;
+  });
+  
+  
+});
+
+
+</script>
+
+</body>
+</html>

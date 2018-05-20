@@ -1,0 +1,1081 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.lj.cloud.secrity.dal.WeixinUserinfoMapper">
+	<resultMap id="weixinUserinfoResult"
+		type="com.weixindev.micro.serv.common.bean.weixin.WeixinUserinfo">
+		<result property="id" column="id" jdbcType="INTEGER" />
+		<result property="nickName" column="nick_name"
+			jdbcType="VARCHAR" />
+		<result property="headImg" column="head_img" jdbcType="VARCHAR" />
+		<result property="serviceTypeInfo" column="service_type_info"
+			jdbcType="VARCHAR" />
+		<result property="verifyTypeInfo" column="verify_type_info"
+			jdbcType="INTEGER" />
+		<result property="userName" column="user_name"
+			jdbcType="VARCHAR" />
+		<result property="principalName" column="principal_name"
+			jdbcType="VARCHAR" />
+		<result property="alias" column="alias" jdbcType="VARCHAR" />
+		<result property="businessInfo" column="business_info"
+			jdbcType="VARCHAR" />
+		<result property="remarks" column="remarks" jdbcType="VARCHAR" />
+		<result property="qrcodeUrl" column="qrcode_url"
+			jdbcType="VARCHAR" />
+		<result property="signature" column="signature"
+			jdbcType="VARCHAR" />
+		<result property="authorizationInfo"
+			column="authorization_info" jdbcType="VARCHAR" />
+		<result property="authorizationAppid"
+			column="authorization_appid" jdbcType="VARCHAR" />
+		<result property="weixinGroupsId" column="weixin_groups_id"
+			jdbcType="INTEGER" />
+		<result property="starsCount" column="starsCount"
+			jdbcType="INTEGER" />
+		<result property="createBy" column="create_by"
+			jdbcType="INTEGER" />
+		<result property="createByUname" column="create_By_UName"
+			jdbcType="VARCHAR" />
+		<result property="createDate" column="create_date"
+			jdbcType="TIMESTAMP" />
+		<result property="updateBy" column="update_by"
+			jdbcType="INTEGER" />
+		<result property="updateByUname" column="update_By_Uname"
+			jdbcType="VARCHAR" />
+		<result property="updateDate" column="update_date"
+			jdbcType="TIMESTAMP" />
+		<result property="componentAppId" column="componentAppId"
+			jdbcType="VARCHAR" />
+		<result property="componentSecret" column="componentSecret"
+			jdbcType="VARCHAR" />
+		<result property="componentToken" column="componentToken"
+			jdbcType="VARCHAR" />
+		<result property="componentAesKey" column="componentAesKey"
+			jdbcType="VARCHAR" />
+		<result property="authorizerAppid" column="authorizerAppid"
+			jdbcType="VARCHAR" />
+		<result property="authorizerAccessToken"
+			column="authorizerAccessToken" jdbcType="VARCHAR" />
+		<result property="expiresIn" column="expiresIn"
+			jdbcType="VARCHAR" />
+		<result property="authorizerRefreshToken"
+			column="authorizerRefreshToken" jdbcType="VARCHAR" />
+		<result property="funcInfo" column="func_info"
+			jdbcType="VARCHAR" />
+		<result property="infoType" column="InfoType"
+			jdbcType="VARCHAR" />
+		<result property="PreAuthCode" column="PreAuthCode"
+			jdbcType="VARCHAR" />
+		<result property="AuthorizationCode" column="AuthorizationCode"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+        <![CDATA[
+       
+            id ,
+            nick_name ,
+            head_img ,
+            service_type_info ,
+            verify_type_info ,
+            user_name ,
+            principal_name ,
+            alias ,
+            business_info ,
+            remarks ,
+            qrcode_url ,
+            signature ,
+            authorization_info ,
+            authorization_appid ,
+            weixin_groups_id ,
+            starsCount ,
+            create_by ,
+            create_By_UName ,
+            create_date ,
+            update_by ,
+            update_By_Uname ,
+            update_date ,
+            componentAppId ,
+            componentSecret ,
+            componentToken ,
+            componentAesKey ,
+            authorizerAppid ,
+            authorizerAccessToken ,
+            expiresIn ,
+            authorizerRefreshToken ,
+            func_info ,
+            InfoType ,
+            PreAuthCode,
+            AuthorizationCode
+        ]]>
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="weixinUserinfoResult">
+		select
+		<include refid="Base_Column_List" />
+
+		from weixin_userinfo
+		where
+		id = #{id,jdbcType=INTEGER}
+
+	</select>
+
+	<select id="selectByAppId" resultType="java.util.HashMap">
+		select
+		
+		wu.id,
+		wu.remarks,
+		wu.qrcode_url,
+		wu.InfoType,
+		wg1.group_name as wg1_name,
+		wg2.group_name as wg2_name
+
+		from weixin_userinfo wu left join
+		weixin_groups wg1 on
+		wu.weixin_groups_id =
+		wg1.id
+		left join
+		weixin_groups wg2 on
+		wg1.parent_id = wg2.id
+		where
+		authorizerAppid = #{appId,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="selectByTyinfo" resultMap="weixinUserinfoResult">
+		select
+		authorizerAppid,
+		authorizerRefreshToken
+
+		from weixin_userinfo
+		where
+		InfoType !=
+		#{infotype,jdbcType=VARCHAR} and InfoType != ""
+
+	</select>
+
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from weixin_userinfo where
+		id =
+		#{id,jdbcType=INTEGER}
+
+	</delete>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+
+		INSERT
+		INTO weixin_userinfo (
+		id, nick_name, head_img, service_type_info,
+		verify_type_info, user_name,
+		principal_name, alias, business_info,
+		remarks, qrcode_url,
+		authorization_info, authorization_appid,
+		weixin_groups_id, starsCount,
+		create_by, create_By_UName, create_date,
+		update_by, update_By_Uname,
+		update_date, componentAppId,
+		componentSecret, componentToken,
+		componentAesKey, authorizerAppid,
+		authorizerAccessToken, expiresIn,
+		authorizerRefreshToken, func_info,
+		InfoType, PreAuthCode,AuthorizationCode
+		) VALUES (
+		#{id,jdbcType=INTEGER}, #{nickName,jdbcType=VARCHAR},
+		#{headImg,jdbcType=VARCHAR},
+		#{serviceTypeInfo,jdbcType=VARCHAR},
+		#{verifyTypeInfo,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR},
+		#{principalName,jdbcType=VARCHAR}, #{alias,jdbcType=VARCHAR},
+		#{businessInfo,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR},
+		#{qrcodeUrl,jdbcType=VARCHAR}, #{authorizationInfo,jdbcType=VARCHAR},
+		#{authorizationAppid,jdbcType=VARCHAR},
+		#{weixinGroupsId,jdbcType=INTEGER}, #{starsCount,jdbcType=INTEGER},
+		#{createBy,jdbcType=INTEGER}, #{createByUname,jdbcType=VARCHAR},
+		#{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER},
+		#{updateByUname,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP},
+		#{componentAppId,jdbcType=VARCHAR},
+		#{componentSecret,jdbcType=VARCHAR},
+		#{componentToken,jdbcType=VARCHAR},
+		#{componentAesKey,jdbcType=VARCHAR},
+		#{authorizerAppid,jdbcType=VARCHAR},
+		#{authorizerAccessToken,jdbcType=VARCHAR},
+		#{expiresIn,jdbcType=VARCHAR},
+		#{authorizerRefreshToken,jdbcType=VARCHAR},
+		#{funcInfo,jdbcType=VARCHAR}, #{infoType,jdbcType=VARCHAR},
+		#{PreAuthCode,jdbcType=VARCHAR},#{AuthorizationCode,jdbcType=VARCHAR}
+		)
+
+	</insert>
+
+	<insert id="insertSelective"
+		parameterType="com.weixindev.micro.serv.common.bean.weixin.WeixinUserinfo"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO weixin_userinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="nickName != null">
+				nick_name,
+			</if>
+			<if test="headImg != null">
+				head_img,
+			</if>
+			<if test="serviceTypeInfo != null">
+				service_type_info,
+			</if>
+			<if test="verifyTypeInfo != null">
+				verify_type_info,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="principalName != null">
+				principal_name,
+			</if>
+			<if test="alias != null">
+				alias,
+			</if>
+			<if test="businessInfo != null">
+				business_info,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="qrcodeUrl != null">
+				qrcode_url,
+			</if>
+			<if test="authorizationInfo != null">
+				authorization_info,
+			</if>
+			<if test="authorizationAppid != null">
+				authorization_appid,
+			</if>
+			<if test="weixinGroupsId != null">
+				weixin_groups_id,
+			</if>
+			<if test="starsCount != null">
+				starsCount,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="createByUname != null">
+				create_By_UName,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="updateByUname != null">
+				update_By_Uname,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="componentAppId != null">
+				componentAppId,
+			</if>
+			<if test="componentSecret != null">
+				componentSecret,
+			</if>
+			<if test="componentToken != null">
+				componentToken,
+			</if>
+			<if test="componentAesKey != null">
+				componentAesKey,
+			</if>
+			<if test="authorizerAppid != null">
+				authorizerAppid,
+			</if>
+			<if test="authorizerAccessToken != null">
+				authorizerAccessToken,
+			</if>
+			<if test="expiresIn != null">
+				expiresIn,
+			</if>
+			<if test="authorizerRefreshToken != null">
+				authorizerRefreshToken,
+			</if>
+			<if test="funcInfo != null">
+				func_info,
+			</if>
+			<if test="infoType != null">
+				InfoType,
+			</if>
+			<if test="PreAuthCode != null">
+				PreAuthCode,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="nickName != null">
+				#{nickName,jdbcType=VARCHAR},
+			</if>
+			<if test="headImg != null">
+				#{headImg,jdbcType=VARCHAR},
+			</if>
+			<if test="serviceTypeInfo != null">
+				#{serviceTypeInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="verifyTypeInfo != null">
+				#{verifyTypeInfo,jdbcType=INTEGER},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="principalName != null">
+				#{principalName,jdbcType=VARCHAR},
+			</if>
+			<if test="alias != null">
+				#{alias,jdbcType=VARCHAR},
+			</if>
+			<if test="businessInfo != null">
+				#{businessInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="qrcodeUrl != null">
+				#{qrcodeUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="authorizationInfo != null">
+				#{authorizationInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="authorizationAppid != null">
+				#{authorizationAppid,jdbcType=VARCHAR},
+			</if>
+			<if test="weixinGroupsId != null">
+				#{weixinGroupsId,jdbcType=INTEGER},
+			</if>
+			<if test="starsCount != null">
+				#{starsCount,jdbcType=INTEGER},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=INTEGER},
+			</if>
+			<if test="createByUname != null">
+				#{createByUname,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy,jdbcType=INTEGER},
+			</if>
+			<if test="updateByUname != null">
+				#{updateByUname,jdbcType=VARCHAR},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="componentAppId != null">
+				#{componentAppId,jdbcType=VARCHAR},
+			</if>
+			<if test="componentSecret != null">
+				#{componentSecret,jdbcType=VARCHAR},
+			</if>
+			<if test="componentToken != null">
+				#{componentToken,jdbcType=VARCHAR},
+			</if>
+			<if test="componentAesKey != null">
+				#{componentAesKey,jdbcType=VARCHAR},
+			</if>
+			<if test="authorizerAppid != null">
+				#{authorizerAppid,jdbcType=VARCHAR},
+			</if>
+			<if test="authorizerAccessToken != null">
+				#{authorizerAccessToken,jdbcType=VARCHAR},
+			</if>
+			<if test="expiresIn != null">
+				#{expiresIn,jdbcType=VARCHAR},
+			</if>
+			<if test="authorizerRefreshToken != null">
+				#{authorizerRefreshToken,jdbcType=VARCHAR},
+			</if>
+			<if test="funcInfo != null">
+				#{funcInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="infoType != null">
+				#{infoType,jdbcType=VARCHAR},
+			</if>
+			<if test="PreAuthCode != null">
+				#{PreAuthCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.weixindev.micro.serv.common.bean.weixin.WeixinUserinfo">
+
+		UPDATE weixin_userinfo
+
+		<set>
+			<if test="nickName != null and  nickName != ''">
+				nick_name = #{nickName,jdbcType=VARCHAR} ,
+			</if>
+			<if test="headImg != null and  headImg != ''">
+				head_img = #{headImg,jdbcType=VARCHAR} ,
+			</if>
+			<if test="serviceTypeInfo != null and  serviceTypeInfo != ''">
+				service_type_info = #{serviceTypeInfo,jdbcType=VARCHAR} ,
+			</if>
+			<if test="verifyTypeInfo != null and  verifyTypeInfo != ''">
+				verify_type_info = #{verifyTypeInfo,jdbcType=INTEGER} ,
+			</if>
+			<if test="userName != null and  userName != ''">
+				user_name = #{userName,jdbcType=VARCHAR} ,
+			</if>
+			<if test="principalName != null and  principalName != ''">
+				principal_name = #{principalName,jdbcType=VARCHAR} ,
+			</if>
+			<if test="alias != null and  alias != ''">
+				alias = #{alias,jdbcType=VARCHAR} ,
+			</if>
+			<if test="businessInfo != null and  businessInfo != ''">
+				business_info = #{businessInfo,jdbcType=VARCHAR} ,
+			</if>
+			<if test="remarks != null and  remarks != ''">
+				remarks = #{remarks,jdbcType=VARCHAR} ,
+			</if>
+			<if test="qrcodeUrl != null and  qrcodeUrl != ''">
+				qrcode_url = #{qrcodeUrl,jdbcType=VARCHAR} ,
+			</if>
+			<if test="signature != null and  signature != ''">
+				signature = #{signature,jdbcType=VARCHAR} ,
+			</if>
+			<if test="authorizationInfo != null and  authorizationInfo != ''">
+				authorization_info =
+				#{authorizationInfo,jdbcType=VARCHAR} ,
+			</if>
+			<if
+				test="authorizationAppid != null and  authorizationAppid != ''">
+				authorization_appid = #{authorizationAppid,jdbcType=VARCHAR} ,
+			</if>
+			<if test="weixinGroupsId != null and  weixinGroupsId != ''">
+				weixin_groups_id = #{weixinGroupsId,jdbcType=INTEGER} ,
+			</if>
+			<if test="starsCount != null and  starsCount != ''">
+				starsCount = #{starsCount,jdbcType=INTEGER} ,
+			</if>
+			<if test="createBy != null and  createBy != ''">
+				create_by = #{createBy,jdbcType=INTEGER} ,
+			</if>
+			<if test="createByUname != null and  createByUname != ''">
+				create_By_UName = #{createByUname,jdbcType=VARCHAR} ,
+			</if>
+			<if test="createDate != null and  createDate != ''">
+				create_date = #{createDate,jdbcType=TIMESTAMP} ,
+			</if>
+			<if test="updateBy != null and  updateBy != ''">
+				update_by = #{updateBy,jdbcType=INTEGER} ,
+			</if>
+			<if test="updateByUname != null and  updateByUname != ''">
+				update_By_Uname = #{updateByUname,jdbcType=VARCHAR} ,
+			</if>
+			<if test="updateDate != null and  updateDate != ''">
+				update_date = #{updateDate,jdbcType=TIMESTAMP} ,
+			</if>
+			<if test="componentAppId != null and  componentAppId != ''">
+				componentAppId = #{componentAppId,jdbcType=VARCHAR} ,
+			</if>
+			<if test="componentSecret != null and  componentSecret != ''">
+				componentSecret = #{componentSecret,jdbcType=VARCHAR} ,
+			</if>
+			<if test="componentToken != null and  componentToken != ''">
+				componentToken = #{componentToken,jdbcType=VARCHAR} ,
+			</if>
+			<if test="componentAesKey != null and  componentAesKey != ''">
+				componentAesKey = #{componentAesKey,jdbcType=VARCHAR} ,
+			</if>
+			<if test="authorizerAppid != null and  authorizerAppid != ''">
+				authorizerAppid = #{authorizerAppid,jdbcType=VARCHAR} ,
+			</if>
+			<if
+				test="authorizerAccessToken != null and  authorizerAccessToken != ''">
+				authorizerAccessToken =
+				#{authorizerAccessToken,jdbcType=VARCHAR} ,
+			</if>
+			<if test="expiresIn != null and  expiresIn != ''">
+				expiresIn = #{expiresIn,jdbcType=VARCHAR} ,
+			</if>
+			<if
+				test="authorizerRefreshToken != null and  authorizerRefreshToken != ''">
+				authorizerRefreshToken =
+				#{authorizerRefreshToken,jdbcType=VARCHAR}
+				,
+			</if>
+			<if test="funcInfo != null and  funcInfo != ''">
+				func_info = #{funcInfo,jdbcType=VARCHAR} ,
+			</if>
+			<if test="infoType != null and  infoType != ''">
+				InfoType = #{infoType,jdbcType=VARCHAR} ,
+			</if>
+			<if test="PreAuthCode != null and  PreAuthCode != ''">
+				PreAuthCode = #{PreAuthCode,jdbcType=VARCHAR} ,
+			</if>
+			<if test="AuthorizationCode != null and  AuthorizationCode != ''">
+				AuthorizationCode = #{AuthorizationCode,jdbcType=VARCHAR}
+				,
+			</if>
+
+		</set>
+		WHERE
+		id = #{id,jdbcType=INTEGER}
+
+	</update>
+
+	<update id="updateByAppIdSelective"
+		parameterType="com.weixindev.micro.serv.common.bean.weixin.WeixinUserinfo">
+
+		UPDATE weixin_userinfo
+
+		<set>
+			<if test="nickName != null and  nickName != ''">
+				nick_name = #{nickName,jdbcType=VARCHAR} ,
+			</if>
+			<if test="headImg != null and  headImg != ''">
+				head_img = #{headImg,jdbcType=VARCHAR} ,
+			</if>
+			<if test="serviceTypeInfo != null and  serviceTypeInfo != ''">
+				service_type_info = #{serviceTypeInfo,jdbcType=VARCHAR} ,
+			</if>
+			<if test="verifyTypeInfo != null and  verifyTypeInfo != ''">
+				verify_type_info = #{verifyTypeInfo,jdbcType=INTEGER} ,
+			</if>
+			<if test="userName != null and  userName != ''">
+				user_name = #{userName,jdbcType=VARCHAR} ,
+			</if>
+			<if test="principalName != null and  principalName != ''">
+				principal_name = #{principalName,jdbcType=VARCHAR} ,
+			</if>
+			<if test="alias != null and  alias != ''">
+				alias = #{alias,jdbcType=VARCHAR} ,
+			</if>
+			<if test="businessInfo != null and  businessInfo != ''">
+				business_info = #{businessInfo,jdbcType=VARCHAR} ,
+			</if>
+			<if test="remarks != null and  remarks != ''">
+				remarks = #{remarks,jdbcType=VARCHAR} ,
+			</if>
+			<if test="qrcodeUrl != null and  qrcodeUrl != ''">
+				qrcode_url = #{qrcodeUrl,jdbcType=VARCHAR} ,
+			</if>
+			<if test="signature != null and  signature != ''">
+				signature = #{signature,jdbcType=VARCHAR} ,
+			</if>
+			<if test="authorizationInfo != null and  authorizationInfo != ''">
+				authorization_info =
+				#{authorizationInfo,jdbcType=VARCHAR} ,
+			</if>
+			<if
+				test="authorizationAppid != null and  authorizationAppid != ''">
+				authorization_appid = #{authorizationAppid,jdbcType=VARCHAR} ,
+			</if>
+			<if test="weixinGroupsId != null and  weixinGroupsId != ''">
+				weixin_groups_id = #{weixinGroupsId,jdbcType=INTEGER} ,
+			</if>
+			<if test="starsCount != null and  starsCount != ''">
+				starsCount = #{starsCount,jdbcType=INTEGER} ,
+			</if>
+			<if test="createBy != null and  createBy != ''">
+				create_by = #{createBy,jdbcType=INTEGER} ,
+			</if>
+			<if test="createByUname != null and  createByUname != ''">
+				create_By_UName = #{createByUname,jdbcType=VARCHAR} ,
+			</if>
+			<if test="createDate != null and  createDate != ''">
+				create_date = #{createDate,jdbcType=TIMESTAMP} ,
+			</if>
+			<if test="updateBy != null and  updateBy != ''">
+				update_by = #{updateBy,jdbcType=INTEGER} ,
+			</if>
+			<if test="updateByUname != null and  updateByUname != ''">
+				update_By_Uname = #{updateByUname,jdbcType=VARCHAR} ,
+			</if>
+			<if test="updateDate != null and  updateDate != ''">
+				update_date = #{updateDate,jdbcType=TIMESTAMP} ,
+			</if>
+			<if test="componentAppId != null and  componentAppId != ''">
+				componentAppId = #{componentAppId,jdbcType=VARCHAR} ,
+			</if>
+			<if test="componentSecret != null and  componentSecret != ''">
+				componentSecret = #{componentSecret,jdbcType=VARCHAR} ,
+			</if>
+			<if test="componentToken != null and  componentToken != ''">
+				componentToken = #{componentToken,jdbcType=VARCHAR} ,
+			</if>
+			<if test="componentAesKey != null and  componentAesKey != ''">
+				componentAesKey = #{componentAesKey,jdbcType=VARCHAR} ,
+			</if>
+			<!-- <if test="authorizerAppid != null and authorizerAppid != ''"> authorizerAppid 
+				= #{authorizerAppid,jdbcType=VARCHAR} , </if> -->
+			<if
+				test="authorizerAccessToken != null and  authorizerAccessToken != ''">
+				authorizerAccessToken =
+				#{authorizerAccessToken,jdbcType=VARCHAR} ,
+			</if>
+			<if test="expiresIn != null and  expiresIn != ''">
+				expiresIn = #{expiresIn,jdbcType=VARCHAR} ,
+			</if>
+			<if
+				test="authorizerRefreshToken != null and  authorizerRefreshToken != ''">
+				authorizerRefreshToken =
+				#{authorizerRefreshToken,jdbcType=VARCHAR}
+				,
+			</if>
+			<if test="funcInfo != null and  funcInfo != ''">
+				func_info = #{funcInfo,jdbcType=VARCHAR} ,
+			</if>
+			<if test="infoType != null and  infoType != ''">
+				InfoType = #{infoType,jdbcType=VARCHAR} ,
+			</if>
+			<if test="PreAuthCode != null and  PreAuthCode != ''">
+				PreAuthCode = #{PreAuthCode,jdbcType=VARCHAR} ,
+			</if>
+			<if test="AuthorizationCode != null and  AuthorizationCode != ''">
+				AuthorizationCode = #{AuthorizationCode,jdbcType=VARCHAR}
+				,
+			</if>
+
+		</set>
+		WHERE
+		authorizerAppid = #{authorizerAppid,jdbcType=VARCHAR}
+
+	</update>
+
+	<update id="updateByPrimaryKey">
+
+		UPDATE weixin_userinfo SET
+		nick_name = #{nickName} ,
+		head_img = #{headImg} , service_type_info =
+		#{serviceTypeInfo} ,
+		verify_type_info = #{verifyTypeInfo} , user_name
+		= #{userName} ,
+		principal_name = #{principalName} , alias = #{alias} ,
+		business_info =
+		#{businessInfo} , remarks = #{remarks} , qrcode_url =
+		#{qrcodeUrl} ,
+		authorization_info = #{authorizationInfo} ,
+		authorization_appid =
+		#{authorizationAppid} , weixin_groups_id =
+		#{weixinGroupsId} ,
+		starsCount = #{starsCount} , create_by =
+		#{createBy} , create_By_UName
+		= #{createByUname} , create_date =
+		#{createDate} , update_by =
+		#{updateBy} , update_By_Uname =
+		#{updateByUname} , update_date =
+		#{updateDate} , componentAppId =
+		#{componentAppId} , componentSecret =
+		#{componentSecret} ,
+		componentToken = #{componentToken} ,
+		componentAesKey =
+		#{componentAesKey} , authorizerAppid =
+		#{authorizerAppid} ,
+		authorizerAccessToken = #{authorizerAccessToken} ,
+		expiresIn =
+		#{expiresIn} , authorizerRefreshToken =
+		#{authorizerRefreshToken} ,
+		func_info = #{funcInfo} , InfoType =
+		#{infoType}, PreAuthCode = #{PreAuthCode}
+		WHERE
+		id =
+		#{id,jdbcType=INTEGER}
+
+
+	</update>
+
+	<update id="WeixinGroupsBatchMove">
+
+		UPDATE weixin_userinfo SET
+		weixin_groups_id =
+		#{weixinGroupsId,jdbcType=INTEGER}
+		WHERE
+		id =
+		#{movieUseIds,jdbcType=VARCHAR}
+
+
+	</update>
+
+	<select id="select" resultMap="weixinUserinfoResult">
+		select
+		<include refid="Base_Column_List" />
+
+		from weixin_userinfo WHERE 1=1
+
+		and id = #{id,jdbcType=INTEGER}
+		and
+		nick_name = #{nickName,jdbcType=VARCHAR}
+		and head_img =
+		#{headImg,jdbcType=VARCHAR}
+		and service_type_info =
+		#{serviceTypeInfo,jdbcType=VARCHAR}
+		and verify_type_info =
+		#{verifyTypeInfo,jdbcType=INTEGER}
+		and user_name =
+		#{userName,jdbcType=VARCHAR}
+		and principal_name =
+		#{principalName,jdbcType=VARCHAR}
+		and alias = #{alias,jdbcType=VARCHAR}
+		and business_info = #{businessInfo,jdbcType=VARCHAR}
+		and remarks =
+		#{remarks,jdbcType=VARCHAR}
+		and qrcode_url =
+		#{qrcodeUrl,jdbcType=VARCHAR}
+		and authorization_info =
+		#{authorizationInfo,jdbcType=VARCHAR}
+		and authorization_appid =
+		#{authorizationAppid,jdbcType=VARCHAR}
+		and weixin_groups_id =
+		#{weixinGroupsId,jdbcType=INTEGER}
+		and starsCount =
+		#{starsCount,jdbcType=INTEGER}
+		and create_by =
+		#{createBy,jdbcType=INTEGER}
+		and create_By_UName =
+		#{createByUname,jdbcType=VARCHAR}
+		and create_date =
+		#{createDate,jdbcType=TIMESTAMP}
+		and update_by =
+		#{updateBy,jdbcType=INTEGER}
+		and update_By_Uname =
+		#{updateByUname,jdbcType=VARCHAR}
+		and update_date =
+		#{updateDate,jdbcType=TIMESTAMP}
+		and componentAppId =
+		#{componentAppId,jdbcType=VARCHAR}
+		and componentSecret =
+		#{componentSecret,jdbcType=VARCHAR}
+		and componentToken =
+		#{componentToken,jdbcType=VARCHAR}
+		and componentAesKey =
+		#{componentAesKey,jdbcType=VARCHAR}
+		and authorizerAppid =
+		#{authorizerAppid,jdbcType=VARCHAR}
+		and authorizerAccessToken =
+		#{authorizerAccessToken,jdbcType=VARCHAR}
+		and expiresIn =
+		#{expiresIn,jdbcType=VARCHAR}
+		and authorizerRefreshToken =
+		#{authorizerRefreshToken,jdbcType=VARCHAR}
+		and func_info =
+		#{funcInfo,jdbcType=VARCHAR}
+		and InfoType =
+		#{infoType,jdbcType=VARCHAR}
+		and PreAuthCode =
+		#{PreAuthCode,jdbcType=VARCHAR}
+
+	</select>
+
+	<select id="selectByExample" resultMap="weixinUserinfoResult">
+		select
+		<include refid="Base_Column_List" />
+		from weixin_userinfo WHERE 1=1
+
+		<if test="id != null and  id != ''">
+			and id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="nickName != null and  nickName != ''">
+			and nick_name = #{nickName,jdbcType=VARCHAR}
+		</if>
+		<if test="headImg != null and  headImg != ''">
+			and head_img = #{headImg,jdbcType=VARCHAR}
+		</if>
+		<if test="serviceTypeInfo != null and  serviceTypeInfo != ''">
+			and service_type_info =
+			#{serviceTypeInfo,jdbcType=VARCHAR}
+		</if>
+		<if test="verifyTypeInfo != null and  verifyTypeInfo != ''">
+			and verify_type_info = #{verifyTypeInfo,jdbcType=INTEGER}
+		</if>
+		<if test="userName != null and  userName != ''">
+			and user_name = #{userName,jdbcType=VARCHAR}
+		</if>
+		<if test="principalName != null and  principalName != ''">
+			and principal_name = #{principalName,jdbcType=VARCHAR}
+		</if>
+		<if test="alias != null and  alias != ''">
+			and alias = #{alias,jdbcType=VARCHAR}
+		</if>
+		<if test="businessInfo != null and  businessInfo != ''">
+			and business_info = #{businessInfo,jdbcType=VARCHAR}
+		</if>
+		<if test="remarks != null and  remarks != ''">
+			and remarks = #{remarks,jdbcType=VARCHAR}
+		</if>
+		<if test="qrcodeUrl != null and  qrcodeUrl != ''">
+			and qrcode_url = #{qrcodeUrl,jdbcType=VARCHAR}
+		</if>
+		<if test="authorizationInfo != null and  authorizationInfo != ''">
+			and authorization_info =
+			#{authorizationInfo,jdbcType=VARCHAR}
+		</if>
+		<if test="authorizationAppid != null and  authorizationAppid != ''">
+			and authorization_appid =
+			#{authorizationAppid,jdbcType=VARCHAR}
+		</if>
+		<if test="weixinGroupsId != null and  weixinGroupsId != ''">
+			and weixin_groups_id = #{weixinGroupsId,jdbcType=INTEGER}
+		</if>
+		<if test="starsCount != null and  starsCount != ''">
+			and starsCount = #{starsCount,jdbcType=INTEGER}
+		</if>
+		<if test="createBy != null and  createBy != ''">
+			and create_by = #{createBy,jdbcType=INTEGER}
+		</if>
+		<if test="createByUname != null and  createByUname != ''">
+			and create_By_UName = #{createByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="createDate != null and  createDate != ''">
+			and create_date = #{createDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateBy != null and  updateBy != ''">
+			and update_by = #{updateBy,jdbcType=INTEGER}
+		</if>
+		<if test="updateByUname != null and  updateByUname != ''">
+			and update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="updateDate != null and  updateDate != ''">
+			and update_date = #{updateDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="componentAppId != null and  componentAppId != ''">
+			and componentAppId = #{componentAppId,jdbcType=VARCHAR}
+		</if>
+		<if test="componentSecret != null and  componentSecret != ''">
+			and componentSecret = #{componentSecret,jdbcType=VARCHAR}
+		</if>
+		<if test="componentToken != null and  componentToken != ''">
+			and componentToken = #{componentToken,jdbcType=VARCHAR}
+		</if>
+		<if test="componentAesKey != null and  componentAesKey != ''">
+			and componentAesKey = #{componentAesKey,jdbcType=VARCHAR}
+		</if>
+		<if test="authorizerAppid != null and  authorizerAppid != ''">
+			and authorizerAppid = #{authorizerAppid,jdbcType=VARCHAR}
+		</if>
+		<if
+			test="authorizerAccessToken != null and  authorizerAccessToken != ''">
+			and authorizerAccessToken =
+			#{authorizerAccessToken,jdbcType=VARCHAR}
+		</if>
+		<if test="expiresIn != null and  expiresIn != ''">
+			and expiresIn = #{expiresIn,jdbcType=VARCHAR}
+		</if>
+		<if
+			test="authorizerRefreshToken != null and  authorizerRefreshToken != ''">
+			and authorizerRefreshToken =
+			#{authorizerRefreshToken,jdbcType=VARCHAR}
+		</if>
+		<if test="funcInfo != null and  funcInfo != ''">
+			and func_info = #{funcInfo,jdbcType=VARCHAR}
+		</if>
+		<if test="infoType != null and  infoType != ''">
+			and InfoType = #{infoType,jdbcType=VARCHAR}
+		</if>
+		<if test="PreAuthCode != null and  PreAuthCode != ''">
+			and PreAuthCode = #{PreAuthCode,jdbcType=VARCHAR}
+		</if>
+
+	</select>
+
+	<select id="selectByPageExample" resultType="java.util.HashMap">
+		select
+		wu.id ,
+		nick_name ,
+		head_img ,
+		service_type_info ,
+		verify_type_info
+		,
+		user_name ,
+		principal_name ,
+		alias ,
+		business_info ,
+		wu.remarks ,
+		qrcode_url ,
+		signature ,
+		authorization_info ,
+		authorization_appid ,
+		weixin_groups_id ,
+		starsCount ,
+		wu.create_by ,
+		wu.create_By_UName ,
+		wu.create_date ,
+		wu.update_by ,
+		wu.update_By_Uname ,
+		wu.update_date ,
+		componentAppId ,
+		componentSecret ,
+		componentToken ,
+		componentAesKey ,
+		authorizerAppid ,
+		authorizerAccessToken ,
+		expiresIn ,
+		authorizerRefreshToken ,
+		func_info ,
+		InfoType ,
+		PreAuthCode,
+		wg.group_name,
+		wg.parent_id
+		from weixin_userinfo wu
+		left join
+		weixin_groups wg on
+		wu.weixin_groups_id = wg.id
+		WHERE 1=1
+
+		<if test="id != null and  id != ''">
+			and wu.id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="nickName != null and  nickName != ''">
+			and nick_name = #{nickName,jdbcType=VARCHAR}
+		</if>
+		<if test="headImg != null and  headImg != ''">
+			and head_img = #{headImg,jdbcType=VARCHAR}
+		</if>
+		<if test="serviceTypeInfo != null and  serviceTypeInfo != ''">
+			and service_type_info =
+			#{serviceTypeInfo,jdbcType=VARCHAR}
+		</if>
+		<if test="verifyTypeInfo != null and  verifyTypeInfo != ''">
+			and verify_type_info = #{verifyTypeInfo,jdbcType=INTEGER}
+		</if>
+		<if test="userName != null and  userName != ''">
+			and user_name = #{userName,jdbcType=VARCHAR}
+		</if>
+		<if test="principalName != null and  principalName != ''">
+			and principal_name = #{principalName,jdbcType=VARCHAR}
+		</if>
+		<if test="alias != null and  alias != ''">
+			and alias = #{alias,jdbcType=VARCHAR}
+		</if>
+		<if test="businessInfo != null and  businessInfo != ''">
+			and business_info = #{businessInfo,jdbcType=VARCHAR}
+		</if>
+		<if test="remarks != null and  remarks != ''">
+			and wu.remarks = #{remarks,jdbcType=VARCHAR}
+		</if>
+		<if test="qrcodeUrl != null and  qrcodeUrl != ''">
+			and qrcode_url = #{qrcodeUrl,jdbcType=VARCHAR}
+		</if>
+		<if test="authorizationInfo != null and  authorizationInfo != ''">
+			and authorization_info =
+			#{authorizationInfo,jdbcType=VARCHAR}
+		</if>
+		<if test="authorizationAppid != null and  authorizationAppid != ''">
+			and authorization_appid =
+			#{authorizationAppid,jdbcType=VARCHAR}
+		</if>
+		<if test="weixinGroupsId != null and  weixinGroupsId != ''">
+			and (weixin_groups_id = #{weixinGroupsId,jdbcType=INTEGER}
+			or wg.parent_id = #{weixinGroupsId,jdbcType=INTEGER})
+		</if>
+		<if test="starsCount != null and  starsCount != ''">
+			and starsCount = #{starsCount,jdbcType=INTEGER}
+		</if>
+		<if test="createBy != null and  createBy != ''">
+			and wu.create_by = #{createBy,jdbcType=INTEGER}
+		</if>
+		<if test="createByUname != null and  createByUname != ''">
+			and wu.create_By_UName = #{createByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="createDate != null and  createDate != ''">
+			and wu.create_date = #{createDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="updateBy != null and  updateBy != ''">
+			and wu.update_by = #{updateBy,jdbcType=INTEGER}
+		</if>
+		<if test="updateByUname != null and  updateByUname != ''">
+			and wu.update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+		</if>
+		<if test="updateDate != null and  updateDate != ''">
+			and wu.update_date = #{updateDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="componentAppId != null and  componentAppId != ''">
+			and componentAppId = #{componentAppId,jdbcType=VARCHAR}
+		</if>
+		<if test="componentSecret != null and  componentSecret != ''">
+			and componentSecret = #{componentSecret,jdbcType=VARCHAR}
+		</if>
+		<if test="componentToken != null and  componentToken != ''">
+			and componentToken = #{componentToken,jdbcType=VARCHAR}
+		</if>
+		<if test="componentAesKey != null and  componentAesKey != ''">
+			and componentAesKey = #{componentAesKey,jdbcType=VARCHAR}
+		</if>
+		<if test="authorizerAppid != null and  authorizerAppid != ''">
+			and authorizerAppid = #{authorizerAppid,jdbcType=VARCHAR}
+		</if>
+		<if
+			test="authorizerAccessToken != null and  authorizerAccessToken != ''">
+			and authorizerAccessToken =
+			#{authorizerAccessToken,jdbcType=VARCHAR}
+		</if>
+		<if test="expiresIn != null and  expiresIn != ''">
+			and expiresIn = #{expiresIn,jdbcType=VARCHAR}
+		</if>
+		<if
+			test="authorizerRefreshToken != null and  authorizerRefreshToken != ''">
+			and authorizerRefreshToken =
+			#{authorizerRefreshToken,jdbcType=VARCHAR}
+		</if>
+		<if test="funcInfo != null and  funcInfo != ''">
+			and func_info = #{funcInfo,jdbcType=VARCHAR}
+		</if>
+
+		and <![CDATA[ InfoType <> "unauthorized" ]]>
+
+
+		<if test="PreAuthCode != null and  PreAuthCode != ''">
+			and PreAuthCode = #{PreAuthCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="keyword != null and  keyword != ''">
+			and nick_name LIKE
+			CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
+		</if>
+
+		<if test="ids != null and  ids != ''">
+			and wg.id in (${ids})
+		</if>
+		order by wu.id desc
+
+	</select>
+
+	<update id="updateByPrimaryByWeixinGroupsId"
+		parameterType="java.util.HashMap">
+
+		UPDATE weixin_userinfo
+
+		<set>
+			<if
+				test="weixinGroupsRoootId != null and  weixinGroupsRoootId != ''">
+				weixin_groups_id = #{weixinGroupsRoootId,jdbcType=INTEGER} ,
+			</if>
+			<if test="updateBy != null and  updateBy != ''">
+				update_by = #{updateBy,jdbcType=INTEGER} ,
+			</if>
+			<if test="updateByUname != null and  updateByUname != ''">
+				update_By_Uname = #{updateByUname,jdbcType=VARCHAR} ,
+			</if>
+			<if test="updateDate != null and  updateDate != ''">
+				update_date = #{updateDate,jdbcType=TIMESTAMP} ,
+			</if>
+
+		</set>
+		WHERE
+		weixin_groups_id = #{weixinGroupsId,jdbcType=INTEGER}
+
+	</update>
+	<select id="selectAuthorizerAppidByPrimaryKey" parameterType="int" resultType="string">
+		select authorizerAppid
+		from weixin_userinfo
+		where id=#{id}
+	</select>
+</mapper>
+
