@@ -85,7 +85,7 @@
                     loginNo=data.loginNo;
                     //console.log(token);
                     $.cookie('bearcktkaeskey', token, { expires: 1, path: '/' });
-                    location.href = ctxApp + '/index.html?loginNo='+loginNo;
+                    location.href = '/index.html?loginNo='+loginNo;
                 }else{
                     //console.log(JSON.stringify(data, null, 4));
                     alert("账号或密码输入不正确");

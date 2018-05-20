@@ -201,7 +201,7 @@ layui.use(['laypage', 'table', 'element', 'layer','laydate','form'], function(){
     table.render({
         elem: '#datagrid'
         ,url:ctxAppSec+'/api/WeixinAudio?Authorization='+acekeystoken
-        ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+        ,cellMinWidth: 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
 
         ,cols: [[
             {type:'checkbox'},
@@ -248,6 +248,7 @@ layui.use(['laypage', 'table', 'element', 'layer','laydate','form'], function(){
                            	where:{
                            	  "createDateBegin":$("#createDateBegin").val(),
                               "createDateEnd":$("#createDateEnd").val(),
+                              "categoryId":$("#categoryId").val()
                            	},page: {
                            	    curr: 1 //重新从第 1 页开始
                            	  }

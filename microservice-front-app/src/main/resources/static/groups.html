@@ -176,7 +176,7 @@
 			}
 
 			.ipt_box input {
-				height: 36px;
+
 				border-radius: 3px;
 				padding: 0 5px;
 				background: #f5f5f5;
@@ -274,7 +274,7 @@
 		            
 		                 var input_checkbox = ' <input type="text" value="'+dataTmp.groupName+'"  disabled="disabled"/>';
 		                 html += input_checkbox;
-		            $("#ipt_box").html(html);
+		            $("#ipt_box p").html(html);
 		        },
 		        error: function (data) {
 		            try {
@@ -293,10 +293,16 @@
 			        if(obj[k].checked)
 			            check_val.push(obj[k].value);
 			    }
-				
-			   /*  var params = {  
-			    		urids:check_val 
-			         };   */
+
+
+				if (check_val.length==0) {
+					layer.msg("至少选择一项权限");
+					return false;
+				}
+
+				/*  var params = {
+                         urids:check_val
+                      };   */
 			    var params = 'urids=' + check_val.join(",")
 			    //alert(JSON.stringify(params))
 				//alert(JSON.stringify(params));

@@ -247,6 +247,21 @@
 			        if(obj[k].checked)
 			            check_val.push(obj[k].value);
 			    }
+
+
+				var groupName = $("#groupName").val();
+				if (groupName == '') {
+					layer.msg("请输入分组名称");
+					return false;
+				}
+				if (check_val.length==0) {
+					layer.msg("至少选择一项权限");
+					return false;
+				}
+
+
+
+
 			    var urids=check_val.join(",");
 			    var groupName = $("#groupName").val();
 				var  url = ctxAppSec + '/api/SecGroupsAdd'  + '?Authorization=' + acekeystoken;
