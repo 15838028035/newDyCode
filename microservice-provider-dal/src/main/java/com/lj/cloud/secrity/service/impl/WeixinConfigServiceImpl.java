@@ -64,4 +64,9 @@ public class WeixinConfigServiceImpl  implements WeixinConfigService{
 		return weixinConfigMapper.selectByExample(query);
 	}
 
+	@Override
+	public List<Map<String,Object>> selectVideoCate() {
+		return weixinConfigMapper.selectVideoCate();
+	}
+
 }

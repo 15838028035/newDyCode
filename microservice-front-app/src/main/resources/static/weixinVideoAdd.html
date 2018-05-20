@@ -1,5 +1,4 @@
 ﻿
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -35,6 +34,8 @@
 			font-size: 12px;
 			color: #999;
 		}
+		#tags{width:80%;margin-bottom:20px;margin-top:0px}
+		#tags>div{width:100px}
 	</style>
 </head>
 
@@ -55,42 +56,21 @@
             <video id="headImgPic"  controls="controls">  
 			    your browser does not support the video tag  
 			</video>
-			<p class="amentit">上传视频文件不能超过10M</p>
+			<p class="amentit">上传视频文件不能超过500M</p>
           	<button type="button" class="layui-btn" id="upload"><i class="layui-icon">&#xe67c;</i>选择文件</button> 
         </div>
      </div>
  	
-     <div class="layui-form-radio">
+ 	 <div class="layui-form-item">
+        <label class="layui-form-label">分类</label>
+        <div class="layui-input-block">
+        <select name="categoryId" id="categoryId" lay-filter="aihao">
+      </select>
+        </div>
+     </div>
+     <div class="layui-form-item">
         <label class="layui-form-label">标签</label>
-        <div class="layui-input-radio" id="tags">
-        <input type="radio" name="tag" value="电影" title="电影">
-        <input type="radio" name="tag" value="电视剧" title="电视剧">
-        <input type="radio" name="tag" value="动漫" title="动漫">
-        <input type="radio" name="tag" value="新闻" title="新闻">
-        <input type="radio" name="tag" value="娱乐" title="娱乐">
-        <input type="radio" name="tag" value="综艺" title="综艺">
-        <input type="radio" name="tag" value="搞笑" title="搞笑">
-        <input type="radio" name="tag" value="体育" title="体育">
-        <input type="radio" name="tag" value="音乐" title="音乐">
-        <input type="radio" name="tag" value="舞蹈" title="舞蹈">
-       <input type="radio" name="tag" value="广场舞" title="广场舞">
-        <input type="radio" name="tag" value="少儿" title="少儿">
-        <input type="radio" name="tag" value="游戏" title="游戏">
-        <input type="radio" name="tag" value="财经" title="财经">
-        <input type="radio" name="tag" value="军事" title="军事">
-        <input type="radio" name="tag" value="美食" title="美食">
-        <input type="radio" name="tag" value="生活" title="生活">
-        <input type="radio" name="tag" value="时尚" title="时尚">
-        <input type="radio" name="tag" value="育儿" title="育儿">
-        <input type="radio" name="tag" value="旅游" title="旅游">
-        <input type="radio" name="tag" value="汽车" title="汽车">
-        <input type="radio" name="tag" value="纪录片" title="纪录片">
-        <input type="radio" name="tag" value="教育" title="教育">
-        <input type="radio" name="tag" value="文化历史" title="文化历史">
-        <input type="radio" name="tag" value="数码" title="数码">
-        <input type="radio" name="tag" value="科学" title="科学">
-        <input type="radio" name="tag" value="科技" title="科技">
-        <input type="radio" name="tag" value="其他" title="其他">
+        <div class="layui-input-block" id="tags">
         </div>
      </div>
  	 <div class="layui-form-item">
@@ -123,15 +103,16 @@ if (acekeystoken == "") {
     parent.location.href = ctxApp + '/login.html';
 }
 
+
 layui.use(['form', 'layedit', 'laydate','upload'], function(){
 	var upload = layui.upload;
-	isUpload=false;
+
     //执行上传
     var uploadInst = upload.render({
         elem: '#upload' //绑定元素
         ,url: ctxApp+'/file/upload' //上传接口
         ,method: 'POST'
-        ,accept: 'video'
+        ,accept: 'file'
         ,size:10240
         ,before: function(obj){
             layer.load();
@@ -139,6 +120,7 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
         ,done: function(res){//上传完毕回调
             layer.closeAll('loading');
             layer.msg(res.msg);
+            isUpload=true;
             var result = ctxApp+"/" +res.imgUrl;
             $("#headImg").val(result);
             $("#headImgPic").attr("src",result);
@@ -158,7 +140,11 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
   
   $("#id").val(getQueryString("id"));
   
+  
 
+  initConfigSelect(vido_category,"categoryId", null);
+
+  initConfigCheckbox(vido_tag, "tag", "tags");
   
   form.render('radio'); //刷新select选择框渲染
   form.render('select'); //刷新select选择框渲染
@@ -169,33 +155,35 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
   /*   layer.alert(JSON.stringify(data.field), {
       title: '最终的提交信息'
     }) */
-	   if(!isUpload){
-	    	parent.layer.msg('请先上传视频');
-	    	return;
-	    }
-	  function trim(str){
-		  return str.replace(/(^\s*)|(\s*$)/g, "");
-		  }
-  
-    var title=$('#title').val();
-    if(typeof title=='string'){
-    	title=trim(title);
-    }
-    if(title==null||title==''){
-    	parent.layer.msg('请输入标题');
-    	return;
-    }
-    console.log(data);
+
+
+      var title = $("#title").val();
+      var headImg = $("#headImg").val();
+
+
+      if (title == '') {
+          layer.msg("请输入标题");
+          return false;
+      }
+      if (headImg == '') {
+          layer.msg("请上传视频");
+          return false;
+      }
+    
     data.field.Authorization=acekeystoken;
     var files = data.field;
-    console.log(files);
     var postType ="POST";
     var url =ctxAppSec+'/api/WeixinVideo';
     if(getQueryString("id")!=null){
     	postType="PUT";
     	url =ctxAppSec+'/api/WeixinVideo/'+getQueryString("id");
     }
-    
+
+
+
+
+
+
     //提交
     $.ajax({
         url: url,
@@ -203,10 +191,10 @@ layui.use(['form', 'layedit', 'laydate','upload'], function(){
         type: postType,
         dataType: "json",
         success: function(data){
-        	parent.parent.layer.msg(data.respMsg);
-            var index = parent.layer.getFrameIndex(window.name);  
-            parent.layer.close(index); 
+        	 var index = parent.layer.getFrameIndex(window.name);  
+             parent.layer.close(index);
         	   layer.closeAll('loading');
+                 layer.msg(data.respMsg);
 	     return true;
           },
           error: function(data){

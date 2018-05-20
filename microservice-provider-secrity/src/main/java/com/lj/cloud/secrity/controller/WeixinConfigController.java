@@ -140,5 +140,12 @@ public class WeixinConfigController extends BaseController{
 		return retMap;
 	}
 	
+	@ApiOperation(value = "查询视频分类")
+	@RequestMapping(value="/api/WeixinConfig/forList", method = RequestMethod.GET)
+	public  List<Map<String,Object>> forList(){
+		List<Map<String,Object>> retMap =weixinConfigService.selectVideoCate();
+		return retMap;
+	}
+	
 }
 

@@ -801,8 +801,7 @@
                 <script type="text/pain" id="deitor" name="articleContentEditor"></script>
                 <div class="bootm">
                     <div class="yuanwen">
-                        <p>原文链接<input id="originUrl" style="width: 400px;height: 35px;margin-left: 20px;"
-                                      name="originUrl" type="text"></p>
+                        <p>原文链接<input id="originUrl" style="width: 400px;height: 35px;margin-left: 20px;" name="originUrl" type="text" placeholder="http://或https://开头"></p>
                         <p>原创：未声明</p>
                         <a class="sehnmbtn" href="#"><label><input name="yuanchuang" value="1"
                                                                    type="checkbox">申明原创</label></a>
@@ -1459,7 +1458,7 @@ function getImg() {
                 
                 //选择图片
 
-                $('body .imglistBox ul li').on('click',function () {
+                $('#imglists li').on('click',function () {
                 	if ($(this).hasClass('cur')) {
                         $(this).removeClass('cur');
                     } else {
@@ -1609,7 +1608,7 @@ function getImg() {
                 
                 //选择图片
 
-                $('.imglistBox ul li').on('click',function () {
+                $('#fmimglists li').on('click',function () {
                     $(this).addClass('cur').siblings().removeClass('cur')
                     $(this).children('.pimg').show();
                     $(this).siblings().children('.pimg').hide();
@@ -1653,8 +1652,8 @@ function getImg() {
     str += '</li>'
 
     $('body').on('click', '.addleftbtn', function () {
-    	if($('.tuwenli').find('.pli').length>=8){
-    		layer.tips('最多只能添加7个图文消息', '.addleftbtn', {
+    	if($('.tuwenli').find('.pli').length>8){
+    		layer.tips('最多只能添加8个图文消息', '.addleftbtn', {
 			  tips: [3, '#999'],
 			  time: 1500
 			});
@@ -1889,6 +1888,8 @@ function getImg() {
                         $('.tuwenli ul .cur').attr('id', data.dataCode);
                     }
                     $('.tuwenli ul .cur').find('.fuceng').html('<a class="up" href="#">上移</a><a href="javascript:;" class="delcount">删除</a>');
+                    
+                    window.location.realod();
                 }
             });
         }

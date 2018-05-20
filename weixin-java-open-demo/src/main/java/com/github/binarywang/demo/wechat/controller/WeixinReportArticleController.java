@@ -664,12 +664,14 @@ public class WeixinReportArticleController{
         Query query= new Query(params);
         Integer titleCounts  = weixinReportArticleService.selectByPageExample5(query);
         
-        List weixinUserList = weixinUserinfoService.selectByTyinfo("authorized");
+		LayUiTableResultResponse LayUiTableResultResponse = weixinUserinfoService.selectByQuery(query);
+		
         Integer selecCountAllFans = weixinFansInfoService.selecCountAllFans();
+        Long weixinUserCount = LayUiTableResultResponse.getCount();
         
         Map<String, Object> retMap = new HashMap<String,Object>();
         retMap.put("titleCounts", titleCounts);
-        retMap.put("weixinUserCount", weixinUserList.size());
+        retMap.put("weixinUserCount", weixinUserCount);
         retMap.put("selecCountAllFans", selecCountAllFans);
         
         return retMap;

@@ -24,4 +24,5 @@ public interface WeixinConfigMapper  {
     List<WeixinConfig> selectByExample(Object mapAndObject);
 
     List<Map<String,Object>> selectByPageExample(Object mapAndObject);
+    List<Map<String,Object>> selectVideoCate();
 }
