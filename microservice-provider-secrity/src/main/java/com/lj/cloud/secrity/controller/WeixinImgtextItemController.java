@@ -51,7 +51,7 @@ public class WeixinImgtextItemController extends BaseController{
 					String articleContent = StringUtil.trimBlank(weixinImgtextItem.getArticleContent());
 					
 					if(articleContent.startsWith(",")||articleContent.startsWith("，")){
-						articleContent=articleContent.substring(1, articleContent.length()-1);
+						articleContent=articleContent.substring(1, articleContent.length());
 						weixinImgtextItem.setArticleContent(articleContent);
 					}
 
@@ -114,7 +114,7 @@ public class WeixinImgtextItemController extends BaseController{
 				String articleContent = StringUtil.trimBlank(weixinImgtextItem.getArticleContent());
 				
 				if(articleContent.startsWith(",")||articleContent.startsWith("，")){
-					articleContent=articleContent.substring(1, articleContent.length()-1);
+					articleContent=articleContent.substring(1, articleContent.length());
 					weixinImgtextItem.setArticleContent(articleContent);
 				}
 				

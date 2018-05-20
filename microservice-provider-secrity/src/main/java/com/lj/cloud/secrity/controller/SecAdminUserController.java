@@ -118,7 +118,7 @@ public class SecAdminUserController extends BaseController{
 					SecAdminUser loginInfo=secAdminUserService.getUserInfoByLoginNo(userNo);
 					
 					if(null!=loginInfo) {
-						if(loginInfo.getEnableFlag().equals("1")) {
+						if(loginInfo.getEnableFlag().equals("0")) {
 							restAPIResult.setRespCode(0);
 							restAPIResult.setRespMsg("设置失败，用户已存在  失效账户");
 						}else{
