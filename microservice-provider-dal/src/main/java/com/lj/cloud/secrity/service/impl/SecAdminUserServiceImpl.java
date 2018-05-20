@@ -101,6 +101,12 @@ public class SecAdminUserServiceImpl implements SecAdminUserService{
 	public SecAdminUser findAdminUserQuery(String loginNo) {
 		return secAdminUserMapper.findAdminUserQuery(loginNo);
 	}
+
+	@Override
+	public SecAdminUser getUserInfoByLoginNo(String loginNo) {
+		
+		return secAdminUserMapper.findAdminUserQuery(loginNo);
+	}
 	
 	
 }

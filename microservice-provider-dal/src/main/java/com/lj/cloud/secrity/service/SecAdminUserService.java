@@ -38,5 +38,12 @@ public interface SecAdminUserService {
 	List<SecAdminUser> selectByExampleQuery(Query query);
 
 	SecAdminUser findAdminUserQuery(String loginNo);
+
+	/**
+	 * 根据登录编号获取用户时候存在
+	 * @param loginNo
+	 * @return
+	 */
+	SecAdminUser getUserInfoByLoginNo(String loginNo);
 	    
 }
