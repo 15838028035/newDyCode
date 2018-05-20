@@ -114,11 +114,24 @@ public class SecAdminUserController extends BaseController{
 					secAdminUser.setCreateBy(createBy);
 					secAdminUser.setCreateByUname(getUserName());
 					secAdminUser.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
-					secAdminUserService.insertSelective(secAdminUser);
+					String userNo=secAdminUser.getLoginiNo();
+					SecAdminUser loginInfo=secAdminUserService.getUserInfoByLoginNo(userNo);
+					
+					if(null!=loginInfo) {
+						if(loginInfo.getEnableFlag().equals("1")) {
+							restAPIResult.setRespCode(0);
+							restAPIResult.setRespMsg("设置失败，用户已存在  失效账户");
+						}else{
+						restAPIResult.setRespCode(0);
+						restAPIResult.setRespMsg("设置失败，用户已存在");
+						}
+					}else {
+						secAdminUserService.insertSelective(secAdminUser);
+					}
 					
 				}catch(Exception e) {
 					restAPIResult.setRespCode(0);
-					restAPIResult.setRespMsg("失败成功:"+e.getMessage());
+					restAPIResult.setRespMsg("设置失败，用户已存在:"+e.getMessage());
 				}
 				
 				return restAPIResult;
