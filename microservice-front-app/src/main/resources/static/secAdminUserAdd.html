@@ -66,6 +66,12 @@
                        type="text" value={{d.secAdminUser.loginiNo}}>
             </div>
         </div>
+     <div class="layui-form-item">
+            <label class="layui-form-label">登录密码</label>
+            <div class="layui-input-block">
+                <input name="pwd" id="pwd" autocomplete="off" placeholder="登录密码" class="layui-input" type="text"
+                       value={{}}>
+            </div>
         <div class="layui-form-item">
             <label class="layui-form-label">手机号码</label>
             <div class="layui-input-block">
@@ -219,7 +225,9 @@
                 type: postType,
                 dataType: "json",
                 success: function (data) {
-                    layer.closeAll('loading');
+                	var index = parent.layer.getFrameIndex(window.name);  
+                    parent.layer.close(index);
+               	   layer.closeAll('loading');
                     layer.msg(data.respMsg);
                     return true;
                 },

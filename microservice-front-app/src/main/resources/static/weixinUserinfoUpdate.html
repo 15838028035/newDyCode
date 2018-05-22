@@ -27,19 +27,19 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">授权公众号:</label>
                 <div class="layui-input-inline">
-                    <p lay-filter="gzhnikename" style="line-height: 35px;" id="nikename">苏联间谍事件分类检索</p>
+                    <input lay-filter="gzhnikename" style="line-height: 35px;" id="nikename" type ="text" value="" disabled="disabled"/>
                 </div>
             </div>
              <div class="layui-form-item">
                 <label class="layui-form-label">城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市ID:</label>
                 <div class="layui-input-inline">
-                    <p lay-filter="cityId" style="line-height: 35px;" id="cityId"></p>
+                    <input name="cityId" id="cityId"  placeholder="" class="layui-input" type="text" value=""/>
                 </div>
             </div>
              <div class="layui-form-item">
                 <label class="layui-form-label">影&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;院ID:</label>
                 <div class="layui-input-inline">
-                    <p lay-filter="cinemaId" style="line-height: 35px;" id="cinemaId"></p>
+                     <input name="cinemaId" id="cinemaId"  placeholder="" class="layui-input" type="text" value=""/>
                 </div>
             </div>
 
@@ -96,8 +96,8 @@ if (acekeystoken == "") {
                 console.log(data);
                 $("#nikename").text(data.nickName);
                 $("#headimg").attr("src",data.headImg);
-                $("#cityId").text(data.cityId);
-                $("#cinemaId").text(data.cinemaId);
+                $("#cityId").val(data.cityId);
+                $("#cinemaId").val(data.cinemaId);
             },
             error: function (data) {
                 try {
@@ -175,6 +175,8 @@ if (acekeystoken == "") {
         	 var cityId= $("#cityId").val();
               var cinemaId=$("#cinemaId").val();
             var lastgroupid = $("#fenzu2").val() == null?$("#fenzu1").val():$("#fenzu2").val();
+            
+            alert(cityId);
             $.ajax({
                 url: ctxAppSec + '/api/WeixinUserinfo/' + getQueryString("authorizerAppid"),
                 type: "PUT",
