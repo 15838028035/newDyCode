@@ -150,6 +150,7 @@ public class WechatApiController {
 			if(null!=wx) {
 				weixinUserinfo.setCinemaId(wx.getCinemaId());
 				weixinUserinfo.setCityId(wx.getCityId());
+				weixinUserinfo.setNickName(wx.getNickName());
 			}
 			WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
 					.getAuthorizerInfo(authorizerAppid);
@@ -164,7 +165,7 @@ public class WechatApiController {
 			weixinUserinfo.setUserName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getUserName());
 			weixinUserinfo.setQrcodeUrl(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getQrcodeUrl());
 			return weixinUserinfo;
-		} catch (WxErrorException e) {
+		} catch (WxErrorException e) {//
 			logger.error("getAuthorizerInfo", e);
 			throw new RuntimeException(e);
 		}
