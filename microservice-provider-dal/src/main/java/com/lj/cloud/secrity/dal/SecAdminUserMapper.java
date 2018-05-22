@@ -44,5 +44,7 @@ public interface SecAdminUserMapper {
 	List<SecAdminUser> updateBySecGroupId(SecAdminUser secAdminUser);
 
 	SecAdminUser findAdminUserQuery(String loginNo);
+
+	
     
 }

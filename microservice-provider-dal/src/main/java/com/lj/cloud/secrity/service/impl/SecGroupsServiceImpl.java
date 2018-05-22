@@ -79,14 +79,17 @@ public class SecGroupsServiceImpl  implements SecGroupsService{
 	@Override
 	public List<Map<String, Object>> selectByInfoKey(Integer id) {
 		
-		List<Map<String, Object>> resultList=secGroupsMapper.selectByInfoKey(id);
+		List<Integer> gids=secGroupsMapper.selectGrouipId(id);
 		
-		List<Map<String, Object>> data=secGroupsMapper.selectByInfoKeyData();
-		List<Integer> list=new ArrayList<Integer>();
-		for (Map<String, Object> map : data) {
-			list.add(Integer.valueOf(map.get("id").toString()));
+		List<Map<String, Object>> resultList=secGroupsMapper.selectByInfoKeyData();
+		for (Map<String, Object> map : resultList) {
+			if(gids.contains(map.get("id"))) {
+				map.put("flag", "true");
+				
+			}else {
+				map.put("flag", "false");
+			}
 		}
-		
 		
 		
 		return resultList;
@@ -98,9 +101,13 @@ public class SecGroupsServiceImpl  implements SecGroupsService{
 	}
 
 	@Override
-	public void updateByPrimaryKeySelective(Integer id, List<String> urlId) {
+	public void updateByPrimaryKeySelective(Integer id, List<String> urlId,String remarks) {
 		secGroupsMapper.deleteByPrimaryGroupId(id);
 		if(urlId!=null&&urlId.size()>0) {
+			SecGroups group=new SecGroups();
+			group.setRemarks(remarks);
+			group.setId(id);
+			secGroupsMapper.updateByPrimaryKeySelective(group);
 				for (String rulId : urlId) {
 					Integer ruiId=Integer.valueOf(rulId);
 					Integer gid=id;
