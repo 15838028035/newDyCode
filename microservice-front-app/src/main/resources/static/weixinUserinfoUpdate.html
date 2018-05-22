@@ -30,6 +30,18 @@
                     <p lay-filter="gzhnikename" style="line-height: 35px;" id="nikename">苏联间谍事件分类检索</p>
                 </div>
             </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市ID:</label>
+                <div class="layui-input-inline">
+                    <p lay-filter="cityId" style="line-height: 35px;" id="cityId"></p>
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label class="layui-form-label">影&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;院ID:</label>
+                <div class="layui-input-inline">
+                    <p lay-filter="cinemaId" style="line-height: 35px;" id="cinemaId"></p>
+                </div>
+            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">公众号头像:</label>
@@ -84,6 +96,8 @@ if (acekeystoken == "") {
                 console.log(data);
                 $("#nikename").text(data.nickName);
                 $("#headimg").attr("src",data.headImg);
+                $("#cityId").text(data.cityId);
+                $("#cinemaId").text(data.cinemaId);
             },
             error: function (data) {
                 try {
@@ -158,12 +172,14 @@ if (acekeystoken == "") {
         });
         
         $("#sbbt").click(function () {
+        	 var cityId= $("#cityId").val();
+              var cinemaId=$("#cinemaId").val();
             var lastgroupid = $("#fenzu2").val() == null?$("#fenzu1").val():$("#fenzu2").val();
             $.ajax({
                 url: ctxAppSec + '/api/WeixinUserinfo/' + getQueryString("authorizerAppid"),
                 type: "PUT",
                 dataType: "json",
-                data: {weixinGroupsId:lastgroupid,"Authorization":acekeystoken},
+                data: {weixinGroupsId:lastgroupid,"Authorization":acekeystoken,"cityId":cityId,"cinemaId":cinemaId},
                 success: function (data) {
                     console.log(data);
                     if (data.respCode == 1){
