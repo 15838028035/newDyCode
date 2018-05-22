@@ -154,23 +154,21 @@
 			<select name="categoryId" id="categoryId" lay-filter="aihao"  class="layui-select" style="padding-right: 40px"></select>
 
 		</div>
-		标题
-		<div class="layui-inline">
-			<input type="text" class="layui-input" name="title" id="title" placeholder="标题">
 
-		</div>
 		<button class="layui-btn" data-type="reload">搜索</button>
+	</div>
+
+
+	<div class="layui-row twonewl">
+		<div class="layui-btn-group Table ">
+			<button class="layui-btn" data-type="add" id="add">
+				<i class="layui-icon">&#xe608;</i>新增
+			</button>
+		</div>
 		<div class="layui-btn-group Table">
-    <button class="layui-btn" data-type="add" id="add">
-        <i class="layui-icon">&#xe608;</i>新增
-    </button>
-</div>
-<div class="layui-btn-group Table">
-    <button class="layui-btn" id="batchDelete">
-     		批量删除
-    </button>
-</div>
-</div>
+			<button class="layui-btn" id="batchDelete">批量删除</button>
+		</div>
+	</div>
 
 
 	<table id="datagrid" class="layui-table" lay-filter="Grid"></table>
@@ -193,52 +191,27 @@
 		if (acekeystoken == "") {
 			parent.location.href = ctxApp + '/login.html';
 		}
-		Date.prototype.format = function (fmt) { //author: meizz   
-		    var o = {  
-		        "M+": this.getMonth() + 1, //月份   
-		        "d+": this.getDate(), //日   
-		        "H+": this.getHours(), //小时   
-		        "m+": this.getMinutes(), //分   
-		        "s+": this.getSeconds(), //秒   
-		        "q+": Math.floor((this.getMonth() + 3) / 3), //季度   
-		        "S": this.getMilliseconds() //毫秒   
-		    };  
-		    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));  
-		    for (var k in o)  
-		    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));  
-		    return fmt;  
-		} 
-		initForList("categoryId", null)
-		
+
+		initConfigSelect(vido_category, "categoryId", null);
+
 		var table;
 
-		layui.use(
+		layui
+				.use(
 						[ 'laypage', 'table', 'element', 'layer', 'laydate' ],
 						function() {
 							table = layui.table;
 							var laydate = layui.laydate;
-			
-							var now = new Date().format("yyyy-MM-dd");
-							var createDateBegin='';
-							
+
 							//自定义事件
-							var createDateEnd="1900-1-1";
-							 laydate.render({ 
-							        elem: '#createDateBegin'
-							        ,max: now
-							        ,trigger: 'click' //采用click弹出
-						        	,done: function(value, date, endDate){
-						        		createDateBegin=value;
-						    	    }   
-							  });
-							  laydate.render({ 
-								    elem: '#createDateEnd'
-								    ,min:createDateBegin
-								    ,trigger: 'click' //采用click弹出
-								    ,done: function(value, date, endDate){
-								    	createDateEnd=value;
-								    }
-								  });
+							laydate.render({
+								elem : '#createDateEnd',
+								trigger : 'click' //采用click弹出
+							});
+							laydate.render({
+								elem : '#createDateBegin',
+								trigger : 'click' //采用click弹出
+							});
 
                             table.render({
                                 elem : '#datagrid',
@@ -301,13 +274,20 @@
 												var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
 												if (layEvent === 'remove') { //编辑
 													var id = data.id;
-													layer.confirm('确定要删除？',{
+													layer
+															.confirm(
+																	'确定要删除？',
+																	{
 																		title : "系统提示",
 																		anim : 1,
 																		icon : 3,
 																		closeBtn : 0
 																	},
-																	function(index) {$.ajax({
+																	function(
+																			index) {
+
+																		$
+																				.ajax({
 																					url : ctxAppSec
 																							+ '/api/WeixinVideo/'
 																							+ id
@@ -318,7 +298,8 @@
 																					},
 																					type : "DELETE",
 																					dataType : "json",
-																					success : function(data) {
+																					success : function(
+																							data) {
 																						layer
 																								.msg(data.respMsg);
 																						table
@@ -334,8 +315,7 @@
 																														.val(),
 																												"categoryId" : $(
 																														"#categoryId")
-																														.val(),
-																												"title":$("#title").val()
+																														.val()
 																											},
 																											page : {
 																												curr : 1
@@ -403,8 +383,7 @@
 													'#createDateBegin').val()),
 											"createDateEnd" : $.trim($(
 													'#createDateEnd').val()),
-											"tag" : $("#categoryId").val(),
-											"title":$.trim($("#title").val())
+											"tag" : $("#categoryId").val()
 										}
 									});
 								}
