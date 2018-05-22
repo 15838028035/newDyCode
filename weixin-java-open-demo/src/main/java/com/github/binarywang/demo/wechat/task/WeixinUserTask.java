@@ -364,7 +364,7 @@ public class WeixinUserTask {
 		logger.info("统计异常:"+e.getMessage());
 	}
   }
-	@Scheduled(cron = "0 50 17 * * ? ") // cron接受cron表达式，根据cron表达式确定定时规则
+	@Scheduled(cron = "0 0 18 * * ? ") // cron接受cron表达式，根据cron表达式确定定时规则
 	public void userCountCron(){
 		try {
 			logger.info("===initialDelay: 第{}次执行方法", cronCount++);
