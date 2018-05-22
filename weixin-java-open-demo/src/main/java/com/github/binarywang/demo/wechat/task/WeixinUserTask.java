@@ -30,6 +30,10 @@ import me.chanjar.weixin.mp.bean.datacube.WxDataCubeUserCumulate;
 import me.chanjar.weixin.mp.bean.datacube.WxDataCubeUserSummary;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import me.chanjar.weixin.mp.bean.result.WxMpUserList;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 13e4de051a5e142ffe76d2777f6004cba9b439ed
 @Component
 public class WeixinUserTask {
 	private Logger logger = LoggerFactory.getLogger(WeixinImgageArticleReportTask.class);

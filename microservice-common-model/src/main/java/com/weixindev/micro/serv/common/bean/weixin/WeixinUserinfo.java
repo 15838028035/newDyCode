@@ -185,7 +185,10 @@ public class WeixinUserinfo extends BaseEntity {
 	 */
 	@ApiModelProperty(value = "unauthorized是取消授权，updateauthorized是更新授权，authorized是授权成功通知  InfoType")
 	private String infoType = "";
-
+	@ApiModelProperty(value = "城市Id")
+	private String cityId = "";
+	@ApiModelProperty(value = "影院id")
+	private String cinemaId = "";
 	/*
 	 * 授权码
 	 */
@@ -421,6 +424,22 @@ public class WeixinUserinfo extends BaseEntity {
 
 	public void setAuthorizationCode(String authorizationCode) {
 		AuthorizationCode = authorizationCode;
+	}
+
+	public String getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(String cityId) {
+		this.cityId = cityId;
+	}
+
+	public String getCinemaId() {
+		return cinemaId;
+	}
+
+	public void setCinemaId(String cinemaId) {
+		this.cinemaId = cinemaId;
 	}
 
 }
