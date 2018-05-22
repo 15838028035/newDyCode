@@ -1,9 +1,24 @@
 var authorizerAppid = getQueryString("authorizerAppid");
 var acekeystoken = $.cookie('bearcktkaeskey');
+var cityid=(getQueryString("cityid")!=null&&getQueryString("cityid")!="")?getQueryString("cityid"):"";
+var cinemaid=(getQueryString("cinemaid")!=null&&getQueryString("cinemaid")!="")?getQueryString("cinemaid"):"";
+/**
+ * 填充购票链接,链接后缀增加城市编号,影院编号
+ *
+ */
+ function checkUrl(obj) {  
+     if (obj.checked == true) {  
+         $("#url").val("http://h5.dadicinema.com/wapportal/wechat/buy.do?cityid="+cinemaid+"&cinemaid="+cinemaid+"")
+     }else{
+    	 $("#url").val("");
+     }
+ }
+
 layui.use(['layer', 'table'], function() {
 	var layer = layui.layer;
 	var $ = layui.$;
 	var table = layui.table;
+	$("#autoUrl").hide();
 	//-type 10图文 2图片  3语音 15视频 11商品消息-->
 	var dataObj=[{
 			text: "图文消息",
@@ -343,8 +358,11 @@ layui.use(['layer', 'table'], function() {
 			if(type == 'view') {//链接
 				key = 'url';
 				value = $("input[name='" + key + "']").val();
+				$("#autoUrl").show();
 			} else {//其他四种
 				key = 'key';
+				$("#url").val("");
+				$("#autoUrl").hide();
 				value1 = $("input[name='" + key + "']").val();
 				value2 = $("input[name='" + key + "']").attr('to_id');
 			}
