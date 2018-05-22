@@ -184,7 +184,7 @@
                 {field: 'head_img', title: '公众号头像', templet: '#headimg', width: '100'},
                 {field: 'service_type_info', title: '账号类型', templet: '#accountTypetpl', width: '100'},
                 {field: 'InfoType', title: '授权状态', templet: '#InfoTypetpl', width: '100'},
-                {field: 'city_id', title: '城市ID',  width: '100'},
+                {field: 'city_id',title: '城市ID',  width: '100'},
                 {field: 'cinema_id', title: '影院ID',  width: '100'},
                 {field: 'group_name', title: '账号分组', width: '100'},
                 //{field: 'create_By_UName', title: '添加人', width: '100'},
@@ -211,6 +211,7 @@
         table.on('tool(Grid)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+           // console.log(data);
             if (layEvent === 'deleteone') { //删除单个
                 var id = data.id;
                 layer.confirm('确定要删除？', {title: "系统提示", anim: 1, icon: 3, closeBtn: 0}, function (index) {
@@ -249,7 +250,9 @@
             }
             else if (layEvent === 'selfmenu') { //自定义菜单
                 var authorizerAppid = data.authorizerAppid;
-                selfmenu(authorizerAppid);
+                var cityId=data.cityId,
+                var cinemaId=data.cinemaId;
+                selfmenu(authorizerAppid,cityId,cinemaId);
             }
         });
 
@@ -449,13 +452,16 @@
         });
     }
 
-    function selfmenu(authorizerAppid) {
+    
+    
+    	
+    function selfmenu(authorizerAppid,cityId,cinemaId) {
         layer.open({
             title: "自定义菜单",
             type: 2,
             maxmin: true,
             area: ['100%', '100%'],
-            content: 'aaYls_editpage.html?authorizerAppid=' + authorizerAppid,
+            content: 'aaYls_editpage.html?authorizerAppid=' + authorizerAppid+'&cityId='+cityId+'&cinemaId'+cinemaId,
             // 下面这句是,添加页面关闭后,刷新本页面.
             end: function () {
                 location.reload();
