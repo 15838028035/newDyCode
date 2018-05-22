@@ -366,6 +366,7 @@ public class WeixinUserTask {
 		logger.info("统计异常:"+e.getMessage());
 	}
   }
+	
 	//@Scheduled(cron = "0 45 20 * * ? ") // cron接受cron表达式，根据cron表达式确定定时规则
 	public void userCountCron(){
 		try {
@@ -635,7 +636,7 @@ public class WeixinUserTask {
 					
 					Date endExcuteTime=new Date();
 					Integer endTimeHour=Integer.parseInt(sdf1.format(endExcuteTime));
-					userNames+=weixinUserinfo.getNickName();
+					userNames+=weixinUserinfo.getNickName()+",";
 					queryCount++;
 					logger.info("当前公众号"+weixinUserinfo.getNickName()+"统计结束");
 					logger.info("耗时:"+(System.currentTimeMillis()-timeBegin)+"毫秒");
