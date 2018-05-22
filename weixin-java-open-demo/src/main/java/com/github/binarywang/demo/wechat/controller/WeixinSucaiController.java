@@ -242,17 +242,18 @@ public class WeixinSucaiController {
 									
 									FileUtil.createFile(inputStream2, filePath);*/
 									
-									String extName = StringUtil.getExtension(str).toLowerCase();//文件扩展名
+									URL netUrl = new URL(str);   
+							        URLConnection rulConnection = netUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
+									HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
+									InputStream inputStream = httpUrlConnection.getInputStream();
+									
+									FileType FileType = FileTypeJudge.getType2(inputStream);
+									
+									String extName = FileType.name().toLowerCase();//文件扩展名
 									String fileName = System.nanoTime()+"."+extName; 
 									String filePath = file_location +fileName;
-									  
-									URL netUrl = new URL(str);   
-									
-									if(FileType.GIF.name().toLowerCase().equals(extName)){
-								    	URLConnection rulConnection = netUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
-										HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
-										InputStream inputStream = httpUrlConnection.getInputStream();
-										
+							        
+							        if(FileType.GIF.name().toLowerCase().equals(extName)){
 										GIfUtil.saveGif(inputStream,filePath);
 									}else {
 										BufferedImage image = null; 
