@@ -69,6 +69,8 @@
 			jdbcType="VARCHAR" />
 		<result property="AuthorizationCode" column="AuthorizationCode"
 			jdbcType="VARCHAR" />
+			<result property="cityId" column="city_id" />
+			<result property="cinemaId" column="cinema_id" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -107,7 +109,9 @@
             func_info ,
             InfoType ,
             PreAuthCode,
-            AuthorizationCode
+            AuthorizationCode,
+            city_id,
+            cinema_id
         ]]>
 	</sql>
 
@@ -128,6 +132,8 @@
 		wu.remarks,
 		wu.qrcode_url,
 		wu.InfoType,
+		wu.city_id,
+		wu.cinema_id,
 		wg1.group_name as wg1_name,
 		wg2.group_name as wg2_name
 
@@ -309,6 +315,12 @@
 			<if test="PreAuthCode != null">
 				PreAuthCode,
 			</if>
+			<if test="cityId != null">
+				city_id,
+			</if>
+			<if test="cinemaId != null">
+				cinema_id,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 
@@ -407,6 +419,12 @@
 			</if>
 			<if test="PreAuthCode != null">
 				#{PreAuthCode,jdbcType=VARCHAR},
+			</if>
+			<if test="cityId != null">
+				#{cityId},
+			</if>
+			<if test="cinemaId != null">
+				#{cinemaId},
 			</if>
 		</trim>
 	</insert>
@@ -524,7 +542,8 @@
 				AuthorizationCode = #{AuthorizationCode,jdbcType=VARCHAR}
 				,
 			</if>
-
+           <if test="cityId != null">	city_id=#{cityId},	</if>
+			<if test="cinemaId != null">cinema_id#{cinemaId},	</if>
 		</set>
 		WHERE
 		id = #{id,jdbcType=INTEGER}
@@ -643,6 +662,8 @@
 				AuthorizationCode = #{AuthorizationCode,jdbcType=VARCHAR}
 				,
 			</if>
+			 <if test="cityId != null">	city_id=#{cityId},	</if>
+			<if test="cinemaId != null">cinema_id#{cinemaId},	</if>
 
 		</set>
 		WHERE
@@ -685,6 +706,8 @@
 		#{authorizerRefreshToken} ,
 		func_info = #{funcInfo} , InfoType =
 		#{infoType}, PreAuthCode = #{PreAuthCode}
+		 <if test="cityId != null">	city_id=#{cityId},	</if>
+			<if test="cinemaId != null">cinema_id#{cinemaId},	</if>
 		WHERE
 		id =
 		#{id,jdbcType=INTEGER}
@@ -771,7 +794,7 @@
 		#{infoType,jdbcType=VARCHAR}
 		and PreAuthCode =
 		#{PreAuthCode,jdbcType=VARCHAR}
-
+       
 	</select>
 
 	<select id="selectByExample" resultMap="weixinUserinfoResult">
@@ -922,7 +945,9 @@
 		InfoType ,
 		PreAuthCode,
 		wg.group_name,
-		wg.parent_id
+		wg.parent_id,
+		wu.city_id,
+		wu.cinema_id
 		from weixin_userinfo wu
 		left join
 		weixin_groups wg on

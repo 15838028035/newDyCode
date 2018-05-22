@@ -144,9 +144,16 @@ public class WechatApiController {
 	@ResponseBody
 	public WeixinUserinfo getAuthorizerInfo(@RequestParam String authorizerAppid) {
 		try {
+//			WeixinUserinfo wei 
+			WeixinUserinfo wx=weixinUserinfoService.selectByauthorizerAppid(authorizerAppid);
+			WeixinUserinfo weixinUserinfo = new WeixinUserinfo();
+			if(null!=wx) {
+				weixinUserinfo.setCinemaId(wx.getCinemaId());
+				weixinUserinfo.setCityId(wx.getCityId());
+			}
 			WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
 					.getAuthorizerInfo(authorizerAppid);
-			WeixinUserinfo weixinUserinfo = new WeixinUserinfo();
+			
 			weixinUserinfo.setNickName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getNickName());
 			weixinUserinfo.setHeadImg(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getHeadImg());
 			weixinUserinfo.setPrincipalName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getPrincipalName());
