@@ -471,7 +471,7 @@
             g.group_name as secGroupName
                from sec_admin_user u  left join sec_groups g
                on u.sec_group_id = g.id
-               WHERE 1=1  and u.enable_flag='0'
+               WHERE 1=1  and u.enable_flag='1'
       
         <if test="id != null " >
                and   u.id = #{id,jdbcType=INTEGER}

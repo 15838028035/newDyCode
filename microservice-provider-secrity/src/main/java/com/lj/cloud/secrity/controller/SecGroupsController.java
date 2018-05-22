@@ -34,6 +34,7 @@ import com.weixindev.micro.serv.common.util.TreeUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import tk.mybatis.mapper.util.StringUtil;
 
 /**
  *管理员分组管理
@@ -79,7 +80,6 @@ public class SecGroupsController extends BaseController{
     public RestAPIResult2 showInfo(@PathVariable("id") Integer id) throws Exception {
     	  RestAPIResult2 restAPIResult = new RestAPIResult2();
         List<Map<String,Object>> secGroups =secGroupsService.selectByInfoKey(id);
-        
         restAPIResult.setRespCode(1);
         restAPIResult.setRespMsg("操作成功");
         try {
@@ -164,6 +164,18 @@ public class SecGroupsController extends BaseController{
         restAPIResult.setRespCode(1);
         restAPIResult.setRespMsg("操作成功");
         try {
+        	if(StringUtil.isEmpty(secGroups.getGroupName())) {
+        		 restAPIResult.setRespCode(0);
+                 restAPIResult.setRespMsg("分组名称不为空");
+                 return restAPIResult;
+        	}
+        	/*if(StringUtil.isEmpty(secGroups.getRemarks())) {
+       		 restAPIResult.setRespCode(0);
+                restAPIResult.setRespMsg("描述不为空");
+                return restAPIResult;
+       	     }*/
+        	String data =DateUtil.getNowDateYYYYMMddHHMMSS();
+        	secGroups.setCreateDate(data);
         	String str[] = secGroups.getUrids().split(",");
         	secGroupsService.insert(secGroups);
         	Integer gid=secGroups.getId();
@@ -179,14 +191,14 @@ public class SecGroupsController extends BaseController{
     /** 保存更新  */
     @ApiOperation(value = "修改权限")
     @RequestMapping(value="/api/SecGroupsUrl/{id}",method=RequestMethod.PUT)
-    public RestAPIResult2 update(@PathVariable("id") Integer id ,String urids)  {
+    public RestAPIResult2 update(@PathVariable("id") Integer id ,String urids,String remarks)  {
         RestAPIResult2 restAPIResult = new RestAPIResult2();
         restAPIResult.setRespCode(1);
         restAPIResult.setRespMsg("操作成功");
         try {
         	String str[] = urids.split(",");
 //        	return 
-        	secGroupsService.updateByPrimaryKeySelective(id, Arrays.asList(str));
+        	secGroupsService.updateByPrimaryKeySelective(id, Arrays.asList(str),remarks);
         	
 
         }catch(Exception e) {
