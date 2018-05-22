@@ -1,5 +1,19 @@
 var authorizerAppid = getQueryString("authorizerAppid");
 var acekeystoken = $.cookie('bearcktkaeskey');
+var cityid=(getQueryString("cityid")!=null&&getQueryString("cityid")!="")?getQueryString("cityid"):"";
+var cinemaid=(getQueryString("cinemaid")!=null&&getQueryString("cinemaid")!="")?getQueryString("cinemaid"):"";
+/**
+ * 填充购票链接,链接后缀增加城市编号,影院编号
+ *
+ */
+ function checkUrl(obj) {  
+     if (obj.checked == true) {  
+         $("#url").val("http://h5.dadicinema.com/wapportal/wechat/buy.do?cityid="+cinemaid+"&cinemaid="+cinemaid+"")
+     }else{
+    	 $("#url").val("")
+     }
+ }
+
 layui.use(['layer', 'table'], function() {
 	var layer = layui.layer;
 	var $ = layui.$;
