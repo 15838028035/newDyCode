@@ -10,9 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 
-import com.github.binarywang.demo.wechat.controller.UserSourceEnum;
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
 import com.lj.cloud.secrity.service.WeixinFansAllCountService;
 import com.lj.cloud.secrity.service.WeixinFansCountService;
@@ -48,24 +46,25 @@ public class WeixinUserTask {
 	private int cronCount = 1;
 
 	//@Scheduled(cron = "0 0/10 * * * ?") // cron接受cron表达式，根据cron表达式确定定时规则
-	public void testCron() throws Exception {
+	public void testCron(){
 	  try {
 		logger.info("===initialDelay: 第{}次执行方法", cronCount++);
 		long timeBegin=System.currentTimeMillis();
 		// WeixinUserinfo
 		// weixinUserinfo=WeixinUserinfoService.selectByPrimaryKey(Integer.parseInt(uid));
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
 		String endDate = DateUtil.getNowDate(DateUtil.DATE_FOMRAT_yyyy_MM_dd);
-
 		Date endDateTime = DateUtil.formatDate(endDate, DateUtil.DATE_FOMRAT_yyyy_MM_dd);
 		Date beginDateTime = DateUtil.rollDay(sdf.parse(endDate), -1);
-		
 		Date createTime=new Date();
 		Date updateTime=createTime;
-
+		String userNames="";
+		int queryCount=0;
+		
+		SimpleDateFormat sdf1 = new SimpleDateFormat("HH");
+		
 		String beginDate = DateUtil.dateStryyyyMMdd(beginDateTime);
-		logger.info("开始时间:" + beginDate + "结束时间:" + endDate);
+		logger.info("查询开始时间:" + beginDate + "查询结束时间:" + endDate);
 
 		WeixinFansAllCount weixinFansAllCount=new  WeixinFansAllCount();
 		Integer fansAllCount=0;
@@ -302,8 +301,22 @@ public class WeixinUserTask {
 				addSceneprofileLinkAllCount+=addSceneprofileLink;
 				addCircleFriendsAllCount+=addCircleFriends;
 				addSceneOthersAllCount+=addSceneOthers;
-				
 				weixinFansCountService.insertSelective(fansCount);
+				
+				Date endExcuteTime=new Date();
+				Integer endTimeHour=Integer.parseInt(sdf1.format(endExcuteTime));
+				userNames+=weixinUserinfo.getNickName();
+				queryCount++;
+				logger.info("当前公众号"+weixinUserinfo.getNickName()+"统计结束");
+				logger.info("耗时:"+(System.currentTimeMillis()-timeBegin)+"毫秒");
+				logger.info("已统计"+queryCount+"个公众号:"+userNames);
+				if(endTimeHour>7) {
+					logger.info("当前公众号"+weixinUserinfo.getNickName()+"统计结束");
+					logger.info("已统计"+queryCount+"个公众号:"+userNames);
+					logger.info("统计结束,结束时间:"+endTimeHour+"点");
+					logger.info("耗时:"+(System.currentTimeMillis()-timeBegin)+"毫秒");
+					return;
+				}
 			}
 		}
 		weixinFansAllCount.setCount(fansAllCount);
@@ -332,7 +345,7 @@ public class WeixinUserTask {
 		logger.info("统计结束,耗时:"+(System.currentTimeMillis()-timeBegin)+"毫秒");
 	}catch(Exception e) {
 		e.printStackTrace();
-		logger.info("统计失败:"+e.getMessage());
+		logger.info("统计异常:"+e.getMessage());
 	}
   }
 }
