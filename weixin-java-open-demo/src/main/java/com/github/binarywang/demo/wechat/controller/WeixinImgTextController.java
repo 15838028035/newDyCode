@@ -48,6 +48,7 @@ import com.weixindev.micro.serv.common.util.StringUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -534,26 +535,29 @@ public class WeixinImgTextController {
 					if (StringUtil.isNotBlank(WeixinImgtextItem.getHeadImg())) {// 更新media
 							
 						try {
-							URL fileUrl = new URL(WeixinImgtextItem.getHeadImg());
-
-							URLConnection rulConnection = fileUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
-							HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
-
-							InputStream inputStream = httpUrlConnection.getInputStream();
-
 							// 动态判断mediaType
-							String headImg = WeixinImgtextItem.getHeadImg();
-
-							String mediaType = "image";// 图片类型的素材
-							String mediaId = "";
+							String headImg = WeixinImgtextItem.getHeadImg();// 图片地址
+							String headImgRepl = headImg.replaceFirst(appURL, file_location);
 
 							String fileType = StringUtil.getExtension(headImg);// 获得文件的扩展名
 
-							WxMediaUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
-									.getWxMpServiceByAppid(str).getMaterialService()
-									.mediaUpload(mediaType, fileType, inputStream);
+							String fileName = headImg.substring(headImg.lastIndexOf("/") + 1);
+							File fileTmp = new File(headImgRepl);
+							if (!fileTmp.exists()) {
+								throw new Exception("封面图片不存在,headImgRepl"+headImgRepl);
+							}
+							String mediaType = WxConsts.MediaFileType.THUMB;
 
-							mediaId = res.getMediaId();
+							// 上传图片
+							WxMpMaterial wxMpMaterial = new WxMpMaterial();
+							wxMpMaterial.setFile(fileTmp);
+							wxMpMaterial.setName(fileName);
+
+							WxMpMaterialUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
+									.getWxMpServiceByAppid(str).getMaterialService()
+									.materialFileUpload(mediaType, wxMpMaterial);
+
+							String mediaId = res.getMediaId();
 							logger.info("上传图文消息的封面的mediaId=" + mediaId + ",mediaType=" + mediaType + ",fileType=" + fileType
 									+ ",headImg=" + headImg);
 
@@ -562,10 +566,7 @@ public class WeixinImgTextController {
 
 							logger.info("上传图文消息的封面的图片  WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
 									+ ",的imgTextId=" + imgTextId + ", mediaId= " + mediaId);
-
-							if (inputStream != null) {
-								inputStream.close();
-							}
+							
 						} catch(WxErrorException e) {
 							 e.printStackTrace();
 					    		Integer code = e.getError().getErrorCode();
