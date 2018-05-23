@@ -12,10 +12,10 @@ var ctxAppWeixin = "http://weixin.xrtz.org:8050/weixin";
 //
 //console.log(window.location.protocol+ "//" +"127.0.0.1");
 //
-ctxApp = "http://127.0.0.1:8022";
-ctxAppSec = "http://127.0.0.1:8050/sec";
-ctxAppSec2 = "http://127.0.0.1:8002";
-ctxAppWeixin = "http://127.0.0.1:8050/weixin";
+ctxApp = "http://192.168.0.192:8022";
+ctxAppSec = "http://192.168.0.192:8050/sec";
+ctxAppSec2 = "http://192.168.0.192:8002";
+ctxAppWeixin = "http://192.168.0.192:8050/weixin";
 //
 //
 //if(hostname == window.location.protocol + "//" +"127.0.0.1" || hostname == window.location.protocol + "//" +"localhost"){
