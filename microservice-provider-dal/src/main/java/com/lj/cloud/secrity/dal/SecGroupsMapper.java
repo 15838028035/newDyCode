@@ -54,6 +54,10 @@ public interface SecGroupsMapper {
 
 	Map<String, Object> getGroupInfoByid(Integer parentId);
 
+	List<Map<String, Object>> selectGroupInfoByPareintId(@Param("pids")List<Integer> pids);
+	
+	
+
 
 
 }

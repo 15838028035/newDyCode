@@ -182,6 +182,35 @@
 				background: #f5f5f5;
 				border: 1px solid #f5f5f5;
 			}
+			
+			.parentInfo {
+				overflow:hidden;
+				padding:10px 0;
+				border-bottom: 1px #EBEBEB solid;
+			}
+			.childeInfo {
+				overflow:hidden;
+			}
+			.ipt_box .childeInfo p {
+				float:left;
+				width:130px;
+			}
+			.ipt_box .childeInfo p input {
+				
+				width:15px;
+				height:15px;
+			}
+			.ipt_box.zubie span {
+				float:none;
+			}
+			.ipt_box.zubie .selcheckBox {
+				float:none;
+				width:100%;
+			}
+			.ipt_box.zubie {
+				border-bottom:none;
+			}
+			
 		</style>
 </head>
 	<body class="bgcolor">
@@ -198,7 +227,7 @@
 	  					<span>备注</span>
 	  					<p><input type="text" value="" id="remarks" name="remarks"/></p>
 	  				</div>
-		  			<div class="ipt_box">
+		  			<div class="ipt_box zubie">
 		  				<span>组别权限</span>
 		  				<div class="selcheckBox" id="selcheckBoxQX">
 		  					
@@ -230,31 +259,42 @@
 	            dataType: "json",
 	            async: 'false',
 	            success: function (data) {
-	                console.log(data.respData);
-	                dataTmp = data;
-
-	                var datas = dataTmp.respData;
-	                var li = "";
-	                var html = "";
-	                
-	                 for (var i = 0; i < datas.length; i++) {
-	                	 //alert(datas[i].menu_name);
-	                	 var checkboxName = datas[i].menu_name;
-	                	 var flag=datas[i].flag;
-	                	 var checked='checked';
-	                	 var input_checkbox="";
-	                	 if(flag=='true'){
-	                		 input_checkbox = " <label> <input id='tag_id_" + datas[i].id + "' type='checkbox' lay-skin='primary' title='" + datas[i].menu_name + "' name='checkId' value='" + datas[i].id + "' checked="+checked+"   />"+checkboxName+"</label>";
-	                    
-	                	 }
-	                	 if(flag=='false'){
-	                		 input_checkbox = " <label> <input id='tag_id_" + datas[i].id + "' type='checkbox' lay-skin='primary' title='" + datas[i].menu_name + "' name='checkId' value='" + datas[i].id + "'/>"+checkboxName+"</label>";
-		                 	
-	                	 }
-	                     html += input_checkbox;
-	                } 
-	                $("#selcheckBoxQX").html(html);
-	            },
+		                var datas = data.respData;
+		                var li = "";
+		                var html = "";
+		                
+		                 for (var i = 0; i < datas.length; i++) {
+		                	 var html2="";
+		                	 var checkboxName = datas[i].menu_name;
+		                	 var flag=datas[i].parentFlag;
+		                	 var checked='checked';
+		                	 var  input_checkbox1 ="";
+		                	 if(flag==true){
+		                		 input_checkbox1 = " <label> <input id='tag_id_" + datas[i].id + "' type='checkbox' lay-skin='primary' title='" + datas[i].menu_name + "' name='checkId' value='" + datas[i].id + "' checked="+checked+"   />"+checkboxName+"</label>";
+		                	 }
+		                	 if(flag==false){
+		                		 input_checkbox1= " <label> <input id='tag_id_" + datas[i].id + "' type='checkbox' lay-skin='primary' title='" + datas[i].menu_name + "' name='checkId' value='" + datas[i].id + "'/>"+checkboxName+"</label>";
+			                 }
+		                	 var childeData=datas[i].childrenData;
+			                     for (var j = 0; j < childeData.length; j++) {
+			                    	 var checkboxName2=childeData[j].menu_name;
+			                    	 var flag2=childeData[j].childrenFlag;
+			                    	 var child=childeData[j];
+			                    	 var checked2='checked';
+				                	 var input_checkbox="";
+				                	 if(flag2=='true'){
+				                		 input_checkbox = "<p><label><input id='tag_id_" + child.id + "' type='checkbox' lay-skin='primary' title='" + checkboxName2 + "' name='checkId' value='" + child.id +  "' checked="+checked2+"'/>"+checkboxName2+"</label></p>";
+				                	 }
+				                	 if(flag2=='false'){
+				                		 input_checkbox = "<p><label><input id='tag_id_" + child.id + "' type='checkbox' lay-skin='primary' title='" + checkboxName2 + "' name='checkId' value='" + child.id + "'/>"+checkboxName2+"</label></p>";
+						             }
+				                     html2 += input_checkbox;
+			                     }
+		                	 
+		                     html +=  '<div class="parentInfo">'+input_checkbox1 + '<div class="childeInfo">'+html2+'</div>'+'</div>';
+		                } 
+		                 $(".selcheckBox").html(html);
+		            },
 	            error: function (data) {
 	                try {
 	                    layer.msg("请求异常");
