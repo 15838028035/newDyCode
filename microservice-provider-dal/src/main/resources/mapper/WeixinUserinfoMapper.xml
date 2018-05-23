@@ -911,6 +911,8 @@
 	<select id="selectByPageExample" resultType="java.util.HashMap">
 		select
 		wu.id ,
+		wu.city_id,
+		wu.cinema_id,
 		nick_name ,
 		head_img ,
 		service_type_info ,

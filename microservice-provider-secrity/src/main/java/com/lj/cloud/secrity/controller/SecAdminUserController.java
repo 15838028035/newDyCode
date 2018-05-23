@@ -79,7 +79,10 @@ public class SecAdminUserController extends BaseController{
 			restAPIResult.setRespMsg("账号或密码错误");
 			return restAPIResult;
 		}
-		
+		if(!secAdminUser.getEnableFlag().equals("1")) {
+			restAPIResult.setRespMsg("账号已失效!");
+			return restAPIResult;
+		}
 		restAPIResult.setRespCode(1);
 	    restAPIResult.setRespMsg("登录成功");
 	    
@@ -156,7 +159,18 @@ public class SecAdminUserController extends BaseController{
 					secAdminUser.setUpdateBy(createBy);
 					secAdminUser.setUpdateByUname(getUserName());
 					secAdminUser.setUpdateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
-					secAdminUserService.updateByPrimaryKeySelective(secAdminUser);
+					SecAdminUser loginInfo=secAdminUserService.findAdminUserQuery(secAdminUser.getLoginiNo());
+					
+					if(null==loginInfo) {
+						secAdminUserService.updateByPrimaryKeySelective(secAdminUser);
+					}else {
+						if(loginInfo.getLoginiNo().equals(secAdminUser.getLoginiNo())) {
+							restAPIResult.setRespCode(0);
+							restAPIResult.setRespMsg("设置失败，用户已存在 ");
+//							return 		restAPIResult;
+						}
+						
+					}
 					
 				}catch(Exception e) {
 					restAPIResult.setRespCode(0);

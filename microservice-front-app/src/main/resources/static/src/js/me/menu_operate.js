@@ -1,16 +1,30 @@
 var authorizerAppid = getQueryString("authorizerAppid");
 var acekeystoken = $.cookie('bearcktkaeskey');
-var cityid=(getQueryString("cityid")!=null&&getQueryString("cityid")!="")?getQueryString("cityid"):"";
-var cinemaid=(getQueryString("cinemaid")!=null&&getQueryString("cinemaid")!="")?getQueryString("cinemaid"):"";
+var ref=/(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/;
 /**
  * 填充购票链接,链接后缀增加城市编号,影院编号
  *
  */
- function checkUrl(obj) {  
-     if (obj.checked == true) {  
-         $("#url").val("http://h5.dadicinema.com/wapportal/wechat/buy.do?cityid="+cinemaid+"&cinemaid="+cinemaid+"")
+ function checkUrl(obj) { 
+	 console.log(obj.checked);
+     if (obj.checked == true) {
+    	 var url=$("#url").val();
+    	 if(ref.test(url)){
+    		 if(url.indexOf("?{cityid}&{cinemaid}")<0){
+    			 url=url+"?{cityid}&{cinemaid}";
+        		 $("#url").val(url);
+    		 }
+    	 }
      }else{
-    	 $("#url").val("");
+    		 var url=$("#url").val();
+    		 console.log(url);
+    		 console.log(url.indexOf("?{cityid}&{cinemaid}"));
+    		 if(url.indexOf("?{cityid}&{cinemaid}")>0){
+    			 url=url.substring(0,url.lastIndexOf('?'));
+        		 $("#url").val(url);
+    		 }else{
+    			 $("#url").val(url);
+    		 }
      }
  }
 
@@ -237,6 +251,7 @@ layui.use(['layer', 'table'], function() {
 		});
 		//添加主菜单
 		$("#menu-container").on('click', '#add-item', function() {
+			$("#autoUrl").hide();
 			var menu_item_total = $(".menu-item").size();
 			if(menu_item_total < 3) {
 				var item = '<li class="menu-item" data-type="0" data-action="key|10|" data-name="添加菜单" > <a href="javascript:;" class="menu-link"> <i class="icon-menu-dot"></i> <i class="weixin-icon sort-gray"></i> <span class="title">添加菜单</span> </a> <div class="sub-menu-box" style=""> <ul class="sub-menu-list"><li class=" add-sub-item"><a href="javascript:;" title="最多添加5个子菜单"><span class=" "><i class="weixin-icon add-gray"></i></span></a></li> </ul> <i class="arrow arrow-out"></i> <i class="arrow arrow-in"></i> </div></li>';
@@ -516,6 +531,7 @@ layui.use(['layer', 'table'], function() {
 		//添加子菜单
 		$("#menu-container").on('click', ".add-sub-item", function() {
 			$(this).parents('.menu-item').attr('data-action','');
+			$("#autoUrl").hide();
 			var sub_menu_item_total = $(this).parent().find(".sub-menu-item").size();
 			if(sub_menu_item_total < 5) {
 				var item = '<li class="sub-menu-item" data-type="1" data-action="key|10|" data-name="添加子菜单"><a href="javascript:;"><span class=" "><i class="weixin-icon sort-gray"></i><span class="sub-title">添加子菜单</span></span></a></li>';

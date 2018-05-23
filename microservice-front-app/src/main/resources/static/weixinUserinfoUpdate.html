@@ -23,7 +23,7 @@
 <div class="layui-row" style="margin-top: 50px;">
     <div class="layui-col-xs1"><br></div>
     <div class="layui-col-xs10">
-        <form class="layui-form">
+        <form class="layui-form" id="formData">
             <div class="layui-form-item">
                 <label class="layui-form-label">授权公众号:</label>
                 <div class="layui-input-inline">
@@ -137,6 +137,10 @@ if (acekeystoken == "") {
         //监听提交
         form.on('select(quiz1)', function (data) {
             console.log(data);
+            
+            
+            
+            
             $.ajax({
                 url: ctxAppSec + '/api/WeixinGroups/list?parentId=' + data.value+'&Authorization='+acekeystoken,
                 type: "get",
@@ -174,6 +178,24 @@ if (acekeystoken == "") {
         $("#sbbt").click(function () {
         	 var cityId= $("#cityId").val();
               var cinemaId=$("#cinemaId").val();
+              if(/^\d*$/g.test(cityId)){  
+                  //$("#formData").submit(); // searchForm为表单名  
+                  
+              }else{  
+                  alert("城市ID必须输入数字!");  
+                  $('#cityId').val("");  
+                  $('#cityId').focus();  
+                  return false;  
+              }  
+              if(/^\d*$/g.test(cityId)){  
+                 // $("#formData").submit(); // searchForm为表单名  
+              }else{  
+                  alert("影院ID必须输入数字!");  
+                  $('#cinemaId').val("");  
+                  $('#cinemaId').focus();  
+                  return false;  
+              }  
+              
             var lastgroupid = $("#fenzu2").val() == null?$("#fenzu1").val():$("#fenzu2").val();
             
             alert(cityId);
