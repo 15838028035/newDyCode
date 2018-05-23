@@ -177,8 +177,8 @@ public class WechartMenusController {
 					if (mediaType.equals("1")) {
 						subMenuButton.setType("view");
 						String url=weixinMenuMapUtilSubMenu.getAct_list().get(0).getValue();
-						url.replace("{cityid}", "cityid="+cityid);
-						url.replace("{cinemaid}", "cinemaid="+cinemaid);
+						url.replace("{cityid}", cityid);
+						url.replace("{cinemaid}",cinemaid);
 						subMenuButton.setUrl(url);
 					} else {
 						String mediaMenuType = "media_id";
@@ -231,8 +231,8 @@ public class WechartMenusController {
 				if (mediaType.equals("1")) {
 					MainButton.setType("view");
 					String url=weixinMenuMapUtilMainMenu.getAct_list().get(0).getValue();
-					url.replace("{cityid}", "cityid="+cityid);
-					url.replace("{cinemaid}", "cinemaid="+cinemaid);
+					url.replace("{cityid}", cityid);
+					url.replace("{cinemaid}",cinemaid);
 					MainButton.setUrl(url);
 				} else {
 					String mediaMenuType = "media_id";
@@ -364,8 +364,8 @@ public class WechartMenusController {
 						if (mediaType.equals("1")) {
 							subMenuButton.setType("view");
 							String url=weixinMenuMapUtilSubMenu.getAct_list().get(0).getValue();
-							url.replace("{cityid}", "cityid="+cityid);
-							url.replace("{cinemaid}", "cinemaid="+cinemaid);
+							url.replace("{cityid}", cityid);
+							url.replace("{cinemaid}",cinemaid);
 							subMenuButton.setUrl(url);
 						} else {
 							String mediaMenuType = "media_id";
@@ -418,8 +418,8 @@ public class WechartMenusController {
 					if (mediaType.equals("1")) {
 						MainButton.setType("view");
 						String url=weixinMenuMapUtilMainMenu.getAct_list().get(0).getValue();
-						url.replace("{cityid}", "cityid="+cityid);
-						url.replace("{cinemaid}", "cinemaid="+cinemaid);
+						url.replace("{cityid}", cityid);
+						url.replace("{cinemaid}",cinemaid);
 						MainButton.setUrl(url);
 					} else {
 						String mediaMenuType = "media_id";
