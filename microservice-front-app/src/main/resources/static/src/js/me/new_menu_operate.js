@@ -1,10 +1,38 @@
 var authorizerAppid = getQueryString("authorizerAppid");
 var acekeystoken = $.cookie('bearcktkaeskey');
 var updateid = getQueryString("id");
+var ref=/(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/;
 var nowWeixinMenuId = 0;
 if (updateid != null){
     nowWeixinMenuId = updateid;
 }
+
+/**
+ * 填充购票链接,链接后缀增加城市编号,影院编号
+ *
+ */
+ function checkUrl(obj) { 
+	 console.log(obj.checked);
+     if (obj.checked == true) {
+    	 var url=$("#url").val();
+    	 if(ref.test(url)){
+    		 if(url.indexOf("?{cityid}&{cinemaid}")<0){
+    			 url=url+"?{cityid}&{cinemaid}";
+        		 $("#url").val(url);
+    		 }
+    	 }
+     }else{
+    		 var url=$("#url").val();
+    		 console.log(url);
+    		 console.log(url.indexOf("?{cityid}&{cinemaid}"));
+    		 if(url.indexOf("?{cityid}&{cinemaid}")>0){
+    			 url=url.substring(0,url.lastIndexOf('?'));
+        		 $("#url").val(url);
+    		 }else{
+    			 $("#url").val(url);
+    		 }
+     }
+ }
 
 layui.use(['layer', 'table'], function() {
 	var layer = layui.layer;
@@ -182,9 +210,11 @@ layui.use(['layer', 'table'], function() {
 			$('.msg_sender').removeClass('error')
 			$('#js_errTips').hide();
 			if($('input[name=type]:checked').val() == 'view') {
+				$("#autoUrl").show();
 				$(".is-view").show();
 				$(".is-click").hide();
 			} else {
+				$("#autoUrl").hide();
 				$(".is-view").hide();
 				$(".is-click").show();
 			}
@@ -202,6 +232,7 @@ layui.use(['layer', 'table'], function() {
 		});
 		//添加主菜单
 		$("#menu-container").on('click', '#add-item', function() {
+			$("#autoUrl").hide();
 			var menu_item_total = $(".menu-item").size();
 			if(menu_item_total < 3) {
 				var item = '<li class="menu-item" data-type="0" data-action="key|10|" data-name="添加菜单" > <a href="javascript:;" class="menu-link"> <i class="icon-menu-dot"></i> <i class="weixin-icon sort-gray"></i> <span class="title">添加菜单</span> </a> <div class="sub-menu-box" style=""> <ul class="sub-menu-list"><li class=" add-sub-item"><a href="javascript:;" title="最多添加5个子菜单"><span class=" "><i class="weixin-icon add-gray"></i></span></a></li> </ul> <i class="arrow arrow-out"></i> <i class="arrow arrow-in"></i> </div></li>';
@@ -321,9 +352,11 @@ layui.use(['layer', 'table'], function() {
 			var key = "",
 				value,value1,value2;
 			if(type == 'view') {//链接
+				$("#autoUrl").show();
 				key = 'url';
 				value = $("input[name='" + key + "']").val();
 			} else {//其他四种
+				$("#autoUrl").hide();
 				key = 'key';
 				value1 = $("input[name='" + key + "']").val();
 				value2 = $("input[name='" + key + "']").attr('to_id');
@@ -475,6 +508,7 @@ layui.use(['layer', 'table'], function() {
 		};
 		//添加子菜单
 		$("#menu-container").on('click', ".add-sub-item", function() {
+			$("#autoUrl").hide();
 			$(this).parents('.menu-item').attr('data-action','');
 			var sub_menu_item_total = $(this).parent().find(".sub-menu-item").size();
 			if(sub_menu_item_total < 5) {
