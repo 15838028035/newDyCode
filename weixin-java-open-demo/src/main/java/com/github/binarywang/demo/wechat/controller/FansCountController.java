@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -261,7 +262,13 @@ public class FansCountController {
 	
 	@ApiOperation(value = "test")
 	@RequestMapping(value = "/api/count/test2")
-	public void userCountCronTest(Integer day,Integer timeEnd){
+	public RestAPIResult2 userCountCronTest(Integer day,Integer timeEnd){
+		RestAPIResult2 restAPIResult = new RestAPIResult2();
+		restAPIResult.setRespCode(1);
+		restAPIResult.setRespMsg("成功");
+		
+		StringBuffer sb = new StringBuffer("");
+		
 		try {
 			long timeBegin=System.currentTimeMillis();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -318,6 +325,7 @@ public class FansCountController {
 					logger.error("统计公众号:"+weixinUserinfo.getNickName()+"时出现异常");
 					logger.error("异常信息:"+e.getMessage());
 					logger.error(e.getLocalizedMessage());
+					sb.append("异常信息:"+e.getMessage());
 				}
 				if(list==null){
 					logger.error("统计公众号:"+weixinUserinfo.getNickName()+"时出现异常");
@@ -409,6 +417,7 @@ public class FansCountController {
 					if(countlist==null) {
 						logger.error(weixinUserinfo.getNickName()+"出现错误:获得累计用户失败,id:"+weixinUserinfo.getId());
 						logger.error("countlist=null");
+						sb.append(weixinUserinfo.getNickName()+"出现错误:获得累计用户失败,id:"+weixinUserinfo.getId());
 						break;
 					}
 					Integer count=countlist.get(countlist.size()-1).getCumulateUser();
@@ -426,6 +435,7 @@ public class FansCountController {
 
 					if(!countNewUser.equals(wxMpUserList.getCount())) {
 						logger.error("查询参数不正确，新增用户总数为:"+countNewUser+"参数为:"+wxMpUserList.getCount()+"id:"+weixinUserinfo.getId());
+						sb.append("查询参数不正确，新增用户总数为:"+countNewUser+"参数为:"+wxMpUserList.getCount()+"id:"+weixinUserinfo.getId());
 					}
 					logger.info("id为" + weixinUserinfo.getId() + "的公众号新插入粉丝:" + wxMpUserList.getCount() + "结束next_openId为："
 							+ wxMpUserList.getNextOpenid());
@@ -539,7 +549,12 @@ public class FansCountController {
 						logger.info("已统计"+queryCount+"个公众号:"+userNames);
 						logger.info("统计结束,结束时间:"+endTimeHour+"点");
 						logger.info("耗时:"+(System.currentTimeMillis()-timeBegin)+"毫秒");
-						return;
+						
+						 if(StringUtils.isNoneBlank(sb.toString())){
+								restAPIResult.setRespCode(0);
+								restAPIResult.setRespMsg(sb.toString());
+						}
+						return restAPIResult;
 					}
 			}
 			weixinFansAllCount.setCount(fansAllCount);
@@ -569,7 +584,14 @@ public class FansCountController {
 		}catch(Exception e) {
 			e.printStackTrace();
 			logger.info("统计异常:"+e.getMessage());
+			sb.append("统计异常:"+e.getMessage());
 		}
+		
+		 if(StringUtils.isNoneBlank(sb.toString())){
+				restAPIResult.setRespCode(0);
+				restAPIResult.setRespMsg(sb.toString());
+		}
+		return restAPIResult;
 	}
 	
 	
