@@ -192,7 +192,7 @@ public class WeixinImgTextController {
 												
 												FileUtil.createFile(inputStream2, filePath);*/
 										        
-										        URL netUrl = new URL(strCont);   
+												 URL netUrl = new URL(strCont);   
 										        URLConnection rulConnection = netUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
 												HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
 												InputStream inputStream = httpUrlConnection.getInputStream();
@@ -202,7 +202,6 @@ public class WeixinImgTextController {
 												String extName = FileType.name().toLowerCase();//文件扩展名
 												String fileName = System.nanoTime()+"."+extName; 
 												String filePath = file_location +fileName;
-												
 										        
 										        if(FileType.GIF.name().toLowerCase().equals(extName)){
 													GIfUtil.saveGif(inputStream,filePath);
@@ -211,7 +210,6 @@ public class WeixinImgTextController {
 													image = ImageIO.read(netUrl);    
 											        ImageIO.write(image, extName, new File(filePath));   
 												}
-										        
 												
 												WeixinImg weixinImg = new WeixinImg();
 												
@@ -223,21 +221,41 @@ public class WeixinImgTextController {
 												String headImg = appURL+"/"+fileName;
 												weixinImg.setHeadImg(headImg);
 												weixinImgService.insertSelective(weixinImg);
-												
-												
-												 fileTmp = new File(filePath);
-												 WxMediaImgUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
-															.getWxMpServiceByAppid(appId).getMaterialService()
-															.mediaImgUpload(fileTmp);
+												String mediaType = WxConsts.MediaFileType.IMAGE;
+
+												if(FileType.GIF.name().toLowerCase().equals(extName)){
+													// 上传图片
+													WxMpMaterial wxMpMaterial = new WxMpMaterial();
+													wxMpMaterial.setFile(fileTmp);
+													wxMpMaterial.setName(fileName);
+			
+													WxMpMaterialUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
+															.getWxMpServiceByAppid(str).getMaterialService()
+															.materialFileUpload(mediaType, wxMpMaterial);
+			
 													String url = res.getUrl();
 													retContent = retContent.replaceFirst(str, url);// 替换后的内容
 					
 													WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
 													weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
-													logger.info(" 替换图片img WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
-															+ ",的imgTextId=" + imgTextId + ", url:" + res.getUrl() + ",retContent:"
-															+ retContent);
+													
+													logger.info("替换图片img " + url + ",mediaType=" + mediaType + ",fileType=" + FileType
+															+ ",headImg=" + headImg);
+													}else {
 												
+													 fileTmp = new File(filePath);
+													 WxMediaImgUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
+																.getWxMpServiceByAppid(str).getMaterialService()
+																.mediaImgUpload(fileTmp);
+														String url = res.getUrl();
+														retContent = retContent.replaceFirst(str, url);// 替换后的内容
+						
+														WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
+														weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
+														logger.info(" 替换图片img WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
+																+ ",的imgTextId=" + imgTextId + ", url:" + res.getUrl() + ",retContent:"
+																+ retContent);
+													}
 											}
 										}
 									}
@@ -496,20 +514,41 @@ public class WeixinImgTextController {
 										String headImg = appURL+"/"+fileName;
 										weixinImg.setHeadImg(headImg);
 										weixinImgService.insertSelective(weixinImg);
-										
-										
-										 fileTmp = new File(filePath);
-										 WxMediaImgUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
+										String mediaType = WxConsts.MediaFileType.IMAGE;
+
+										if(FileType.GIF.name().toLowerCase().equals(extName)){
+											// 上传图片
+											WxMpMaterial wxMpMaterial = new WxMpMaterial();
+											wxMpMaterial.setFile(fileTmp);
+											wxMpMaterial.setName(fileName);
+	
+											WxMpMaterialUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
 													.getWxMpServiceByAppid(str).getMaterialService()
-													.mediaImgUpload(fileTmp);
+													.materialFileUpload(mediaType, wxMpMaterial);
+	
 											String url = res.getUrl();
 											retContent = retContent.replaceFirst(str, url);// 替换后的内容
 			
 											WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
 											weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
-											logger.info(" 替换图片img WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
-													+ ",的imgTextId=" + imgTextId + ", url:" + res.getUrl() + ",retContent:"
-													+ retContent);
+											
+											logger.info("替换图片img " + url + ",mediaType=" + mediaType + ",fileType=" + FileType
+													+ ",headImg=" + headImg);
+											}else {
+										
+											 fileTmp = new File(filePath);
+											 WxMediaImgUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
+														.getWxMpServiceByAppid(str).getMaterialService()
+														.mediaImgUpload(fileTmp);
+												String url = res.getUrl();
+												retContent = retContent.replaceFirst(str, url);// 替换后的内容
+				
+												WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
+												weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
+												logger.info(" 替换图片img WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
+														+ ",的imgTextId=" + imgTextId + ", url:" + res.getUrl() + ",retContent:"
+														+ retContent);
+											}
 										
 									}
 								}
