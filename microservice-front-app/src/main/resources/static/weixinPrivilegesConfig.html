@@ -142,7 +142,7 @@
 <script type="text/javascript">
 
     var acekeystoken = $.cookie('bearcktkaeskey');
-    if (acekeystoken == "") {
+    if (acekeystoken == ""||acekeystoken==undefined) {
         parent.location.href = ctxApp + '/login.html';
     }
 
