@@ -11,28 +11,15 @@ if (updateid != null){
  * 填充购票链接,链接后缀增加城市编号,影院编号
  *
  */
- function checkUrl(obj) { 
+function checkUrl(obj) { 
 	 console.log(obj.checked);
-     if (obj.checked == true) {
-    	 var url=$("#url").val();
-    	 if(ref.test(url)){
-    		 if(url.indexOf("?{cityid}&{cinemaid}")<0){
-    			 url=url+"?{cityid}&{cinemaid}";
-        		 $("#url").val(url);
-    		 }
-    	 }
-     }else{
-    		 var url=$("#url").val();
-    		 console.log(url);
-    		 console.log(url.indexOf("?{cityid}&{cinemaid}"));
-    		 if(url.indexOf("?{cityid}&{cinemaid}")>0){
-    			 url=url.substring(0,url.lastIndexOf('?'));
-        		 $("#url").val(url);
-    		 }else{
-    			 $("#url").val(url);
-    		 }
-     }
- }
+    if (obj.checked == true) {
+		url="http://h5.dadicinema.com/wapportal/wechat/buy.do?cityid={cityid}&cinemaid={cinemaid}";
+   	$("#url").val(url);
+    }else{
+   		 var url=$("#url").val("");
+    }
+}
 
 layui.use(['layer', 'table'], function() {
 	var layer = layui.layer;
