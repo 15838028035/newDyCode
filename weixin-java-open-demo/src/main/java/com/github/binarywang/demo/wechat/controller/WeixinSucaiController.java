@@ -1,6 +1,8 @@
 package com.github.binarywang.demo.wechat.controller;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -247,20 +249,32 @@ public class WeixinSucaiController {
 									HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
 									InputStream inputStream = httpUrlConnection.getInputStream();
 									
-									FileType FileType = FileTypeJudge.getType2(inputStream);
-									
-									String extName = FileType.name().toLowerCase();//文件扩展名
-									String fileName = System.nanoTime()+"."+extName; 
-									String filePath = file_location +fileName;
-							        
-							        if(FileType.GIF.name().toLowerCase().equals(extName)){
-										GIfUtil.saveGif(inputStream,filePath);
-									}else {
-										BufferedImage image = null; 
-										image = ImageIO.read(netUrl);    
-								        ImageIO.write(image, extName, new File(filePath));   
-									}
-									
+								 ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+								 byte[] buffer = new byte[1024];  
+								 int len;  
+								 while ((len = inputStream.read(buffer)) > -1 ) {  
+								     baos.write(buffer, 0, len);  
+								 }  
+								 baos.flush();                
+								   
+								 InputStream inputStream1 = new ByteArrayInputStream(baos.toByteArray());  
+								 InputStream inputStream2 = new ByteArrayInputStream(baos.toByteArray());  
+								
+								FileType FileType = FileTypeJudge.getType(inputStream1);
+								
+								String extName = FileType.name().toLowerCase();//文件扩展名
+								
+								String fileName = System.nanoTime()+"."+extName; 
+								String filePath = file_location +fileName;
+						        
+						        if(FileType.GIF.name().toLowerCase().equals(extName)){
+									GIfUtil.saveGif(inputStream2,filePath);
+								}else {
+									BufferedImage image = null; 
+									image = ImageIO.read(netUrl);    
+							        ImageIO.write(image, extName, new File(filePath));   
+								}
+										
 									WeixinImg weixinImg = new WeixinImg();
 									
 									Integer createBy = 1;

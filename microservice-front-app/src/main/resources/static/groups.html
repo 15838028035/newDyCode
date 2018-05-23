@@ -188,8 +188,12 @@
 				padding:10px 0;
 				border-bottom: 1px #EBEBEB solid;
 			}
+			.parentInfo h2 {
+				font-size:14px;
+			}
 			.childeInfo {
 				overflow:hidden;
+				padding-left:18px;
 			}
 			.ipt_box .childeInfo p {
 				float:left;
@@ -197,8 +201,8 @@
 			}
 			.ipt_box .childeInfo p input {
 				
-				width:15px;
-				height:15px;
+				width:13px;
+				height:13px;
 			}
 			.ipt_box.zubie span {
 				float:none;
@@ -220,8 +224,7 @@
 	  			<div class="ipt_count">
 	  				<div class="ipt_box" id="ipt_box">
 	  					<span>分组名称</span>
-	  					<p><input id="group" type="text" value=""/></p>
-	  					<i>*</i>
+	  					<p><input id="group" type="text" value="" /></p>
 	  				</div>
 	  					<div class="ipt_box">
 	  					<span>备注</span>
@@ -270,10 +273,10 @@
 		                	 var checked='checked';
 		                	 var  input_checkbox1 ="";
 		                	 if(flag==true){
-		                		 input_checkbox1 = " <label> <input id='tag_id_" + datas[i].id + "' type='checkbox' lay-skin='primary' title='" + datas[i].menu_name + "' name='checkId' value='" + datas[i].id + "' checked="+checked+"   />"+checkboxName+"</label>";
+		                		 input_checkbox1 = " <h2><label> <input id='tag_id_" + datas[i].id + "' type='checkbox' lay-skin='primary' title='" + datas[i].menu_name + "' name='checkId' value='" + datas[i].id + "' checked="+checked+"   />"+checkboxName+"</label></h2>";
 		                	 }
 		                	 if(flag==false){
-		                		 input_checkbox1= " <label> <input id='tag_id_" + datas[i].id + "' type='checkbox' lay-skin='primary' title='" + datas[i].menu_name + "' name='checkId' value='" + datas[i].id + "'/>"+checkboxName+"</label>";
+		                		 input_checkbox1= " <h2><label> <input id='tag_id_" + datas[i].id + "' type='checkbox' lay-skin='primary' title='" + datas[i].menu_name + "' name='checkId' value='" + datas[i].id + "'/>"+checkboxName+"</label></h2>";
 			                 }
 		                	 var childeData=datas[i].childrenData;
 			                     for (var j = 0; j < childeData.length; j++) {
@@ -314,11 +317,8 @@
 		        async: 'false',
 		        success: function (data) {
 		            dataTmp = data;
-		            var html = "";
-		            
-		                 var input_checkbox = ' <input type="text" value="'+dataTmp.groupName+'"  disabled="disabled"/>';
-		                 html += input_checkbox;
-		            $("#ipt_box p").html(html);
+		            $('#group').val(dataTmp.groupName);
+		            $('#remarks').val(dataTmp.remarks);
 		        },
 		        error: function (data) {
 		            try {
@@ -356,9 +356,7 @@
 		
 			    var params = 'urids=' + check_val.join(",")
 			    var remarks=$("#remarks").val();
-			    //alert(JSON.stringify(params))
-				//alert(JSON.stringify(params));
-				 url = ctxAppSec + '/api/SecGroupsUrl/' + getQueryString("id") + '?remarks='+remarks+'&Authorization=' + acekeystoken;
+				url = ctxAppSec + '/api/SecGroupsUrl/' + getQueryString("id") + '?remarks='+remarks+'&Authorization=' + acekeystoken;
 			            var html = "";
 			            var groupName="";
 				$.ajax({
@@ -414,6 +412,34 @@
 	        }
 	    });
 	}
+	
+	
+	$('body').on('change','.parentInfo h2 input',function(){
+		var node = $(this);
+		selectAll(node);
+	})
+
+	
+	function selectAll(node) {  
+        if (node.prop('checked')) {  
+        	node.closest('.parentInfo').find('.childeInfo input').prop("checked","checked");
+            
+        } else {  
+        	node.closest('.parentInfo').find('.childeInfo input').removeAttr("checked");
+        }  
+    }  
+	
+	$('body').on('change','.childeInfo label input',function(){
+		var node = $(this);
+		selectAllNo(node);
+	})
+	function selectAllNo(node) {  
+        if (node.prop('checked')) {  
+    
+        	node.closest('.parentInfo').find('h2 input').prop("checked","checked");
+        	
+        } 
+    }  
 	
 	
 	

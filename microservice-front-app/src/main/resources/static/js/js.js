@@ -9,8 +9,12 @@ var hostname = window.location.protocol + "//" + window.location.hostname;
 //var ctxAppSec2 = "http://weixin.xrtz.org:8002";
 //var ctxAppWeixin = "http://weixin.xrtz.org:8050/weixin";
 
+
 //
-//console.log(window.location.protocol+ "//" +"127.0.0.1");
+//ctxApp = "http://192.168.0.192:8022";
+//ctxAppSec = "http://192.168.0.192:8050/sec";
+//ctxAppSec2 = "http://192.168.0.192:8002";
+//ctxAppWeixin = "http://192.168.0.192:8050/weixin";
 
 //if(hostname == window.location.protocol + "//" +"127.0.0.1" || hostname == window.location.protocol + "//" +"localhost"){
     ctxApp = "http://127.0.0.1:8022";
