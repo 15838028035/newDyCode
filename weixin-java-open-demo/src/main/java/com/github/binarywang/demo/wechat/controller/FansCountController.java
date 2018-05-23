@@ -261,7 +261,7 @@ public class FansCountController {
 	
 	@ApiOperation(value = "test")
 	@RequestMapping(value = "/api/count/test2")
-	public void userCountCronTest(Integer timeEnd){
+	public void userCountCronTest(Integer day,Integer timeEnd){
 		try {
 			long timeBegin=System.currentTimeMillis();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -274,6 +274,7 @@ public class FansCountController {
 			int queryCount=0;
 			
 			SimpleDateFormat sdf1 = new SimpleDateFormat("HH");
+			SimpleDateFormat sdf2 = new SimpleDateFormat("dd");
 			
 			String beginDate = DateUtil.dateStryyyyMMdd(beginDateTime);
 			logger.info("查询开始时间:" + beginDate + "查询结束时间:" + endDate);
@@ -526,12 +527,13 @@ public class FansCountController {
 					
 					Date endExcuteTime=new Date();
 					Integer endTimeHour=Integer.parseInt(sdf1.format(endExcuteTime));
+					Integer endTimeDay=Integer.parseInt(sdf2.format(endExcuteTime));
 					userNames+=weixinUserinfo.getNickName()+",";
 					queryCount++;
 					logger.info("当前公众号"+weixinUserinfo.getNickName()+"统计结束");
 					logger.info("耗时:"+(System.currentTimeMillis()-timeBegin)+"毫秒");
 					logger.info("已统计"+queryCount+"个公众号:"+userNames);
-					if(endTimeHour>timeEnd) {
+					if(endTimeDay==day&&endTimeHour>=timeEnd) {
 						logger.info("当前公众号"+weixinUserinfo.getNickName()+"统计结束");
 						logger.info("已统计"+queryCount+"个公众号:"+userNames);
 						logger.info("统计结束,结束时间:"+endTimeHour+"点");
