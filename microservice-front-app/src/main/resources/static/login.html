@@ -41,7 +41,18 @@
                         <input type="checkbox" name="rememberMe" title="记住帐号" lay-skin="primary">
                     </div>
                 </div>
-                <div class="kit-login-row">
+                 <div class="kit-login-row">
+			 	 <div class="kit-login-col">
+			 	 <i class="layui-icon">&#xe679;</i>
+			 	  <span class="kit-login-input">
+			 	 	 <input type="text" placeholder="验证码"  id="imgCode" lay-verify="required"/>
+			 	 </span>
+			 	 </div>
+			 	 <div class="kit-login-col">
+						<img  class="web_sink_but"  id="refreshImgCode" style="cursor:pointer;min-width:0;width:100%;" src=""/>
+					</div>
+			 </div>
+			 <div class="kit-login-row">
                     <button class="layui-btn kit-login-btn" lay-submit="submit" lay-filter="login_hash">登录</button>
                 </div>
                 <div class="kit-login-row" style="margin-bottom:0;">
@@ -52,13 +63,13 @@
         </div>
     </div>
 </div>
-
+<script src="js/js.js"></script>
 <script src="plugins/polyfill.min.js"></script>
 <script src="plugins/layui/layui.js"></script>
 <script src="js/jquery-1.10.1.min.js"></script>
 <script src="js/jquery.cookie.js"></script>
-<script src="js/js.js"></script>
 <script>
+$('#refreshImgCode').attr('src',ctxAppSec+'/vifityCodeController/getVerify');
     layui.use(['layer', 'form'], function () {
         var form = layui.form,
             $ = layui.jquery;
@@ -75,6 +86,7 @@
             });
             var token = "";
             var data = {username: $("#loginName").val(), password: $("#password").val()};
+            console.log(ctxAppSec);
             $.ajax({
                 url:ctxAppSec +  '/login',
                 method: 'POST',

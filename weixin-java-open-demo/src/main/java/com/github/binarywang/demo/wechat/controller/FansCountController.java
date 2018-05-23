@@ -433,10 +433,6 @@ public class FansCountController {
 						n=count-10000;
 					}while(n>=10000);
 
-					if(!countNewUser.equals(wxMpUserList.getCount())) {
-						logger.error("查询参数不正确，新增用户总数为:"+countNewUser+"参数为:"+wxMpUserList.getCount()+"id:"+weixinUserinfo.getId());
-						sb.append("查询参数不正确，新增用户总数为:"+countNewUser+"参数为:"+wxMpUserList.getCount()+"id:"+weixinUserinfo.getId());
-					}
 					logger.info("id为" + weixinUserinfo.getId() + "的公众号新插入粉丝:" + wxMpUserList.getCount() + "结束next_openId为："
 							+ wxMpUserList.getNextOpenid());
 					// 获取新关注者的openid
@@ -457,7 +453,6 @@ public class FansCountController {
 							logger.error("查询失败,无效的openid:"+openid);
 						}
 						Integer subscribe = userInfo.getSubscribe() ? 1 : 0;
-						String nikeName = userInfo.getNickname();
 						Integer sex = userInfo.getSex();
 						if(sex==1) {
 							male++;
@@ -484,7 +479,7 @@ public class FansCountController {
 						
 						WeixinFansInfo weixinFansInfo=new WeixinFansInfo();
 						weixinFansInfo.setSubscribe(subscribe);
-						weixinFansInfo.setNickname(nikeName);
+//						weixinFansInfo.setNickname();
 						weixinFansInfo.setSex(sex);
 						weixinFansInfo.setCity(city);
 						weixinFansInfo.setCountry(country);
@@ -495,7 +490,7 @@ public class FansCountController {
 						weixinFansInfo.setGroupid(groupid);
 						weixinFansInfo.setCreateTime(createTime);
 						weixinFansInfo.setUpdateTime(updateTime);
-						fansCount.setNikeName(nikeName);
+						fansCount.setNikeName(weixinUserinfo.getNickName());
 						fansCount.setCreateTime(createTime);
 						fansCount.setUpdateTime(createTime);
 						fansCount.setNewFans(countNewUser);
@@ -1227,7 +1222,18 @@ public class FansCountController {
 		Map<String,Object> map=weixinFansAllCountService.selectFansSource();
 		return map;
 	}
-	
+	@ApiOperation(value = "")
+	@RequestMapping(value = "/api/count/emojiInsert")
+	public String emojiInsert(String content) {
+		try {
+			WeixinFansInfo weixinFansInfo=new WeixinFansInfo();
+			weixinFansInfo.setNickname(content);
+			weixinFansInfoService.insertSelective(weixinFansInfo);
+		}catch(Exception e) {
+			return e.getMessage();
+		}
+		return "success";
+	}
 	
 	
 }
