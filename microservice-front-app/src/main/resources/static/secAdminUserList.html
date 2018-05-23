@@ -104,7 +104,7 @@
                 {field: 'secGroupName', title: '管理员分组'},
                 {field: 'lastLoginDate', title: '最近登录日期'},
                 {field: 'lastLoginIp', title: '最近登录IP'},
-                {field: 'createByUname', title: '创建人姓名'},
+                //{field: 'createByUname', title: '创建人姓名'},
                 {field: 'createDate', title: '创建日期'},
                 {field: 'enableFlag', title: '是否有效', templet: '#enableFlagTpl'},
                 {field: 'opt', title: '操作', templet: '#optTpl'}
@@ -137,7 +137,14 @@
                         dataType: "json",
                         success: function (data) {
                             layer.msg(data.respMsg);
-                            table.reload("Load");
+                            table.reload("datagridTable",{
+                            	where:{
+                            	    aaaaaa: 'xxx',
+                            	    bbb: 'yyy'
+                            	},page: {
+                            	    curr: 1 //重新从第 1 页开始
+                            	  }
+                        					});
                         },
                         error: function (data) {
                             try {
