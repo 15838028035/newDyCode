@@ -48,6 +48,12 @@ public interface SecGroupsMapper {
 
 	List<Integer> selectGrouipId(Integer id);
 
+	List<Integer> getParentId();
+
+	List<Map<String, Object>> getClassInfoByparaenId(Integer parentId);
+
+	Map<String, Object> getGroupInfoByid(Integer parentId);
+
 
 
 }
