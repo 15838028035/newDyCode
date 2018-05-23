@@ -530,6 +530,7 @@ layui.use(['layer', 'table'], function() {
 		//添加子菜单
 		$("#menu-container").on('click', ".add-sub-item", function() {
 			$(this).parents('.menu-item').attr('data-action','');
+			$("#autoUrl").hide();
 			var sub_menu_item_total = $(this).parent().find(".sub-menu-item").size();
 			if(sub_menu_item_total < 5) {
 				var item = '<li class="sub-menu-item" data-type="1" data-action="key|10|" data-name="添加子菜单"><a href="javascript:;"><span class=" "><i class="weixin-icon sort-gray"></i><span class="sub-title">添加子菜单</span></span></a></li>';
