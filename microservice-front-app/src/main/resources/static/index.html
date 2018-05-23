@@ -234,7 +234,7 @@
         //console.log(token);
         var acekeystoken = $.cookie('bearcktkaeskey');
         //var acekeystoken = token;
-        if (acekeystoken == "") {
+        if (acekeystoken == ""||acekeystoken==undefined) {
             location.href = ctxApp + '/login.html';
         }
         else {

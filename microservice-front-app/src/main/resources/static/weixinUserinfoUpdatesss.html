@@ -45,7 +45,7 @@
 <script src="layui/layui.js"></script>
 <script>
 var acekeystoken = $.cookie('bearcktkaeskey');
-if (acekeystoken == "") {
+if (acekeystoken == ""||acekeystoken==undefined) {
     parent.location.href = ctxApp + '/login.html';
 }
 

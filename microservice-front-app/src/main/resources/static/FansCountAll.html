@@ -291,7 +291,7 @@ ul{bottom: 0; top: 0;z-index: 9999;}
     </script>
 	<script type="text/javascript">
 	var acekeystoken = $.cookie('bearcktkaeskey');
-	if (acekeystoken == "") {
+	if (acekeystoken == ""||acekeystoken==undefined) {
 		parent.location.href = ctxApp + '/login.html';
 	}
 	var ids=getQueryString('ids');
