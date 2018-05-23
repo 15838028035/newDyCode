@@ -82,6 +82,7 @@ public class SecGroupsServiceImpl  implements SecGroupsService{
 		List<Integer> gids=secGroupsMapper.selectGrouipId(id);
 		
 		List<Map<String, Object>> resultList=secGroupsMapper.selectByInfoKeyData();
+		
 		for (Map<String, Object> map : resultList) {
 			if(gids.contains(map.get("id"))) {
 				map.put("flag", "true");
@@ -89,9 +90,8 @@ public class SecGroupsServiceImpl  implements SecGroupsService{
 			}else {
 				map.put("flag", "false");
 			}
+			
 		}
-		
-		
 		return resultList;
 	}
 

@@ -313,4 +313,12 @@
    <select id="selectGrouipId" resultType="Integer">
        select sec_privilege_id FROM sec_previlege_relation WHERE sec_ag_id=#{id}
    </select>
+   <select id="getParentId" resultType="Integer">
+       SELECT sec_parent_id FROM sec_privileges_config GROUP BY sec_parent_id
+   </select>
+   <select id="getClassInfoByparaenId" resultType="java.util.HashMap">
+     SELECT * FROM sec_privileges_config WHERE sec_parent_id=#{parentId}
+   </select>
+   <select id="getGroupInfoByid" resultType="java.util.HashMap">
+   SELECT * FROM sec_privileges_config WHERE id=#{parentId}</select>
 </mapper>
