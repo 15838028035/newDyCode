@@ -57,6 +57,7 @@ import me.chanjar.weixin.mp.bean.WxMpMassPreviewMessage;
 import me.chanjar.weixin.mp.bean.WxMpMassTagMessage;
 import me.chanjar.weixin.mp.bean.material.WxMediaImgUploadResult;
 import me.chanjar.weixin.mp.bean.material.WxMpMaterial;
+import me.chanjar.weixin.mp.bean.material.WxMpMaterialNews;
 import me.chanjar.weixin.mp.bean.material.WxMpMaterialUploadResult;
 import me.chanjar.weixin.mp.bean.material.WxMpMaterialVideoInfoResult;
 import me.chanjar.weixin.mp.bean.result.WxMpMassSendResult;
@@ -587,55 +588,41 @@ public class WeixinImgTextController {
 					if (list != null) {
 						String appId = str;
 
-						try {
+							WxMpMaterialNews wxMpMaterialNewsSingle = new WxMpMaterialNews();
+
 							for (WeixinImgtextItem WeixinImgtextItem : list) {
-								WxMpMassNews.WxMpMassNewsArticle article2 = new WxMpMassNews.WxMpMassNewsArticle();
-								article2.setTitle(WeixinImgtextItem.getTitle());
-								article2.setContent(WeixinImgtextItem.getNewContent());// 文章内容为替换以后的文章内容
-								article2.setThumbMediaId(WeixinImgtextItem.getMediaId());
-								// if (i == 0) {// 默认第一张是封面
-								// article2.setShowCoverPic(true);
-								// } else {
-								// article2.setShowCoverPic(false);
-								// }
-								article2.setShowCoverPic(false);
-								article2.setAuthor(WeixinImgtextItem.getAuthor());
-								article2.setContentSourceUrl(WeixinImgtextItem.getOriginUrl());
-								article2.setDigest(WeixinImgtextItem.getIntro());
-								news.addArticle(article2);
-								i++;
+
+								WxMpMaterialNews.WxMpMaterialNewsArticle mpMaterialNewsArticleSingle = new WxMpMaterialNews.WxMpMaterialNewsArticle();
+								mpMaterialNewsArticleSingle.setAuthor(WeixinImgtextItem.getAuthor());
+								mpMaterialNewsArticleSingle.setThumbMediaId(WeixinImgtextItem.getMediaId());
+								mpMaterialNewsArticleSingle.setTitle(WeixinImgtextItem.getTitle());
+								mpMaterialNewsArticleSingle.setContent(WeixinImgtextItem.getNewContent());
+								mpMaterialNewsArticleSingle.setContentSourceUrl(WeixinImgtextItem.getOriginUrl());
+								mpMaterialNewsArticleSingle.setShowCoverPic(false);
+								mpMaterialNewsArticleSingle.setDigest(WeixinImgtextItem.getIntro());
+								wxMpMaterialNewsSingle.addArticle(mpMaterialNewsArticleSingle);
 							}
 
-							WxMpMassUploadResult massUploadResult = wxOpenServiceDemo.getWxOpenComponentService()
-									.getWxMpServiceByAppid(appId).getMassMessageService().massNewsUpload(news);
+							WxMpMaterialUploadResult resSingle = wxOpenServiceDemo.getWxOpenComponentService()
+									.getWxMpServiceByAppid(appId).getMaterialService()
+									.materialNewsUpload(wxMpMaterialNewsSingle);
 
-							logger.info("同步文件素材结果 type:" + massUploadResult.getType() + ",mediaId="
-									+ massUploadResult.getMediaId());
-							
-							WeixinUserinfo WeixinUserinfoFilter = WeixinUserinfoService.selectByauthorizerAppid(appId);
+							logger.info("同步文件素材结果 url:" + resSingle.getUrl() + ",mediaId=" + resSingle.getMediaId());
+
 							WeixinPushLog weixinPushLog = new WeixinPushLog();
-							weixinPushLog.setCategoryId("mpnews");//图文消息
-							weixinPushLog.setMediaCategory("1");//永久素材
-							weixinPushLog.setMediaId(massUploadResult.getMediaId());
+							weixinPushLog.setCategoryId("mpnews");// 图文消息
+							weixinPushLog.setMediaCategory("mpnews");// 永久素材
+							weixinPushLog.setMediaId(resSingle.getMediaId());
 							weixinPushLog.setImgTextId(Integer.parseInt(imgTextId));
 							weixinPushLog.setCreateBy(1);
 							weixinPushLog.setCreateByUname("admin01");
-							weixinPushLog.setUserId(WeixinUserinfoFilter.getId());
-							weixinPushLog.setAuthorizerAppid(appId);
-							
+
 							weixinPushLog.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
-							
+
+							weixinPushLog.setAuthorizerAppid(str);
+
 							weixinPushLogService.insertSelective(weixinPushLog);
-						} catch(WxErrorException e) {
-							 e.printStackTrace();
-					    		Integer code = e.getError().getErrorCode();
-								logger.info(str + "同步异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-								sb.append("同步异常:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-						} catch (Exception e2) {
-							logger.error("同步异常，异常信息22222222222222:" + e2.getMessage());
-							sb.append("同步异常:"+ e2.getMessage()+"<br/>");
 						}
-					}
 				}
 			}
 
