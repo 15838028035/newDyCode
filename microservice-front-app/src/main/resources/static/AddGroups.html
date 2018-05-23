@@ -178,8 +178,12 @@
 				padding:10px 0;
 				border-bottom: 1px #EBEBEB solid;
 			}
+			.parentInfo h2 {
+				font-size:14px;
+			}
 			.childeInfo {
 				overflow:hidden;
+				padding-left:18px;
 			}
 			.ipt_box .childeInfo p {
 				float:left;
@@ -187,8 +191,8 @@
 			}
 			.ipt_box .childeInfo p input {
 				
-				width:15px;
-				height:15px;
+				width:13px;
+				height:13px;
 			}
 			.ipt_box.zubie span {
 				float:none;
@@ -360,7 +364,33 @@
 	        }
 	    });
 	}
+
+	$('body').on('change','.parentInfo h2 input',function(){
+		var node = $(this);
+		selectAll(node);
+	})
+
 	
+	function selectAll(node) {  
+        if (node.prop('checked')) {  
+        	node.closest('.parentInfo').find('.childeInfo input').prop("checked","checked");
+            
+        } else {  
+        	node.closest('.parentInfo').find('.childeInfo input').removeAttr("checked");
+        }  
+    }  
+	
+	$('body').on('change','.childeInfo label input',function(){
+		var node = $(this);
+		selectAllNo(node);
+	})
+	function selectAllNo(node) {  
+        if (node.prop('checked')) {  
+    
+        	node.closest('.parentInfo').find('h2 input').prop("checked","checked");
+        	
+        } 
+    }  
 	
 	</script>
 </html>
