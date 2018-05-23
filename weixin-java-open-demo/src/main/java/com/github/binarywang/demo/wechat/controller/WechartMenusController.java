@@ -148,6 +148,8 @@ public class WechartMenusController {
 			restAPIResult2.setRespMsg("查询authorzizer失败");
 			return restAPIResult2;
 		}
+		String cityid=weixinUserinfo.get("city_id")==null||weixinUserinfo.get("city_id").equals("")?"":weixinUserinfo.get("city_id").toString();
+		String cinemaid=weixinUserinfo.get("cinema_id")==null||weixinUserinfo.get("cinema_id").equals("")?"":weixinUserinfo.get("cinema_id").toString();
 		WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
 				.getAuthorizerInfo(authorizerAppid);
 		if (wxOpenAuthorizerInfoResult.getAuthorizerInfo().getVerifyTypeInfo() == -1) {
@@ -174,7 +176,10 @@ public class WechartMenusController {
 					subMenuButton.setName(weixinMenuMapUtilSubMenu.getName());
 					if (mediaType.equals("1")) {
 						subMenuButton.setType("view");
-						subMenuButton.setUrl(weixinMenuMapUtilSubMenu.getAct_list().get(0).getValue());
+						String url=weixinMenuMapUtilSubMenu.getAct_list().get(0).getValue();
+						url.replace("{cityid}", "cityid="+cityid);
+						url.replace("{cinemaid}", "cinemaid="+cinemaid);
+						subMenuButton.setUrl(url);
 					} else {
 						String mediaMenuType = "media_id";
 						String mediaId = "";
@@ -225,7 +230,10 @@ public class WechartMenusController {
 				String mediaType = weixinMenuMapUtilMainMenu.getAct_list().get(0).getType();
 				if (mediaType.equals("1")) {
 					MainButton.setType("view");
-					MainButton.setUrl(weixinMenuMapUtilMainMenu.getAct_list().get(0).getValue());
+					String url=weixinMenuMapUtilMainMenu.getAct_list().get(0).getValue();
+					url.replace("{cityid}", "cityid="+cityid);
+					url.replace("{cinemaid}", "cinemaid="+cinemaid);
+					MainButton.setUrl(url);
 				} else {
 					String mediaMenuType = "media_id";
 					String mediaId = "";
@@ -333,6 +341,8 @@ public class WechartMenusController {
 				restAPIResult2.setRespMsg("查询有效公众号失败,请检查所勾选的公众号权限和有效性");
 				return restAPIResult2;
 			}
+			String cityid=weixinUserinfo.get("city_id")==null||weixinUserinfo.get("city_id").equals("")?"":weixinUserinfo.get("city_id").toString();
+			String cinemaid=weixinUserinfo.get("cinema_id")==null||weixinUserinfo.get("cinema_id").equals("")?"":weixinUserinfo.get("cinema_id").toString();
 			WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
 					.getAuthorizerInfo(str);
 			if (wxOpenAuthorizerInfoResult.getAuthorizerInfo().getVerifyTypeInfo() == -1) {
@@ -340,9 +350,7 @@ public class WechartMenusController {
 				restAPIResult2.setRespMsg("请先对所勾选的公众号进行认证,再进行自定义菜单编辑");
 				return restAPIResult2;
 			}
-			
 			WxMenu menu = new WxMenu();
-
 			for (weixinMenuMapUtil weixinMenuMapUtilMainMenu : weixinMenuMapUtil) {
 				WxMenuButton MainButton = new WxMenuButton();
 				MainButton.setName(weixinMenuMapUtilMainMenu.getName());
@@ -355,7 +363,10 @@ public class WechartMenusController {
 						subMenuButton.setName(weixinMenuMapUtilSubMenu.getName());
 						if (mediaType.equals("1")) {
 							subMenuButton.setType("view");
-							subMenuButton.setUrl(weixinMenuMapUtilSubMenu.getAct_list().get(0).getValue());
+							String url=weixinMenuMapUtilSubMenu.getAct_list().get(0).getValue();
+							url.replace("{cityid}", "cityid="+cityid);
+							url.replace("{cinemaid}", "cinemaid="+cinemaid);
+							subMenuButton.setUrl(url);
 						} else {
 							String mediaMenuType = "media_id";
 							String mediaId = "";
@@ -406,7 +417,10 @@ public class WechartMenusController {
 					String mediaType = weixinMenuMapUtilMainMenu.getAct_list().get(0).getType();
 					if (mediaType.equals("1")) {
 						MainButton.setType("view");
-						MainButton.setUrl(weixinMenuMapUtilMainMenu.getAct_list().get(0).getValue());
+						String url=weixinMenuMapUtilMainMenu.getAct_list().get(0).getValue();
+						url.replace("{cityid}", "cityid="+cityid);
+						url.replace("{cinemaid}", "cinemaid="+cinemaid);
+						MainButton.setUrl(url);
 					} else {
 						String mediaMenuType = "media_id";
 						String mediaId = "";
