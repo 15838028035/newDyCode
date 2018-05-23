@@ -263,7 +263,7 @@
         <if test="createDateEnd != null and createDateEnd != ''" >
                 <![CDATA[ and   create_date <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
         </if>
-            
+         <if test="id!=null"> and id=#{id}</if>
   </select>
   
   <select id="selectByPageExample"  resultType="java.util.HashMap" >
@@ -321,4 +321,13 @@
    </select>
    <select id="getGroupInfoByid" resultType="java.util.HashMap">
    SELECT * FROM sec_privileges_config WHERE id=#{parentId}</select>
+   <select id="selectGroupInfoByPareintId" resultType="java.util.HashMap">
+   SELECT * FROM sec_privileges_config  where 1=1
+	  <if test="pids!=null">
+		    AND     id  in
+		 <foreach item="item" index="index" collection="pids" open="(" separator="," close=")">  
+		     #{item}  
+		 </foreach> 
+		 </if>
+   </select>
 </mapper>
