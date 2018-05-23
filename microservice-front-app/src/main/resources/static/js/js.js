@@ -4,20 +4,20 @@ var ctx = window.location.protocol + "//" + window.location.host;
 var hostname = window.location.protocol + "//" + window.location.hostname;
 
 
-var ctxApp = "http://weixin.xrtz.org:8022";
-var ctxAppSec = "http://weixin.xrtz.org:8050/sec";
-var ctxAppSec2 = "http://weixin.xrtz.org:8002";
-var ctxAppWeixin = "http://weixin.xrtz.org:8050/weixin";
+//var ctxApp = "http://weixin.xrtz.org:8022";
+//var ctxAppSec = "http://weixin.xrtz.org:8050/sec";
+//var ctxAppSec2 = "http://weixin.xrtz.org:8002";
+//var ctxAppWeixin = "http://weixin.xrtz.org:8050/weixin";
 
 //
 //console.log(window.location.protocol+ "//" +"127.0.0.1");
 //
-//ctxApp = "http://127.0.0.1:8022";
-//ctxAppSec = "http://127.0.0.1:8050/sec";
-//ctxAppSec2 = "http://127.0.0.1:8002";
-//ctxAppWeixin = "http://127.0.0.1:8050/weixin";
-//
-//
+ctxApp = "http://127.0.0.1:8022";
+ctxAppSec = "http://127.0.0.1:8050/sec";
+ctxAppSec2 = "http://127.0.0.1:8002";
+ctxAppWeixin = "http://127.0.0.1:8050/weixin";
+
+
 //if(hostname == window.location.protocol + "//" +"127.0.0.1" || hostname == window.location.protocol + "//" +"localhost"){
 //    ctxApp = "http://127.0.0.1:8022";
 //    ctxAppSec = "http://127.0.0.1:8050/sec";
@@ -65,6 +65,7 @@ var vido_category = "vido_category";//视频分类
 var vido_tag = "vido_tag";//视频标签
 var audio_category = "audio_category";
 var imgtext_category = "imgtext_category";//图文分类 
+
 
 // JavaScript Document
 $(function () {
@@ -470,3 +471,28 @@ function initConfigRodia(){
         }
     });
 }
+//$.ajaxSetup({
+//	beforeSend:function(XMLHttpRequest){
+//		$.ajax();
+//	}
+//});
+
+//$.ajaxSetup( {      
+//    //设置ajax请求结束后的执行动作      
+//    complete : function(XMLHttpRequest, textStatus) {  
+//        // 通过XMLHttpRequest取得响应头，REDIRECT      
+//        var redirect = XMLHttpRequest.getAllResponseHeaders();//若HEADER中含有REDIRECT说明后端想重定向    
+//        console.log(XMLHttpRequest);
+//        if (redirect == "REDIRECT") { 
+//        	console.log(111);
+//            var win = window;      
+//            while (win != win.top){    
+//                win = win.top;    
+//            }  
+//            //将后端重定向的地址取出来,使用win.location.href去实现重定向的要求    
+//            layerAlert(layer,"您的登录信息已超时，请重新登录<p class='ps'>ps:在客户端闲置10分钟后系统会自动登出</p>",'登录超时提示',5,'',0,function(){  
+//                win.location.href= XMLHttpRequest.getResponseHeader("CONTEXTPATH");  
+//            })  
+//        }  
+//    }
+//});   
