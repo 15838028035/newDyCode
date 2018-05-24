@@ -8,25 +8,58 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.lj.cloud.secrity.RedisBusiness;
+import com.lj.cloud.secrity.config.RedisProperies;
 import com.lj.cloud.secrity.util.RandomValidateCodeUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Controller
+@RestController
 @Api(value = "验证码服务", tags = "验证码服务接口")
 public class VifityCodeController {
 
 	private Logger logger = LoggerFactory.getLogger(VifityCodeController.class);
 	
+	@Autowired
+	RedisBusiness r;
 	 /**
 	  * * 生成验证码
+	 * @throws Exception 
 	 */
+	@RequestMapping(value="/checkRedis")  
+	public String checkRedis(String key) throws Exception{  
+      
+    String value= r.get("key");
+      
+    return value;  
+} 
+
+	
+	@RequestMapping(value="/api/SecAdminUser/setSessionId")  
+	public String setSessionId(HttpServletRequest request,String key,String value){  
+      
+    request.getSession().setAttribute(key,value);  
+      
+    return "success";  
+} 
+
+
+
+	@RequestMapping(value="/api/SecAdminUser/getSessionId")  
+    public String getSessionId(HttpServletRequest request,String key){  
+          
+        Object o = request.getSession().getAttribute(key);  
+        return "端口=" + request.getLocalPort() +  " sessionId=" + request.getSession().getId() +"<br/>"+o;  
+    }  
 	 @ApiOperation(value = "获得验证码")
 	@RequestMapping(value = "/vifityCodeController/getVerify")
 	public void getVerify(HttpServletRequest request, HttpServletResponse response) {
@@ -36,7 +69,7 @@ public class VifityCodeController {
 	  response.setHeader("Cache-Control", "no-cache");
 	  response.setDateHeader("Expire", 0);
 	  RandomValidateCodeUtil randomValidateCode = new RandomValidateCodeUtil();
-	  randomValidateCode.getRandcode(request, response);//输出验证码图片方法
+	  randomValidateCode.getRandcode(response,r);//输出验证码图片方法
 	 } catch (Exception e) {
 	  logger.error("获取验证码失败>>>> ", e);
 	 }
@@ -47,7 +80,7 @@ public class VifityCodeController {
 	 try{
 	  //从session中获取随机数
 	  String inputStr = requestMap.get("inputStr").toString();
-	  String random = (String) session.getAttribute(RandomValidateCodeUtil.RANDOMCODEKEY);
+	  String random = r.get(inputStr);
 	  if (random == null) {
 	   return false;
 	  }

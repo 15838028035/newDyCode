@@ -663,11 +663,11 @@
 				,
 			</if>
 			 <if test="cityId != null">	city_id=#{cityId},	</if>
-			<if test="cinemaId != null">cinema_id#{cinemaId},	</if>
+			<if test="cinemaId != null">cinema_id=#{cinemaId},	</if>
 
 		</set>
 		WHERE
-		authorizerAppid = #{authorizerAppid,jdbcType=VARCHAR}
+		 authorizerAppid = #{authorizerAppid,jdbcType=VARCHAR}
 
 	</update>
 
