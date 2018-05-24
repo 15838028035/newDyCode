@@ -334,7 +334,7 @@ public class FansCountController {
 				if(list==null){
 					logger.error("统计公众号:"+weixinUserinfo.getNickName()+"时出现异常");
 					logger.error("list为null");
-					break;
+					continue;
 				}
 				// 查出数据库最后nextOpenid
 				String nextOpenId=weixinFansCountService.selectNextOpenidByNikename(weixinUserinfo.getNickName());
