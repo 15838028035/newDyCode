@@ -470,13 +470,13 @@ function initConfigRodia(){
     });
 }
 
-$.ajax({
-	  url: ctxAppSec+"/chick",
-	  async: false,
-	  function(data,status, xhr){
-		  console.log(xhr);
-	  }
-	})
+//$.ajax({
+//	  url: ctxAppSec+"/chick",
+//	  async: false,
+//	  function(data,status, xhr){
+//		  console.log(xhr);
+//	  }
+//	})
 
 //$.ajaxSetup({
 //	beforeSend:function(XMLHttpRequest){

@@ -181,13 +181,16 @@
    <iframe name="viewFrame"  id="viewFrame" width="100%" height="1024px"  scrolling="yes"  src="" ></iframe>
      
      <script>
-
+var uids=getQueryString("uids");
+if(!uids){
+	uids='';
+}
      var acekeystoken = $.cookie('bearcktkaeskey');
      if (acekeystoken == ""||acekeystoken==undefined) {
          parent.location.href = ctxApp + '/login.html';
      }
 
-     $("#viewFrame").attr("src","weixinReportArticleList.html?ids="+getQueryString("ids")+"&uids="+getQueryString("uids"));
+     $("#viewFrame").attr("src","weixinReportArticleList.html?ids=&uids="+uids);
   var url = url =ctxAppWeixin+'/api/WeixinReportArticle/showInfo3';
   
   $.ajax({
@@ -355,7 +358,7 @@
 					 var username=users[x].title;
 					 var userid=users[x].value.substr(4);
 					 li+='<dl class="layui-nav-child">'
-					 	  +'<dd><a href="weixinReportArticleAll.html?ids='+userid+'">'+username+'</a></dd>'
+					 	  +'<dd><a href="weixinReportArticleAll.html?uids='+userid+'">'+username+'</a></dd>'
 					 	  +'</dl>';
 				 }
 				   li+='</li>';
