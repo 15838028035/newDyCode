@@ -69,7 +69,7 @@
 <script src="js/jquery-1.10.1.min.js"></script>
 <script src="js/jquery.cookie.js"></script>
 <script>
-$('#refreshImgCode').attr('src',ctxAppSec+'/vifityCodeController/getVerify');
+$('#refreshImgCode').attr('src',ctxAppSec+'/vifityCodeController/getVerify?xxx='+Math.random());
 $('#refreshImgCode').click(function(){
 	$('#refreshImgCode').attr('src',ctxAppSec+'/vifityCodeController/getVerify?xxx='+Math.random());
 });
@@ -101,9 +101,10 @@ $('#refreshImgCode').click(function(){
                 }else if(data.respCode == "3"){
                     //console.log(JSON.stringify(data, null, 4));
                     $('#refreshImgCode').attr('src',ctxAppSec+'/vifityCodeController/getVerify?xxx='+Math.random());
-                    alert("验证码不正确或已失效！");
+                    layer.msg("验证码不正确或已失效！");
                 }else{
-                	alert("账号或密码输入不正确");
+                	 $('#refreshImgCode').attr('src',ctxAppSec+'/vifityCodeController/getVerify?xxx='+Math.random());
+                	layer.msg('账号或密码输入不正确');
                 }
             });
 
