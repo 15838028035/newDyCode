@@ -963,6 +963,20 @@ public class WechartMenusController {
 		}
 		return null;
 	}
+	
+	
+	@GetMapping("/getItemMenu")
+	public Map<String, Object> getItemMenu(@RequestParam("id") Integer id) {
+		WeixinMenuItem weixinMenuItem = weixinMenuItemService.selectByPrimaryKey(id);
+		if (weixinMenuItem != null) {
+			Map<String, Object> map=new HashMap<String,Object>();
+			map.put("menuName", weixinMenuItem.getMenuName());
+			map.put("menucontent", weixinMenuItem.getMenucontent());
+			map.put("remarks", weixinMenuItem.getRemarks());
+			return map;
+		}
+		return null;
+	}
 
 	/**
 	 * <pre>

@@ -12,7 +12,6 @@ if (updateid != null){
  *
  */
 function checkUrl(obj) { 
-	 console.log(obj.checked);
     if (obj.checked == true) {
 		url="http://h5.dadicinema.com/wapportal/wechat/buy.do?cityid={cityid}&cinemaid={cinemaid}";
    	$("#url").val(url);
@@ -47,9 +46,17 @@ layui.use(['layer', 'table'], function() {
                 url: ctxAppWeixin+'/wechat/menu/getmenu?id='+nowWeixinMenuId,
                 async:false,
                 success: function(result) {
-                    console.log(result)
                     menu = result  ? result : [];
-                    console.log(menu)
+                }
+            });
+            $.ajax({
+                type: 'get',
+                dataType: 'JSON',
+                url: ctxAppWeixin+'/wechat/menu/getItemMenu?id='+nowWeixinMenuId,
+                async:false,
+                success: function(data) {
+                    $("#menuName").val(data.menuName);
+                    $("#remarks").val(data.remarks);
                 }
             });
 		}
@@ -102,6 +109,7 @@ layui.use(['layer', 'table'], function() {
 	        return realLength;  
 	    }; 
 		var init_menu = function(menu) {
+			console.log(menu);
 			var str = "";
 			var items = menu; //
 			var type = "",
@@ -203,7 +211,6 @@ layui.use(['layer', 'table'], function() {
 				$(".is-click").hide();
 				var url=$("#url").val();
 				if(url.indexOf("{cityid}")>0){
-					console.log("购票链接存在");
 					$("#autoUrlBox").prop("checked","checked");
 				}else{
 					$("#autoUrlBox").prop("checked",false);
@@ -353,7 +360,7 @@ layui.use(['layer', 'table'], function() {
 				$("#autoUrlBox").show();
 				key = 'url';
 				value = $("input[name='" + key + "']").val();
-			} else {//其他四种
+			}else {//其他四种
 				$("#autoUrl").hide();
 				$("#autoUrlBox").hide();
 				key = 'key';
@@ -781,7 +788,6 @@ layui.use(['layer', 'table'], function() {
 		$("#menu-container").on('click', "#menuSave", function() {
 			validateMenu();
 			var menus = getMenuList();
-			console.log(menus)
 			//return false;
             var menuName = $("#menuName").val();
 			if (menuName == ""){
@@ -879,17 +885,14 @@ layui.use(['layer', 'table'], function() {
 			return data;
 		}
 	}
-	
-	$("#autoUrl").click(function(){
-		 if ($("#autoUrlBox").is(':checked')) {
-			 	console.log("选中----------没选中");
-			 	$("#url").val("");
-			 	$("#autoUrlBox").prop("checked",false);
-	     }else{
-	    	 	console.log("没选中---------选中");
-	    	 	$("#autoUrlBox").prop("checked","checked");
-	    		url="http://h5.dadicinema.com/wapportal/wechat/buy.do?cityid={cityid}&cinemaid={cinemaid}";
-		    	$("#url").val(url);
-	     }
-	})
 });
+$("#autoUrl").click(function(){
+	 if ($("#autoUrlBox").is(':checked')) {
+		 	$("#autoUrlBox").prop("checked",false);
+		 	$("#url").val("");
+    }else{
+   	 	$("#autoUrlBox").prop("checked","checked");
+   		url="http://h5.dadicinema.com/wapportal/wechat/buy.do?cityid={cityid}&cinemaid={cinemaid}";
+	    	$("#url").val(url);
+    }
+})
