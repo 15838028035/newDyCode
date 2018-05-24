@@ -138,23 +138,23 @@
                         success: function (data) {
                             layer.msg(data.respMsg);
                             table.reload("datagridTable",{
-                            	where:{
-                            	    aaaaaa: 'xxx',
-                            	    bbb: 'yyy'
-                            	},page: {
-                            	    curr: 1 //重新从第 1 页开始
-                            	  }
-                        					});
-                        },
-                        error: function (data) {
-                            try {
-                                layer.msg("请求异常");
-                                return false;
-                            } catch (e) {
-                                console.log(e);
-                            }
-                        }
-                    });
+	                            	where:{
+	                            	    aaaaaa: 'xxx',
+	                            	    bbb: 'yyy'
+	                            	},page: {
+	                            	    curr: 1 //重新从第 1 页开始
+	                            	  }
+	                        	});
+	                        },
+	                        error: function (data) {
+	                            try {
+	                                layer.msg("请求异常");
+	                                return false;
+	                            } catch (e) {
+	                                console.log(e);
+	                            }
+	                        }
+	                    });
 
                     layer.alert("删除成功！", {title: "系统提示", icon: 1, closeBtn: 0}, function (index) {
                         //关闭删除窗口,并刷新table

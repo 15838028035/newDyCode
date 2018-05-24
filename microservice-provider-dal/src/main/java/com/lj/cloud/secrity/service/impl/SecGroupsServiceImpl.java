@@ -190,11 +190,12 @@ private Map<String,Object> setGroupInfo(List<Map<String,Object>> classInfo,List<
 	}
 
 	@Override
-	public void updateByPrimaryKeySelective(Integer id, List<String> urlId,String remarks) {
+	public void updateByPrimaryKeySelective(Integer id, List<String> urlId,String remarks,String groupName) {
 		secGroupsMapper.deleteByPrimaryGroupId(id);
 		if(urlId!=null&&urlId.size()>0) {
 			SecGroups group=new SecGroups();
 			group.setRemarks(remarks);
+			group.setGroupName(groupName);;
 			group.setId(id);
 			secGroupsMapper.updateByPrimaryKeySelective(group);
 				for (String rulId : urlId) {

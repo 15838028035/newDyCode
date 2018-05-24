@@ -280,7 +280,8 @@
             enable_flag  as enableFlag,
             parent_id as parentId ,
             (
-                select count(1) as userCounts from sec_admin_user u where u.sec_group_id = g.id
+                select count(1) as userCounts from sec_admin_user u where u.sec_group_id = g.id and
+                u.enable_flag='1'
             )  as userCounts
             
        from sec_groups g WHERE 1=1  

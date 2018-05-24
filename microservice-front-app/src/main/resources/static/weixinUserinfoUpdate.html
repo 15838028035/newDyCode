@@ -94,7 +94,7 @@ if (acekeystoken == ""||acekeystoken==undefined) {
             dataType: "json",
             success: function (data) {
                 console.log(data);
-                $("#nikename").text(data.nickName);
+                $("#nikename").val(data.nickName);
                 $("#headimg").attr("src",data.headImg);
                 $("#cityId").val(data.cityId);
                 $("#cinemaId").val(data.cinemaId);
@@ -183,7 +183,7 @@ if (acekeystoken == ""||acekeystoken==undefined) {
                   
               }else{  
                   alert("城市ID必须输入数字!");  
-                  $('#cityId').val("");  
+                  //$('#cityId').val("");  
                   $('#cityId').focus();  
                   return false;  
               }  
@@ -191,21 +191,21 @@ if (acekeystoken == ""||acekeystoken==undefined) {
                  // $("#formData").submit(); // searchForm为表单名  
               }else{  
                   alert("影院ID必须输入数字!");  
-                  $('#cinemaId').val("");  
+                  //$('#cinemaId').val("");  
                   $('#cinemaId').focus();  
                   return false;  
               }  
               
             var lastgroupid = $("#fenzu2").val() == null?$("#fenzu1").val():$("#fenzu2").val();
             
-            alert(cityId);
+           
             $.ajax({
                 url: ctxAppSec + '/api/WeixinUserinfo/' + getQueryString("authorizerAppid"),
                 type: "PUT",
                 dataType: "json",
                 data: {weixinGroupsId:lastgroupid,"Authorization":acekeystoken,"cityId":cityId,"cinemaId":cinemaId},
                 success: function (data) {
-                    console.log(data);
+                    //console.log(data);
                     if (data.respCode == 1){
                         var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
                         parent.layer.close(index);

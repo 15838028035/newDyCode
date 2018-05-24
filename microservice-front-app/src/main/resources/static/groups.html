@@ -243,6 +243,25 @@
 	  		</div>
 	  </div>
 	</body>
+	<script type="text/javascript">  
+        ;!function(){  
+            layer.config({//加载扩展模块  
+                extend: 'extend/layer.ext.js'  
+            });  
+            layer.ready(function(){   
+            });  
+        }();  
+          
+        function ityzl_SHOW_LOAD_LAYER(){  
+            return layer.msg('努力中...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: '0px', time:6000}) ;  
+        }  
+        function ityzl_CLOSE_LOAD_LAYER(index){  
+            layer.close(index);  
+        }  
+        function ityzl_SHOW_TIP_LAYER(){  
+            layer.msg('恭喜您，加载完成！',{time: 1000,offset: '10px'});  
+        }  
+    </script>  
 	<script>
 	var acekeystoken = $.cookie('bearcktkaeskey');
 	if (acekeystoken == ""||acekeystoken==undefined) {
@@ -255,18 +274,23 @@
 		 if (getQueryString("id") != null) {
 	            url = ctxAppSec + '/api/SecGroupData/' + getQueryString("id") + '?Authorization=' + acekeystoken;
 	        }
+		 var loadi;
 		  $.ajax({
 	            url: url,
 	            data: {},
 	            type: "get",
 	            dataType: "json",
 	            async: 'false',
+	            beforeSend: function () {  
+	                loadi = ityzl_SHOW_LOAD_LAYER();  
+	            },  
 	            success: function (data) {
 		                var datas = data.respData;
 		                var li = "";
 		                var html = "";
 		                
 		                 for (var i = 0; i < datas.length; i++) {
+		                	 
 		                	 var html2="";
 		                	 var checkboxName = datas[i].menu_name;
 		                	 var flag=datas[i].parentFlag;
@@ -356,9 +380,9 @@
 		
 			    var params = 'urids=' + check_val.join(",")
 			    var remarks=$("#remarks").val();
-				url = ctxAppSec + '/api/SecGroupsUrl/' + getQueryString("id") + '?remarks='+remarks+'&Authorization=' + acekeystoken;
+				url = ctxAppSec + '/api/SecGroupsUrl/' + getQueryString("id") + '?groupName='+$("#group").val()+'&remarks='+remarks+'&Authorization=' + acekeystoken;
 			            var html = "";
-			            var groupName="";
+			            //var groupName="";
 				$.ajax({
 			        url:url ,
 			        data: params,
