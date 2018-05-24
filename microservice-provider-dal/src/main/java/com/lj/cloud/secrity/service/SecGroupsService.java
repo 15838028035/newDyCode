@@ -38,7 +38,7 @@ public interface SecGroupsService  {
 
 
 
-	void updateByPrimaryKeySelective(Integer id, List<String> urlId,String remarks);
+	void updateByPrimaryKeySelective(Integer id, List<String> urlId,String remarks,String groupName);
 
 
 

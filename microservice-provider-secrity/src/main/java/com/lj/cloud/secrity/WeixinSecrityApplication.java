@@ -1,11 +1,10 @@
 package com.lj.cloud.secrity;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -55,7 +54,7 @@ public class WeixinSecrityApplication {
 			RestAPIResult2.setRespCode(3);
 			return RestAPIResult2;
 		}
-		if (isValidPassword(account)) {
+		if (isValidPassword(request,account)) {
 			String loginNo = account.username;
 			String jwt = JwtUtil.generateToken(account.username);
 			RestAPIResult2.setRespCode(1);
@@ -100,7 +99,7 @@ public class WeixinSecrityApplication {
 		return registrationBean;
 	}
 
-	private boolean isValidPassword(Account ac) {
+	public boolean isValidPassword(HttpServletRequest request,Account ac) {
 		String enPwd = Encrypt.getEncrypt(ac.password, "SHA-256");
 		
 		SecAdminUser secAdminUser = secAdminUserService.login(ac.username,enPwd);
@@ -108,10 +107,30 @@ public class WeixinSecrityApplication {
 		if(secAdminUser==null || (secAdminUser!=null &&secAdminUser.getId()==null)) {
 		return false;
 		}
-		
+		Date date=new Date();
+		String loginIp = getIpAddr(request);
+		secAdminUser.setLastLoginIp(loginIp);
+		secAdminUser.setLastLoginDate(date);
+		secAdminUserService.updateByPrimaryKeySelective(secAdminUser);
 		return true;
 	}
-
+	
+	public static String getIpAddr(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        if (ip.equals("0:0:0:0:0:0:0:1")) {
+            ip = "本地";
+        }
+       return ip;
+    }
 	public static class Account {
 		public String username;
 		public String password;

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +32,36 @@ public class TestController {
         map.put("axis", axis);
         map.put("series", series);
         return map;
+    }
+	
+	@GetMapping("/zullTest1")
+    public Object zullTest1() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "dbToEs";
+    }
+	
+	@GetMapping("/zullTest2")
+    public Object zullTest2() {
+        try {
+            Thread.sleep(60000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "dbToEs";
+    }
+	
+	@GetMapping("/zullTest3")
+    public Object zullTest3() {
+        try {
+            Thread.sleep(70000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "dbToEs";
     }
 	
 }

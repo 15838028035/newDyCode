@@ -165,7 +165,7 @@ public class WechatApiController {
 			weixinUserinfo.setUserName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getUserName());
 			weixinUserinfo.setQrcodeUrl(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getQrcodeUrl());
 			return weixinUserinfo;
-		} catch (WxErrorException e) {//
+		} catch (Exception e) {//WxError
 			logger.error("getAuthorizerInfo", e);
 			throw new RuntimeException(e);
 		}

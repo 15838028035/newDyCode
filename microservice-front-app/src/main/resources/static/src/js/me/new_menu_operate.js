@@ -12,7 +12,6 @@ if (updateid != null){
  *
  */
 function checkUrl(obj) { 
-	 console.log(obj.checked);
     if (obj.checked == true) {
 		url="http://h5.dadicinema.com/wapportal/wechat/buy.do?cityid={cityid}&cinemaid={cinemaid}";
    	$("#url").val(url);
@@ -47,9 +46,17 @@ layui.use(['layer', 'table'], function() {
                 url: ctxAppWeixin+'/wechat/menu/getmenu?id='+nowWeixinMenuId,
                 async:false,
                 success: function(result) {
-                    console.log(result)
                     menu = result  ? result : [];
-                    console.log(menu)
+                }
+            });
+            $.ajax({
+                type: 'get',
+                dataType: 'JSON',
+                url: ctxAppWeixin+'/wechat/menu/getItemMenu?id='+nowWeixinMenuId,
+                async:false,
+                success: function(data) {
+                    $("#menuName").val(data.menuName);
+                    $("#remarks").val(data.remarks);
                 }
             });
 		}
@@ -102,6 +109,7 @@ layui.use(['layer', 'table'], function() {
 	        return realLength;  
 	    }; 
 		var init_menu = function(menu) {
+			console.log(menu);
 			var str = "";
 			var items = menu; //
 			var type = "",
@@ -198,10 +206,18 @@ layui.use(['layer', 'table'], function() {
 			$('#js_errTips').hide();
 			if($('input[name=type]:checked').val() == 'view') {
 				$("#autoUrl").show();
+				$("#autoUrlBox").show();
 				$(".is-view").show();
 				$(".is-click").hide();
+				var url=$("#url").val();
+				if(url.indexOf("{cityid}")>0){
+					$("#autoUrlBox").prop("checked","checked");
+				}else{
+					$("#autoUrlBox").prop("checked",false);
+				}
 			} else {
 				$("#autoUrl").hide();
+				$("#autoUrlBox").hide();
 				$(".is-view").hide();
 				$(".is-click").show();
 			}
@@ -220,6 +236,7 @@ layui.use(['layer', 'table'], function() {
 		//添加主菜单
 		$("#menu-container").on('click', '#add-item', function() {
 			$("#autoUrl").hide();
+			$("#autoUrlBox").hide();
 			var menu_item_total = $(".menu-item").size();
 			if(menu_item_total < 3) {
 				var item = '<li class="menu-item" data-type="0" data-action="key|10|" data-name="添加菜单" > <a href="javascript:;" class="menu-link"> <i class="icon-menu-dot"></i> <i class="weixin-icon sort-gray"></i> <span class="title">添加菜单</span> </a> <div class="sub-menu-box" style=""> <ul class="sub-menu-list"><li class=" add-sub-item"><a href="javascript:;" title="最多添加5个子菜单"><span class=" "><i class="weixin-icon add-gray"></i></span></a></li> </ul> <i class="arrow arrow-out"></i> <i class="arrow arrow-in"></i> </div></li>';
@@ -340,10 +357,12 @@ layui.use(['layer', 'table'], function() {
 				value,value1,value2;
 			if(type == 'view') {//链接
 				$("#autoUrl").show();
+				$("#autoUrlBox").show();
 				key = 'url';
 				value = $("input[name='" + key + "']").val();
-			} else {//其他四种
+			}else {//其他四种
 				$("#autoUrl").hide();
+				$("#autoUrlBox").hide();
 				key = 'key';
 				value1 = $("input[name='" + key + "']").val();
 				value2 = $("input[name='" + key + "']").attr('to_id');
@@ -496,6 +515,7 @@ layui.use(['layer', 'table'], function() {
 		//添加子菜单
 		$("#menu-container").on('click', ".add-sub-item", function() {
 			$("#autoUrl").hide();
+			$("#autoUrlBox").hide();
 			$(this).parents('.menu-item').attr('data-action','');
 			var sub_menu_item_total = $(this).parent().find(".sub-menu-item").size();
 			if(sub_menu_item_total < 5) {
@@ -768,7 +788,6 @@ layui.use(['layer', 'table'], function() {
 		$("#menu-container").on('click', "#menuSave", function() {
 			validateMenu();
 			var menus = getMenuList();
-			console.log(menus)
 			//return false;
             var menuName = $("#menuName").val();
 			if (menuName == ""){
@@ -867,3 +886,13 @@ layui.use(['layer', 'table'], function() {
 		}
 	}
 });
+$("#autoUrl").click(function(){
+	 if ($("#autoUrlBox").is(':checked')) {
+		 	$("#autoUrlBox").prop("checked",false);
+		 	$("#url").val("");
+    }else{
+   	 	$("#autoUrlBox").prop("checked","checked");
+   		url="http://h5.dadicinema.com/wapportal/wechat/buy.do?cityid={cityid}&cinemaid={cinemaid}";
+	    	$("#url").val(url);
+    }
+})
