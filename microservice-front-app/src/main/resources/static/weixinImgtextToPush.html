@@ -936,27 +936,31 @@ $("#btnSend").click(function(){
     var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken};
     
     console.log(postData);
-    
-    //提交
-    $.ajax({
-        url: url,
-        data: postData,
-        type: "POST",
-        dataType: "json",
-        success: function(data){
-               layer.closeAll('loading');
-                 layer.alert(data.respMsg,{area: ['400px', '300px']});
-                 return true;
-          },
-          error: function(data){
-              try {
-                 layer.msg("请求异常");
-                 return false;
-              }catch (e) {
-                 console.log(e);
-              }
-          }
-     });
+    layer.confirm('您确认要进行发送吗？如果图文消息中图片内容过多，请尽量选择少量的公众号进行发送操作', {title: "系统提示", anim: 1, icon: 3, closeBtn: 0}, function (index) {
+	    //提交
+	    $.ajax({
+	        url: url,
+	        data: postData,
+	        type: "POST",
+	        dataType: "json",
+	        beforeSend: function(){
+                layer.msg("正在执行中...，请勿关闭或刷新页面",{time:120000});
+            },
+	        success: function(data){
+	               layer.closeAll('loading');
+	                 layer.alert(data.respMsg,{area: ['400px', '300px']});
+	                 return true;
+	          },
+	          error: function(data){
+	              try {
+	                 layer.msg("请求异常");
+	                 return false;
+	              }catch (e) {
+	                 console.log(e);
+	              }
+	          }
+	     });
+    });
 });
 
 
@@ -979,26 +983,38 @@ $("#btnSync").click(function(){
         
         console.log(postData);
         
-        //提交
-        $.ajax({
-            url: url,
-            data: postData,
-            type: "POST",
-            dataType: "json",
-            success: function(data){
-                   layer.closeAll('loading');
-                     layer.alert(data.respMsg,{area: ['400px', '300px']});
-                     return true;
-              },
-              error: function(data){
-                  try {
-                     layer.msg("请求异常");
-                     return false;
-                  }catch (e) {
-                     console.log(e);
-                  }
-              }
-         });
+       // 测试地址  url = "http://127.0.0.1:8050/weixin/zullTest3";
+        
+        layer.confirm('您确认要进行同步吗？如果图文消息中图片内容过多，请尽量选择少量的公众号进行同步操作', {title: "系统提示", anim: 1, icon: 3, closeBtn: 0}, function (index) {
+        	layer.close(index);
+	        //提交
+	        $.ajax({
+	            url: url,
+	            data: postData,
+	            type: "POST",
+	            dataType: "JSON",
+	            beforeSend: function(){
+	            	layer.msg("正在执行中...，请勿关闭或刷新页面",{time:120000});
+	            },
+	            success: function(data){
+	            	  console.log(data);
+	                   layer.closeAll('loading');
+	                     layer.alert(data.respMsg,{area: ['400px', '300px']});
+	                     return true;
+	              },
+	              error: function(data){
+	                  try {
+	                     layer.msg("请求异常或请求超时");
+	                     return false;
+	                  }catch (e) {
+	                     console.log(e);
+	                  }
+	              },
+	              complete: function(){
+	            	//  layer.msg("执行完毕");
+	              }
+	         });
+        });
 });
 
       function refreshTree(){
