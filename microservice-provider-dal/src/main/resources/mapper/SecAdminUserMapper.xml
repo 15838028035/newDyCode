@@ -217,7 +217,7 @@
         <if test="userName != null and  userName != ''" >
             user_name = #{userName,jdbcType=VARCHAR} ,
         </if>
-        <if test="lastLoginDate != null and  lastLoginDate != ''" >
+        <if test="lastLoginDate" >
             last_login_date = #{lastLoginDate,jdbcType=TIMESTAMP} ,
         </if>
         <if test="lastLoginIp != null and  lastLoginIp != ''" >
@@ -450,28 +450,28 @@
   </select>
   
   <select id="selectByPageExample"  resultType="java.util.HashMap" >
-     select   u.id ,
-            u.logini_no as loginiNo,
+     SELECT   u.id ,
+            u.logini_no AS loginiNo,
             u.mobile ,
             u.pwd ,
             u.qq ,
             u.weixinNo ,
             u.user_name ,
-            u.last_login_date ,
-            u.last_login_ip as lastLoginIp,
+            DATE_FORMAT( u.last_login_date, '%Y-%m-%d %H:%i:%s' )  AS last_login_date,
+            u.last_login_ip AS lastLoginIp,
             u.headImg ,
-            u.create_By_UName as createByUname ,
-            u.create_by as createBy ,
-            date_format(u.create_date, '%Y-%m-%d %H:%i:%s' )  as createDate,
+            u.create_By_UName AS createByUname ,
+            u.create_by AS createBy ,
+            DATE_FORMAT(u.create_date, '%Y-%m-%d %H:%i:%s' )  AS createDate,
             u.update_by ,
-            u.update_By_Uname as updateByUname ,
-            date_format(u.update_date, '%Y-%m-%d %H:%i:%s' )  as updateDate,
-            u.enable_flag as enableFlag,
-            u.sec_group_id as secGroupId ,
-            g.group_name as secGroupName
-               from sec_admin_user u  left join sec_groups g
-               on u.sec_group_id = g.id
-               WHERE 1=1  and u.enable_flag='1'
+            u.update_By_Uname AS updateByUname ,
+            DATE_FORMAT(u.update_date, '%Y-%m-%d %H:%i:%s' )  AS updateDate,
+            u.enable_flag AS enableFlag,
+            u.sec_group_id AS secGroupId ,
+            g.group_name AS secGroupName
+               FROM sec_admin_user u  LEFT JOIN sec_groups g
+               ON u.sec_group_id = g.id
+               WHERE 1=1  AND u.enable_flag='1'
       
         <if test="id != null " >
                and   u.id = #{id,jdbcType=INTEGER}
