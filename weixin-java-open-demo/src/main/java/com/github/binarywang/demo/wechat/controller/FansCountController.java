@@ -269,13 +269,17 @@ public class FansCountController {
 		
 		StringBuffer sb = new StringBuffer("");
 		
-		try {
 			long timeBegin=System.currentTimeMillis();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			String endDate = DateUtil.getNowDate(DateUtil.DATE_FOMRAT_yyyy_MM_dd);
 			Date endDateTime = DateUtil.formatDate(endDate, DateUtil.DATE_FOMRAT_yyyy_MM_dd);
+			Date beginDateTime =null;
+			try {
 			endDateTime = DateUtil.rollDay(sdf.parse(endDate), -1);
-			Date beginDateTime = DateUtil.rollDay(sdf.parse(endDate), -2);
+			beginDateTime = DateUtil.rollDay(sdf.parse(endDate), -2);
+			}catch(Exception e) {
+				logger.error("异常："+e.getMessage());
+			}
 			Date createTime=new Date();
 			Date updateTime=createTime;
 			String userNames="";
@@ -286,7 +290,6 @@ public class FansCountController {
 			
 			String beginDate = DateUtil.dateStryyyyMMdd(beginDateTime);
 			logger.info("查询开始时间:" + beginDate + "查询结束时间:" + endDate);
-
 			WeixinFansAllCount weixinFansAllCount=new  WeixinFansAllCount();
 			Integer fansAllCount=0;
 			Integer maleAllCount=0;
@@ -313,6 +316,7 @@ public class FansCountController {
 			List<WeixinUserinfo> WeixinUserinfoList = WeixinUserinfoService.selectByExample(query);
 			logger.info("查询公众账号列表数量:WeixinUserinfoList", WeixinUserinfoList.size());
 			for (WeixinUserinfo weixinUserinfo : WeixinUserinfoList) {
+				try {
 				 WeixinFansCount fansCount=new WeixinFansCount();
 				Integer uid = weixinUserinfo.getId();
 				// 获取增减用户
@@ -350,6 +354,7 @@ public class FansCountController {
 				
 				//获取当前用户新增和取消用户总数
 				for (WxDataCubeUserSummary wxDataCubeUserSummary : list) {
+					try {
 					Integer newUser=wxDataCubeUserSummary.getNewUser();
 					countNewUser += newUser;
 					cancelUser += wxDataCubeUserSummary.getCancelUser();
@@ -391,6 +396,9 @@ public class FansCountController {
 			        	   addCircleFriends=newUser;
 			                break; 
 						}
+					}
+					}catch(Exception e) {
+					logger.error("异常:"+e.getMessage());
 					}
 				}
 				logger.info("查询userid为"+uid+"查询新增用户为："+countNewUser+"取消用户为"+cancelUser);
@@ -446,6 +454,7 @@ public class FansCountController {
 					 Integer langOther=0;
 					 
 					for (String openid : newUserOpenids) {
+						try {
 						WxMpUser userInfo = wxOpenServiceDemo.getWxOpenComponentService()
 								.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getUserService()
 								.userInfo(openid);
@@ -495,6 +504,9 @@ public class FansCountController {
 						fansCount.setUpdateTime(createTime);
 						fansCount.setNewFans(countNewUser);
 						weixinFansInfoService.insertSelective(weixinFansInfo);
+					}catch(Exception e) {
+						logger.error("异常："+e.getMessage());
+					}
 					}
 					
 					fansCount.setUserId(uid);
@@ -551,6 +563,12 @@ public class FansCountController {
 						}
 						return restAPIResult;
 					}
+				}catch(Exception e) {
+					e.printStackTrace();
+					logger.info("统计异常:"+e.getMessage());
+					sb.append("统计异常:"+e.getMessage());
+				}
+
 			}
 			weixinFansAllCount.setCount(fansAllCount);
 			weixinFansAllCount.setCancel(cancelAllCount);
@@ -576,11 +594,6 @@ public class FansCountController {
 			weixinFansAllCountService.insertSelective(weixinFansAllCount);
 
 			logger.info("统计结束,耗时:"+(System.currentTimeMillis()-timeBegin)+"毫秒");
-		}catch(Exception e) {
-			e.printStackTrace();
-			logger.info("统计异常:"+e.getMessage());
-			sb.append("统计异常:"+e.getMessage());
-		}
 		
 		 if(StringUtils.isNoneBlank(sb.toString())){
 				restAPIResult.setRespCode(0);

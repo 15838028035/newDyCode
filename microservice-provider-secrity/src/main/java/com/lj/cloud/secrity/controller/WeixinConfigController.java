@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lj.cloud.secrity.RedisBusiness;
 import com.lj.cloud.secrity.service.WeixinConfigService;
 import com.weixindev.micro.serv.common.bean.RestAPIResult2;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinConfig;
@@ -30,7 +31,8 @@ import io.swagger.annotations.ApiOperation;
 public class WeixinConfigController extends BaseController{
 	@Autowired
 	private WeixinConfigService weixinConfigService;
-	
+	@Autowired
+	private RedisBusiness r;
 	@ApiOperation(value = "分页")
 	 @RequestMapping(value = "/api/WeixinConfig", method = RequestMethod.GET)
 	  public LayUiTableResultResponse page(@RequestParam(defaultValue = "10") int limit,
