@@ -356,9 +356,9 @@
 		
 			    var params = 'urids=' + check_val.join(",")
 			    var remarks=$("#remarks").val();
-				url = ctxAppSec + '/api/SecGroupsUrl/' + getQueryString("id") + '?remarks='+remarks+'&Authorization=' + acekeystoken;
+				url = ctxAppSec + '/api/SecGroupsUrl/' + getQueryString("id") + '?groupName='+$("#group").val()+'&remarks='+remarks+'&Authorization=' + acekeystoken;
 			            var html = "";
-			            var groupName="";
+			            //var groupName="";
 				$.ajax({
 			        url:url ,
 			        data: params,

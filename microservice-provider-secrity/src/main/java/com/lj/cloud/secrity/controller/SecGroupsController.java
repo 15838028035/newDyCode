@@ -50,7 +50,29 @@ public class SecGroupsController extends BaseController{
     @Autowired
 	private SecAdminUserService secAdminUserService;
 
-    
+    @ApiOperation(value = "获取组名信息")
+    @RequestMapping(value="/api/SecGroupInfo", method = RequestMethod.GET)
+    public RestAPIResult2 GroupInfo() throws Exception {
+    	  RestAPIResult2 restAPIResult = new RestAPIResult2();
+        List<SecGroups> secGroups =secGroupsService.selectByExample(null);
+        
+        restAPIResult.setRespCode(1);
+        restAPIResult.setRespMsg("操作成功");
+        try {
+     	   if(null!=secGroups&&secGroups.size()>0&&secGroups.get(0)!=null) {
+     		   restAPIResult.setRespData(secGroups);
+     		   
+     	   }else {
+     		   restAPIResult.setRespCode(0);
+     	       restAPIResult.setRespMsg("操作成功");
+     	   }
+        }catch(Exception e) {
+            restAPIResult.setRespCode(0);
+            restAPIResult.setRespMsg("失败成功:"+e.getMessage());
+        }
+
+        return restAPIResult;
+    }
     @ApiOperation(value = "获取所有的菜单信息")
     @RequestMapping(value="/api/SecGroupData", method = RequestMethod.GET)
     public RestAPIResult2 showInfo() throws Exception {
@@ -191,14 +213,14 @@ public class SecGroupsController extends BaseController{
     /** 保存更新  */
     @ApiOperation(value = "修改权限")
     @RequestMapping(value="/api/SecGroupsUrl/{id}",method=RequestMethod.PUT)
-    public RestAPIResult2 update(@PathVariable("id") Integer id ,String urids,String remarks)  {
+    public RestAPIResult2 update(@PathVariable("id") Integer id ,String urids,String remarks,String groupName)  {
         RestAPIResult2 restAPIResult = new RestAPIResult2();
         restAPIResult.setRespCode(1);
         restAPIResult.setRespMsg("操作成功");
         try {
         	String str[] = urids.split(",");
 //        	return 
-        	secGroupsService.updateByPrimaryKeySelective(id, Arrays.asList(str),remarks);
+        	secGroupsService.updateByPrimaryKeySelective(id, Arrays.asList(str),remarks,groupName);
         	
 
         }catch(Exception e) {

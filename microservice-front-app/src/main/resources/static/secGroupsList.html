@@ -42,7 +42,11 @@
         <input class="layui-input" name="keyword" id="createDateEnd" autocomplete="off">
     </div>
     分组名称：
-    <div class="layui-inline">
+    <div class="layui-inline" id="">
+       <!-- <select name="groupName" id="groupName" lay-verify="required" lay-search="">
+            <option class="layui-input" value="">选择</option>
+           
+       </select> -->
         <input class="layui-input" name="keyword" id="groupName" autocomplete="off">
     </div>
     <button class="layui-btn" data-type="reload">搜索</button>
@@ -72,6 +76,11 @@
         parent.location.href = ctxApp + '/login.html';
     }
     layui.use(['laypage', 'table', 'element', 'layer', 'laydate'], function () {
+    	
+ 
+    	//initConfigSelect( "groupName");
+    	
+    	
         var table = layui.table;
         var laydate = layui.laydate;
 
@@ -206,7 +215,62 @@
             }
         });
     }
+    /**
+     * 下拉列表
+     * @param cfgClass
+     * @param obj   	$.ajax({
+ 	    type:"GET",
+	    async:false,     //设为同步请求（异步加载的话后面的遍历方法获取不到option）
+	    url:ctxAppSec+"/api/SecGroupInfo",//获取option值得方法返回LIST<String>类型 
+	    success:function(data){
+	        for(var i in data){        //遍历输出LIST添加为option     
+	            $("#jd").append("<option value='"+data[i]+"'>"+data[i]+"</option>");
+	        }
+	    }
 
+	});
+     * @param titleElementId
+     */
+    function initConfigSelect( obj) {
+
+        $.ajax({
+            url: ctxAppSec2+"/api/SecGroupInfo",
+            data: {"Authorization":$.cookie('bearcktkaeskey')},
+            type: "GET",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                //console.log("fn.getDistrict....." + data);
+
+                var html = "";
+
+                var datas = data.respData;
+
+                for (var i = 0; i < datas.length; i++) {
+
+                    html += '<option value=' + datas[i].groupName + '>' + datas[i].groupName + '</option>';
+                }
+
+                console.log("html======" + html);
+                $("#" + obj).html(html);
+
+                if (typeof obj != "undefined" && obj != null) {
+                    $("#" + titleElementId).val(obj);
+                    //if($("#"+titleElementId)) $("#"+titleElementId).attr("value",$("#"+$this.attr("id")+" option:selected").text());
+                }
+
+            },
+            error: function (data) {
+                try {
+                    layer.msg("请求异常");
+                    return false;
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+
+    }
 
 </script>
 

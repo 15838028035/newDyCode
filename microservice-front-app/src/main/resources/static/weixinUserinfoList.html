@@ -117,7 +117,7 @@
     if (acekeystoken == ""||acekeystoken==undefined) {
         parent.location.href = ctxApp + '/login.html';
     }
-
+	var page =1;
     layui.use(['laypage', 'table', 'element', 'layer', 'laydate'], function () {
         var table = layui.table,
             form = layui.form,
@@ -197,6 +197,7 @@
                 {field: 'opt', title: '操作', templet: '#optTpl', width: '300'}
             ]]
             , page: true
+            , id: 'datagridTable'
             , initSort: {
                 field: 'id' //排序字段，对应 cols 设定的各字段名
                 , type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
@@ -205,6 +206,17 @@
                 pageName: 'page' //页码的参数名称，默认：page
                 , limitName: 'limit' //每页数据量的参数名，默认：limit
             }
+            ,jump: function(obj, first){
+            	
+                //obj包含了当前分页的所有参数，比如：
+                console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                console.log(obj.limit); //得到每页显示的条数
+                
+                //首次不执行
+                if(!first){
+                  //do something
+                }
+              }
         });
 
 
@@ -223,7 +235,8 @@
                         dataType: "json",
                         success: function (data) {
                             layer.msg(data.respMsg);
-                            table.reload("datagrid");
+                            $(".layui-laypage-btn")[0].click();
+                            //table.reload("datagrid");
                         },
                         error: function (data) {
                             try {
@@ -362,7 +375,7 @@
                     content: 'weixinUserinfoUpdatesss.html?ids=' + weixininfoids,
                     // 下面这句是,添加页面关闭后,刷新本页面.
                     end: function () {
-                        location.reload();
+                    	$(".layui-laypage-btn")[0].click();
                     }
                 });
             },
@@ -421,7 +434,8 @@
             content: hostname + '/api/auth/goto_auth_url_show',
             // 下面这句是,添加页面关闭后,刷新本页面.
             end: function () {
-                location.reload();
+            	$(".layui-laypage-btn")[0].click();
+                //location.reload();
             }
         });
     })
@@ -435,7 +449,8 @@
             content: 'weixinUserinfoUpdate.html?authorizerAppid=' + authorizerAppid,
             // 下面这句是,添加页面关闭后,刷新本页面.
             end: function () {
-                location.reload();
+            	$(".layui-laypage-btn")[0].click();
+                //location.reload();
             }
         });
     }

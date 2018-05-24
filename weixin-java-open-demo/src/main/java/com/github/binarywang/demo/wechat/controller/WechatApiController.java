@@ -152,20 +152,20 @@ public class WechatApiController {
 				weixinUserinfo.setCityId(wx.getCityId());
 				weixinUserinfo.setNickName(wx.getNickName());
 			}
-			WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
-					.getAuthorizerInfo(authorizerAppid);
-			
-			weixinUserinfo.setNickName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getNickName());
-			weixinUserinfo.setHeadImg(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getHeadImg());
-			weixinUserinfo.setPrincipalName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getPrincipalName());
-			weixinUserinfo.setAlias(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getAlias());
-			weixinUserinfo.setVerifyTypeInfo(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getVerifyTypeInfo());
-			weixinUserinfo.setServiceTypeInfo(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getServiceTypeInfo().toString());
-			weixinUserinfo.setSignature(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getSignature());
-			weixinUserinfo.setUserName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getUserName());
-			weixinUserinfo.setQrcodeUrl(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getQrcodeUrl());
+//			WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
+//					.getAuthorizerInfo(authorizerAppid);
+//			
+//			weixinUserinfo.setNickName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getNickName());
+//			weixinUserinfo.setHeadImg(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getHeadImg());
+//			weixinUserinfo.setPrincipalName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getPrincipalName());
+//			weixinUserinfo.setAlias(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getAlias());
+//			weixinUserinfo.setVerifyTypeInfo(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getVerifyTypeInfo());
+//			weixinUserinfo.setServiceTypeInfo(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getServiceTypeInfo().toString());
+//			weixinUserinfo.setSignature(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getSignature());
+//			weixinUserinfo.setUserName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getUserName());
+//			weixinUserinfo.setQrcodeUrl(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getQrcodeUrl());
 			return weixinUserinfo;
-		} catch (WxErrorException e) {//
+		} catch (Exception e) {//WxError
 			logger.error("getAuthorizerInfo", e);
 			throw new RuntimeException(e);
 		}
