@@ -1030,7 +1030,7 @@ layui.use(['layer'], function() {
 		var layer = layui.layer;
 		var $ = layui.$;
     var acekeystoken = $.cookie('bearcktkaeskey');
-    if (acekeystoken == "") {
+    if (acekeystoken == ""||acekeystoken==undefined) {
         parent.location.href = ctxApp + '/login.html';
     }
 

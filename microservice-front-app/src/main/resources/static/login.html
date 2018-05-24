@@ -79,14 +79,11 @@ $('#refreshImgCode').attr('src',ctxAppSec+'/vifityCodeController/getVerify');
         });
         //监听提交
         form.on('submit(login_hash)', function (data) {
-            // layer.msg(JSON.stringify(data.field));
-
             $.ajaxSetup({
                 contentType: "application/json; charset=utf-8"
             });
             var token = "";
             var data = {username: $("#loginName").val(), password: $("#password").val()};
-            console.log(ctxAppSec);
             $.ajax({
                 url:ctxAppSec +  '/login',
                 method: 'POST',
