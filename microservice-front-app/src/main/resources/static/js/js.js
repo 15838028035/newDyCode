@@ -6,7 +6,7 @@ var hostname = window.location.protocol + "//" + window.location.hostname;
 
 var ctxApp = "http://weixin.xrtz.org:8022";
 var ctxAppSec = "http://weixin.xrtz.org:8050/sec";
-var ctxAppSec2 = "http://weixin.xrtz.org:8002";
+var ctxAppSec2 = "http://weixin.xrtz.orgs:8002";
 var ctxAppWeixin = "http://weixin.xrtz.org:8050/weixin";
 
 //
