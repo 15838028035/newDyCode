@@ -46,6 +46,8 @@ public class WeixinGroupsServiceImpl  implements WeixinGroupsService{
 
 	@Override
 	public WeixinGroups selectByPrimaryKey(Integer id) {
+//		String appId=id;
+//		Map<String,Object> map=weixinUserinfoMapper.selectByAppId(appId);
 		return weixinGroupsMapper.selectByPrimaryKey(id);
 	}
 
@@ -68,7 +70,23 @@ public class WeixinGroupsServiceImpl  implements WeixinGroupsService{
 
 	@Override
 	public List<WeixinGroups> selectByExample(Query query) {
-		return weixinGroupsMapper.selectByExample(query);
+		String appId=query.get("authorizerAppid").toString();
+		Map<String,Object> map=weixinUserinfoMapper.selectByAppId(appId);
+		Integer pid= Integer.valueOf(map.get("parentId").toString());
+		Integer id= Integer.valueOf(map.get("groupId").toString());
+		List<WeixinGroups> wgList= weixinGroupsMapper.selectByExample(query);
+		if(wgList!=null&&wgList.size()>0) {
+			for (WeixinGroups weixinGroups : wgList) {
+				if(weixinGroups.getParentId()==pid) {
+					weixinGroups.setChildflag("true");;
+				}
+				if(weixinGroups.getId()==pid) {
+					weixinGroups.setParentflag("true");
+				}
+			}
+		}
+		
+		return wgList;
 	}
 
 	@Transactional

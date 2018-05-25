@@ -446,7 +446,6 @@
 	function selectAll(node) {  
         if (node.prop('checked')) {  
         	node.closest('.parentInfo').find('.childeInfo input').prop("checked","checked");
-            
         } else {  
         	node.closest('.parentInfo').find('.childeInfo input').removeAttr("checked");
         }  
