@@ -63,6 +63,8 @@
      <iframe name="viewFrame" style="display:none" id="viewFrame" width="100%" height="1024px"  scrolling="yes" marginheight="0" marginwidth="0" src="" ></iframe>
     
 <script>
+var ids=getQueryString("ids");
+var uids=getQueryString("uids");
 var acekeystoken = $.cookie('bearcktkaeskey');
 if (acekeystoken == ""||acekeystoken==undefined) {
     parent.location.href = ctxApp + '/login.html';
@@ -124,8 +126,8 @@ layui.use(['laypage', 'table', 'element', 'layer','laydate'], function(){
               where: {  
             	  "createDateBegin" : $("#createDateBegin") .val(),
             	  "createDateEnd" : $("#createDateEnd") .val(),
-            	  "ids":getQueryString("ids"),
-            	  "uids":getQueryString("uids")
+            	  "ids":ids,
+            	  "uids":uids
               }  
             });  
           }  
@@ -150,7 +152,7 @@ laydate.render({
 
 table.render({
     elem: '#datagridA'
-    ,url:ctxAppWeixin+'/api/WeixinReportArticle2?Authorization='+ acekeystoken+"&ids="+getQueryString("ids")+"&uids="+getQueryString("uids")
+    ,url:ctxAppWeixin+'/api/WeixinReportArticle2?Authorization='+ acekeystoken+"&uids="+uids
     ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
     
     ,cols: [[
@@ -191,8 +193,8 @@ table.on('tool(GridA)', function(obj){ //注：tool是工具条事件名，test�
               where: {  
                   "createDateBeginA" : $("#createDateBeginA") .val(),
                   "createDateEndA" : $("#createDateEndA") .val(),
-                  "ids":getQueryString("ids"),
-                  "uids":getQueryString("uids")
+                  "ids":ids,
+                  "uids":uids
               }  
             });  
           }  

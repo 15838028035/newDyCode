@@ -428,6 +428,7 @@
 				async : false,
 				success : function(data) {
 					layer.closeAll('loading');
+					//$(".layui-laypage-btn")[0].click();
 					layer.msg(data.respMsg);
 					table.reload("datagridTable", {
 						where : {

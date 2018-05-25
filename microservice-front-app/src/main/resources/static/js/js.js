@@ -4,10 +4,10 @@ var ctx = window.location.protocol + "//" + window.location.host;
 var hostname = window.location.protocol + "//" + window.location.hostname;
 
 
-//var ctxApp = "http://weixin.xrtz.org:8022";
-//var ctxAppSec = "http://weixin.xrtz.org:8050/sec";
-//var ctxAppSec2 = "http://weixin.xrtz.org:8002";
-//var ctxAppWeixin = "http://weixin.xrtz.org:8050/weixin";
+var ctxApp = "http://weixin.xrtz.org:8022";
+var ctxAppSec = "http://weixin.xrtz.org:8050/sec";
+var ctxAppSec2 = "http://weixin.xrtz.org:8002";
+var ctxAppWeixin = "http://weixin.xrtz.org:8050/weixin";
 
 
 //
@@ -470,13 +470,13 @@ function initConfigRodia(){
     });
 }
 
-$.ajax({
-	  url: ctxAppSec+"/chick",
-	  async: false,
-	  function(data,status, xhr){
-		  console.log(xhr);
-	  }
-	})
+//$.ajax({
+//	  url: ctxAppSec+"/chick",
+//	  async: false,
+//	  function(data,status, xhr){
+//		  console.log(xhr);
+//	  }
+//	})
 
 //$.ajaxSetup({
 //	beforeSend:function(XMLHttpRequest){
