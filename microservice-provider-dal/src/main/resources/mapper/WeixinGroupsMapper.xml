@@ -17,7 +17,7 @@
    	  	<result property="parentId" column="parent_id" jdbcType="INTEGER"   />
    	  	<result property="level" column="level" jdbcType="INTEGER"   />
    	  	<result property="count" column="count(wu.id)" jdbcType="VARCHAR"/>
-   	  	<result property="flag" column="flag" jdbcType="VARCHAR"/>
+   	  	<!-- <result property="flag" column="flag" jdbcType="VARCHAR"/> -->
     </resultMap>
 
 	<sql id="Base_Column_List">
