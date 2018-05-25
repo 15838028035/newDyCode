@@ -152,9 +152,9 @@ public class WechatApiController {
 				weixinUserinfo.setCinemaId(wx.getCinemaId());
 				weixinUserinfo.setCityId(wx.getCityId());
 				weixinUserinfo.setNickName(wx.getNickName());
-				
+				weixinUserinfo.setWeixinGroupsId(wx.getWeixinGroupsId());
 			}
-			WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
+			/*WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
 					.getAuthorizerInfo(authorizerAppid);
 			
 			weixinUserinfo.setNickName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getNickName());
@@ -165,7 +165,7 @@ public class WechatApiController {
 			weixinUserinfo.setServiceTypeInfo(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getServiceTypeInfo().toString());
 			weixinUserinfo.setSignature(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getSignature());
 			weixinUserinfo.setUserName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getUserName());
-			weixinUserinfo.setQrcodeUrl(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getQrcodeUrl());
+			weixinUserinfo.setQrcodeUrl(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getQrcodeUrl());*/
 			return weixinUserinfo;
 		} catch (Exception e) {//WxError
 			logger.error("getAuthorizerInfo", e);
