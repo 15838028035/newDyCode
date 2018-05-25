@@ -33,7 +33,7 @@
              <div class="layui-form-item">
                 <label class="layui-form-label">城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市ID:</label>
                 <div class="layui-input-inline">
-                    <input name="cityId" id="cityId"  placeholder="" class="layui-input" type="text" value=""/>
+                    <input name="cityId" id="cityId"   placeholder="" class="layui-input" type="text" value=""/>
                 </div>
             </div>
              <div class="layui-form-item">
@@ -285,6 +285,13 @@ if (acekeystoken == ""||acekeystoken==undefined) {
                  }
              });
         }
+        $('#cityId,#cinemaId').keyup(function(){  
+            var c=$(this);  
+            if(/[^\d]/.test(c.val())){//替换非数字字符  
+              var temp_amount=c.val().replace(/[^\d]/g,'');  
+              $(this).val(temp_amount);  
+            }  
+         })
     });
     
 </script>
