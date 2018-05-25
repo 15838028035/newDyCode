@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.lj.cloud.secrity.RedisBusiness;
 import com.lj.cloud.secrity.service.AdminAuthortyService;
 import com.weixindev.micro.serv.common.bean.RestAPIResult2;
 import com.weixindev.micro.serv.common.bean.secrity.SecPrivilegesConfig;
@@ -21,6 +24,9 @@ import io.swagger.annotations.ApiOperation;
 public class AdminAuthorityController {
 	@Autowired
 	AdminAuthortyService  authorityService;
+	
+	@Autowired
+	RedisBusiness r;
 	
 	@ApiOperation(value = "获取登录主页面菜单")
 
@@ -39,6 +45,22 @@ public class AdminAuthorityController {
 	private void getAuthorityList(@RequestParam String loginNo) {
 
 		
+	}
+	
+	@ApiOperation(value = "获取登录人")
+	@ResponseBody
+	@RequestMapping(value = "/api/getLoginNo", method = RequestMethod.GET)
+	public String getLoginNo() {
+		String loginNo="";
+		try {
+			loginNo = r.get("loginNo");
+			return loginNo;
+		} catch (Exception e) {
+			System.out.println("---------------");
+			System.out.println("redis===="+r);
+			e.printStackTrace();
+		}
+		return loginNo;
 	}
 
 	/*@ApiOperation(value = "权限连接分配")
