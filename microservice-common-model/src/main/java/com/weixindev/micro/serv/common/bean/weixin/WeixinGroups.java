@@ -44,7 +44,9 @@ public class WeixinGroups extends BaseEntity {
 		 */ 
 		 @ApiModelProperty(value = "求和 ")
 		private java.lang.Integer count;
+	 private String childflag;
 	 
+	 private String parentflag;
 
 	public java.lang.Integer getCount() {
 		return count;
@@ -93,6 +95,24 @@ public class WeixinGroups extends BaseEntity {
 	public void setLevel(java.lang.Integer level) {
 		this.level = level;
 	}
+
+	public String getChildflag() {
+		return childflag;
+	}
+
+	public void setChildflag(String childflag) {
+		this.childflag = childflag;
+	}
+
+	public String getParentflag() {
+		return parentflag;
+	}
+
+	public void setParentflag(String parentflag) {
+		this.parentflag = parentflag;
+	}
+
+	
 	
 }
 

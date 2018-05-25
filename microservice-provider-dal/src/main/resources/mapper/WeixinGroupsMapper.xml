@@ -17,6 +17,7 @@
    	  	<result property="parentId" column="parent_id" jdbcType="INTEGER"   />
    	  	<result property="level" column="level" jdbcType="INTEGER"   />
    	  	<result property="count" column="count(wu.id)" jdbcType="VARCHAR"/>
+   	  	<result property="flag" column="flag" jdbcType="VARCHAR"/>
     </resultMap>
 
 	<sql id="Base_Column_List">
@@ -230,6 +231,10 @@
         	wig.update_date ,
         	enable_flag ,
         	parent_id ,
+        	CASE  wig.id
+		      WHEN  #{authorizerAppid} THEN 'true'
+		      ELSE 'false'
+		      END  as 'flag',
         	level,
         	count(wu.id)
    	       	   from weixin_groups wig left join weixin_userinfo wu on wig.id = wu.weixin_groups_id
