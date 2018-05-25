@@ -308,7 +308,7 @@
                 return false;
             }
             $.ajax({
-                url: ctxAppSec + '/api/WeixinGroups/list?authorizerAppid=' + authorizerAppid+'&parentId=' + data.value+'&Authorization='+acekeystoken,
+                url: ctxAppSec + '/api/WeixinGroups/list?authorizerAppid='+ authorizerAppid+'&parentId=' + data.value+'&Authorization='+acekeystoken,
                 type: "get",
                 dataType: "json",
                 success: function (data) {
