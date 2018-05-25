@@ -1741,6 +1741,9 @@ function getImg() {
                     $("#imgTextId").val(tempId);
                     $('.addleftbtn').prev('li').addClass('cur').siblings().removeClass('cur');
                     $('.tuwenli ul .cur').find('.fuceng').html('<a class="up" href="#">上移</a><a href="javascript:;" class="delcount">删除</a>');
+                    
+                    
+                   
                 }
             });
         }
@@ -1860,7 +1863,7 @@ function getImg() {
         $("#Authorization").val($.cookie('bearcktkaeskey'));//设置token
 
         if (id > 0) {
-            $.ajax({
+        	$.ajax({
                 url: ctxAppSec + '/api/WeixinImgtextItem/createOrUpdate/' + id,
                 data: $('#formId').serialize(),
                 type: 'post',
@@ -1869,11 +1872,10 @@ function getImg() {
                     console.log(data);
                     layer.msg(data.respMsg);
 
-
+                    window.location.reload();
                 }
             });
         } else {
-
             $.ajax({
                 url: ctxAppSec + '/api/WeixinImgtextItem/createOrUpdate/0',
                 data: $('#formId').serialize(),
