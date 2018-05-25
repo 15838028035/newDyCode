@@ -138,13 +138,6 @@ body {
 	 z-index:9999;
 	 overflow:auto;
 }
-	ul{bottom: 0; top: 0;z-index: 9999;}
-	.main{margin-left: 200px; position: absolute; right: 0; left: 0;}
-	.main #view1{width: 93%; position: relative;}
-	.main > button{margin-left: 20px; margin-top: 20px;      position: absolute;  z-index: 99999;}
-	.layui-layer-tips .layui-layer-content{
-		background-color: transparent;
-	}
 #pies {
 	overflow: hidden;
 }
@@ -173,7 +166,19 @@ body {
 .dino {
 	display: none;
 }
-
+ul{bottom: 0; top: 0;z-index: 9999;}
+.main{margin-left: 200px; position: absolute; right: 0; left: 0;}
+.main #view1{width: 93%; position: relative;}
+.main > button{margin-left: 20px; margin-top: 20px;      position: absolute;  z-index: 99999;}
+.layui-layer-tips .layui-layer-content{
+	background-color: transparent;
+}
+.fixdtop {
+    position: fixed !important;
+}
+.layui-layer-tips {
+	position: fixed !important;
+}
 </style>
 <script type="text/javascript">
 			//为了保证不出现一闪而过的菜单栏, 放在了前面进行加载这段代码
@@ -192,7 +197,7 @@ body {
 <div></div>
 <body>
 <div class="main dynamic-navigation">
-			<button class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe68e;</i></button>
+			<button class="layui-btn layui-btn-primary fixdtop"><i class="layui-icon">&#xe68e;</i></button>
 			<div id="view1"></div>
 		</div>
 		<div>
@@ -348,6 +353,7 @@ body {
 		console.log(obj);
 		var newUserNum=0;
 		var cancelUserNum=0;
+		var netGrowthNum=0;
 		var lastDayUserNum=0;
 		var lastDaycancelUser=0;
 		var lastDaynetGrowth=0;
@@ -381,9 +387,14 @@ body {
 		}
 		lastWeekParas.netGrowth=lastWeekParas.newUser-lastWeekParas.cancelUser;
 		thisWeekParas.netGrowth=thisWeekParas.newUser-thisWeekParas.cancelUser;
+		var timeTimplate=0;
 		for(var i=0;i<obj.length;i++){
-			newUserNum+=obj[i].newFans;
-			cancelUserNum+=obj[i].cancel;
+			if(obj[i].createTime>timeTimplate){
+				timeTimplate=obj[i].createTime;
+				newUserNum=obj[i].newFans;
+				cancelUserNum=obj[i].cancel;
+				netGrowthNum=obj[i].netGrowth;
+			}
 			if(obj[i].createTime==lastDay){
 				lastDayUserNum+=obj[i].newFans;
 				lastDaycancelUser+=obj[i].cancel;
@@ -393,6 +404,8 @@ body {
 				endDaycancelUser+=obj[i].cancel;
 			}
 		}
+		console.log(11111);
+		console.log(netGrowthNum);
 		lastDaynetGrowth=lastDayUserNum-lastDaycancelUser;
 		endDaynetGrowth=endDayUserNum-endDaycancelUser;
 		if(lastDayUserNum==0){
@@ -427,7 +440,7 @@ body {
 		}
 		$('#newUserNum').html(newUserNum);
 	    $('#cancelUserNum').html(cancelUserNum);
-	    $('#netGrowthNum').html(newUserNum-cancelUserNum);
+	    $('#netGrowthNum').html(netGrowthNum);
 	    var url=ctxAppWeixin+'/api/count/getMonthAllState?ids='+ids;
 	   $.get(url,function(obj){
 		   var lastMonthEndTime=endDay-24*60*60*1000*30;
