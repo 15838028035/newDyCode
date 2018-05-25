@@ -241,7 +241,7 @@ public class WeixinImgTextController {
 															.getWxMpServiceByAppid(str).getMaterialService()
 															.mediaImgUpload(fileTmp);
 													String url = res.getUrl();
-													retContent = retContent.replaceFirst(str, url);// 替换后的内容
+													retContent = retContent.replaceFirst(strCont, url);// 替换后的内容
 					
 													WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
 													weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
@@ -524,7 +524,7 @@ public class WeixinImgTextController {
 													.getWxMpServiceByAppid(str).getMaterialService()
 													.mediaImgUpload(fileTmp);
 											String url = res.getUrl();
-											retContent = retContent.replaceFirst(str, url);// 替换后的内容
+											retContent = retContent.replaceFirst(strCon, url);// 替换后的内容
 			
 											WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
 											weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);

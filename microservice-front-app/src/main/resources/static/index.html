@@ -240,7 +240,15 @@
         else {
         	var url = window.location.search; 
         	var loginNo = url.substring(url.lastIndexOf('=')+1, url.length);
-        	$("#loginNo").html(loginNo);
+        	//获取登录人
+        	$.ajax({
+                type: 'get',
+                url: ctxAppSec+'/api/getLoginNo',
+                success: function(data) {
+                	console.log(data)
+                    $("#loginNo").html(data);
+                }
+            });
             $.ajax({
                 url: ctxAppSec + '/api/getLeftMenuList?loginNo='+loginNo+'&Authorization='+acekeystoken,
                 //headers: {'Authorization': acekeystoken},

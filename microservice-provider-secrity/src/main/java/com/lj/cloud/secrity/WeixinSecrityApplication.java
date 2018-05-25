@@ -58,10 +58,15 @@ public class WeixinSecrityApplication {
 			String loginNo = account.username;
 			String jwt = JwtUtil.generateToken(account.username);
 			RestAPIResult2.setRespCode(1);
-			RestAPIResult2.setLoginNo(loginNo);
 			RestAPIResult2.setRespMsg("登录成功");
 			RestAPIResult2.setToken(jwt);
-			request.getSession().setAttribute("loginNo",loginNo);
+			try {
+				r.set("loginNo", loginNo);
+			} catch (Exception e) {
+				System.out.println("---------------");
+				System.out.println(r);
+				e.printStackTrace();
+			}
 			return RestAPIResult2;
 		} else {
 			RestAPIResult2.setRespCode(0);
