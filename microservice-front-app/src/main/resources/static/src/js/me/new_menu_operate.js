@@ -856,18 +856,19 @@ layui.use(['layer', 'table'], function() {
                 layer.msg("请先点击保存,再进行同步!");
                 return false;
 			}
-
-            layer.open({
-                title: "群发",
-                type: 2,
-                maxmin: true,
-                area: ['100%', '100%'],
-                content: "weixinMenuBatchSend.html?id=" + nowWeixinMenuId,
-                // 下面这句是,添加页面关闭后,刷新本页面.
-                end: function () {
-                    //location.reload();
-                }
-            });
+			alertMsg("提示","请确认先保存再进行同步",function(){
+				layer.open({
+	                title: "群发",
+	                type: 2,
+	                maxmin: true,
+	                area: ['100%', '100%'],
+	                content: "weixinMenuBatchSend.html?id=" + nowWeixinMenuId,
+	                // 下面这句是,添加页面关闭后,刷新本页面.
+	                end: function () {
+	                    //location.reload();
+	                }
+	            });
+	         });
 		});
 		var refreshkey = function(data) {
 			$("input[name=key]").val(data.id).attr("data-msgtype", data.type).trigger("change");
@@ -896,3 +897,24 @@ $("#autoUrl").click(function(){
 	    	$("#url").val(url);
     }
 })
+
+function alertMsg(title,content,fun,param){
+		layer.open({
+			  title: [
+			    title,'font-size:14px;color:#fff'
+			  ]
+			  ,anim: 'up'
+			  ,content: content
+			  ,btn: ['确认', '取消']
+			  ,yes:function(index){
+				  if(fun){
+					  fun(index,param); 
+				  }else{
+					  layer.close(index);
+				  }
+			  },
+			  no:function(){
+				  layer.close();
+			  }
+			});
+	}
