@@ -86,6 +86,7 @@ public class SecAdminUserController extends BaseController{
 		restAPIResult.setRespCode(1);
 	    restAPIResult.setRespMsg("登录成功");
 	    
+	    
 	    String jwt = JwtUtil.generateToken(loginiNo);
 	    restAPIResult.setToken(jwt);
 	    
