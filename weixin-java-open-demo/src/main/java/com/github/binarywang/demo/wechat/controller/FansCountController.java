@@ -1177,6 +1177,13 @@ public class FansCountController {
 		return weixinUserinfo;
 	}
 	
+	@ApiOperation(value = "获取用户信息")
+	@RequestMapping(value = "/api/count/nextopenidtest")
+	public String nextopenidtest(String uid) {
+		String nextOpenId=weixinFansCountService.selectNextOpenidByUserId(Integer.parseInt(uid));
+		return nextOpenId;
+	}
+	
 	@ApiOperation(value = "用户表统计")
 	@RequestMapping(value = "/api/count/userTableCount")
 	public LayUiTableResultResponse userTableCount(String ids) {

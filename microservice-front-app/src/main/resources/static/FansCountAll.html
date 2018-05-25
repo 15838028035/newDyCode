@@ -363,7 +363,6 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 			});
 		 }
 	function simpleCount(obj){
-		console.log(obj);
 		var newUserNum=0;
 		var cancelUserNum=0;
 		var lastDayUserNum=0;
@@ -382,7 +381,6 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 		var thisMonthParas={newUser:0,cancelUser:0,netGrowth:0};
 		var lastWeekBeginTime=endDay-24*60*60*1000*14;
 		var lastWeekEndTime=endDay-24*60*60*1000*7;
-		
 		for(var i=0;i<obj.length;i++){
 			if(obj[i].createTime>lastWeekBeginTime&&obj[i].createTime<lastWeekEndTime){
 				lastWeekParas.newUser+=obj[i].newFans;
@@ -399,9 +397,13 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 		}
 		lastWeekParas.netGrowth=lastWeekParas.newUser-lastWeekParas.cancelUser;
 		thisWeekParas.netGrowth=thisWeekParas.newUser-thisWeekParas.cancelUser;
+		var timeTimplate=0;
 		for(var i=0;i<obj.length;i++){
-			newUserNum+=obj[i].newFans;
-			cancelUserNum+=obj[i].cancel;
+			if(obj[i].createTime>timeTimplate){
+				timeTimplate=obj[i].createTime;
+				newUserNum=obj[i].newFans;
+				cancelUserNum=obj[i].cancel;
+			}
 			if(obj[i].createTime==lastDay){
 				lastDayUserNum+=obj[i].newFans;
 				lastDaycancelUser+=obj[i].cancel;
@@ -411,6 +413,9 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 				endDaycancelUser+=obj[i].cancel;
 			}
 		}
+		console.log(1111111111111);
+		console.log(timeTimplate);
+		console.log(newUserNum);
 		lastDaynetGrowth=lastDayUserNum-lastDaycancelUser;
 		endDaynetGrowth=endDayUserNum-endDaycancelUser;
 		if(lastDayUserNum==0){
