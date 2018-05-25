@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="https://github.com/007gzs">007</a>
@@ -151,6 +152,7 @@ public class WechatApiController {
 				weixinUserinfo.setCinemaId(wx.getCinemaId());
 				weixinUserinfo.setCityId(wx.getCityId());
 				weixinUserinfo.setNickName(wx.getNickName());
+				
 			}
 			WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
 					.getAuthorizerInfo(authorizerAppid);

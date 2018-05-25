@@ -36,11 +36,7 @@
                     </div>
                     <div class="kit-login-col"></div>
                 </div>
-                <div class="kit-login-row">
-                    <div class="kit-login-col">
-                        <input type="checkbox" name="rememberMe" title="记住帐号" lay-skin="primary">
-                    </div>
-                </div>
+                
                  <div class="kit-login-row">
 			 	 <div class="kit-login-col">
 			 	 <i class="layui-icon">&#xe679;</i>
@@ -48,10 +44,16 @@
 			 	 	 <input type="text" placeholder="验证码"  id="imgCode" lay-verify="required"/>
 			 	 </span>
 			 	 </div>
+			 	 
 			 	 <div class="kit-login-col">
 						<img  class="web_sink_but"  id="refreshImgCode" style="cursor:pointer;min-width:0;width:100%;" src=""/>
 					</div>
 			 </div>
+			 <div class="kit-login-row">
+                    <div class="kit-login-col">
+                        <input type="checkbox" name="rememberMe" title="记住帐号" lay-skin="primary">
+                    </div>
+                </div>
 			 <div class="kit-login-row">
                     <button class="layui-btn kit-login-btn" lay-submit="submit" lay-filter="login_hash">登录</button>
                 </div>
