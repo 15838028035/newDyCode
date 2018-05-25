@@ -148,8 +148,10 @@ public class WechartMenusController {
 			restAPIResult2.setRespMsg("查询authorzizer失败");
 			return restAPIResult2;
 		}
-		String cityid=weixinUserinfo.get("city_id")==null||weixinUserinfo.get("city_id").equals("")?"":weixinUserinfo.get("city_id").toString();
-		String cinemaid=weixinUserinfo.get("cinema_id")==null||weixinUserinfo.get("cinema_id").equals("")?"":weixinUserinfo.get("cinema_id").toString();
+		String cityid=weixinUserinfo.get("city_id")==null||weixinUserinfo.get("city_id").equals("")?"":weixinUserinfo.get("city_id")+"";
+		String cinemaid=weixinUserinfo.get("cinema_id")==null||weixinUserinfo.get("cinema_id").equals("")?"":weixinUserinfo.get("cinema_id")+"";
+		System.out.println("----------------------------城市ID"+cityid);
+		System.out.println("----------------------------影院ID"+cinemaid);
 		WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
 				.getAuthorizerInfo(authorizerAppid);
 		if (wxOpenAuthorizerInfoResult.getAuthorizerInfo().getVerifyTypeInfo() == -1) {
@@ -177,8 +179,10 @@ public class WechartMenusController {
 					if (mediaType.equals("1")) {
 						subMenuButton.setType("view");
 						String url=weixinMenuMapUtilSubMenu.getAct_list().get(0).getValue();
-						url.replace("{cityid}", cityid);
-						url.replace("{cinemaid}",cinemaid);
+						url=url.replace("{cityid}", cityid);
+						System.out.println("----------------------------"+url);
+						url=url.replace("{cinemaid}",cinemaid);
+						System.out.println("----------------------------"+url);
 						subMenuButton.setUrl(url);
 					} else {
 						String mediaMenuType = "media_id";
@@ -231,8 +235,8 @@ public class WechartMenusController {
 				if (mediaType.equals("1")) {
 					MainButton.setType("view");
 					String url=weixinMenuMapUtilMainMenu.getAct_list().get(0).getValue();
-					url.replace("{cityid}", cityid);
-					url.replace("{cinemaid}",cinemaid);
+					url=url.replace("{cityid}", cityid);
+					url=url.replace("{cinemaid}",cinemaid);
 					MainButton.setUrl(url);
 				} else {
 					String mediaMenuType = "media_id";
@@ -341,8 +345,10 @@ public class WechartMenusController {
 				restAPIResult2.setRespMsg("查询有效公众号失败,请检查所勾选的公众号权限和有效性");
 				return restAPIResult2;
 			}
-			String cityid=weixinUserinfo.get("city_id")==null||weixinUserinfo.get("city_id").equals("")?"":weixinUserinfo.get("city_id").toString();
-			String cinemaid=weixinUserinfo.get("cinema_id")==null||weixinUserinfo.get("cinema_id").equals("")?"":weixinUserinfo.get("cinema_id").toString();
+			String cityid=weixinUserinfo.get("city_id")==null||weixinUserinfo.get("city_id").equals("")?"":weixinUserinfo.get("city_id")+"";
+			String cinemaid=weixinUserinfo.get("cinema_id")==null||weixinUserinfo.get("cinema_id").equals("")?"":weixinUserinfo.get("cinema_id")+"";
+			System.out.println("----------------------------城市ID"+cityid);
+			System.out.println("----------------------------影院ID"+cinemaid);
 			WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
 					.getAuthorizerInfo(str);
 			if (wxOpenAuthorizerInfoResult.getAuthorizerInfo().getVerifyTypeInfo() == -1) {
@@ -364,9 +370,10 @@ public class WechartMenusController {
 						if (mediaType.equals("1")) {
 							subMenuButton.setType("view");
 							String url=weixinMenuMapUtilSubMenu.getAct_list().get(0).getValue();
-							url.replace("{cityid}", cityid);
-							url.replace("{cinemaid}",cinemaid);
+							url=url.replace("{cityid}", cityid);
+							url=url.replace("{cinemaid}",cinemaid);
 							subMenuButton.setUrl(url);
+							System.out.println("----------------------------"+url);
 						} else {
 							String mediaMenuType = "media_id";
 							String mediaId = "";
@@ -418,8 +425,9 @@ public class WechartMenusController {
 					if (mediaType.equals("1")) {
 						MainButton.setType("view");
 						String url=weixinMenuMapUtilMainMenu.getAct_list().get(0).getValue();
-						url.replace("{cityid}", cityid);
-						url.replace("{cinemaid}",cinemaid);
+						url=url.replace("{cityid}", cityid);
+						url=url.replace("{cinemaid}",cinemaid);
+						System.out.println("----------------------------"+url);
 						MainButton.setUrl(url);
 					} else {
 						String mediaMenuType = "media_id";

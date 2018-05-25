@@ -96,10 +96,9 @@ $('#refreshImgCode').click(function(){
             }).always(function(data, status, xhr) {
                 if(data.respCode == "1"){
                     token = data.token;
-                    loginNo=data.loginNo;
                     //console.log(token);
                     $.cookie('bearcktkaeskey', token, { expires: 1, path: '/' });
-                    location.href = '/index.html?loginNo='+loginNo;
+                    location.href = '/index.html';
                 }else if(data.respCode == "3"){
                     //console.log(JSON.stringify(data, null, 4));
                     $('#refreshImgCode').attr('src',ctxAppSec+'/vifityCodeController/getVerify?xxx='+Math.random());
