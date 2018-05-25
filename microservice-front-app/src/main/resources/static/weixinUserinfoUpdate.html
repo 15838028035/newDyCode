@@ -109,17 +109,24 @@ if (acekeystoken == ""||acekeystoken==undefined) {
             }
         });
         $.ajax({
-            url: ctxAppSec + '/api/WeixinGroups/list?parentId=' + nowgroupIndex+'&Authorization='+acekeystoken,
+            url: ctxAppSec + '/api/WeixinGroups/list?authorizerAppid='+authorizerAppid+'&parentId=' + nowgroupIndex+'&Authorization='+acekeystoken,
             type: "get",
             dataType: "json",
             success: function (data) {
+            	//alert(1);
                 console.log(data);
                 var html = "<option value=\"\">请选分组</option>";
 
                 var datas = data;
 
                 for(var i=0; i< datas.length;i++){
-                    html+='<option value='+datas[i].id+'>'+datas[i].groupName+'</option>';
+                	//alert(authorizerAppid);
+                	  if(datas[i].childflag=="true"){
+                		  html+='<option value='+datas[i].id+' selected>'+datas[i].groupName+'</option>';  
+                	  }else{
+                        html+='<option value='+datas[i].id+'>'+datas[i].groupName+'</option>';
+                	  }
+                	  
                 }
                 $("#fenzu1").html(html);
                 form.render();
@@ -136,13 +143,9 @@ if (acekeystoken == ""||acekeystoken==undefined) {
 
         //监听提交
         form.on('select(quiz1)', function (data) {
-            console.log(data);
-            
-            
-            
-            
+            //console.log(data);
             $.ajax({
-                url: ctxAppSec + '/api/WeixinGroups/list?parentId=' + data.value+'&Authorization='+acekeystoken,
+                url: ctxAppSec + '/api/WeixinGroups/list?authorizerAppid='+authorizerAppid+'&parentId=' + data.value+'&Authorization='+acekeystoken,
                 type: "get",
                 dataType: "json",
                 success: function (data) {

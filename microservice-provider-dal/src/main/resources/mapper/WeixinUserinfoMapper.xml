@@ -134,6 +134,8 @@
 		wu.InfoType,
 		wu.city_id,
 		wu.cinema_id,
+		 wu.weixin_groups_id groupId,
+		 wg1.parent_id  parentId,
 		wg1.group_name as wg1_name,
 		wg2.group_name as wg2_name
 
