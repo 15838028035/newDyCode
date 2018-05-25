@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
+import com.github.binarywang.demo.wechat.task.TimingSendTask;
+import com.github.binarywang.demo.wechat.task.TimingThread;
 import com.github.binarywang.demo.wechat.utils.FileMatchUtil;
 import com.github.binarywang.demo.wechat.utils.GIfUtil;
 import com.lj.cloud.secrity.service.WeixinImgService;
@@ -84,7 +86,9 @@ public class WeixinImgTextController {
 	
 	@Autowired
 	private WeixinPushLogService weixinPushLogService ;
-
+	
+	@Autowired
+	private TimingSendTask task;
 	@Value("${appURL}")
 	private String appURL;// 网站前台url
 
@@ -1244,6 +1248,44 @@ public class WeixinImgTextController {
 		}
 		
 		return restAPIResult;
+	}
+//	@RequestMapping(value="/api/createTimingTask")
+//	public RestAPIResult2 createTimingTask(String minute) {
+//		RestAPIResult2 result=new RestAPIResult2();
+//		Map<String,String> map=new HashMap<String,String>();
+//		map.put("year","2018");
+//		map.put("month","5");
+//		map.put("day","25");
+//		map.put("hour","19");
+//		map.put("minute",minute);
+//		map.put("second","0");
+//		task.setCronStr(map);
+//		task.startCron();
+//		result.setRespMsg(task.getCronStr());
+//		return result;
+//	}
+//	@RequestMapping(value="/api/stopTimingTask")
+//	public RestAPIResult2 stopTimingTask() {
+//		RestAPIResult2 result=new RestAPIResult2();
+//		task.stopCron();
+//		result.setRespMsg("success");
+//		return result;
+//	}
+	@RequestMapping(value="/api/createTimingTask")
+	public RestAPIResult2 createTimingTask(Map<String,Object> params) {
+		RestAPIResult2 result=new RestAPIResult2();
+		Map<String,String> map=new HashMap<String,String>();
+		String date=(String) params.get("date");
+		String time=(String) params.get("time");
+		map.put("month","5");
+		map.put("day","25");
+		map.put("hour","19");
+//		map.put("minute",minute);
+		map.put("second","0");
+		task.setCronStr(map);
+		task.startCron();
+		result.setRespMsg(task.getCronStr());
+		return result;
 	}
 	
 }

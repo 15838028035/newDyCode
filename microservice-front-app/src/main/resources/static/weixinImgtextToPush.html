@@ -848,6 +848,7 @@
                         <span class="layui-btn" lay-button="" lay-filter="btnSync" id ="btnSync">同步</span>
                         <button class="layui-btn layui-btn-primary" id="yulan" type="button">预览</button>
                         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        <span class="layui-btn" lay-button="" lay-filter="btnTimingSend" id ="btnTimingSend">定时发送</span>
                     </div>
                 </div>
 	        </div>
@@ -1158,7 +1159,19 @@ $("#btnSync").click(function(){
     	            }
     	        });
     	    });
-
+    	    $("#btnTimingSend").click(function(){
+    	    	layer.open({
+    	    		title : "定时任务",
+    	    		type : 2,
+    	    		maxmin : true,
+    	    		area : [ '680px', '580px' ],
+    	    		content : 'weixinTimingSend.html',
+    	    		// 下面这句是,添加页面关闭后,刷新本页面.
+    	    		end : function() {
+    	    			location.reload();
+    	    		}
+    	    	});
+    	    });
     	    $('.prcancel').on('click', function () {
     	        $('.previewcountent').hide();
     	    });

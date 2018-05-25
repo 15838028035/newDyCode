@@ -1,0 +1,117 @@
+﻿
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>定时任务</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+	<style>
+		.layui-form{ 
+			padding:20px;
+		}
+		#upload{
+			display: block;
+		}
+		#headImgPic{
+			background:#F5F5F5;
+		}
+		.amentit{
+			margin: 10px 0;
+			font-size: 12px;
+			color: #999;
+		}
+		#tags{width:80%;margin-bottom:20px;margin-top:0px}
+		#tags>div{width:100px}
+	</style>
+</head>
+
+    <body>
+    <form class="layui-form" action="">
+     创建时间：
+    <div class="layui-inline">
+        <input class="layui-input" name="date" id="date" autocomplete="off" placeholder="开始日期">
+    </div>
+       <div class="layui-inline">
+        <input class="layui-input" name="time" id="time" autocomplete="off" placeholder="开始时间">
+    </div>
+<!--  	 <div class="layui-form-item"> -->
+<!--     	<label class="layui-form-label">标题</label> -->
+<!--     	<div class="layui-input-block"> -->
+<!--       <input name="title" id="title"  autocomplete="off" placeholder="请输入" class="layui-input" type="text" > -->
+<!--     	</div> -->
+<!--  	 </div> -->
+<!--  	 <div class="layui-form-item"> -->
+<!--         <label class="layui-form-label">视频</label> -->
+<!--         <div class="layui-input-block"> -->
+<!--           	<input name="headImg" id="headImg"  autocomplete="off"  class="layui-input" type="hidden" > -->
+<!--            <input name="fileSize" id="fileSize"  autocomplete="off"  class="layui-input" type="hidden" > -->
+
+	<div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit="" lay-filter="demo1">启动任务</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+</form>
+<div id="history">历史记录</div>
+
+<script>
+	layui.use(['laypage', 'table', 'element', 'layer','laydate','form'], function(){
+		 var laydate = layui.laydate;
+		  var form = layui.form;
+		  //执行一个laydate实例
+		 laydate.render({ 
+			    elem: '#date'
+			    ,trigger: 'click' //采用click弹出
+			  });
+		 laydate.render({ 
+			    elem: '#time'
+			    ,type:'time'
+			    ,trigger: 'click' //采用click弹出
+			  });
+		 
+		 
+		 form.on('submit(demo1)', function(data){
+			 console.log(data.field);
+// 			 var url='';
+// 			   $.ajax({
+// 			        url: url,
+// 			        data: files,
+// 			        type: postType,
+// 			        dataType: "json",
+// 			        success: function(data){
+// 			        	parent.parent.layer.msg(data.respMsg);
+// 			            var index = parent.layer.getFrameIndex(window.name);  
+// 			            parent.layer.close(index); 
+// 			        	   layer.closeAll('loading');
+// 				     return true;
+// 			          },
+// 			          error: function(data){
+// 			              try {
+// 			                 layer.msg("请求异常");
+// 			                 return false;
+// 			              }catch (e) {
+// 			                 console.log(e);
+// 			              }
+// 			          }
+// 			     });
+		 })
+	})
+</script>
+</body>
+</html>
