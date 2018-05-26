@@ -267,7 +267,6 @@
 	if (acekeystoken == ""||acekeystoken==undefined) {
 	    parent.location.href = ctxApp + '/login.html';
 	}
-	
 	layui.use(['laytpl'], function () {
 		 $("#id").val(getQueryString("id"));
 		 var url ="";
@@ -459,7 +458,19 @@
 	function selectAllNo(node) {  
         if (node.prop('checked')) {  
         	node.closest('.parentInfo').find('h2 input').prop("checked","checked");
-        } 
+        } else{
+        	var child=node.closest('.childeInfo').find('p input');
+        	var isCheck=false;
+        	for(var i=0;i<child.length;i++){
+        		if($(child[i]).prop('checked')){
+        			isCheck=true;
+        			break;
+        		}
+        	}
+        	if(isCheck==false){
+        		node.closest('.parentInfo').find('h2 input').removeAttr("checked");
+        	}
+        }
     }  
 	</script>
 	
