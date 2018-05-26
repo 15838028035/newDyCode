@@ -155,24 +155,16 @@ public class SecAdminUserController extends BaseController{
 					if(secAdminUser.getId()==null){
 						secAdminUser.setId(id);
 					}
-					String enPwd = Encrypt.getEncrypt(secAdminUser.getPwd(), "SHA-256");
-					secAdminUser.setPwd(enPwd);
+					
+					if(StringUtil.isNotBlank((secAdminUser.getPwd()))){
+						String 	enPwd = Encrypt.getEncrypt(secAdminUser.getPwd(), "SHA-256");
+						secAdminUser.setPwd(enPwd);
+					}
 					Integer createBy = getLoginId();
 					secAdminUser.setUpdateBy(createBy);
 					secAdminUser.setUpdateByUname(getUserName());
 					secAdminUser.setUpdateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
-					SecAdminUser loginInfo=secAdminUserService.findAdminUserQuery(secAdminUser.getLoginiNo());
-					
-					if(null==loginInfo) {
-						secAdminUserService.updateByPrimaryKeySelective(secAdminUser);
-					}else {
-						if(loginInfo.getLoginiNo().equals(secAdminUser.getLoginiNo())) {
-							restAPIResult.setRespCode(0);
-							restAPIResult.setRespMsg("设置失败，用户已存在 ");
-//							return 		restAPIResult;
-						}
-						
-					}
+					secAdminUserService.updateByPrimaryKeySelective(secAdminUser);
 					
 				}catch(Exception e) {
 					restAPIResult.setRespCode(0);
