@@ -77,6 +77,8 @@
 				{{# if(d.secAdminUser.loginiNo == ""){ }}
                    		<input name="pwd" id="pwd" autocomplete="off" placeholder="请输入登录密码" class="layui-input" type="text"
                        value={{}}>
+                    <input name="pwdFlag" id="pwdFlag"  type="text" style="display:none;" value="true">
+
                     {{# }else{ }}
                       <input name="pwd" id="pwd" autocomplete="off" placeholder="登录密码不输入不修改" class="layui-input" type="text"
                        value={{}}>
@@ -186,19 +188,27 @@
             var mobile = $("#mobile").val();
             var pwd = $("#pwd").val();
             var userName = $("#userName").val();
-
-
+           var pwdFlag= $("#pwdFlag").val();
+			//alert(pwdFlag);
             if (loginiNo == '') {
                 layer.msg("请输入登录账号");
                 return false;
+            }
+            if(loginiNo!=''){
+            	pedFlag=true;
             }
             if (mobile == '') {
                 layer.msg("请输入手机号");
                 return false;
             }
 
-
-
+          if(pwdFlag=="true"){
+        	  if(pwd==""){
+        		  layer.msg("请输入密码");
+                  return false;
+        	  }
+          }
+	
             var reg = /^1[0-9][0-9]\d{8}$/  ;
             if(reg.test(mobile)==false){
                 layer.msg("请输入正确的电话号码");
@@ -229,6 +239,9 @@
                 	var index = parent.layer.getFrameIndex(window.name);  
                 	parent.parent.layer.msg(data.respMsg);
                     parent.layer.close(index);
+                    if(data.loginFlag=='true'){
+                    	sendPage();
+                    }
                	   layer.closeAll('loading');
                     //return false;
                 },
@@ -247,7 +260,11 @@
 
 
     });
-    
+    function sendPage() {//重定向
+    	  $.cookie('bearcktkaeskey', '', { expires: 1, path: '/' });
+
+    	  window.location.href=ctxApp+'/login.html';
+    }
     
     
 </script>
