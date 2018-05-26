@@ -61,7 +61,13 @@ public class WeixinSecrityApplication {
 			RestAPIResult2.setRespMsg("登录成功");
 			RestAPIResult2.setToken(jwt);
 			try {
-				r.set("loginNo", loginNo);
+				String enPwd = Encrypt.getEncrypt(account.password, "SHA-256");
+				SecAdminUser secAdminUser = secAdminUserService.login(account.username,enPwd);
+				RestAPIResult2.setRespData(secAdminUser);
+				
+				r.set("loginNo_"+secAdminUser.getLoginiNo(), loginNo);
+				r.set("loginId_"+secAdminUser.getId(), String.valueOf(secAdminUser.getId()));
+				
 			} catch (Exception e) {
 				System.out.println("---------------");
 				System.out.println(r);

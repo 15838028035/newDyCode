@@ -219,17 +219,16 @@
 						function() {
 							table = layui.table;
 							var laydate = layui.laydate;
-
 							//自定义事件
+							laydate.render({
+								elem : '#createDateBegin',
+								trigger : 'click', //采用click弹出
+								max:new Date().format('yyyy-MM-dd')
+							});
 							laydate.render({
 								elem : '#createDateEnd',
 								trigger : 'click' //采用click弹出
 							});
-							laydate.render({
-								elem : '#createDateBegin',
-								trigger : 'click' //采用click弹出
-							});
-
                             table.render({
                                 elem : '#datagrid',
                                 url : ctxAppSec

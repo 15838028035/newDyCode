@@ -241,14 +241,18 @@
         	var url = window.location.search; 
         	var loginNo = url.substring(url.lastIndexOf('=')+1, url.length);
         	//获取登录人
-        	$.ajax({
+        /* 	$.ajax({
                 type: 'get',
                 url: ctxAppSec+'/api/getLoginNo',
                 success: function(data) {
                 	console.log(data)
                     $("#loginNo").html(data);
                 }
-            });
+            }); */
+        	
+        	var loginNo = $.cookie('loginNo');
+        	$("#loginNo").html(loginNo);
+        	
             $.ajax({
                 url: ctxAppSec + '/api/getLeftMenuList?loginNo='+loginNo+'&Authorization='+acekeystoken,
                 //headers: {'Authorization': acekeystoken},

@@ -825,6 +825,16 @@
             border: 1px solid #999;
             color: #999999;
         }
+        #xiala{
+        	width:50px;
+        	margin-left:0;
+        	position: absolute;
+        }
+        #history{
+        	position: absolute;
+        	left:230px;
+        	display:none;
+        }
     </style>
     
 </head>
@@ -849,6 +859,8 @@
                         <button class="layui-btn layui-btn-primary" id="yulan" type="button">预览</button>
                         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                         <span class="layui-btn" lay-button="" lay-filter="btnTimingSend" id ="btnTimingSend">定时发送</span>
+                        <i class="layui-btn layui-icon" id="xiala">&#xe625;</i>
+                         <p><a class="layui-btn" href="javascript:;" id="history">查看历史</a></p>
                     </div>
                 </div>
 	        </div>
@@ -964,7 +976,51 @@ $("#btnSend").click(function(){
     });
 });
 
+$('#xiala').click(function(){
+	$('#history').toggle();
+});
+$('#history').click(function(){
+	layer.open({
+		title : "历史任务",
+		type : 2,
+		maxmin : true,
+		area : [ '680px', '580px' ],
+		content : 'weixinTimingHistory.html',
+		// 下面这句是,添加页面关闭后,刷新本页面.
+		end : function() {
+			location.reload();
+		}
+	});
+});
 
+$("#btnTimingSend").click(function(){
+	 var checkStatus = table.checkStatus('datagridTable');
+	    var datas = checkStatus.data;
+
+	    if (datas.length == 0) {
+	        layer.msg("请选择至少一个公众号");
+	        return false;	
+	    }
+	    var checkStatus = table.checkStatus('datagridTable');
+        var datas = checkStatus.data;
+        
+        var ids = "";
+        $.each(datas, function(index, item){
+             var id = item.authorizerAppid;
+             ids+=id+",";
+         });
+	layer.open({
+		title : "定时任务",
+		type : 2,
+		maxmin : true,
+		area : [ '680px', '580px' ],
+		content : 'weixinTimingSend.html?tempId='+getQueryString("tempId")+'&ids='+ids,
+		// 下面这句是,添加页面关闭后,刷新本页面.
+		end : function() {
+			location.reload();
+		}
+	});
+});
 $("#btnSync").click(function(){
         var     url =ctxAppWeixin+'/api/doExexcuteBatchSync';
         var imgTextId = getQueryString("tempId");//模板ID
@@ -1158,19 +1214,6 @@ $("#btnSync").click(function(){
     	                }
     	            }
     	        });
-    	    });
-    	    $("#btnTimingSend").click(function(){
-    	    	layer.open({
-    	    		title : "定时任务",
-    	    		type : 2,
-    	    		maxmin : true,
-    	    		area : [ '680px', '580px' ],
-    	    		content : 'weixinTimingSend.html',
-    	    		// 下面这句是,添加页面关闭后,刷新本页面.
-    	    		end : function() {
-    	    			location.reload();
-    	    		}
-    	    	});
     	    });
     	    $('.prcancel').on('click', function () {
     	        $('.previewcountent').hide();
