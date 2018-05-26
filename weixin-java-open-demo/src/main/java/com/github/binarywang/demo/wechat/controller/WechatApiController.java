@@ -152,7 +152,7 @@ public class WechatApiController {
 				weixinUserinfo.setCinemaId(wx.getCinemaId());
 				weixinUserinfo.setCityId(wx.getCityId());
 				weixinUserinfo.setNickName(wx.getNickName());
-				
+				weixinUserinfo.setWeixinGroupsId(wx.getWeixinGroupsId());
 			}
 			WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
 					.getAuthorizerInfo(authorizerAppid);

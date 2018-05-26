@@ -33,7 +33,7 @@
              <div class="layui-form-item">
                 <label class="layui-form-label">城&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市ID:</label>
                 <div class="layui-input-inline">
-                    <input name="cityId" id="cityId"  placeholder="" class="layui-input" type="text" value=""/>
+                    <input name="cityId" id="cityId"   placeholder="" class="layui-input" type="text" value=""/>
                 </div>
             </div>
              <div class="layui-form-item">
@@ -98,6 +98,26 @@ if (acekeystoken == ""||acekeystoken==undefined) {
                 $("#headimg").attr("src",data.headImg);
                 $("#cityId").val(data.cityId);
                 $("#cinemaId").val(data.cinemaId);
+                var groupId=data.weixinGroupsId;
+                $.ajax({
+                    url: ctxAppSec + '/api/WeixinGroups/'+groupId,
+                    type: "get",
+                    dataType: "json",
+                    success: function (data) {
+                    	parentId=data.parentId;//获取父级菜单编号
+						if(data.level==1){
+							console.log("一级菜单");
+							getGroup(authorizerAppid,nowgroupIndex,acekeystoken,groupId);//
+							//$("#fenzu1").find("option[value = '"+groupId+"']").attr("selected","selected");
+						}else{
+							console.log("二级菜单");
+							getChidrenlGroup(authorizerAppid,parentId,acekeystoken,groupId);
+							getGroup(authorizerAppid,nowgroupIndex,acekeystoken,parentId);//
+							//$("#fenzu1").find("option[value = '"+parentId+"']").attr("selected","selected");
+						}
+                    }
+
+                });
             },
             error: function (data) {
                 try {
@@ -108,42 +128,10 @@ if (acekeystoken == ""||acekeystoken==undefined) {
                 }
             }
         });
-        $.ajax({
-            url: ctxAppSec + '/api/WeixinGroups/list?authorizerAppid='+authorizerAppid+'&parentId=' + nowgroupIndex+'&Authorization='+acekeystoken,
-            type: "get",
-            dataType: "json",
-            success: function (data) {
-            	//alert(1);
-                console.log(data);
-                var html = "<option value=\"\">请选分组</option>";
-
-                var datas = data;
-
-                for(var i=0; i< datas.length;i++){
-                	//alert(authorizerAppid);
-                	  if(datas[i].childflag=="true"){
-                		  html+='<option value='+datas[i].id+' selected>'+datas[i].groupName+'</option>';  
-                	  }else{
-                        html+='<option value='+datas[i].id+'>'+datas[i].groupName+'</option>';
-                	  }
-                	  
-                }
-                $("#fenzu1").html(html);
-                form.render();
-            },
-            error: function (data) {
-                try {
-                    layer.msg("请求异常");
-                    return false;
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-        });
-
         //监听提交
         form.on('select(quiz1)', function (data) {
             //console.log(data);
+            $("#fenzu2").empty(); 
             $.ajax({
                 url: ctxAppSec + '/api/WeixinGroups/list?authorizerAppid='+authorizerAppid+'&parentId=' + data.value+'&Authorization='+acekeystoken,
                 type: "get",
@@ -157,13 +145,10 @@ if (acekeystoken == ""||acekeystoken==undefined) {
                         $("#fenzudiv2").show();
                     }
                     var html = "";
-
                     var datas = data;
-
                     for(var i=0; i< datas.length;i++){
                         html+='<option value='+datas[i].id+'>'+datas[i].groupName+'</option>';
                     }
-
                     $("#fenzu2").html(html);
                     form.render();
                 },
@@ -228,8 +213,87 @@ if (acekeystoken == ""||acekeystoken==undefined) {
             });
         });
 
+        function getGroup(authorizerAppid,nowgroupIndex,acekeystoken,groupId){
+        	$.ajax({
+                url: ctxAppSec + '/api/WeixinGroups/list?authorizerAppid='+authorizerAppid+'&parentId=' + nowgroupIndex+'&Authorization='+acekeystoken,
+                type: "get",
+                dataType: "json",
+                success: function (data) {
+                	//alert(1);
+                    
+                    var html = "<option value=\"\">请选分组</option>";
+                    var datas = data;
+                    for(var i=0; i< datas.length;i++){
+                    	//alert(authorizerAppid);
+                    	console.log(datas[i].id+"--------------------"+groupId);
+                    	if(datas[i].id==groupId){
+	                        html+='<option value='+datas[i].id+' selected=selected>'+datas[i].groupName+'</option>';
+                    	}else{
+                        	html+='<option value='+datas[i].id+'>'+datas[i].groupName+'</option>';
+                    	}
+                    }
+                    $("#fenzu1").html(html);
+                    form.render();
+                },
+                error: function (data) {
+                    try {
+                        layer.msg("请求异常");
+                        return false;
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            });
+        }
+        function getChidrenlGroup(authorizerAppid,parentId,acekeystoken,groupId){
+        	 $.ajax({
+                 url: ctxAppSec + '/api/WeixinGroups/list?authorizerAppid='+authorizerAppid+'&parentId=' +parentId+'&Authorization='+acekeystoken,
+                 type: "get",
+                 dataType: "json",
+                 success: function (data) {
+                     console.log(data);
+                     if (data.length == 0) {
+                         $("#fenzudiv2").hide();
+                     }
+                     else {
+                         $("#fenzudiv2").show();
+                     }
+                     var html = "";
 
+                     var datas = data;
+
+                     for(var i=0; i< datas.length;i++){
+                    	 console.log(groupId+'---------------'+datas[i].id)
+                    	 if(datas[i].id==groupId){
+                        	 html+='<option value='+datas[i].id+' selected="selected">'+datas[i].groupName+'</option>';
+                    	 }else{
+                        	 html+='<option value='+datas[i].id+'>'+datas[i].groupName+'</option>';
+                    	 }
+                     }
+
+                     $("#fenzu2").html(html);
+                     form.render();
+                     $("#fenzu1").val($("#fenzu2").val());
+                 },
+                 error: function (data) {
+                     try {
+                         layer.msg("请求异常");
+                         return false;
+                     } catch (e) {
+                         console.log(e);
+                     }
+                 }
+             });
+        }
+        $('#cityId,#cinemaId').keyup(function(){  
+            var c=$(this);  
+            if(/[^\d]/.test(c.val())){//替换非数字字符  
+              var temp_amount=c.val().replace(/[^\d]/g,'');  
+              $(this).val(temp_amount);  
+            }  
+         })
     });
+    
 </script>
 </body>
 </html>

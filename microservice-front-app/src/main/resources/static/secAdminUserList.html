@@ -68,8 +68,13 @@
 
 <!-- 数据操作监听事件 -->
 <script type="text/html" id="optTpl">
-    <button class="layui-btn layui-btn-edit layui-btn-xs" lay-event="update">编辑</button>
-    <button class="layui-btn layui-btn-primary layui-btn-xs" lay-event="remove">删除</button>
+   <button class="layui-btn layui-btn-edit layui-btn-xs" lay-event="update">编辑</button>
+
+  {{#  if(d.loginiNo == 'admin'){ }}
+    {{# }else{  }}
+        <button class="layui-btn layui-btn-primary layui-btn-xs" lay-event="remove">删除</button>
+    {{# } }}
+  
 </script>
 
 <script>
