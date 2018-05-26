@@ -62,21 +62,33 @@
         <div class="layui-form-item">
             <label class="layui-form-label">登录账号</label>
             <div class="layui-input-block">
-                <input name="loginiNo" id="loginiNo" autocomplete="off" placeholder="请输入登录账号" class="layui-input"
-                       type="text"   disabled="disabled" value={{d.secAdminUser.loginiNo}}>
+					{{# if(d.secAdminUser.loginiNo == ""){ }}
+                   		<input name="loginiNo" id="loginiNo" autocomplete="off" placeholder="请输入登录账号" class="layui-input"
+                      	 type="text"    value={{d.secAdminUser.loginiNo}}>
+                    {{# }else{ }}
+                      <input name="loginiNo" id="loginiNo" autocomplete="off" readOnly="true" placeholder="请输入登录账号" class="layui-input"
+                       type="text"    value={{d.secAdminUser.loginiNo}}>
+					{{# } }}
             </div>
         </div>
      <div class="layui-form-item">
             <label class="layui-form-label">登录密码</label>
             <div class="layui-input-block">
-                <input name="pwd" id="pwd" autocomplete="off" placeholder="登录密码不输入不修改" class="layui-input" type="text"
+				{{# if(d.secAdminUser.loginiNo == ""){ }}
+                   		<input name="pwd" id="pwd" autocomplete="off" placeholder="请输入登录密码" class="layui-input" type="text"
                        value={{}}>
+                    {{# }else{ }}
+                      <input name="pwd" id="pwd" autocomplete="off" placeholder="登录密码不输入不修改" class="layui-input" type="text"
+                       value={{}}>
+					{{# } }}
+                
         </div>
  </div>
         <div class="layui-form-item">
             <label class="layui-form-label">姓名</label>
             <div class="layui-input-block">
-                <input name="userName" id="userName" autocomplete="off" placeholder="请输入姓名" class="layui-input"
+					
+                    <input name="userName" id="userName" autocomplete="off" placeholder="请输入姓名" class="layui-input"
                        type="text" value={{d.secAdminUser.userName}}>
             </div>
         </div>
@@ -113,13 +125,13 @@
     var dataTmp = { //数据
     }
 
+	var manageId=getQueryString("id");//管理员ID
     layui.use(['laytpl', 'form'], function () {
         var laytpl = layui.laytpl;
         var getTpl = demo.innerHTML
             , view = document.getElementById('view');
 
         var form = layui.form;
-
         var postType = "GET";
         var url = ctxAppSec + '/api/SecAdminUser/showInfo/0' + '?Authorization=' + acekeystoken;
         $("#id").val(getQueryString("id"));
@@ -150,7 +162,6 @@
                 }
             }
         });
-
     });
 
     layui.use(['form', 'layedit', 'laydate'], function () {
@@ -158,7 +169,6 @@
             , layer = layui.layer
             , layedit = layui.layedit
             , laydate = layui.laydate;
-
 
         //创建一个编辑器
         var editIndex = layedit.build('LAY_demo_editor');
@@ -237,6 +247,9 @@
 
 
     });
+    
+    
+    
 </script>
 
 </body>
