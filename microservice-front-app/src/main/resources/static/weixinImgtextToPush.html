@@ -892,8 +892,6 @@ var acekeystoken = $.cookie('bearcktkaeskey');
 if (acekeystoken == ""||acekeystoken==undefined) {
     parent.location.href = ctxApp + '/login.html';
 }
-
-
 var table;
 
 layui.use(['laypage', 'table', 'element', 'layer','laydate'], function(){
@@ -1016,7 +1014,6 @@ $("#btnSync").click(function(){
         var     url =ctxAppWeixin+'/api/doExexcuteBatchSync';
         var imgTextId = getQueryString("tempId");//模板ID
         console.log(imgTextId);
-        
         var table = layui.table;
         var checkStatus = table.checkStatus('datagridTable');
         var datas = checkStatus.data;
