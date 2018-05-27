@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +17,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.LoggerFactory;
 
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
 import com.github.binarywang.demo.wechat.utils.FileMatchUtil;
@@ -51,50 +51,75 @@ import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
 
 public class TimingThread implements Runnable {
 
+	private Logger logger = LoggerFactory.getLogger(TimingThread.class);
+	
 	private Map<String,Object> map;
 	
-	@Autowired
-	private Logger logger;
-	@Autowired
 	private WxOpenServiceDemo wxOpenServiceDemo;
-	@Autowired
-	WxMpService WxMpService;
+	WxMpService WxMpService ;
 
-	@Autowired
-	WeixinUserinfoService WeixinUserinfoService;
+	private WeixinUserinfoService WeixinUserinfoService;
 
-	@Autowired
 	private WeixinImgtextItemService weixinImgtextItemService;
 	
-	@Autowired
 	private WeixinPushLogService weixinPushLogService ;
 	
-	@Autowired
-	private WeixinImgService weixinImgService;
-	@Autowired
-	private WeixinArticleTaskService weixinArticleTaskService;
+	private WeixinImgService weixinImgService ;
+	private WeixinArticleTaskService weixinArticleTaskService ;
 	
-	@Value("${file_location}")
-	private String file_location;// 文件存储路径
-	@Value("${ctxAppWeixin}")
-	private String ctxAppWeixin;// 微信网站路径
-	@Value("${appURL}")
-	private String appURL;// 网站前台url
+	private String file_location ;
+	
+	private String ctxAppWeixin ;
+	private String appURL ;
+	
+	
+	public TimingThread(Map<String, Object> map, WxOpenServiceDemo wxOpenServiceDemo,
+			me.chanjar.weixin.mp.api.WxMpService wxMpService,
+			com.lj.cloud.secrity.service.WeixinUserinfoService weixinUserinfoService,
+			WeixinImgtextItemService weixinImgtextItemService, WeixinPushLogService weixinPushLogService,
+			WeixinImgService weixinImgService, WeixinArticleTaskService weixinArticleTaskService, String file_location,
+			String ctxAppWeixin, String appURL, List<WeixinArticleTask> weixinArticleTaskList) {
+		super();
+		this.map = map;
+		this.wxOpenServiceDemo = wxOpenServiceDemo;
+		WxMpService = wxMpService;
+		WeixinUserinfoService = weixinUserinfoService;
+		this.weixinImgtextItemService = weixinImgtextItemService;
+		this.weixinPushLogService = weixinPushLogService;
+		this.weixinImgService = weixinImgService;
+		this.weixinArticleTaskService = weixinArticleTaskService;
+		this.file_location = file_location;
+		this.ctxAppWeixin = ctxAppWeixin;
+		this.appURL = appURL;
+		this.weixinArticleTaskList = weixinArticleTaskList;
+	}
+
+
+	private List<WeixinArticleTask> weixinArticleTaskList = new ArrayList<WeixinArticleTask>();
+	
 	
 	public void setMap(Map<String, Object> map) {
 		this.map = map;
+	}
+
+	public List<WeixinArticleTask> getWeixinArticleTaskList() {
+		return weixinArticleTaskList;
+	}
+
+	public void setWeixinArticleTaskList(List<WeixinArticleTask> weixinArticleTaskList) {
+		this.weixinArticleTaskList = weixinArticleTaskList;
 	}
 
 
 	@Override
 	public void run() {
 		String imgTextId = String.valueOf(map.get("imgTextId"));// 图文素材ID
-		String ids = (String)map.get("ids");// 选择的公众号
 
-		List<String> idsList = StringUtil.splitStringToStringList(ids);
+		List<WeixinArticleTask> idsList = getWeixinArticleTaskList();
+		
 		logger.info("定时群发开始执行...");
 		logger.info("StringUtil.splitStringToStringList :" + idsList.size());
-		logger.info("群发消息 imgTextId:" + imgTextId + ",公众号ids:" + ids);
+		logger.info("群发消息 imgTextId:" + imgTextId + ",公众号ids:" + idsList.size());
 		StringBuffer sb = new StringBuffer("");
 		try {
 			Map<String, Object> params = new HashMap<String, Object>();
@@ -110,13 +135,13 @@ public class TimingThread implements Runnable {
 					logger.error("封面图片为空，不允许发送");
 				}
 			}
-
 			
-			for (String str : idsList) {
+			for (WeixinArticleTask weixinArticleTask : idsList) {
 				int i = 0;
-				if (StringUtils.isNotBlank(str)) {// 过滤授权状态为空的
+				if (StringUtils.isNotBlank(weixinArticleTask.getAuthorizerAppid())) {// 过滤授权状态为空的
 					if (list != null) {
-						String appId = str;
+						String appId = weixinArticleTask.getAuthorizerAppid();
+						String str = weixinArticleTask.getAuthorizerAppid();
 						
 						WxMpMassNews news = new WxMpMassNews();
 						try {
@@ -322,12 +347,19 @@ public class TimingThread implements Runnable {
 							weixinPushLog.setAuthorizerAppid(appId);
 							
 							weixinPushLogService.insertSelective(weixinPushLog);
-							WeixinArticleTask weixinArticleTask=new WeixinArticleTask();
-							weixinArticleTask.setUpdateByUname((String)map.get("user"));
-							weixinArticleTask.setTaskStatus("已发送");
-							weixinArticleTask.setEnableFlag("无效");
-							weixinArticleTask.setExecuteResult("发送成功");
-							weixinArticleTaskService.updateBySelective(weixinArticleTask);
+							
+							if(massResult.getErrorCode()!=null  && "0".equals(massResult.getErrorCode())) {
+								weixinArticleTask.setTaskStatus("已发送");
+								weixinArticleTask.setEnableFlag("有效");
+								weixinArticleTask.setExecuteResult("发送成功");
+								weixinArticleTaskService.updateBySelective(weixinArticleTask);
+							}else {
+								weixinArticleTask.setTaskStatus("已发送");
+								weixinArticleTask.setEnableFlag("有效");
+								weixinArticleTask.setExecuteResult("执行失败,异常信息:"+ WxMpErrorMsg.findMsgByCode(Integer.valueOf(massResult.getErrorCode())));
+								weixinArticleTaskService.updateBySelective(weixinArticleTask);
+							}
+							
 							logger.info("群发消息str= " + str + ",结果：" + massResult.getErrorCode() + ","
 									+ massResult.getErrorMsg() + "," + massResult.getMsgId());
 						}catch(WxErrorException e) {
@@ -335,7 +367,7 @@ public class TimingThread implements Runnable {
 					    		Integer code = e.getError().getErrorCode();
 								logger.info(str + "群发异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
 								sb.append("异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-								WeixinArticleTask weixinArticleTask=new WeixinArticleTask();
+								
 								weixinArticleTask.setTaskStatus("群发异常");
 								weixinArticleTask.setEnableFlag("无效");
 								weixinArticleTask.setExecuteResult(e.getMessage());

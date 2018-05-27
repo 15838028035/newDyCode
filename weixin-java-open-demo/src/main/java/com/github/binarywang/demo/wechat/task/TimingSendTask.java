@@ -1,7 +1,6 @@
 package com.github.binarywang.demo.wechat.task;
 
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,8 @@ import org.springframework.stereotype.Component;
 public class TimingSendTask {
     @Autowired
     private ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    
+	
 	@Bean
 	public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
 	   return new ThreadPoolTaskScheduler();

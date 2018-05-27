@@ -337,7 +337,7 @@
 
      </set>
         WHERE 
-            create_By_UName = #{createByUname,jdbcType=VARCHAR}
+           id = #{id,jdbcType=INTEGER}
     </update>
    
     <update id="updateByPrimaryKey" >
