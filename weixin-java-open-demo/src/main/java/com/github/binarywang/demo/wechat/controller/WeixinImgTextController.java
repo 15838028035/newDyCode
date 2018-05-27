@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -113,6 +111,7 @@ public class WeixinImgTextController {
 	private FuturesMap futuresMap;
 	@Autowired
 	private WeixinArticleTaskService weixinArticleTaskService;
+	
 	/**
 	 * 1、首先，预先将图文消息中需要用到的图片，使用上传图文消息内图片接口，上传成功并获得图片 URL；
 	 * 2、上传图文消息素材，需要用到图片时，请使用上一步获取的图片 URL； 3、使用对用户标签的群发，或对 OpenID
@@ -1273,33 +1272,44 @@ public class WeixinImgTextController {
 		String time=(String)map.get("dateTime");
 		Date date=null;
 		date=sdf.parse(time);
-		TimingThread t=new TimingThread();
-		t.setMap(map);
-		ScheduledFuture<?> future=task.startCron(date,t);
-		String key=UUID.randomUUID().toString();
-		futuresMap.setFutures(key, future);
-		WeixinArticleTask w=new WeixinArticleTask();
+		
+		
 		Date createDate=new Date();
 		List list=JSONArray.parseArray((String) map.get("toSendUsers"));
 		List<Map<String,Object>> toSendUsers=list;
-		String nickNames="";
-		String ids="";
+		
+		List<WeixinArticleTask> weixinArticleTaskList = new ArrayList<WeixinArticleTask>();
+		
 		for(Map<String,Object> toSendUser:toSendUsers) {
-			nickNames+=(String)toSendUser.get("nickName")+",";
-			ids=(String)toSendUser.get("ids")+",";
+			WeixinArticleTask w=new WeixinArticleTask();
+			w.setCreateByUname((String)map.get("user"));
+			w.setCreateDate(sdf.format(createDate));
+			w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
+			w.setToUserName((String)toSendUser.get("nickName"));
+			w.setUserId(toSendUser.get("id").toString());
+			w.setAuthorizerAppid((String)toSendUser.get("authorizerAppid"));
+			w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
+			w.setTaskStatus("待发送");
+			w.setTaskCron((String)map.get("dateTime"));
+			w.setEnableFlag("有效");
+			weixinArticleTaskService.insert(w);
+			
+			weixinArticleTaskList.add(w);
 		}
-		w.setCreateByUname((String)map.get("user"));
-		w.setCreateDate(sdf.format(createDate));
-		w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
-		w.setToUserName(nickNames);
-		w.setAuthorizerAppid((String)map.get("authorizerAppid"));
-		w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
-		w.setTaskStatus("待发送");
-		w.setTaskCron((String)map.get("dateTime"));
-		w.setEnableFlag("有效");
-		w.setMapKey(key);
-		w.setUserId(ids);
-		weixinArticleTaskService.insert(w);
+		
+		TimingThread t=new  TimingThread(map,  wxOpenServiceDemo,
+				WxMpService,
+				WeixinUserinfoService,
+				 weixinImgtextItemService, weixinPushLogService,
+				 weixinImgService,  weixinArticleTaskService,  file_location,
+				 ctxAppWeixin,  appURL,  weixinArticleTaskList);
+	/*	t.setMap(map);
+		t.setWeixinArticleTaskList(weixinArticleTaskList);*/
+		
+		ScheduledFuture<?> future=task.startCron(date,t);
+		String key=UUID.randomUUID().toString();
+		futuresMap.setFutures(key, future);
+		
 		}catch(Exception e) {
 			result.setRespCode(1);
 			result.setRespMsg("系统异常");
@@ -1366,7 +1376,7 @@ public class WeixinImgTextController {
 		Date dateTime=null;
 		try {
 			dateTime=sdf.parse(dateStr);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			logger.error("修改定时群发异常"+e.getMessage());
 			result.setRespCode(1);
 			result.setRespMsg("修改失败");

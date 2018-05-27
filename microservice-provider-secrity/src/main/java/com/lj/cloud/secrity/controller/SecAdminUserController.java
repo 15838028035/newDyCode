@@ -123,10 +123,18 @@ public class SecAdminUserController extends BaseController{
 					SecAdminUser loginInfo=secAdminUserService.getUserInfoByLoginNo(userNo);
 					
 					if(null!=loginInfo) {
-						if(loginInfo.getEnableFlag().equals("0")) {
-							restAPIResult.setRespCode(0);
-							restAPIResult.setRespMsg("设置失败，用户已存在  失效账户");
-						}else{
+						if(loginInfo.getEnableFlag().equals("0")) {//用户已存在失效状态  重新启用  设置最新信息
+							SecAdminUser seUser=new SecAdminUser();
+							seUser.setId(loginInfo.getId());
+							seUser.setLoginiNo(secAdminUser.getLoginiNo());
+							seUser.setPwd(enPwd);
+							seUser.setCreateBy(createBy);
+							seUser.setCreateByUname(getUserName());
+							seUser.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
+							seUser.setEnableFlag("1");
+							secAdminUserService.updateByPrimaryKeySelective(seUser);
+							
+						}else{//如果用户正常状态  已存在编辑失败
 						restAPIResult.setRespCode(0);
 						restAPIResult.setRespMsg("设置失败，用户已存在");
 						}
@@ -139,8 +147,9 @@ public class SecAdminUserController extends BaseController{
 					restAPIResult.setRespCode(0);
 					restAPIResult.setRespMsg("设置失败，用户已存在:"+e.getMessage());
 				}
+					return restAPIResult;
 				
-				return restAPIResult;
+				
 	}
 	 
 	 @ApiOperation(value = "修改")
@@ -169,6 +178,11 @@ public class SecAdminUserController extends BaseController{
 				}catch(Exception e) {
 					restAPIResult.setRespCode(0);
 					restAPIResult.setRespMsg("失败成功:"+e.getMessage());
+				}
+				if(secAdminUser.getLoginiNo().equals(getUserName())) {//如果登录账户等于  修改用户  跳到登录
+					if(StringUtil.isNotBlank((secAdminUser.getPwd()))){
+						restAPIResult.setLoginFlag("true");
+					}
 				}
 				
 				return restAPIResult;
