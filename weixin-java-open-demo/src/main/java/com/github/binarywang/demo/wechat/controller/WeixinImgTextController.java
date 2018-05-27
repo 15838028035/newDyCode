@@ -1287,7 +1287,7 @@ public class WeixinImgTextController {
 			w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
 			w.setToUserName((String)toSendUser.get("nickName"));
 			w.setUserId(toSendUser.get("id").toString());
-			w.setAuthorizerAppid((String)map.get("authorizerAppid"));
+			w.setAuthorizerAppid((String)toSendUser.get("authorizerAppid"));
 			w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
 			w.setTaskStatus("待发送");
 			w.setTaskCron((String)map.get("dateTime"));
