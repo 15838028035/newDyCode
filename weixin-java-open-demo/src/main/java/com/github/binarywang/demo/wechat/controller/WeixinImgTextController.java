@@ -53,6 +53,7 @@ import com.weixindev.micro.serv.common.bean.weixin.WeixinImg;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImgtextItem;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinPushLog;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinUserinfo;
+import com.weixindev.micro.serv.common.msg.LayUiTableResultResponse;
 import com.weixindev.micro.serv.common.pagination.Query;
 import com.weixindev.micro.serv.common.util.DateUtil;
 import com.weixindev.micro.serv.common.util.FileType;
@@ -1281,7 +1282,6 @@ public class WeixinImgTextController {
 		
 		for(Map<String,Object> toSendUser:toSendUsers) {
 			WeixinArticleTask w=new WeixinArticleTask();
-			
 			w.setCreateByUname((String)map.get("user"));
 			w.setCreateDate(sdf.format(createDate));
 			w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
@@ -1318,48 +1318,73 @@ public class WeixinImgTextController {
 		return result;
 	}
 	@RequestMapping(value="/api/stopTimingTask")
-	public RestAPIResult2 stopTimingTask(String key) {
+	public RestAPIResult2 stopTimingTask(String id) {
 		RestAPIResult2 result=new RestAPIResult2();
+		result.setRespCode(0);
+		result.setRespMsg("成功");
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("id", id);
+		Query query=new Query(map);
+		String key=weixinArticleTaskService.selectMapKeyByExample(query);
 		ScheduledFuture<?> future=futuresMap.getFutures().get(key);
 		task.stopCron(future);
-		result.setRespMsg("success");
+		WeixinArticleTask weixinArticleTask=new WeixinArticleTask();
+		weixinArticleTask.setId(Integer.parseInt(id));
+		weixinArticleTask.setEnableFlag("无效");
+		weixinArticleTask.setTaskStatus("已取消");
+		weixinArticleTaskService.updateByPrimaryKeySelective(weixinArticleTask);
 		return result;
 	}
-	@ApiOperation("查询定时群发已发送记录")
-	@RequestMapping(value="/api/getWaitToSend")
-	public List<WeixinArticleTask> getWaitToSend(String createByUname) {
+	@ApiOperation("查询定时群发记录")
+	@RequestMapping(value="/api/getSendMsg")
+	public LayUiTableResultResponse getSendMsg(String createByUname) {
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("createByUname", createByUname);
-		map.put("taskStatus", "已发送");
 		Query query=new Query(map);
-		List<WeixinArticleTask> list=weixinArticleTaskService.selectByExample(query);
+		LayUiTableResultResponse list=weixinArticleTaskService.selectByQuery(query);
+		List data=list.getData();
+		for(int i=0;i<data.size();i++) {
+			Map<String,Object> m=(Map<String,Object>)data.get(i);
+			List<String> nickNameList=StringUtil.splitStringToStringList((String)m.get("to_user_name"));
+			m.remove("to_user_name");
+			m.put("to_user_name", nickNameList);
+		}
+		list.setData(data);
 		return list;
 	}
-	@ApiOperation("查询定时群发待发送记录")
-	@RequestMapping(value="/api/getAlreadyToSend")
-	public List<WeixinArticleTask> getAlreadyToSend(String createByUname) {
+	@RequestMapping(value="/api/updateTimingTask")
+	public RestAPIResult2 updateTimingTask(@RequestParam Map<String,Object> params) {
+		RestAPIResult2 result=new RestAPIResult2();
+		result.setRespCode(0);
+		result.setRespMsg("成功");
+		if(params.get("id")==null||params.get("id")=="") {
+			result.setRespCode(1);;
+			result.setRespMsg("修改失败");
+			return result;
+		}
+		Integer id=Integer.parseInt((String)params.get("id"));
+		String dateStr=(String)params.get("dateTime");
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		WeixinArticleTask w=weixinArticleTaskService.selectByPrimaryKey(id);
+		String mapKey=w.getMapKey();
+		ScheduledFuture<?> future=futuresMap.getFutures().get(mapKey);
+		TimingThread timingThread=new TimingThread();
 		Map<String,Object> map=new HashMap<String,Object>();
-		map.put("createByUname", createByUname);
-		map.put("taskStatus", "待发送");
-		Query query=new Query(map);
-		List<WeixinArticleTask> list=weixinArticleTaskService.selectByExample(query);
-		return list;
+		map.put("imgTextId", w.getImgTextId());
+		map.put("ids", w.getUserId());
+		timingThread.setMap(map);
+		Date dateTime=null;
+		try {
+			dateTime=sdf.parse(dateStr);
+		} catch (Exception e) {
+			logger.error("修改定时群发异常"+e.getMessage());
+			result.setRespCode(1);
+			result.setRespMsg("修改失败");
+		}
+			task.changeCron(future, dateTime, timingThread);
+		w.setTaskCron(dateStr);
+		weixinArticleTaskService.updateByPrimaryKey(w);
+		return result;
 	}
-//	@RequestMapping(value="/api/createTimingTask")
-//	public RestAPIResult2 createTimingTask(Map<String,Object> params) {
-//		RestAPIResult2 result=new RestAPIResult2();
-//		Map<String,String> map=new HashMap<String,String>();
-//		String date=(String) params.get("date");
-//		String time=(String) params.get("time");
-//		map.put("month","5");
-//		map.put("day","25");
-//		map.put("hour","19");
-////		map.put("minute",minute);
-//		map.put("second","0");
-//		task.setCronStr(map);
-//		task.startCron();
-//		result.setRespMsg(task.getCronStr());
-//		return result;
-//	}
 	
 }

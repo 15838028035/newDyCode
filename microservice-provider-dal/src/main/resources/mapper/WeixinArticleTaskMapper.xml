@@ -32,7 +32,7 @@
             id ,
             create_by ,
             create_By_UName ,
-            create_date ,
+            str_to_date(create_date,'%Y-%m-%d %H:%i:%s') create_date,
             update_by ,
             update_By_Uname ,
             update_date ,
@@ -382,6 +382,75 @@
 <select id="selectByExample" resultMap="weixinArticleTaskResult" >
      select 
         <include refid="Base_Column_List"/>
+               from weixin_article_task WHERE 1=1  
+      
+        <if test="id != null and  id != ''" >
+               and   id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="createBy != null and  createBy != ''" >
+               and   create_by = #{createBy,jdbcType=INTEGER}
+        </if>
+        <if test="createByUname != null and  createByUname != ''" >
+               and   create_By_UName = #{createByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="createDate != null and  createDate != ''" >
+               and   create_date = #{createDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="updateBy != null and  updateBy != ''" >
+               and   update_by = #{updateBy,jdbcType=INTEGER}
+        </if>
+        <if test="updateByUname != null and  updateByUname != ''" >
+               and   update_By_Uname = #{updateByUname,jdbcType=VARCHAR}
+        </if>
+        <if test="updateDate != null and  updateDate != ''" >
+               and   update_date = #{updateDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="msgId != null and  msgId != ''" >
+               and   msg_id = #{msgId,jdbcType=VARCHAR}
+        </if>
+        <if test="msgDataId != null and  msgDataId != ''" >
+               and   msg_data_id = #{msgDataId,jdbcType=VARCHAR}
+        </if>
+        <if test="mediaCategory != null and  mediaCategory != ''" >
+               and   media_category = #{mediaCategory,jdbcType=VARCHAR}
+        </if>
+        <if test="imgTextId != null and  imgTextId != ''" >
+               and   imgTextId = #{imgTextId,jdbcType=INTEGER}
+        </if>
+        <if test="mediaId != null and  mediaId != ''" >
+               and   media_id = #{mediaId,jdbcType=VARCHAR}
+        </if>
+        <if test="userId != null and  userId != ''" >
+               and   user_id = #{userId,jdbcType=VARCHAR}
+        </if>
+        <if test="authorizerAppid != null and  authorizerAppid != ''" >
+               and   authorizerAppid = #{authorizerAppid,jdbcType=VARCHAR}
+        </if>
+        <if test="enableFlag != null and  enableFlag != ''" >
+               and   enable_flag = #{enableFlag,jdbcType=VARCHAR}
+        </if>
+        <if test="taskCron != null and  taskCron != ''" >
+               and   task_cron = #{taskCron,jdbcType=VARCHAR}
+        </if>
+        <if test="taskStatus != null and  taskStatus != ''" >
+               and   task_status = #{taskStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="executeResult != null and  executeResult != ''" >
+               and   execute_result = #{executeResult,jdbcType=VARCHAR}
+        </if>
+        <if test="toUserName != null and  toUserName != ''" >
+               and   to_user_name = #{toUserName,jdbcType=VARCHAR}
+        </if>
+        <if test="mapKey != null and  mapKey != ''" >
+               and   map_key = #{mapKey,jdbcType=VARCHAR}
+        </if>
+            
+  </select>
+  
+  
+  <select id="selectMapKeyByExample" resultType="string" >
+     select 
+        map_key
                from weixin_article_task WHERE 1=1  
       
         <if test="id != null and  id != ''" >

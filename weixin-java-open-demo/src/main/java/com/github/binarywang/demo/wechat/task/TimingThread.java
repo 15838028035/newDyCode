@@ -72,6 +72,9 @@ public class TimingThread implements Runnable {
 	private String ctxAppWeixin ;
 	private String appURL ;
 	
+	public TimingThread() {
+		
+	}
 	
 	public TimingThread(Map<String, Object> map, WxOpenServiceDemo wxOpenServiceDemo,
 			me.chanjar.weixin.mp.api.WxMpService wxMpService,

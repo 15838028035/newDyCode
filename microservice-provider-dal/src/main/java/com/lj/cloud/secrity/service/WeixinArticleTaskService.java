@@ -26,4 +26,5 @@ public interface WeixinArticleTaskService  {
     public LayUiTableResultResponse	 selectByQuery(Query query) ;
 
     public  List<WeixinArticleTask> selectByExample(Query query);
+    public String selectMapKeyByExample(Query query);
 }
