@@ -106,14 +106,26 @@
 		 
 		 
 		 form.on('submit(demo1)', function(data){
+			 var checkStatus=parent.table.checkStatus('datagridTable');
+			 var datas = checkStatus.data;
+			 var ids = "";
+		    var nickNames='';
+		        $.each(datas, function(index, item){
+		             var id = item.authorizerAppid;
+		             var nickName=item.nick_name;
+		             ids+=id+",";
+		             nickNames+=nickName;
+		         });
 			  var url =ctxAppWeixin+'/api/doExexcuteBatchSend';
-		      var imgTextId = getQueryString("tempId");//模板ID
-		      var ids=getQueryString("ids");//模板ID
+		      var imgTextId = parent.getQueryString("tempId");//模板ID
+		      var ids=parent.getQueryString("ids");//模板ID
  			 var params=data.field;
+ 			params.dateTime=params.date+' '+params.time;
+ 			console.log(params.dateTime);
  			params.user=$.cookie('loginNo');
  			 params.ids=ids;
  			 params.imgTextId=imgTextId;
- 			 console.log(params);
+ 			 params.nickNames=nickNames;
  			var url=ctxAppWeixin+'/api/createTimingTask';
 			   $.ajax({
 			        url: url,

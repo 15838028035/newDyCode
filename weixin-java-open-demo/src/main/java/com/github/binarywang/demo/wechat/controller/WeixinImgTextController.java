@@ -40,12 +40,14 @@ import com.github.binarywang.demo.wechat.task.TimingSendTask;
 import com.github.binarywang.demo.wechat.task.TimingThread;
 import com.github.binarywang.demo.wechat.utils.FileMatchUtil;
 import com.github.binarywang.demo.wechat.utils.GIfUtil;
+import com.lj.cloud.secrity.service.WeixinArticleTaskService;
 import com.lj.cloud.secrity.service.WeixinImgService;
 import com.lj.cloud.secrity.service.WeixinImgtextItemService;
 import com.lj.cloud.secrity.service.WeixinPushLogService;
 import com.lj.cloud.secrity.service.WeixinUserinfoService;
 import com.weixindev.micro.serv.common.bean.RestAPIResult2;
 import com.weixindev.micro.serv.common.bean.WxMpErrorMsg;
+import com.weixindev.micro.serv.common.bean.weixin.WeixinArticleTask;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImg;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImgtextItem;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinPushLog;
@@ -105,6 +107,8 @@ public class WeixinImgTextController {
 	private WeixinImgService weixinImgService;
 	@Autowired
 	private FuturesMap futuresMap;
+	@Autowired
+	private WeixinArticleTaskService weixinArticleTaskService;
 	/**
 	 * 1、首先，预先将图文消息中需要用到的图片，使用上传图文消息内图片接口，上传成功并获得图片 URL；
 	 * 2、上传图文消息素材，需要用到图片时，请使用上一步获取的图片 URL； 3、使用对用户标签的群发，或对 OpenID
@@ -1261,7 +1265,7 @@ public class WeixinImgTextController {
 		result.setRespMsg("成功");
 		try {
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String time=map.get("date")+" "+map.get("time");
+		String time=map.get("dateTime");
 		Date date=null;
 		date=sdf.parse(time);
 		TimingThread t=new TimingThread();
@@ -1269,7 +1273,12 @@ public class WeixinImgTextController {
 		ScheduledFuture<?> future=task.startCron(date,t);
 		String key=UUID.randomUUID().toString();
 		futuresMap.setFutures(key, future);
-		
+		WeixinArticleTask w=new WeixinArticleTask();
+		w.setCreateByUname(map.get("user"));
+		w.setCreateDate(sdf.format(new Date()));
+		w.setImgTextId(Integer.parseInt(map.get("imgTextId")));
+		w.setUserId(map.get("ids"));
+		weixinArticleTaskService.insert(w);
 		}catch(Exception e) {
 			result.setRespCode(1);
 			result.setRespMsg("系统异常");

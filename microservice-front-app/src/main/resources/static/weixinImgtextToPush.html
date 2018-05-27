@@ -1001,20 +1001,21 @@ $("#btnTimingSend").click(function(){
 	        layer.msg("请选择至少一个公众号");
 	        return false;	
 	    }
-	    var checkStatus = table.checkStatus('datagridTable');
-        var datas = checkStatus.data;
-        
+        console.log(datas);
         var ids = "";
+        var nickNames='';
         $.each(datas, function(index, item){
              var id = item.authorizerAppid;
+             var nickName=item.nick_name;
              ids+=id+",";
+             nickNames+=nickName;
          });
 	layer.open({
 		title : "定时任务",
 		type : 2,
 		maxmin : true,
 		area : [ '680px', '580px' ],
-		content : 'weixinTimingSend.html?tempId='+getQueryString("tempId")+'&ids='+ids,
+		content : 'weixinTimingSend.html',
 		// 下面这句是,添加页面关闭后,刷新本页面.
 		end : function() {
 			location.reload();
