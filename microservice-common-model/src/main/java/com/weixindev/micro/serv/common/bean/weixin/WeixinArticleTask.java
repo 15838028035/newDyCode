@@ -16,6 +16,7 @@ public class WeixinArticleTask extends BaseEntity{
 	 */
 	@ApiModelProperty(value = "ID")
 	private java.lang.Integer id;
+	
 	/**
 	 *   msg_id
 	 */
@@ -83,10 +84,16 @@ public class WeixinArticleTask extends BaseEntity{
 		private String executeResult = "";
 	
 	/**
-	 *   to_user_names
+	 *   to_user_name
 	 */
 	@ApiModelProperty(value = "")
-		private String toUserNames = "";
+		private String toUserName = "";
+	
+	/**
+	 *   map_key
+	 */
+	@ApiModelProperty(value = "")
+		private String mapKey = "";
 
 	public java.lang.Integer getId() {
 		return id;
@@ -184,12 +191,20 @@ public class WeixinArticleTask extends BaseEntity{
 		this.executeResult = executeResult;
 	}
 
-	public String getToUserNames() {
-		return toUserNames;
+	public String getToUserName() {
+		return toUserName;
 	}
 
-	public void setToUserNames(String toUserNames) {
-		this.toUserNames = toUserNames;
+	public void setToUserName(String toUserName) {
+		this.toUserName = toUserName;
+	}
+
+	public String getMapKey() {
+		return mapKey;
+	}
+
+	public void setMapKey(String mapKey) {
+		this.mapKey = mapKey;
 	}
 	
 }
