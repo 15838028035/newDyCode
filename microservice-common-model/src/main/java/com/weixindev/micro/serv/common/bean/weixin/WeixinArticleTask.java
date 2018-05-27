@@ -29,7 +29,7 @@ public class WeixinArticleTask extends BaseEntity{
 		private String msgDataId = "";
 	
 	/**
-	 * 素材类型,0:临时素材，1永久素材  mediaCategory
+	 * 素材类型,0:临时素材，1永久素材  media_category
 	 */
 	@ApiModelProperty(value = "素材类型,0:临时素材，1永久素材")
 		private String mediaCategory = "";
@@ -41,16 +41,16 @@ public class WeixinArticleTask extends BaseEntity{
 	private java.lang.Integer imgTextId;
 	
 	/**
-	 * 素材类型ID  mediaId
+	 * 素材类型ID  media_id
 	 */
 	@ApiModelProperty(value = "素材类型ID")
 		private String mediaId = "";
 	
 	/**
-	 * 公众账号ID  userId
+	 * 公众账号ID  user_id
 	 */
 	@ApiModelProperty(value = "公众账号ID")
-	private java.lang.Integer userId;
+		private String userId = "";
 	
 	/**
 	 * 授权方APPID  authorizerAppid
@@ -81,6 +81,12 @@ public class WeixinArticleTask extends BaseEntity{
 	 */
 	@ApiModelProperty(value = "执行结果")
 		private String executeResult = "";
+	
+	/**
+	 *   to_user_names
+	 */
+	@ApiModelProperty(value = "")
+		private String toUserNames = "";
 
 	public java.lang.Integer getId() {
 		return id;
@@ -130,11 +136,11 @@ public class WeixinArticleTask extends BaseEntity{
 		this.mediaId = mediaId;
 	}
 
-	public java.lang.Integer getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(java.lang.Integer userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
@@ -176,6 +182,14 @@ public class WeixinArticleTask extends BaseEntity{
 
 	public void setExecuteResult(String executeResult) {
 		this.executeResult = executeResult;
+	}
+
+	public String getToUserNames() {
+		return toUserNames;
+	}
+
+	public void setToUserNames(String toUserNames) {
+		this.toUserNames = toUserNames;
 	}
 	
 }

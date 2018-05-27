@@ -1,4 +1,4 @@
-﻿package com.github.binarywang.demo.wechat.controller;
+package com.github.binarywang.demo.wechat.controller;
 
 import java.util.Map;
 
