@@ -19,6 +19,8 @@ public interface WeixinArticleTaskService  {
 
     int updateByPrimaryKeySelective(WeixinArticleTask weixinArticleTask);
 
+    int updateBySelective(WeixinArticleTask weixinArticleTask);
+    
     int updateByPrimaryKey(WeixinArticleTask weixinArticleTask);
 
     public LayUiTableResultResponse	 selectByQuery(Query query) ;

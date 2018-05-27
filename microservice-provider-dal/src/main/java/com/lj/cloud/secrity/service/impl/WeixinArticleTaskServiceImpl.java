@@ -47,6 +47,10 @@ public class WeixinArticleTaskServiceImpl  implements WeixinArticleTaskService{
 	public int updateByPrimaryKeySelective(WeixinArticleTask weixinArticleTask) {
 		return weixinArticleTaskMapper.updateByPrimaryKeySelective(weixinArticleTask);
 	}
+	@Override
+	public int updateBySelective(WeixinArticleTask weixinArticleTask) {
+		return weixinArticleTaskMapper.updateByPrimaryKeySelective(weixinArticleTask);
+	}
 
 	@Override
 	public int updateByPrimaryKey(WeixinArticleTask weixinArticleTask) {
