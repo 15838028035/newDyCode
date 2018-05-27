@@ -22,11 +22,13 @@ import org.springframework.beans.factory.annotation.Value;
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
 import com.github.binarywang.demo.wechat.utils.FileMatchUtil;
 import com.github.binarywang.demo.wechat.utils.GIfUtil;
+import com.lj.cloud.secrity.service.WeixinArticleTaskService;
 import com.lj.cloud.secrity.service.WeixinImgService;
 import com.lj.cloud.secrity.service.WeixinImgtextItemService;
 import com.lj.cloud.secrity.service.WeixinPushLogService;
 import com.lj.cloud.secrity.service.WeixinUserinfoService;
 import com.weixindev.micro.serv.common.bean.WxMpErrorMsg;
+import com.weixindev.micro.serv.common.bean.weixin.WeixinArticleTask;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImg;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImgtextItem;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinPushLog;
@@ -69,6 +71,8 @@ public class TimingThread implements Runnable {
 	
 	@Autowired
 	private WeixinImgService weixinImgService;
+	@Autowired
+	private WeixinArticleTaskService weixinArticleTaskService;
 	
 	@Value("${file_location}")
 	private String file_location;// 文件存储路径
@@ -318,7 +322,12 @@ public class TimingThread implements Runnable {
 							weixinPushLog.setAuthorizerAppid(appId);
 							
 							weixinPushLogService.insertSelective(weixinPushLog);
-
+							WeixinArticleTask weixinArticleTask=new WeixinArticleTask();
+							weixinArticleTask.setUpdateByUname((String)map.get("user"));
+							weixinArticleTask.setTaskStatus("已发送");
+							weixinArticleTask.setEnableFlag("无效");
+							weixinArticleTask.setExecuteResult("发送成功");
+							weixinArticleTaskService.updateBySelective(weixinArticleTask);
 							logger.info("群发消息str= " + str + ",结果：" + massResult.getErrorCode() + ","
 									+ massResult.getErrorMsg() + "," + massResult.getMsgId());
 						}catch(WxErrorException e) {
@@ -326,6 +335,11 @@ public class TimingThread implements Runnable {
 					    		Integer code = e.getError().getErrorCode();
 								logger.info(str + "群发异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
 								sb.append("异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
+								WeixinArticleTask weixinArticleTask=new WeixinArticleTask();
+								weixinArticleTask.setTaskStatus("群发异常");
+								weixinArticleTask.setEnableFlag("无效");
+								weixinArticleTask.setExecuteResult(e.getMessage());
+								weixinArticleTaskService.updateBySelective(weixinArticleTask);
 					    }catch(Exception e){
 							sb.append(str + "群发异常:" +e.getMessage()+"<br/>");
 						}

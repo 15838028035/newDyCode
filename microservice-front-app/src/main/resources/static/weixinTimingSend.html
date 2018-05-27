@@ -42,7 +42,7 @@
 
     <body>
     <form class="layui-form" action="">
-     创建时间：
+     启动时间：
     <div class="layui-inline">
         <input class="layui-input" name="date" id="date" autocomplete="off" placeholder="开始日期">
     </div>
@@ -71,6 +71,14 @@
 </div>
 
 <script>
+var acekeystoken = $.cookie('bearcktkaeskey');
+if (acekeystoken == ""||acekeystoken==undefined) {
+    parent.location.href = ctxApp + '/login.html';
+}
+var loginNo=$.cookie('loginNo');
+if (loginNo == ""||loginNo==undefined) {
+    parent.location.href = ctxApp + '/login.html';
+}
 	layui.use(['laypage', 'table', 'element', 'layer','laydate','form'], function(){
 		 var laydate = layui.laydate;
 		  var form = layui.form;
@@ -106,13 +114,20 @@
 		 
 		 
 		 form.on('submit(demo1)', function(data){
+			 var inputDate=data.field.date;
+			 var inputTime=data.field.time;
+			 if(inputDate==null||inputDate==''||inputTime==null||inputTime==''){
+				 layer.msg("请选择时间");
+				 return false;
+			 }
 			 var checkStatus=parent.table.checkStatus('datagridTable');
 			 var datas = checkStatus.data;
 			 var toSendUsers=[];
 		        $.each(datas, function(index, item){
-		             var id = item.authorizerAppid;
+		             var authorizerAppid = item.authorizerAppid;
+		             var id=item.id;
 		             var nickName=item.nick_name;
-		             toSendUsers.push({id:id,nickName:nickName});
+		             toSendUsers.push({id:id,nickName:nickName,authorizerAppid:authorizerAppid});
 		         });
 			  var url =ctxAppWeixin+'/api/doExexcuteBatchSend';
 		      var imgTextId = parent.getQueryString("tempId");//模板ID
@@ -120,8 +135,8 @@
  			 var params=data.field;
  			params.dateTime=params.date+' '+params.time;
  			console.log(params.dateTime);
- 			params.user=$.cookie('loginNo');
- 			params.toSendUsers=toSendUsers;
+ 			params.user=loginNo;
+ 			params.toSendUsers=JSON.stringify(toSendUsers);
  			 params.imgTextId=imgTextId;
  			var url=ctxAppWeixin+'/api/createTimingTask';
 			   $.ajax({

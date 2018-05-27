@@ -29,12 +29,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONArray;
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
 import com.github.binarywang.demo.wechat.task.FuturesMap;
 import com.github.binarywang.demo.wechat.task.TimingSendTask;
@@ -1259,6 +1261,7 @@ public class WeixinImgTextController {
 		
 		return restAPIResult;
 	}
+	@ApiOperation("创建定时群发")
 	@RequestMapping(value="/api/createTimingTask")
 	public RestAPIResult2 createTimingTask(@RequestParam Map<String,Object> map) {
 		RestAPIResult2 result=new RestAPIResult2();
@@ -1275,16 +1278,26 @@ public class WeixinImgTextController {
 		String key=UUID.randomUUID().toString();
 		futuresMap.setFutures(key, future);
 		WeixinArticleTask w=new WeixinArticleTask();
-		List<Map<String,String>> toSendUsers=(List<Map<String,String>>)map.get("toSendUsers");
-		w.setCreateByUname((String)map.get("user"));
-		w.setCreateDate(sdf.format(new Date()));
-		w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
-//		w.setUserId((String)map.get("ids"));
-//		w.setToUserNames((String)map.get("nickNames"));
-		weixinArticleTaskService.insert(w);
+		Date createDate=new Date();
+		List list=JSONArray.parseArray((String) map.get("toSendUsers"));
+		List<Map<String,Object>> toSendUsers=list;
+		for(Map<String,Object> toSendUser:toSendUsers) {
+			w.setCreateByUname((String)map.get("user"));
+			w.setCreateDate(sdf.format(createDate));
+			w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
+			w.setToUserName((String)toSendUser.get("nickName"));
+			w.setUserId(toSendUser.get("id").toString());
+			w.setAuthorizerAppid((String)map.get("authorizerAppid"));
+			w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
+			w.setTaskStatus("待发送");
+			w.setTaskCron((String)map.get("dateTime"));
+			w.setEnableFlag("有效");
+			weixinArticleTaskService.insert(w);
+		}
 		}catch(Exception e) {
 			result.setRespCode(1);
 			result.setRespMsg("系统异常");
+			e.printStackTrace();
 		}
 		return result;
 	}
@@ -1295,6 +1308,26 @@ public class WeixinImgTextController {
 		task.stopCron(future);
 		result.setRespMsg("success");
 		return result;
+	}
+	@ApiOperation("查询定时群发已发送记录")
+	@RequestMapping(value="/api/getWaitToSend")
+	public List<WeixinArticleTask> getWaitToSend(String createByUname) {
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("createByUname", createByUname);
+		map.put("taskStatus", "已发送");
+		Query query=new Query(map);
+		List<WeixinArticleTask> list=weixinArticleTaskService.selectByExample(query);
+		return list;
+	}
+	@ApiOperation("查询定时群发待发送记录")
+	@RequestMapping(value="/api/getAlreadyToSend")
+	public List<WeixinArticleTask> getAlreadyToSend(String createByUname) {
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("createByUname", createByUname);
+		map.put("taskStatus", "待发送");
+		Query query=new Query(map);
+		List<WeixinArticleTask> list=weixinArticleTaskService.selectByExample(query);
+		return list;
 	}
 //	@RequestMapping(value="/api/createTimingTask")
 //	public RestAPIResult2 createTimingTask(Map<String,Object> params) {
