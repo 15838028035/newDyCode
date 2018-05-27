@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1259,13 +1260,13 @@ public class WeixinImgTextController {
 		return restAPIResult;
 	}
 	@RequestMapping(value="/api/createTimingTask")
-	public RestAPIResult2 createTimingTask(@RequestParam Map<String,String> map) {
+	public RestAPIResult2 createTimingTask(@RequestParam Map<String,Object> map) {
 		RestAPIResult2 result=new RestAPIResult2();
 		result.setRespCode(0);
 		result.setRespMsg("成功");
 		try {
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String time=map.get("dateTime");
+		String time=(String)map.get("dateTime");
 		Date date=null;
 		date=sdf.parse(time);
 		TimingThread t=new TimingThread();
@@ -1274,10 +1275,12 @@ public class WeixinImgTextController {
 		String key=UUID.randomUUID().toString();
 		futuresMap.setFutures(key, future);
 		WeixinArticleTask w=new WeixinArticleTask();
-		w.setCreateByUname(map.get("user"));
+		List<Map<String,String>> toSendUsers=(List<Map<String,String>>)map.get("toSendUsers");
+		w.setCreateByUname((String)map.get("user"));
 		w.setCreateDate(sdf.format(new Date()));
-		w.setImgTextId(Integer.parseInt(map.get("imgTextId")));
-		w.setUserId(map.get("ids"));
+		w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
+//		w.setUserId((String)map.get("ids"));
+//		w.setToUserNames((String)map.get("nickNames"));
 		weixinArticleTaskService.insert(w);
 		}catch(Exception e) {
 			result.setRespCode(1);

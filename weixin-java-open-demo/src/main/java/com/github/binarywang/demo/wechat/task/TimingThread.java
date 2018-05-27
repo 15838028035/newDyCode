@@ -49,7 +49,7 @@ import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
 
 public class TimingThread implements Runnable {
 
-	private Map<String,String> map;
+	private Map<String,Object> map;
 	
 	@Autowired
 	private Logger logger;
@@ -77,7 +77,7 @@ public class TimingThread implements Runnable {
 	@Value("${appURL}")
 	private String appURL;// 网站前台url
 	
-	public void setMap(Map<String, String> map) {
+	public void setMap(Map<String, Object> map) {
 		this.map = map;
 	}
 
@@ -85,7 +85,7 @@ public class TimingThread implements Runnable {
 	@Override
 	public void run() {
 		String imgTextId = String.valueOf(map.get("imgTextId"));// 图文素材ID
-		String ids = map.get("ids");// 选择的公众号
+		String ids = (String)map.get("ids");// 选择的公众号
 
 		List<String> idsList = StringUtil.splitStringToStringList(ids);
 		logger.info("定时群发开始执行...");
