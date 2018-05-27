@@ -69,4 +69,9 @@ public class WeixinArticleTaskServiceImpl  implements WeixinArticleTaskService{
 		return weixinArticleTaskMapper.selectByExample(query);
 	}
 
+	@Override
+	public String selectMapKeyByExample(Query query) {
+		return weixinArticleTaskMapper.selectMapKeyByExample(query);
+	}
+
 }

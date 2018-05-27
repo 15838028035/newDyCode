@@ -22,7 +22,7 @@ public interface WeixinArticleTaskMapper  {
     int updateByPrimaryKey(WeixinArticleTask weixinArticleTask);
 
    
-
+    String selectMapKeyByExample(Object mapAndObject);
    /**
      * 根据条件查询列表
      *

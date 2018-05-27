@@ -10,7 +10,7 @@
         <meta content="black" name="apple-mobile-web-app-status-bar-style" />
         <meta content="telephone=no" name="format-detection" />
         <meta http-equiv="Access-Control-Allow-Origin" content="*">
-        <title>定时任务</title>
+        <title>修改任务</title>
     
     <link rel="stylesheet" href="layui/css/layui.css">
 <!--     <link rel="stylesheet" href="css/css.css"> -->
@@ -121,22 +121,11 @@ if (loginNo == ""||loginNo==undefined) {
 			 }
 			 var checkStatus=parent.table.checkStatus('datagridTable');
 			 var datas = checkStatus.data;
-			 var toSendUsers=[];
-		        $.each(datas, function(index, item){
-		             var authorizerAppid = item.authorizerAppid;
-		             var id=item.id;
-		             var nickName=item.nick_name;
-		             toSendUsers.push({id:id,nickName:nickName,authorizerAppid:authorizerAppid});
-		         });
-		      var imgTextId = parent.getQueryString("tempId");//模板ID
-		      var ids=parent.getQueryString("ids");//模板ID
  			 var params=data.field;
  			params.dateTime=params.date+' '+params.time;
- 			console.log(params.dateTime);
- 			params.user=loginNo;
- 			params.toSendUsers=JSON.stringify(toSendUsers);
- 			 params.imgTextId=imgTextId;
- 			var url=ctxAppWeixin+'/api/createTimingTask';
+ 			 params.id=getQueryString('id');
+ 			 console.log(params);
+ 			var url=ctxAppWeixin+'/api/updateTimingTask';
 			   $.ajax({
 			        url: url,
 			        data: params,
@@ -144,9 +133,6 @@ if (loginNo == ""||loginNo==undefined) {
 			        dataType: "json",
 			        success: function(obj){
 			        	parent.parent.layer.msg(obj.respMsg);
-			            var index = parent.layer.getFrameIndex(window.name);  
-			            parent.layer.close(index); 
-			        	layer.closeAll('loading');
 			          },
 			          error: function(data){
 			              try {

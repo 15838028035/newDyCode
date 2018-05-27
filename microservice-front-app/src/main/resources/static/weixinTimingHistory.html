@@ -41,44 +41,36 @@
 </head>
 
     <body>
-    <form class="layui-form" action="">
 <div id="history">
 	<div>
-		<p>待发送:</p>
 		<table id="waitToSend" class="layui-table" lay-filter="Grid" ></table>
-	</div>
-	<div>
-		<p>已发送:</p>
-		<table id="alreadyToSend" class="layui-table" lay-filter="Grid" ></table>
 	</div>
 </div>
 
-</form>
-
+<script type="text/html" id="optTpl">
+            <button class="layui-btn layui-btn layui-btn-xs" lay-event="cancel">取消</button>
+			<button class="layui-btn layui-btn-edit layui-btn-xs" lay-event="update">修改</button>
+    </script>
 <script>
 layui.use(['laypage', 'table', 'element', 'layer','laydate','form'], function(){
 	  table = layui.table;
 	  
 	  table.render({
-	        elem: '#datagrid'
-	        ,url:ctxAppSec+'/api/WeixinAudio?Authorization='+acekeystoken
+	        elem: '#waitToSend'
+	        ,url:ctxAppWeixin+'/api/getSendMsg?Authorization='+acekeystoken
 	        ,cellMinWidth: 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-
 	        ,cols: [[
 	            {type:'checkbox'},
 	            {field:'id',title:'ID'},
-	            {field:'title',title:'名称'},
-	            {field:'createByUname',title:'上传管理员'},
-	            {field:'createDate',title:'上传时间'},
-	            {field:'file_size',title:'文件大小'},
-	            {field:'audio_length',title:'音频时长'},
-	            {field:'categoryId',title:'分类'},
-	            {field:'headImg',title:'音频' ,templet: '#headImgTpl'},
-	            {field: 'opt', title: '操作',templet: '#optTpl'}
-
+	            {field:'create_date',title:'创建时间'},
+	            {field:'task_cron',title:'定时任务时间'},
+	            {field:'to_user_name',title:'群发目标'},
+	            {field:'enable_flag',title:'是否有效'},
+	            {field:'task_status',title:'任务状态'},
+	            {title:'操作', templet : '#optTpl'}
 	        ]]
 	        ,page: true
-	        ,id: 'datagridTable'
+	        ,id: 'waitToSend'
 	        ,initSort: {
 	            field: 'id' //排序字段，对应 cols 设定的各字段名
 	            ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
@@ -88,6 +80,43 @@ layui.use(['laypage', 'table', 'element', 'layer','laydate','form'], function(){
 	            ,limitName: 'limit' //每页数据量的参数名，默认：limit
 	        }
 	    });
+	  table.on('tool(Grid)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+	      var data = obj.data; //获得当前行数据
+	      var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+	   if(layEvent === 'cancel'){
+		   layer.confirm('确定要删除？',{title: "系统提示",anim: 1,icon: 3,closeBtn: 0},function(index){
+			   $.ajax({
+	               url: ctxAppWeixin+'/api/stopTimingTask',
+	               data: {"Authorization":acekeystoken,id:data.id},
+	               type: "post",
+	               dataType: "json",
+	               success: function(data){
+	                        layer.msg(data.respMsg);
+	                 },
+	                 error: function(data){
+	                     try {
+	                        layer.msg("请求异常");
+	                        return false;
+	                     }catch (e) {
+	                        console.log(e);
+	                     }
+	                 }
+	            });
+		   })
+	   } if(layEvent === 'update'){
+		   layer.open({
+				title : "定时任务",
+				type : 2,
+				maxmin : true,
+				area : [ '680px', '380px' ],
+				content : 'weixinTimingUpdate.html?id='+data.id,
+				// 下面这句是,添加页面关闭后,刷新本页面.
+				end : function() {
+					location.reload();
+				}
+			});
+	   }
+	  });
 })
 </script>
 </body>
