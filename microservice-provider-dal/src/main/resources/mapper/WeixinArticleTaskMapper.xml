@@ -22,7 +22,8 @@
         <result property="taskCron" column="task_cron" jdbcType="VARCHAR"   />
         <result property="taskStatus" column="task_status" jdbcType="VARCHAR"   />
         <result property="executeResult" column="execute_result" jdbcType="VARCHAR"   />
-        <result property="toUserNames" column="to_user_names" jdbcType="VARCHAR"   />
+        <result property="toUserName" column="to_user_name" jdbcType="VARCHAR"   />
+        <result property="mapKey" column="map_key" jdbcType="VARCHAR"   />
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -46,7 +47,8 @@
             task_cron ,
             task_status ,
             execute_result ,
-            to_user_names 
+            to_user_name ,
+            map_key 
         ]]>
     </sql>
 
@@ -69,9 +71,9 @@
  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
 
         INSERT INTO weixin_article_task (
-         id, create_by, create_By_UName, create_date, update_by, update_By_Uname, update_date, msg_id, msg_data_id, media_category, imgTextId, media_id, user_id, authorizerAppid, enable_flag, task_cron, task_status, execute_result, to_user_names
+         id, create_by, create_By_UName, create_date, update_by, update_By_Uname, update_date, msg_id, msg_data_id, media_category, imgTextId, media_id, user_id, authorizerAppid, enable_flag, task_cron, task_status, execute_result, to_user_name, map_key
         ) VALUES (
-         #{id,jdbcType=INTEGER}, #{createBy,jdbcType=INTEGER}, #{createByUname,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateByUname,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{msgId,jdbcType=VARCHAR}, #{msgDataId,jdbcType=VARCHAR}, #{mediaCategory,jdbcType=VARCHAR}, #{imgTextId,jdbcType=INTEGER}, #{mediaId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{authorizerAppid,jdbcType=VARCHAR}, #{enableFlag,jdbcType=VARCHAR}, #{taskCron,jdbcType=VARCHAR}, #{taskStatus,jdbcType=VARCHAR}, #{executeResult,jdbcType=VARCHAR}, #{toUserNames,jdbcType=VARCHAR}        
+         #{id,jdbcType=INTEGER}, #{createBy,jdbcType=INTEGER}, #{createByUname,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=INTEGER}, #{updateByUname,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{msgId,jdbcType=VARCHAR}, #{msgDataId,jdbcType=VARCHAR}, #{mediaCategory,jdbcType=VARCHAR}, #{imgTextId,jdbcType=INTEGER}, #{mediaId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{authorizerAppid,jdbcType=VARCHAR}, #{enableFlag,jdbcType=VARCHAR}, #{taskCron,jdbcType=VARCHAR}, #{taskStatus,jdbcType=VARCHAR}, #{executeResult,jdbcType=VARCHAR}, #{toUserName,jdbcType=VARCHAR}, #{mapKey,jdbcType=VARCHAR}        
         )
    
 </insert>
@@ -133,8 +135,11 @@
             <if test="executeResult != null" >
                 execute_result,
             </if>
-            <if test="toUserNames != null" >
-                to_user_names,
+            <if test="toUserName != null" >
+                to_user_name,
+            </if>
+            <if test="mapKey != null" >
+                map_key,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -193,8 +198,11 @@
                 <if test="executeResult != null" >
                      #{executeResult,jdbcType=VARCHAR},
                 </if>
-                <if test="toUserNames != null" >
-                     #{toUserNames,jdbcType=VARCHAR},
+                <if test="toUserName != null" >
+                     #{toUserName,jdbcType=VARCHAR},
+                </if>
+                <if test="mapKey != null" >
+                     #{mapKey,jdbcType=VARCHAR},
                 </if>
         </trim>
  </insert>
@@ -255,8 +263,11 @@
         <if test="executeResult != null and  executeResult != ''" >
             execute_result = #{executeResult,jdbcType=VARCHAR} ,
         </if>
-        <if test="toUserNames != null and  toUserNames != ''" >
-            to_user_names = #{toUserNames,jdbcType=VARCHAR} ,
+        <if test="toUserName != null and  toUserName != ''" >
+            to_user_name = #{toUserName,jdbcType=VARCHAR} ,
+        </if>
+        <if test="mapKey != null and  mapKey != ''" >
+            map_key = #{mapKey,jdbcType=VARCHAR} ,
         </if>
 
      </set>
@@ -268,7 +279,7 @@
     <update id="updateByPrimaryKey" >
 
         UPDATE weixin_article_task SET
-            create_by = #{createBy} , create_By_UName = #{createByUname} , create_date = #{createDate} , update_by = #{updateBy} , update_By_Uname = #{updateByUname} , update_date = #{updateDate} , msg_id = #{msgId} , msg_data_id = #{msgDataId} , media_category = #{mediaCategory} , imgTextId = #{imgTextId} , media_id = #{mediaId} , user_id = #{userId} , authorizerAppid = #{authorizerAppid} , enable_flag = #{enableFlag} , task_cron = #{taskCron} , task_status = #{taskStatus} , execute_result = #{executeResult} , to_user_names = #{toUserNames}  
+            create_by = #{createBy} , create_By_UName = #{createByUname} , create_date = #{createDate} , update_by = #{updateBy} , update_By_Uname = #{updateByUname} , update_date = #{updateDate} , msg_id = #{msgId} , msg_data_id = #{msgDataId} , media_category = #{mediaCategory} , imgTextId = #{imgTextId} , media_id = #{mediaId} , user_id = #{userId} , authorizerAppid = #{authorizerAppid} , enable_flag = #{enableFlag} , task_cron = #{taskCron} , task_status = #{taskStatus} , execute_result = #{executeResult} , to_user_name = #{toUserName} , map_key = #{mapKey}  
         WHERE 
         id = #{id,jdbcType=INTEGER}
          
@@ -299,7 +310,8 @@
                  and  task_cron = #{taskCron,jdbcType=VARCHAR}
                  and  task_status = #{taskStatus,jdbcType=VARCHAR}
                  and  execute_result = #{executeResult,jdbcType=VARCHAR}
-                 and  to_user_names = #{toUserNames,jdbcType=VARCHAR}
+                 and  to_user_name = #{toUserName,jdbcType=VARCHAR}
+                 and  map_key = #{mapKey,jdbcType=VARCHAR}
         
     </select>
       
@@ -362,8 +374,11 @@
         <if test="executeResult != null and  executeResult != ''" >
                and   execute_result = #{executeResult,jdbcType=VARCHAR}
         </if>
-        <if test="toUserNames != null and  toUserNames != ''" >
-               and   to_user_names = #{toUserNames,jdbcType=VARCHAR}
+        <if test="toUserName != null and  toUserName != ''" >
+               and   to_user_name = #{toUserName,jdbcType=VARCHAR}
+        </if>
+        <if test="mapKey != null and  mapKey != ''" >
+               and   map_key = #{mapKey,jdbcType=VARCHAR}
         </if>
             
   </select>
@@ -427,8 +442,11 @@
         <if test="executeResult != null and  executeResult != ''" >
                and   execute_result = #{executeResult,jdbcType=VARCHAR}
         </if>
-        <if test="toUserNames != null and  toUserNames != ''" >
-               and   to_user_names = #{toUserNames,jdbcType=VARCHAR}
+        <if test="toUserName != null and  toUserName != ''" >
+               and   to_user_name = #{toUserName,jdbcType=VARCHAR}
+        </if>
+        <if test="mapKey != null and  mapKey != ''" >
+               and   map_key = #{mapKey,jdbcType=VARCHAR}
         </if>
             
   </select>
