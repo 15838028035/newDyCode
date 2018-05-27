@@ -1,0 +1,94 @@
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+        <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport">
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="telephone=no" name="format-detection" />
+        <meta http-equiv="Access-Control-Allow-Origin" content="*">
+        <title>定时任务</title>
+    
+    <link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="./js/jquery.cookie.js"></script>
+    <script src="js/js.js"></script>
+    
+    <script src="layer/layer.js"></script>
+    <script src="layui/layui.js"></script>
+	<style>
+		.layui-form{ 
+			padding:20px;
+		}
+		#upload{
+			display: block;
+		}
+		#headImgPic{
+			background:#F5F5F5;
+		}
+		.amentit{
+			margin: 10px 0;
+			font-size: 12px;
+			color: #999;
+		}
+		#tags{width:80%;margin-bottom:20px;margin-top:0px}
+		#tags>div{width:100px}
+	</style>
+</head>
+
+    <body>
+    <form class="layui-form" action="">
+<div id="history">
+	<div>
+		<p>待发送:</p>
+		<table id="waitToSend" class="layui-table" lay-filter="Grid" ></table>
+	</div>
+	<div>
+		<p>已发送:</p>
+		<table id="alreadyToSend" class="layui-table" lay-filter="Grid" ></table>
+	</div>
+</div>
+
+</form>
+
+<script>
+layui.use(['laypage', 'table', 'element', 'layer','laydate','form'], function(){
+	  table = layui.table;
+	  
+	  table.render({
+	        elem: '#datagrid'
+	        ,url:ctxAppSec+'/api/WeixinAudio?Authorization='+acekeystoken
+	        ,cellMinWidth: 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+
+	        ,cols: [[
+	            {type:'checkbox'},
+	            {field:'id',title:'ID'},
+	            {field:'title',title:'名称'},
+	            {field:'createByUname',title:'上传管理员'},
+	            {field:'createDate',title:'上传时间'},
+	            {field:'file_size',title:'文件大小'},
+	            {field:'audio_length',title:'音频时长'},
+	            {field:'categoryId',title:'分类'},
+	            {field:'headImg',title:'音频' ,templet: '#headImgTpl'},
+	            {field: 'opt', title: '操作',templet: '#optTpl'}
+
+	        ]]
+	        ,page: true
+	        ,id: 'datagridTable'
+	        ,initSort: {
+	            field: 'id' //排序字段，对应 cols 设定的各字段名
+	            ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+	        }
+	        ,request: {
+	            pageName: 'page' //页码的参数名称，默认：page
+	            ,limitName: 'limit' //每页数据量的参数名，默认：limit
+	        }
+	    });
+})
+</script>
+</body>
+</html>

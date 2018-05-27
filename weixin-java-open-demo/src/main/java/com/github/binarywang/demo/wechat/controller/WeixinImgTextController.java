@@ -8,9 +8,15 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -23,23 +29,28 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONArray;
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
+import com.github.binarywang.demo.wechat.task.FuturesMap;
 import com.github.binarywang.demo.wechat.task.TimingSendTask;
 import com.github.binarywang.demo.wechat.task.TimingThread;
 import com.github.binarywang.demo.wechat.utils.FileMatchUtil;
 import com.github.binarywang.demo.wechat.utils.GIfUtil;
+import com.lj.cloud.secrity.service.WeixinArticleTaskService;
 import com.lj.cloud.secrity.service.WeixinImgService;
 import com.lj.cloud.secrity.service.WeixinImgtextItemService;
 import com.lj.cloud.secrity.service.WeixinPushLogService;
 import com.lj.cloud.secrity.service.WeixinUserinfoService;
 import com.weixindev.micro.serv.common.bean.RestAPIResult2;
 import com.weixindev.micro.serv.common.bean.WxMpErrorMsg;
+import com.weixindev.micro.serv.common.bean.weixin.WeixinArticleTask;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImg;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImgtextItem;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinPushLog;
@@ -86,7 +97,6 @@ public class WeixinImgTextController {
 	
 	@Autowired
 	private WeixinPushLogService weixinPushLogService ;
-	
 	@Autowired
 	private TimingSendTask task;
 	@Value("${appURL}")
@@ -96,10 +106,12 @@ public class WeixinImgTextController {
 	private String file_location;// 文件存储路径
 	@Value("${ctxAppWeixin}")
 	private String ctxAppWeixin;// 微信网站路径
-	
 	@Autowired
 	private WeixinImgService weixinImgService;
-	
+	@Autowired
+	private FuturesMap futuresMap;
+	@Autowired
+	private WeixinArticleTaskService weixinArticleTaskService;
 	/**
 	 * 1、首先，预先将图文消息中需要用到的图片，使用上传图文消息内图片接口，上传成功并获得图片 URL；
 	 * 2、上传图文消息素材，需要用到图片时，请使用上一步获取的图片 URL； 3、使用对用户标签的群发，或对 OpenID
@@ -1249,43 +1261,89 @@ public class WeixinImgTextController {
 		
 		return restAPIResult;
 	}
+	@ApiOperation("创建定时群发")
+	@RequestMapping(value="/api/createTimingTask")
+	public RestAPIResult2 createTimingTask(@RequestParam Map<String,Object> map) {
+		RestAPIResult2 result=new RestAPIResult2();
+		result.setRespCode(0);
+		result.setRespMsg("成功");
+		try {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String time=(String)map.get("dateTime");
+		Date date=null;
+		date=sdf.parse(time);
+		TimingThread t=new TimingThread();
+		t.setMap(map);
+		ScheduledFuture<?> future=task.startCron(date,t);
+		String key=UUID.randomUUID().toString();
+		futuresMap.setFutures(key, future);
+		WeixinArticleTask w=new WeixinArticleTask();
+		Date createDate=new Date();
+		List list=JSONArray.parseArray((String) map.get("toSendUsers"));
+		List<Map<String,Object>> toSendUsers=list;
+		for(Map<String,Object> toSendUser:toSendUsers) {
+			w.setCreateByUname((String)map.get("user"));
+			w.setCreateDate(sdf.format(createDate));
+			w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
+			w.setToUserName((String)toSendUser.get("nickName"));
+			w.setUserId(toSendUser.get("id").toString());
+			w.setAuthorizerAppid((String)map.get("authorizerAppid"));
+			w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
+			w.setTaskStatus("待发送");
+			w.setTaskCron((String)map.get("dateTime"));
+			w.setEnableFlag("有效");
+			weixinArticleTaskService.insert(w);
+		}
+		}catch(Exception e) {
+			result.setRespCode(1);
+			result.setRespMsg("系统异常");
+			e.printStackTrace();
+		}
+		return result;
+	}
+	@RequestMapping(value="/api/stopTimingTask")
+	public RestAPIResult2 stopTimingTask(String key) {
+		RestAPIResult2 result=new RestAPIResult2();
+		ScheduledFuture<?> future=futuresMap.getFutures().get(key);
+		task.stopCron(future);
+		result.setRespMsg("success");
+		return result;
+	}
+	@ApiOperation("查询定时群发已发送记录")
+	@RequestMapping(value="/api/getWaitToSend")
+	public List<WeixinArticleTask> getWaitToSend(String createByUname) {
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("createByUname", createByUname);
+		map.put("taskStatus", "已发送");
+		Query query=new Query(map);
+		List<WeixinArticleTask> list=weixinArticleTaskService.selectByExample(query);
+		return list;
+	}
+	@ApiOperation("查询定时群发待发送记录")
+	@RequestMapping(value="/api/getAlreadyToSend")
+	public List<WeixinArticleTask> getAlreadyToSend(String createByUname) {
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("createByUname", createByUname);
+		map.put("taskStatus", "待发送");
+		Query query=new Query(map);
+		List<WeixinArticleTask> list=weixinArticleTaskService.selectByExample(query);
+		return list;
+	}
 //	@RequestMapping(value="/api/createTimingTask")
-//	public RestAPIResult2 createTimingTask(String minute) {
+//	public RestAPIResult2 createTimingTask(Map<String,Object> params) {
 //		RestAPIResult2 result=new RestAPIResult2();
 //		Map<String,String> map=new HashMap<String,String>();
-//		map.put("year","2018");
+//		String date=(String) params.get("date");
+//		String time=(String) params.get("time");
 //		map.put("month","5");
 //		map.put("day","25");
 //		map.put("hour","19");
-//		map.put("minute",minute);
+////		map.put("minute",minute);
 //		map.put("second","0");
 //		task.setCronStr(map);
 //		task.startCron();
 //		result.setRespMsg(task.getCronStr());
 //		return result;
 //	}
-//	@RequestMapping(value="/api/stopTimingTask")
-//	public RestAPIResult2 stopTimingTask() {
-//		RestAPIResult2 result=new RestAPIResult2();
-//		task.stopCron();
-//		result.setRespMsg("success");
-//		return result;
-//	}
-	@RequestMapping(value="/api/createTimingTask")
-	public RestAPIResult2 createTimingTask(Map<String,Object> params) {
-		RestAPIResult2 result=new RestAPIResult2();
-		Map<String,String> map=new HashMap<String,String>();
-		String date=(String) params.get("date");
-		String time=(String) params.get("time");
-		map.put("month","5");
-		map.put("day","25");
-		map.put("hour","19");
-//		map.put("minute",minute);
-		map.put("second","0");
-		task.setCronStr(map);
-		task.startCron();
-		result.setRespMsg(task.getCronStr());
-		return result;
-	}
 	
 }

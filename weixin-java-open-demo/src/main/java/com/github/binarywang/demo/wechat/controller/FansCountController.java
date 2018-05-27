@@ -499,16 +499,15 @@ public class FansCountController {
 						weixinFansInfo.setGroupid(groupid);
 						weixinFansInfo.setCreateTime(createTime);
 						weixinFansInfo.setUpdateTime(updateTime);
-						fansCount.setNikeName(weixinUserinfo.getNickName());
-						fansCount.setCreateTime(createTime);
-						fansCount.setUpdateTime(createTime);
-						fansCount.setNewFans(countNewUser);
 						weixinFansInfoService.insertSelective(weixinFansInfo);
 					}catch(Exception e) {
 						logger.error("异常："+e.getMessage());
 					}
 					}
-					
+					fansCount.setNikeName(weixinUserinfo.getNickName());
+					fansCount.setNewFans(countNewUser);
+					fansCount.setCreateTime(createTime);
+					fansCount.setUpdateTime(createTime);
 					fansCount.setUserId(uid);
 					fansCount.setCount(count);
 					fansCount.setCancel(cancelUser);

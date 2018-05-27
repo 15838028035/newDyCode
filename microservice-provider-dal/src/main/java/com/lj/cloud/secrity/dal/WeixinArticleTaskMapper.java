@@ -18,6 +18,7 @@ public interface WeixinArticleTaskMapper  {
 
     int updateByPrimaryKeySelective(WeixinArticleTask weixinArticleTask);
 
+    int updateBySelective(WeixinArticleTask weixinArticleTask);
     int updateByPrimaryKey(WeixinArticleTask weixinArticleTask);
 
    
