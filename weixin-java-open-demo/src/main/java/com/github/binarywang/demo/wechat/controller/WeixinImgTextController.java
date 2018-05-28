@@ -1290,18 +1290,10 @@ public class WeixinImgTextController {
 		}
 //		weixinArticleTaskList.add(w);
 		
-		TimingThread t=new  TimingThread(map,  wxOpenServiceDemo,
-				WxMpService,
-				WeixinUserinfoService,
-				 weixinImgtextItemService, weixinPushLogService,
-				 weixinImgService,  weixinArticleTaskService,  file_location,
-				 ctxAppWeixin,  appURL,appIds);
 	/*	t.setMap(map);
 		t.setWeixinArticleTaskList(weixinArticleTaskList);*/
 		
-		ScheduledFuture<?> future=task.startCron(date,t);
 		String key=UUID.randomUUID().toString();
-		futuresMap.setFutures(key, future);
 		WeixinArticleTask w=new WeixinArticleTask();
 		w.setCreateByUname((String)map.get("user"));
 		w.setCreateDate(sdf.format(createDate));
@@ -1315,6 +1307,14 @@ public class WeixinImgTextController {
 		w.setEnableFlag("有效");
 		w.setMapKey(key);
 		weixinArticleTaskService.insert(w);
+		TimingThread t=new  TimingThread(map,  wxOpenServiceDemo,
+				WxMpService,
+				WeixinUserinfoService,
+				 weixinImgtextItemService, weixinPushLogService,
+				 weixinImgService,  weixinArticleTaskService,  file_location,
+				 ctxAppWeixin,  appURL,appIds,w.getId());
+		ScheduledFuture<?> future=task.startCron(date,t);
+		futuresMap.setFutures(key, future);
 		}catch(Exception e) {
 			result.setRespCode(1);
 			result.setRespMsg("系统异常");
@@ -1385,7 +1385,7 @@ public class WeixinImgTextController {
 				WeixinUserinfoService,
 				 weixinImgtextItemService, weixinPushLogService,
 				 weixinImgService,  weixinArticleTaskService,  file_location,
-				 ctxAppWeixin,  appURL,w.getUserId());
+				 ctxAppWeixin,  appURL,w.getUserId(),w.getId());
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("imgTextId", w.getImgTextId());
 		map.put("ids", w.getUserId());

@@ -71,14 +71,14 @@ public class WeixinFansInfoServiceImpl  implements WeixinFansInfoService{
 	}
 
 	@Override
-	public List<Map<String, Object>> selectPositionByTime(Map<String,Object> map) {
-		List<Map<String, Object>> list=weixinFansInfoMapper.selectPositionByTime(map);
+	public List<Map<String, Object>> selectPosition(Map<String,Object> map) {
+		List<Map<String, Object>> list=weixinFansInfoMapper.selectPosition(map);
 		return list;
 	}
 
 	@Override
-	public List<Map<String, Object>> selectPositionByUidAndTime(Map<String, Object> map) {
-		List<Map<String, Object>> list=weixinFansInfoMapper.selectPositionByUidAndTime(map);
+	public List<Map<String, Object>> selectPositionByUid(Map<String, Object> map) {
+		List<Map<String, Object>> list=weixinFansInfoMapper.selectPositionByUid(map);
 		return list;
 	}
 

@@ -1370,8 +1370,9 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 		 var citys=[];
 		 var datas=[];
 		 for(var i=0;i<geoCoord.length;i++){
-			 citys.push(geoCoord[i].city);
-			 datas.push(geoCoord[i].value);
+			 var city=geoCoord[i].city;
+				 citys.push(city);
+				 datas.push(geoCoord[i].value);
 		 }
 		 option = {
 			 title: {

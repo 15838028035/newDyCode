@@ -139,8 +139,6 @@ if (loginNo == ""||loginNo==undefined) {
  			params.toSendUsers=JSON.stringify(toSendUsers);
  			 params.imgTextId=imgTextId;
  			var url=ctxAppWeixin+'/api/createTimingTask';
- 			
- 			
  			var postData = {"dateTime":params.dateTime,"user":loginNo,"toSendUsers":params.toSendUsers,"imgTextId":params.imgTextId};
  			
 			   $.ajax({
