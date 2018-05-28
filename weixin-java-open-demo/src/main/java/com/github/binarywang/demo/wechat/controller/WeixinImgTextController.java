@@ -1262,7 +1262,7 @@ public class WeixinImgTextController {
 		return restAPIResult;
 	}
 	@ApiOperation("创建定时群发")
-	@RequestMapping(value="/api/createTimingTask")
+	@RequestMapping(value="/api/createTimingTask", method = {RequestMethod.POST})
 	public RestAPIResult2 createTimingTask(@RequestParam Map<String,Object> map) {
 		RestAPIResult2 result=new RestAPIResult2();
 		result.setRespCode(1);
