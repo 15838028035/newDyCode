@@ -118,7 +118,6 @@ if (loginNo == ""||loginNo==undefined) {
 		             toSendUsers.push({id:id,nickName:nickName,authorizerAppid:authorizerAppid});
 		         });
 		      var imgTextId = parent.getQueryString("tempId");//模板ID
-		      var ids=parent.getQueryString("ids");//模板ID
  			 var params=data.field;
  			params.dateTime=params.date+' '+params.time;
  			console.log(params.dateTime);
@@ -142,7 +141,7 @@ if (loginNo == ""||loginNo==undefined) {
 			            parent.layer.close(index); 
 			           layer.closeAll('loading');
 			          },
-			          error: function(data){
+			          error: function(data,xhr){
 			              try {
 			              console.log("data="+data);
 			               //  parent.layer.alert("请求异常");
