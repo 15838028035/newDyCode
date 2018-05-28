@@ -1357,7 +1357,7 @@ public class WeixinImgTextController {
 		RestAPIResult2 result=new RestAPIResult2();
 		result.setRespCode(0);
 		result.setRespMsg("成功");
-		if(params.get("id")==null||params.get("id")=="") {
+		if(params.get("id")==null||params.get("id").equals("")) {
 			result.setRespCode(1);;
 			result.setRespMsg("修改失败");
 			return result;

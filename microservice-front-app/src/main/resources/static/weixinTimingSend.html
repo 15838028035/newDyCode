@@ -73,11 +73,11 @@
 <script>
 var acekeystoken = $.cookie('bearcktkaeskey');
 if (acekeystoken == ""||acekeystoken==undefined) {
-    parent.location.href = ctxApp + '/login.html';
+	parent.parent.location.href = ctxApp + '/login.html';
 }
 var loginNo=$.cookie('loginNo');
 if (loginNo == ""||loginNo==undefined) {
-    parent.location.href = ctxApp + '/login.html';
+	parent.parent.location.href = ctxApp + '/login.html';
 }
 	layui.use(['laypage', 'table', 'element', 'layer','laydate','form'], function(){
 		 var laydate = layui.laydate;

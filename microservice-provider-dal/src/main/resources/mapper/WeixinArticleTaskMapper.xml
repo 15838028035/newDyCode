@@ -32,7 +32,7 @@
             id ,
             create_by ,
             create_By_UName ,
-            str_to_date(create_date,'%Y-%m-%d %H:%i:%s') create_date,
+            str_to_date(create_date,'%Y-%m-%d %H:%i:%s') as create_date,
             update_by ,
             update_By_Uname ,
             update_date ,
