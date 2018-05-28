@@ -102,6 +102,7 @@ if (loginNo == ""||loginNo==undefined) {
 		  //执行一个laydate实例
 		 laydate.render({ 
 			    elem: '#date'
+			    ,type:'date'
 			    ,trigger: 'click' //采用click弹出
 			    ,min:new Date().format('yyyy-MM-dd')
 			  });
@@ -119,8 +120,6 @@ if (loginNo == ""||loginNo==undefined) {
 				 layer.msg("请选择时间");
 				 return false;
 			 }
-			 var checkStatus=parent.table.checkStatus('datagridTable');
-			 var datas = checkStatus.data;
  			 var params=data.field;
  			params.dateTime=params.date+' '+params.time;
  			 params.id=getQueryString('id');
@@ -130,16 +129,18 @@ if (loginNo == ""||loginNo==undefined) {
 			        url: url,
 			        data: params,
 			        type: 'post',
-			        dataType: "json",
+			        dataType:'json',
 			        success: function(obj){
-			        	parent.parent.layer.msg(obj.respMsg);
+			        	console.log(1111);
+// 			        	parent.parent.layer.msg(data.respMsg);
+// 			            var index = parent.layer.getFrameIndex(window.name);  
+// 			            console.log(index);
+// 			            parent.layer.close(index); 
+// 			        	layer.closeAll('loading');
 			          },
 			          error: function(data){
-			              try {
-			                 layer.msg("请求异常");
-			              }catch (e) {
-			                 console.log(e);
-			              }
+			        	  console.log(data);
+			                 parent.layer.msg("请求异常");
 			          }
 			     });
 		 })
