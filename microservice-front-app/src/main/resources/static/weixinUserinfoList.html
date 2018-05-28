@@ -179,8 +179,8 @@
             , url: ctxAppSec + '/api/WeixinUserinfo?'+tableLoadurl+'Authorization=' + acekeystoken
             , cols: [[
                 {type: 'checkbox'},
-                {field: 'id', title: 'ID', width: '80'},
-                {field: 'nick_name', title: '公众号昵称', width: '100'},
+                {field: 'id', title: 'ID', width: '60'},
+                {field: 'nick_name', title: '公众号昵称', width: '200'},
                 {field: 'head_img', title: '公众号头像', templet: '#headimg', width: '100'},
                 {field: 'service_type_info', title: '账号类型', templet: '#accountTypetpl', width: '100'},
                 {field: 'InfoType', title: '授权状态', templet: '#InfoTypetpl', width: '100'},
@@ -197,7 +197,7 @@
                 {field: 'opt', title: '操作', templet: '#optTpl', width: '300'}
             ]]
             , page: true
-            , id: 'datagridTable'
+            , id: 'datagrid'
             , initSort: {
                 field: 'id' //排序字段，对应 cols 设定的各字段名
                 , type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
@@ -300,7 +300,7 @@
         });
 
         //监听提交
-        form.on('select(quiz1)', function (data) {
+         form.on('select(quiz1)', function (data) {
             console.log(data);
             if (data.value == ""){
                 $("#fenzu2").html("");
@@ -308,7 +308,7 @@
                 return false;
             }
             $.ajax({
-                url: ctxAppSec + '/api/WeixinGroups/list?authorizerAppid='+ authorizerAppid+'&parentId=' + data.value+'&Authorization='+acekeystoken,
+                url: ctxAppSec + '/api/WeixinGroups/list?&parentId=' + data.value+'&Authorization='+acekeystoken,
                 type: "get",
                 dataType: "json",
                 success: function (data) {
@@ -339,7 +339,7 @@
                     }
                 }
             });
-        });
+        }); 
 
         var $ = layui.$, active = {
             reload: function () {
@@ -353,6 +353,7 @@
             getCheckData: function () { //获取选中数据
                 var checkStatus = table.checkStatus('datagrid')
                     , data = checkStatus.data;
+            	console.log(data);
                 if (data.length==0){
                     layer.msg("请勾选需要移动分组的公众号");
                     return false;
