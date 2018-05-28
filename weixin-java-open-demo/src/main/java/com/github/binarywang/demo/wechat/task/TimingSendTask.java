@@ -25,7 +25,6 @@ public class TimingSendTask {
         return future;
      }
     public Boolean stopCron(ScheduledFuture<?> future) {
-    	System.out.println(future);
     	 Boolean iscancel=null;
         if (future != null) {
             iscancel=future.cancel(true);
@@ -33,11 +32,11 @@ public class TimingSendTask {
         System.out.println("DynamicTask.stopCron()");
         return iscancel;
      }
-    public String changeCron(ScheduledFuture<?> future,Date date,TimingThread thread) {
+    public Boolean changeCron(ScheduledFuture<?> future,Date date,TimingThread thread){
     	System.out.println(future);
-        stopCron(future);// 先停止，在开启.
-        future = threadPoolTaskScheduler.schedule(thread,date);
-        System.out.println("DynamicTask.startCron10()");
-        return "changeCron";
+    	Boolean iscancel=stopCron(future);// 先停止，在开启.
+    		future = threadPoolTaskScheduler.schedule(thread,date);
+            System.out.println("DynamicTask.startCron10()");
+            return true;
      }
 }

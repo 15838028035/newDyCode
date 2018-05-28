@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
+import com.github.binarywang.demo.wechat.task.CancelFailedException;
 import com.github.binarywang.demo.wechat.task.FuturesMap;
 import com.github.binarywang.demo.wechat.task.TimingSendTask;
 import com.github.binarywang.demo.wechat.task.TimingThread;
@@ -1287,18 +1288,6 @@ public class WeixinImgTextController {
 			nickNames+=(String)toSendUser.get("nickName")+",";
 			userIds+=toSendUser.get("id").toString()+",";
 		}
-		WeixinArticleTask w=new WeixinArticleTask();
-		w.setCreateByUname((String)map.get("user"));
-		w.setCreateDate(sdf.format(createDate));
-		w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
-		w.setToUserName(nickNames);
-		w.setUserId(userIds);
-		w.setAuthorizerAppid(appIds);
-		w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
-		w.setTaskStatus("待发送");
-		w.setTaskCron((String)map.get("dateTime"));
-		w.setEnableFlag("有效");
-		weixinArticleTaskService.insert(w);
 //		weixinArticleTaskList.add(w);
 		
 		TimingThread t=new  TimingThread(map,  wxOpenServiceDemo,
@@ -1313,7 +1302,19 @@ public class WeixinImgTextController {
 		ScheduledFuture<?> future=task.startCron(date,t);
 		String key=UUID.randomUUID().toString();
 		futuresMap.setFutures(key, future);
-		
+		WeixinArticleTask w=new WeixinArticleTask();
+		w.setCreateByUname((String)map.get("user"));
+		w.setCreateDate(sdf.format(createDate));
+		w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
+		w.setToUserName(nickNames);
+		w.setUserId(userIds);
+		w.setAuthorizerAppid(appIds);
+		w.setImgTextId(Integer.parseInt((String)map.get("imgTextId")));
+		w.setTaskStatus("待发送");
+		w.setTaskCron((String)map.get("dateTime"));
+		w.setEnableFlag("有效");
+		w.setMapKey(key);
+		weixinArticleTaskService.insert(w);
 		}catch(Exception e) {
 			result.setRespCode(1);
 			result.setRespMsg("系统异常");
@@ -1325,13 +1326,18 @@ public class WeixinImgTextController {
 	public RestAPIResult2 stopTimingTask(String id) {
 		RestAPIResult2 result=new RestAPIResult2();
 		result.setRespCode(0);
-		result.setRespMsg("成功");
+		result.setRespMsg("取消成功");
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("id", id);
 		Query query=new Query(map);
 		String key=weixinArticleTaskService.selectMapKeyByExample(query);
 		ScheduledFuture<?> future=futuresMap.getFutures().get(key);
-		task.stopCron(future);
+		Boolean iscancel=task.stopCron(future);
+//		if(iscancel==false) {
+//			result.setRespCode(1);
+//			result.setRespMsg("取消失败");
+//			return result;
+//		}
 		WeixinArticleTask weixinArticleTask=new WeixinArticleTask();
 		weixinArticleTask.setId(Integer.parseInt(id));
 		weixinArticleTask.setEnableFlag("无效");
@@ -1374,7 +1380,12 @@ public class WeixinImgTextController {
 		WeixinArticleTask w=weixinArticleTaskService.selectByPrimaryKey(id);
 		String mapKey=w.getMapKey();
 		ScheduledFuture<?> future=futuresMap.getFutures().get(mapKey);
-		TimingThread timingThread=new TimingThread();
+		TimingThread timingThread=new TimingThread(params,  wxOpenServiceDemo,
+				WxMpService,
+				WeixinUserinfoService,
+				 weixinImgtextItemService, weixinPushLogService,
+				 weixinImgService,  weixinArticleTaskService,  file_location,
+				 ctxAppWeixin,  appURL,w.getUserId());
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("imgTextId", w.getImgTextId());
 		map.put("ids", w.getUserId());
@@ -1388,6 +1399,8 @@ public class WeixinImgTextController {
 			result.setRespMsg("修改失败");
 		}
 			task.changeCron(future, dateTime, timingThread);
+			result.setRespCode(1);
+			result.setRespMsg("修改失败");
 		w.setTaskCron(dateStr);
 		weixinArticleTaskService.updateByPrimaryKey(w);
 		return result;
