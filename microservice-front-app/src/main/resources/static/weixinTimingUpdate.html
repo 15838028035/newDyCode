@@ -99,19 +99,34 @@ if (loginNo == ""||loginNo==undefined) {
 			    return fmt;
 			}
 		  
+		  var time=laydate.render({ 
+				    elem: '#time'
+				    ,type:'time'
+				    ,trigger: 'click' //采用click弹出
+				  });
+			 
 		  //执行一个laydate实例
-		 laydate.render({ 
+		 var date=laydate.render({ 
 			    elem: '#date'
 			    ,type:'date'
 			    ,trigger: 'click' //采用click弹出
 			    ,min:new Date().format('yyyy-MM-dd')
+			     ,done: function (value, dates) { 
+			    	 var now=new Date();
+			    	 console.log(value);
+					 if(now.format('yyyy-MM-dd')==value){
+						 time.config.min ={  
+								year:dates.year,   
+                        month:dates.month-1,//关键   
+                        date: dates.date,  
+			                        hours: now.format('h'),   
+			                        minutes: now.format('m'),   
+			                        seconds : now.format('s')
+            		}  
+						 console.log(time.config.min);
+				 }
+			    }
 			  });
-		 laydate.render({ 
-			    elem: '#time'
-			    ,type:'time'
-			    ,trigger: 'click' //采用click弹出
-			  });
-		 
 		 
 		 form.on('submit(demo1)', function(data){
 			 var inputDate=data.field.date;
@@ -124,22 +139,22 @@ if (loginNo == ""||loginNo==undefined) {
  			params.dateTime=params.date+' '+params.time;
  			 params.id=getQueryString('id');
  			 console.log(params);
+ 			var postData = {"dateTime":params.dateTime,"id":params.id};
+ 			console.log(postData);
  			var url=ctxAppWeixin+'/api/updateTimingTask';
 			   $.ajax({
 			        url: url,
-			        data: params,
+			        data: postData,
 			        type: 'post',
 			        dataType:'json',
+			        async: false,
 			        success: function(obj){
-			        	console.log(1111);
-// 			        	parent.parent.layer.msg(data.respMsg);
-// 			            var index = parent.layer.getFrameIndex(window.name);  
-// 			            console.log(index);
-// 			            parent.layer.close(index); 
-// 			        	layer.closeAll('loading');
+			        	parent.parent.layer.alert(obj.respMsg);
+			            var index = parent.layer.getFrameIndex(window.name);  
+			            parent.layer.close(index); 
+			           layer.closeAll('loading');
 			          },
-			          error: function(data){
-			        	  console.log(data);
+			          error: function(data,xhr){
 			                 parent.layer.msg("请求异常");
 			          }
 			     });
