@@ -49,17 +49,6 @@
        <div class="layui-inline">
         <input class="layui-input" name="time" id="time" autocomplete="off" placeholder="开始时间">
     </div>
-<!--  	 <div class="layui-form-item"> -->
-<!--     	<label class="layui-form-label">标题</label> -->
-<!--     	<div class="layui-input-block"> -->
-<!--       <input name="title" id="title"  autocomplete="off" placeholder="请输入" class="layui-input" type="text" > -->
-<!--     	</div> -->
-<!--  	 </div> -->
-<!--  	 <div class="layui-form-item"> -->
-<!--         <label class="layui-form-label">视频</label> -->
-<!--         <div class="layui-input-block"> -->
-<!--           	<input name="headImg" id="headImg"  autocomplete="off"  class="layui-input" type="hidden" > -->
-<!--            <input name="fileSize" id="fileSize"  autocomplete="off"  class="layui-input" type="hidden" > -->
 
 	<div class="layui-form-item">
     <div class="layui-input-block">
@@ -129,7 +118,6 @@ if (loginNo == ""||loginNo==undefined) {
 		             toSendUsers.push({id:id,nickName:nickName,authorizerAppid:authorizerAppid});
 		         });
 		      var imgTextId = parent.getQueryString("tempId");//模板ID
-		      var ids=parent.getQueryString("ids");//模板ID
  			 var params=data.field;
  			params.dateTime=params.date+' '+params.time;
  			console.log(params.dateTime);
@@ -137,21 +125,26 @@ if (loginNo == ""||loginNo==undefined) {
  			params.toSendUsers=JSON.stringify(toSendUsers);
  			 params.imgTextId=imgTextId;
  			var url=ctxAppWeixin+'/api/createTimingTask';
+ 			
+ 			
+ 			var postData = {"dateTime":params.dateTime,"user":loginNo,"toSendUsers":params.toSendUsers,"imgTextId":params.imgTextId};
+ 			
 			   $.ajax({
 			        url: url,
-			        data: params,
-			        type: 'post',
+			        data: postData,
+			        type: "post",
 			        dataType: "json",
-			        success: function(obj){
-			        	parent.parent.layer.msg(obj.respMsg);
+			         async: false,
+			        success: function(respData){
+			        	parent.parent.layer.alert(respData.respMsg);
 			            var index = parent.layer.getFrameIndex(window.name);  
 			            parent.layer.close(index); 
-			        	layer.closeAll('loading');
+			           layer.closeAll('loading');
 			          },
-			          error: function(data){
+			          error: function(data,xhr){
 			              try {
 			              console.log("data="+data);
-			                 parent.layer.alert("请求异常");
+			               //  parent.layer.alert("请求异常");
 			              }catch (e) {
 			                 console.log(e);
 			              }

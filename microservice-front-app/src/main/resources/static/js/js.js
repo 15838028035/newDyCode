@@ -16,8 +16,8 @@ var ctxAppWeixin = "http://weixin.xrtz.org:8050/weixin";
 //if(hostname == window.location.protocol + "//" +"127.0.0.1" || hostname == window.location.protocol + "//" +"localhost"){
 //    ctxApp = "http://127.0.0.1:8022";
 //    ctxAppSec = "http://127.0.0.1:8050/sec";
-//    ctxAppSec2 = "http://127.0.0.1:8002";
-//    ctxAppWeixin = "http://127.0.0.1:8050/weixin";
+ //   ctxAppSec2 = "http://127.0.0.1:8002";
+ //   ctxAppWeixin = "http://127.0.0.1:8050/weixin";
 //}
 //else {
 //    ctxApp = "http://weixin.xrtz.org:8022";
@@ -437,7 +437,7 @@ function initConfigRodia(){
         async: false,
         success: function (data) {
             console.log(data);
-            return;
+            
             var html = "";
 
             var datas = data.list;
