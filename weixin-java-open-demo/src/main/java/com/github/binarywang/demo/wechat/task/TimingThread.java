@@ -94,7 +94,7 @@ public class TimingThread implements Runnable {
 		this.ctxAppWeixin = ctxAppWeixin;
 		this.appURL = appURL;
 //		this.weixinArticleTaskList = weixinArticleTaskList;
-		this.appIds=appIds;
+		this.appIds=appids;
 	}
 
 
