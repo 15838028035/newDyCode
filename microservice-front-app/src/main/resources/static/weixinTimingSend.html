@@ -150,7 +150,8 @@ if (loginNo == ""||loginNo==undefined) {
 			          },
 			          error: function(data){
 			              try {
-			                 layer.msg("请求异常");
+			              console.log("data="+data);
+			                 parent.layer.alert("请求异常");
 			              }catch (e) {
 			                 console.log(e);
 			              }
