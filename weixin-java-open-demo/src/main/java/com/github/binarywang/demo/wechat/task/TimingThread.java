@@ -71,6 +71,7 @@ public class TimingThread implements Runnable {
 	private String ctxAppWeixin ;
 	private String appURL ;
 	private String appIds;
+	private Integer id;
 	public TimingThread() {
 		
 	}
@@ -80,7 +81,7 @@ public class TimingThread implements Runnable {
 			com.lj.cloud.secrity.service.WeixinUserinfoService weixinUserinfoService,
 			WeixinImgtextItemService weixinImgtextItemService, WeixinPushLogService weixinPushLogService,
 			WeixinImgService weixinImgService, WeixinArticleTaskService weixinArticleTaskService, String file_location,
-			String ctxAppWeixin, String appURL,String appids) {
+			String ctxAppWeixin, String appURL,String appids,Integer id) {
 		super();
 		this.map = map;
 		this.wxOpenServiceDemo = wxOpenServiceDemo;
@@ -95,6 +96,7 @@ public class TimingThread implements Runnable {
 		this.appURL = appURL;
 //		this.weixinArticleTaskList = weixinArticleTaskList;
 		this.appIds=appids;
+		this.id=id;
 	}
 
 
@@ -140,12 +142,11 @@ public class TimingThread implements Runnable {
 			}
 			
 			for (String appId : idsList) {
-				int i = 0;
 				if (StringUtils.isNotBlank(appId)) {// 过滤授权状态为空的
 					if (list != null) {
 						String str = appId;
 						WxMpMassNews news = new WxMpMassNews();
-						WeixinArticleTask weixinArticleTask=new WeixinArticleTask();
+						WeixinArticleTask weixinArticleTask=weixinArticleTaskService.selectByPrimaryKey(id);
 						try {
 							for (WeixinImgtextItem WeixinImgtextItem : list) {
 								
@@ -316,7 +317,6 @@ public class TimingThread implements Runnable {
 								article2.setContentSourceUrl(WeixinImgtextItem.getOriginUrl());
 								article2.setDigest(WeixinImgtextItem.getIntro());
 								news.addArticle(article2);
-								i++;
 							}
 
 							WxMpMassUploadResult massUploadResult = wxOpenServiceDemo.getWxOpenComponentService()
@@ -357,7 +357,7 @@ public class TimingThread implements Runnable {
 							}else {
 								weixinArticleTask.setTaskStatus("已发送");
 								weixinArticleTask.setEnableFlag("有效");
-								weixinArticleTask.setExecuteResult("执行失败,异常信息:"+ WxMpErrorMsg.findMsgByCode(Integer.valueOf(massResult.getErrorCode())));
+								weixinArticleTask.setExecuteResult(weixinArticleTask.getExecuteResult()+"执行失败,异常信息:"+ WxMpErrorMsg.findMsgByCode(Integer.valueOf(massResult.getErrorCode())));
 								weixinArticleTaskService.updateBySelective(weixinArticleTask);
 							}
 							
@@ -370,7 +370,7 @@ public class TimingThread implements Runnable {
 								sb.append("异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
 								weixinArticleTask.setTaskStatus("群发异常");
 								weixinArticleTask.setEnableFlag("无效");
-								weixinArticleTask.setExecuteResult("异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
+								weixinArticleTask.setExecuteResult(weixinArticleTask.getExecuteResult()+"异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
 								weixinArticleTaskService.updateBySelective(weixinArticleTask);
 					    }catch(Exception e){
 							sb.append(str + "群发异常:" +e.getMessage()+"<br/>");

@@ -460,33 +460,26 @@
 			)
 		</foreach>
 	</insert>
-	<select id="selectPositionByTime" parameterType="map" resultType="map">
-		<![CDATA[	
+	<select id="selectPosition" parameterType="map" resultType="map">
 		SELECT
 		a.city,COUNT(1) num
 		FROM
 		weixin_fans_info a left join weixin_userinfo b
 		on a.user_id=b.id
 		WHERE country='中国'
-		and TO_DAYS(NOW()) - TO_DAYS(create_time) <= #{day}
-		]]>
 		<if test="ids != null and ids != '' and ids!='null'"  >
          and b.weixin_groups_id in (${ids}) 
          </if>
-		
 		GROUP BY city
 	</select>
-	<select id="selectPositionByUidAndTime" parameterType="map" resultType="map">
-		<![CDATA[	
+	<select id="selectPositionByUid" parameterType="map" resultType="map">
 		SELECT
 		city,COUNT(1) num
 		FROM
 		weixin_fans_info
 		WHERE country='中国'
 		and user_id=#{#uid}
-		and TO_DAYS(NOW()) - TO_DAYS(create_time) <= #{day}
 		GROUP BY city
-		]]>
 	</select>
 	
 	<select id="selecCountAllFans" resultType="java.lang.Integer">

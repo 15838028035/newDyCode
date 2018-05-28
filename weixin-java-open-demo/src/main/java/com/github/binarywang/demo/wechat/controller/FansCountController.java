@@ -236,7 +236,7 @@ public class FansCountController {
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("day", day);
 		map.put("ids", ids);
-		List<Map<String,Object>> list=weixinFansInfoService.selectPositionByTime(map);
+		List<Map<String,Object>> list=weixinFansInfoService.selectPosition(map);
 		return list;
 	}
 	
@@ -252,7 +252,7 @@ public class FansCountController {
 		
 		map.put("uid", Integer.parseInt(uid));
 		map.put("day", day);
-		List<Map<String,Object>> list=weixinFansInfoService.selectPositionByUidAndTime(map);
+		List<Map<String,Object>> list=weixinFansInfoService.selectPositionByUid(map);
 		System.out.println("--------------------");
 		System.out.println(list);
 		System.out.println("--------------------");
@@ -490,6 +490,8 @@ public class FansCountController {
 						weixinFansInfo.setSubscribe(subscribe);
 //						weixinFansInfo.setNickname();
 						weixinFansInfo.setSex(sex);
+						weixinFansInfo.setOpenid(openid);
+						weixinFansInfo.setUserId(weixinUserinfo.getId());
 						weixinFansInfo.setCity(city);
 						weixinFansInfo.setCountry(country);
 						weixinFansInfo.setProvince(province);

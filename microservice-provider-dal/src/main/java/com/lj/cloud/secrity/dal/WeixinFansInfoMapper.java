@@ -38,9 +38,9 @@ public interface WeixinFansInfoMapper  {
     
     int insertBatch(List<WeixinFansInfo> list);
     
-    List<Map<String,Object>> selectPositionByTime(Map<String,Object> map);
+    List<Map<String,Object>> selectPosition(Map<String,Object> map);
     
-    List<Map<String,Object>> selectPositionByUidAndTime(Map<String,Object> map);
+    List<Map<String,Object>> selectPositionByUid(Map<String,Object> map);
 
 	Integer selecCountAllFans();
 }
