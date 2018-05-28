@@ -1278,7 +1278,7 @@ public class WeixinImgTextController {
 		List list=JSONArray.parseArray((String) map.get("toSendUsers"));
 		List<Map<String,Object>> toSendUsers=list;
 		
-//		List<WeixinArticleTask> weixinArticleTaskList = new ArrayList<WeixinArticleTask>();
+//		List<WeixinUserInfo> WeixinUserInfoList = new ArrayList<WeixinArticleTask>();
 		
 		String appIds="";
 		String nickNames="";

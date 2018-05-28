@@ -1,6 +1,7 @@
 package com.lj.cloud.secrity.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.weixindev.micro.serv.common.bean.weixin.WeixinArticleTask;
 import com.weixindev.micro.serv.common.msg.LayUiTableResultResponse;
@@ -27,4 +28,5 @@ public interface WeixinArticleTaskService  {
 
     public  List<WeixinArticleTask> selectByExample(Query query);
     public String selectMapKeyByExample(Query query);
+    public List<WeixinArticleTask> selectByTime(String dateStr);
 }
