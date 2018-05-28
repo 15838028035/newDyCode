@@ -78,11 +78,7 @@
 						elem : '#waitToSend',
 						url : ctxAppWeixin + '/api/getSendMsg?Authorization='
 								+ acekeystoken,
-						cellMinWidth : 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-						,
-						cols : [ [ {
-							type : 'checkbox'
-						}, {
+						cols : [ [  {
 							field : 'id',
 							title : 'ID'
 						}, {
