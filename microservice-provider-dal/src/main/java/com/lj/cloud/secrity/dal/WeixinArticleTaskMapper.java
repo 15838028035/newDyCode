@@ -36,4 +36,5 @@ public interface WeixinArticleTaskMapper  {
      * @param example
      */
     List<Map<String,Object>> selectByPageExample(Object mapAndObject);
+    List<WeixinArticleTask> selectByTime(String dateStr);
 }

@@ -74,4 +74,9 @@ public class WeixinArticleTaskServiceImpl  implements WeixinArticleTaskService{
 		return weixinArticleTaskMapper.selectMapKeyByExample(query);
 	}
 
+	@Override
+	public List<WeixinArticleTask> selectByTime(String dateStr) {
+		return weixinArticleTaskMapper.selectByTime(dateStr);
+	}
+
 }

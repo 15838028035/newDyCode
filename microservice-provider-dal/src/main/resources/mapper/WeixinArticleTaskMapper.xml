@@ -446,8 +446,13 @@
         </if>
             
   </select>
-  
-  
+  <select id="selectByTime" resultMap="weixinArticleTaskResult" >
+     select 
+        <include refid="Base_Column_List"/>
+               from weixin_article_task WHERE 1=1  
+               and task_status="待发送"
+               <![CDATA[ and   str_to_date(task_cron,'%Y-%m-%d %H:%i:%s') > str_to_date(#{taskCron,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')]]>
+  </select>
   <select id="selectMapKeyByExample" resultType="string" >
      select 
         map_key
