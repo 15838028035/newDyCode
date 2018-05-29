@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -266,10 +265,6 @@ public class FansCountController {
 		RestAPIResult2 restAPIResult = new RestAPIResult2();
 		restAPIResult.setRespCode(1);
 		restAPIResult.setRespMsg("成功");
-		
-		StringBuffer sb = new StringBuffer("");
-		
-			long timeBegin=System.currentTimeMillis();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			String endDate = DateUtil.getNowDate(DateUtil.DATE_FOMRAT_yyyy_MM_dd);
 			Date endDateTime = DateUtil.formatDate(endDate, DateUtil.DATE_FOMRAT_yyyy_MM_dd);
@@ -282,42 +277,55 @@ public class FansCountController {
 			}
 			Date createTime=new Date();
 			Date updateTime=createTime;
-			String userNames="";
-			int queryCount=0;
-			
 			SimpleDateFormat sdf1 = new SimpleDateFormat("HH");
 			SimpleDateFormat sdf2 = new SimpleDateFormat("dd");
-			
 			String beginDate = DateUtil.dateStryyyyMMdd(beginDateTime);
 			logger.info("查询开始时间:" + beginDate + "查询结束时间:" + endDate);
 			WeixinFansAllCount weixinFansAllCount=new  WeixinFansAllCount();
-			Integer fansAllCount=0;
-			Integer maleAllCount=0;
-			Integer femaleAllCount=0;
-			Integer chineseAllCount=0;
-			Integer notChineseAllCount=0;
-			Integer cancelAllCount=0;
-			Integer langChAllCount=0;
-			Integer langOtherAllCount=0;
-			Integer netGrowthAllCount=0;
-			Integer newFansAllCount=0;
-			
-			Integer addSceneSearchAllCount=0;
-			Integer addSceneAccountMigrationAllCount=0;
-			Integer addSceneProfileCardAllCount=0;
-			Integer addSceneQrCodeAllCount=0;
-			Integer addSceneProfileItemAllCount=0;
-			Integer addScenePaidAllCount=0;
-			Integer addSceneprofileLinkAllCount=0;
-			Integer addCircleFriendsAllCount=0;
-			Integer addSceneOthersAllCount=0;
-			Map<String, Object> map = new HashMap<String, Object>();
-			Query query = new Query(map);
-			List<WeixinUserinfo> WeixinUserinfoList = WeixinUserinfoService.selectByExample(query);
+//			Integer fansAllCount=0;
+//			Integer maleAllCount=0;
+//			Integer femaleAllCount=0;
+//			Integer chineseAllCount=0;
+//			Integer notChineseAllCount=0;
+//			Integer cancelAllCount=0;
+//			Integer langChAllCount=0;
+//			Integer langOtherAllCount=0;
+//			Integer netGrowthAllCount=0;
+//			Integer newFansAllCount=0;
+//			Integer addSceneSearchAllCount=0;
+//			Integer addSceneAccountMigrationAllCount=0;
+//			Integer addSceneProfileCardAllCount=0;
+//			Integer addSceneQrCodeAllCount=0;
+//			Integer addSceneProfileItemAllCount=0;
+//			Integer addScenePaidAllCount=0;
+//			Integer addSceneprofileLinkAllCount=0;
+//			Integer addCircleFriendsAllCount=0;
+//			Integer addSceneOthersAllCount=0;
+			List<WeixinUserinfo> WeixinUserinfoList = WeixinUserinfoService.selectByExample(new Query(new HashMap<String, Object>()));
 			logger.info("查询公众账号列表数量:WeixinUserinfoList", WeixinUserinfoList.size());
+			WeixinFansCount fansCount=null;
+			
+			Integer cancelUser = 0;
+			Integer countNewUser = 0;
+			//用户渠道
+			Integer addSceneSearch=0;
+			Integer addSceneAccountMigration=0;
+			Integer addSceneProfileCard=0;
+			Integer addSceneQrCode=0;
+			Integer addSceneProfileItem=0;
+			Integer addScenePaid=0;
+			Integer addSceneprofileLink=0;
+			Integer addCircleFriends=0;
+			Integer addSceneOthers=0;
+			 Integer male=0;
+			 Integer female=0;
+			 Integer chinese=0;
+			 Integer notChinese=0;
+			 Integer langCh=0;
+			 Integer langOther=0;
 			for (WeixinUserinfo weixinUserinfo : WeixinUserinfoList) {
 				try {
-				 WeixinFansCount fansCount=new WeixinFansCount();
+				  fansCount=new WeixinFansCount();
 				Integer uid = weixinUserinfo.getId();
 				// 获取增减用户
 				List<WxDataCubeUserSummary> list=null;
@@ -329,7 +337,6 @@ public class FansCountController {
 					logger.error("统计公众号:"+weixinUserinfo.getNickName()+"时出现异常");
 					logger.error("异常信息:"+e.getMessage());
 					logger.error(e.getLocalizedMessage());
-					sb.append("异常信息:"+e.getMessage());
 				}
 				if(list==null){
 					logger.error("统计公众号:"+weixinUserinfo.getNickName()+"时出现异常");
@@ -337,20 +344,20 @@ public class FansCountController {
 					continue;
 				}
 				// 查出数据库最后nextOpenid
-				String nextOpenId=weixinFansCountService.selectNextOpenidByNikename(weixinUserinfo.getNickName());
+				String nextOpenId=weixinFansCountService.selectNextOpenidByUserId(weixinUserinfo.getId());
 				logger.info("查询:" + weixinUserinfo.getNickName() + "开始nextOpenid为:" + nextOpenId);
-				Integer cancelUser = 0;
-				Integer countNewUser = 0;
+				 cancelUser = 0;
+				 countNewUser = 0;
 				//用户渠道
-				Integer addSceneSearch=0;
-				Integer addSceneAccountMigration=0;
-				Integer addSceneProfileCard=0;
-				Integer addSceneQrCode=0;
-				Integer addSceneProfileItem=0;
-				Integer addScenePaid=0;
-				Integer addSceneprofileLink=0;
-				Integer addCircleFriends=0;
-				Integer addSceneOthers=0;
+				 addSceneSearch=0;
+				 addSceneAccountMigration=0;
+				 addSceneProfileCard=0;
+				 addSceneQrCode=0;
+				 addSceneProfileItem=0;
+				 addScenePaid=0;
+				 addSceneprofileLink=0;
+				 addCircleFriends=0;
+				 addSceneOthers=0;
 				
 				//获取当前用户新增和取消用户总数
 				for (WxDataCubeUserSummary wxDataCubeUserSummary : list) {
@@ -421,11 +428,9 @@ public class FansCountController {
 					}catch(WxErrorException e) {
 						logger.error("获得累计用户出现异常:"+weixinUserinfo.getNickName());
 					}
-					List<String> openidList=new ArrayList<String>();
 					if(countlist==null) {
 						logger.error(weixinUserinfo.getNickName()+"出现错误:获得累计用户失败,id:"+weixinUserinfo.getId());
 						logger.error("countlist=null");
-						sb.append(weixinUserinfo.getNickName()+"出现错误:获得累计用户失败,id:"+weixinUserinfo.getId());
 						break;
 					}
 					Integer count=countlist.get(countlist.size()-1).getCumulateUser();
@@ -437,75 +442,133 @@ public class FansCountController {
 								.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getUserService()
 								.userList(nextOpenId);
 						nextOpenId=wxMpUserList.getNextOpenid();
-						openidList.addAll(wxMpUserList.getOpenids());
+						 male=0;
+						  female=0;
+						  chinese=0;
+						  notChinese=0;
+						  langCh=0;
+						  langOther=0;
+						 
+						for (String openid : wxMpUserList.getOpenids()) {
+							try {
+							WxMpUser userInfo = wxOpenServiceDemo.getWxOpenComponentService()
+									.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getUserService()
+									.userInfo(openid);
+							if (userInfo == null) {
+								logger.error("查询失败,无效的openid:"+openid);
+							}
+							Integer subscribe = userInfo.getSubscribe() ? 1 : 0;
+							Integer sex = userInfo.getSex();
+							if(sex==1) {
+								male++;
+							}else {
+								female++;
+							}
+							String city = userInfo.getCity();
+							String country = userInfo.getCountry();
+							if("中国".equals(country)) {
+								chinese++;
+							}else {
+								notChinese++;
+							}
+							String province = userInfo.getProvince();
+							String language = userInfo.getLanguage();
+							if("zh_CN".equals(language)) {
+								langCh++;
+							}else {
+								langOther++;
+							}
+							Date subscribeTime=new Date(userInfo.getSubscribeTime()*1000L);
+							String unionid=userInfo.getUnionId();
+							Integer groupid=userInfo.getGroupId();
+							
+							WeixinFansInfo weixinFansInfo=new WeixinFansInfo();
+							weixinFansInfo.setSubscribe(subscribe);
+//							weixinFansInfo.setNickname();
+							weixinFansInfo.setSex(sex);
+							weixinFansInfo.setOpenid(openid);
+							weixinFansInfo.setUserId(weixinUserinfo.getId());
+							weixinFansInfo.setCity(city);
+							weixinFansInfo.setCountry(country);
+							weixinFansInfo.setProvince(province);
+							weixinFansInfo.setLanguage(language);
+							weixinFansInfo.setSubscribeTime(subscribeTime);
+							weixinFansInfo.setUnionid(unionid);
+							weixinFansInfo.setGroupid(groupid);
+							weixinFansInfo.setCreateTime(createTime);
+							weixinFansInfo.setUpdateTime(updateTime);
+							weixinFansInfoService.insertSelective(weixinFansInfo);
+						}catch(Exception e) {
+							logger.error("异常："+e.getMessage());
+						}
+						}
 						n=count-10000;
 					}while(n>=10000);
 
 					logger.info("id为" + weixinUserinfo.getId() + "的公众号新插入粉丝:" + wxMpUserList.getCount() + "结束next_openId为："
 							+ wxMpUserList.getNextOpenid());
 					// 获取新关注者的openid
-					List<String> newUserOpenids = wxMpUserList.getOpenids();
-
-					 Integer male=0;
-					 Integer female=0;
-					 Integer chinese=0;
-					 Integer notChinese=0;
-					 Integer langCh=0;
-					 Integer langOther=0;
+//
+//					  male=0;
+//					  female=0;
+//					  chinese=0;
+//					  notChinese=0;
+//					  langCh=0;
+//					  langOther=0;
 					 
-					for (String openid : newUserOpenids) {
-						try {
-						WxMpUser userInfo = wxOpenServiceDemo.getWxOpenComponentService()
-								.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getUserService()
-								.userInfo(openid);
-						if (userInfo == null) {
-							logger.error("查询失败,无效的openid:"+openid);
-						}
-						Integer subscribe = userInfo.getSubscribe() ? 1 : 0;
-						Integer sex = userInfo.getSex();
-						if(sex==1) {
-							male++;
-						}else {
-							female++;
-						}
-						String city = userInfo.getCity();
-						String country = userInfo.getCountry();
-						if("中国".equals(country)) {
-							chinese++;
-						}else {
-							notChinese++;
-						}
-						String province = userInfo.getProvince();
-						String language = userInfo.getLanguage();
-						if("zh_CN".equals(language)) {
-							langCh++;
-						}else {
-							langOther++;
-						}
-						Date subscribeTime=new Date(userInfo.getSubscribeTime()*1000L);
-						String unionid=userInfo.getUnionId();
-						Integer groupid=userInfo.getGroupId();
-						
-						WeixinFansInfo weixinFansInfo=new WeixinFansInfo();
-						weixinFansInfo.setSubscribe(subscribe);
-//						weixinFansInfo.setNickname();
-						weixinFansInfo.setSex(sex);
-						weixinFansInfo.setOpenid(openid);
-						weixinFansInfo.setUserId(weixinUserinfo.getId());
-						weixinFansInfo.setCity(city);
-						weixinFansInfo.setCountry(country);
-						weixinFansInfo.setProvince(province);
-						weixinFansInfo.setLanguage(language);
-						weixinFansInfo.setSubscribeTime(subscribeTime);
-						weixinFansInfo.setUnionid(unionid);
-						weixinFansInfo.setGroupid(groupid);
-						weixinFansInfo.setCreateTime(createTime);
-						weixinFansInfo.setUpdateTime(updateTime);
-						weixinFansInfoService.insertSelective(weixinFansInfo);
-					}catch(Exception e) {
-						logger.error("异常："+e.getMessage());
-					}
-					}
+//					for (String openid : openidList) {
+//						try {
+//						WxMpUser userInfo = wxOpenServiceDemo.getWxOpenComponentService()
+//								.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getUserService()
+//								.userInfo(openid);
+//						if (userInfo == null) {
+//							logger.error("查询失败,无效的openid:"+openid);
+//						}
+//						Integer subscribe = userInfo.getSubscribe() ? 1 : 0;
+//						Integer sex = userInfo.getSex();
+//						if(sex==1) {
+//							male++;
+//						}else {
+//							female++;
+//						}
+//						String city = userInfo.getCity();
+//						String country = userInfo.getCountry();
+//						if("中国".equals(country)) {
+//							chinese++;
+//						}else {
+//							notChinese++;
+//						}
+//						String province = userInfo.getProvince();
+//						String language = userInfo.getLanguage();
+//						if("zh_CN".equals(language)) {
+//							langCh++;
+//						}else {
+//							langOther++;
+//						}
+//						Date subscribeTime=new Date(userInfo.getSubscribeTime()*1000L);
+//						String unionid=userInfo.getUnionId();
+//						Integer groupid=userInfo.getGroupId();
+//						
+//						WeixinFansInfo weixinFansInfo=new WeixinFansInfo();
+//						weixinFansInfo.setSubscribe(subscribe);
+////						weixinFansInfo.setNickname();
+//						weixinFansInfo.setSex(sex);
+//						weixinFansInfo.setOpenid(openid);
+//						weixinFansInfo.setUserId(weixinUserinfo.getId());
+//						weixinFansInfo.setCity(city);
+//						weixinFansInfo.setCountry(country);
+//						weixinFansInfo.setProvince(province);
+//						weixinFansInfo.setLanguage(language);
+//						weixinFansInfo.setSubscribeTime(subscribeTime);
+//						weixinFansInfo.setUnionid(unionid);
+//						weixinFansInfo.setGroupid(groupid);
+//						weixinFansInfo.setCreateTime(createTime);
+//						weixinFansInfo.setUpdateTime(updateTime);
+//						weixinFansInfoService.insertSelective(weixinFansInfo);
+//					}catch(Exception e) {
+//						logger.error("异常："+e.getMessage());
+//					}
+//					}
 					fansCount.setNikeName(weixinUserinfo.getNickName());
 					fansCount.setNewFans(countNewUser);
 					fansCount.setCreateTime(createTime);
@@ -522,84 +585,66 @@ public class FansCountController {
 					Integer netGrowth=countNewUser-cancelUser;
 					fansCount.setNetGrowth(netGrowth);
 					fansCount.setNextOpenid(wxMpUserList.getNextOpenid());
-					fansAllCount+=count;
-					cancelAllCount+=cancelUser;
-					maleAllCount+=male;
-					femaleAllCount+=female;
-					chineseAllCount+=chinese;
-					notChineseAllCount+=notChinese;
-					langChAllCount+=langCh;
-					langOtherAllCount+=langOther;
-					netGrowthAllCount+=netGrowth;
-					newFansAllCount+=countNewUser;
-					
-					addSceneSearchAllCount+=addSceneSearch;
-					addSceneAccountMigrationAllCount+=addSceneAccountMigration;
-					addSceneProfileCardAllCount+=addSceneProfileCard;
-					addSceneQrCodeAllCount+=addSceneQrCode;
-					addSceneProfileItemAllCount+=addSceneProfileItem;
-					addScenePaidAllCount+=addScenePaid;
-					addSceneprofileLinkAllCount+=addSceneprofileLink;
-					addCircleFriendsAllCount+=addCircleFriends;
-					addSceneOthersAllCount+=addSceneOthers;
+//					fansAllCount+=count;
+//					cancelAllCount+=cancelUser;
+//					maleAllCount+=male;
+//					femaleAllCount+=female;
+//					chineseAllCount+=chinese;
+//					notChineseAllCount+=notChinese;
+//					langChAllCount+=langCh;
+//					langOtherAllCount+=langOther;
+//					netGrowthAllCount+=netGrowth;
+//					newFansAllCount+=countNewUser;
+//					
+//					addSceneSearchAllCount+=addSceneSearch;
+//					addSceneAccountMigrationAllCount+=addSceneAccountMigration;
+//					addSceneProfileCardAllCount+=addSceneProfileCard;
+//					addSceneQrCodeAllCount+=addSceneQrCode;
+//					addSceneProfileItemAllCount+=addSceneProfileItem;
+//					addScenePaidAllCount+=addScenePaid;
+//					addSceneprofileLinkAllCount+=addSceneprofileLink;
+//					addCircleFriendsAllCount+=addCircleFriends;
+//					addSceneOthersAllCount+=addSceneOthers;
 					weixinFansCountService.insertSelective(fansCount);
 					
 					Date endExcuteTime=new Date();
 					Integer endTimeHour=Integer.parseInt(sdf1.format(endExcuteTime));
 					Integer endTimeDay=Integer.parseInt(sdf2.format(endExcuteTime));
-					userNames+=weixinUserinfo.getNickName()+",";
-					queryCount++;
 					logger.info("当前公众号"+weixinUserinfo.getNickName()+"统计结束");
-					logger.info("耗时:"+(System.currentTimeMillis()-timeBegin)+"毫秒");
-					logger.info("已统计"+queryCount+"个公众号:"+userNames);
 					if(endTimeDay==day&&endTimeHour>=timeEnd) {
 						logger.info("当前公众号"+weixinUserinfo.getNickName()+"统计结束");
-						logger.info("已统计"+queryCount+"个公众号:"+userNames);
 						logger.info("统计结束,结束时间:"+endTimeHour+"点");
-						logger.info("耗时:"+(System.currentTimeMillis()-timeBegin)+"毫秒");
-						
-						 if(StringUtils.isNoneBlank(sb.toString())){
-								restAPIResult.setRespCode(0);
-								restAPIResult.setRespMsg(sb.toString());
-						}
-						return restAPIResult;
 					}
 				}catch(Exception e) {
 					e.printStackTrace();
 					logger.info("统计异常:"+e.getMessage());
-					sb.append("统计异常:"+e.getMessage());
 				}
 
 			}
-			weixinFansAllCount.setCount(fansAllCount);
-			weixinFansAllCount.setCancel(cancelAllCount);
-			weixinFansAllCount.setMale(maleAllCount);
-			weixinFansAllCount.setFemale(femaleAllCount);
-			weixinFansAllCount.setChinese(chineseAllCount);
-			weixinFansAllCount.setNotChinese(notChineseAllCount);
-			weixinFansAllCount.setLangCh(langChAllCount);
-			weixinFansAllCount.setLangOther(langOtherAllCount);
-			weixinFansAllCount.setNetGrowth(netGrowthAllCount);
-			weixinFansAllCount.setNewFans(newFansAllCount);
-			weixinFansAllCount.setAddSceneSearch(addSceneSearchAllCount);
-			weixinFansAllCount.setAddSceneAccountMigration(addSceneAccountMigrationAllCount);
-			weixinFansAllCount.setAddSceneProfileCard(addSceneProfileCardAllCount);
-			weixinFansAllCount.setAddSceneQrCode(addSceneQrCodeAllCount);
-			weixinFansAllCount.setAddSceneProfileItem(addSceneProfileItemAllCount);
-			weixinFansAllCount.setAddScenePaid(addScenePaidAllCount);
-			weixinFansAllCount.setAddSceneprofileLink(addSceneprofileLinkAllCount);
-			weixinFansAllCount.setAddCircleFriends(addCircleFriendsAllCount);
-			weixinFansAllCount.setAddSceneOthers(addSceneOthersAllCount);
+//			weixinFansAllCount.setCount(fansAllCount);
+//			weixinFansAllCount.setCancel(cancelAllCount);
+//			weixinFansAllCount.setMale(maleAllCount);
+//			weixinFansAllCount.setFemale(femaleAllCount);
+//			weixinFansAllCount.setChinese(chineseAllCount);
+//			weixinFansAllCount.setNotChinese(notChineseAllCount);
+//			weixinFansAllCount.setLangCh(langChAllCount);
+//			weixinFansAllCount.setLangOther(langOtherAllCount);
+//			weixinFansAllCount.setNetGrowth(netGrowthAllCount);
+//			weixinFansAllCount.setNewFans(newFansAllCount);
+//			weixinFansAllCount.setAddSceneSearch(addSceneSearchAllCount);
+//			weixinFansAllCount.setAddSceneAccountMigration(addSceneAccountMigrationAllCount);
+//			weixinFansAllCount.setAddSceneProfileCard(addSceneProfileCardAllCount);
+//			weixinFansAllCount.setAddSceneQrCode(addSceneQrCodeAllCount);
+//			weixinFansAllCount.setAddSceneProfileItem(addSceneProfileItemAllCount);
+//			weixinFansAllCount.setAddScenePaid(addScenePaidAllCount);
+//			weixinFansAllCount.setAddSceneprofileLink(addSceneprofileLinkAllCount);
+//			weixinFansAllCount.setAddCircleFriends(addCircleFriendsAllCount);
+//			weixinFansAllCount.setAddSceneOthers(addSceneOthersAllCount);
 			weixinFansAllCount.setCreateTime(createTime);
 			weixinFansAllCount.setUpdateTime(updateTime);
 			weixinFansAllCountService.insertSelective(weixinFansAllCount);
 
-			logger.info("统计结束,耗时:"+(System.currentTimeMillis()-timeBegin)+"毫秒");
 		
-		 if(StringUtils.isNoneBlank(sb.toString())){
-				restAPIResult.setRespCode(0);
-				restAPIResult.setRespMsg(sb.toString());
-		}
 		return restAPIResult;
 	}
 	

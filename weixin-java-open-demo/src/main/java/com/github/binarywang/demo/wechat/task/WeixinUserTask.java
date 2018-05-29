@@ -434,7 +434,7 @@ public class WeixinUserTask {
 					continue;
 				}
 				// 查出数据库最后nextOpenid
-				String nextOpenId=weixinFansCountService.selectNextOpenidByNikename(weixinUserinfo.getNickName());
+				String nextOpenId=weixinFansCountService.selectNextOpenidByUserId(weixinUserinfo.getId());
 				logger.info("查询:" + weixinUserinfo.getNickName() + "开始nextOpenid为:" + nextOpenId);
 				Integer cancelUser = 0;
 				Integer countNewUser = 0;
