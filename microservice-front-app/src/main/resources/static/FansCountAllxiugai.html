@@ -1353,15 +1353,18 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 		 geoCoord.sort(function(a,b){
 			 return a.value > b.value ? -1 : 1;
 		 });
-		 geoCoord=geoCoord.slice(0,20);
+		 geoCoord=geoCoord.slice(0,21);
 		 geoCoord.sort(function(a,b){
 			 return a.value > b.value ? 1 : -1;
 		 });
 		 var citys=[];
 		 var datas=[];
 		 for(var i=0;i<geoCoord.length;i++){
-			 citys.push(geoCoord[i].city);
-			 datas.push(geoCoord[i].value);
+			 var city=geoCoord[i].city;
+			 if(city){
+				 citys.push(geoCoord[i].city);
+				 datas.push(geoCoord[i].value); 
+			 }
 		 }
 		 option = {
 			 title: {

@@ -88,16 +88,30 @@ if (loginNo == ""||loginNo==undefined) {
 			    return fmt;
 			}
 		  
-		  //执行一个laydate实例
-		 laydate.render({ 
-			    elem: '#date'
-			    ,trigger: 'click' //采用click弹出
-			    ,min:new Date().format('yyyy-MM-dd')
-			  });
-		 laydate.render({ 
+		  var time=laydate.render({ 
 			    elem: '#time'
 			    ,type:'time'
 			    ,trigger: 'click' //采用click弹出
+			  });
+		  //执行一个laydate实例
+		 var date=laydate.render({ 
+			    elem: '#date'
+			    ,trigger: 'click' //采用click弹出
+			    ,min:new Date().format('yyyy-MM-dd')
+			    ,done: function (value, dates) { 
+			    	 var now=new Date();
+			    	 console.log(value);
+					 if(now.format('yyyy-MM-dd')==value){
+						 time.config.min ={  
+								year:dates.year,   
+                        month:dates.month-1,//关键   
+                        date: dates.date,  
+			                        hours: now.format('h'),   
+			                        minutes: now.format('m'),   
+			                        seconds : now.format('s')
+            		}  
+				 }
+			    }
 			  });
 		 
 		 
@@ -125,8 +139,6 @@ if (loginNo == ""||loginNo==undefined) {
  			params.toSendUsers=JSON.stringify(toSendUsers);
  			 params.imgTextId=imgTextId;
  			var url=ctxAppWeixin+'/api/createTimingTask';
- 			
- 			
  			var postData = {"dateTime":params.dateTime,"user":loginNo,"toSendUsers":params.toSendUsers,"imgTextId":params.imgTextId};
  			
 			   $.ajax({
@@ -144,7 +156,6 @@ if (loginNo == ""||loginNo==undefined) {
 			          error: function(data,xhr){
 			              try {
 			              console.log("data="+data);
-			               //  parent.layer.alert("请求异常");
 			              }catch (e) {
 			                 console.log(e);
 			              }

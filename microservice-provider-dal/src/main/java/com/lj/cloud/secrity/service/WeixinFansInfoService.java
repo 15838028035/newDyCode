@@ -27,9 +27,9 @@ public interface WeixinFansInfoService  {
     public  List<WeixinFansInfo> selectByExample(Query query);
     public int insertBatch(List<WeixinFansInfo> list);
     
-    public List<Map<String,Object>> selectPositionByTime(Map<String,Object> map);
+    public List<Map<String,Object>> selectPosition(Map<String,Object> map);
     
-    List<Map<String,Object>> selectPositionByUidAndTime(Map<String,Object> map);
+    List<Map<String,Object>> selectPositionByUid(Map<String,Object> map);
     
     public Integer selecCountAllFans();
 }

@@ -832,8 +832,13 @@
         }
         #history{
         	position: absolute;
-        	left:230px;
+        	left:528px;
         	display:none;
+        }
+        .btns{
+        	position: absolute;
+        	width:700px;
+        	left:-100px;
         }
     </style>
     
@@ -848,11 +853,11 @@
 	            <ul id="weixinGroupsTree" class="ztree"></ul> 
 	            <input name="selectIds" id="selectIds"  class="layui-input" type="hidden" > 
 	        </div>
-	        <div class="layui-input-block ">
+	        <div class="layui-input-block">
 	        	<label class="layui-form-label" style="width: 100%;text-align: left">公众号列表</label>
                     <table id="datagrid" class="layui-table" lay-filter="Grid" ></table>
 
-                <div class="layui-form-item">
+                <div class="layui-form-item btns">
                     <div class="layui-input-block" style="text-align: center;width: 100%;">
                         <span class="layui-btn" lay-button="" lay-filter="btnSend" id ="btnSend">发送</span>
                         <span class="layui-btn" lay-button="" lay-filter="btnSync" id ="btnSync">同步</span>

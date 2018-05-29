@@ -78,11 +78,7 @@
 						elem : '#waitToSend',
 						url : ctxAppWeixin + '/api/getSendMsg?Authorization='
 								+ acekeystoken,
-						cellMinWidth : 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-						,
-						cols : [ [ {
-							type : 'checkbox'
-						}, {
+						cols : [ [  {
 							field : 'id',
 							title : 'ID'
 						}, {
@@ -100,7 +96,10 @@
 						}, {
 							field : 'task_status',
 							title : '任务状态'
-						}, {
+						},{
+							field : 'execute_result',
+							title : '执行结果'
+						},{
 							title : '操作',
 							templet : '#optTpl'
 						} ] ],
@@ -134,7 +133,7 @@
 						var data = obj.data; //获得当前行数据
 						var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
 						if (layEvent === 'cancel') {
-							layer.confirm('确定将取消所有关联任务？', {
+							layer.confirm('您确定取消任务？', {
 								title : "系统提示",
 								anim : 1,
 								icon : 3,
