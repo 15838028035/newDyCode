@@ -21,7 +21,6 @@ import com.lj.cloud.secrity.service.WeixinImgtextItemService;
 import com.lj.cloud.secrity.service.WeixinPushLogService;
 import com.lj.cloud.secrity.service.WeixinUserinfoService;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinArticleTask;
-import com.weixindev.micro.serv.common.pagination.Query;
 
 import me.chanjar.weixin.mp.api.WxMpService;
 @Component 

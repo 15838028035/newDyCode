@@ -79,6 +79,14 @@ public class WeixinFansCountServiceImpl  implements WeixinFansCountService{
 		String openId=weixinFansCountMapper.selectNextOpenidByuserId(userId);
 		return openId;
 	}
+
+	@Override
+	public LayUiTableResultResponse selectUserStatus(Query query) {
+		 com.github.pagehelper.Page<Object> result = PageHelper.startPage(query.getPage(), query.getLimit());
+		List<Map<String, Object>> list=weixinFansCountMapper.selectUserStatus(query);
+		return new LayUiTableResultResponse(result.getTotal(), list);
+	}
+
 	
 
 }
