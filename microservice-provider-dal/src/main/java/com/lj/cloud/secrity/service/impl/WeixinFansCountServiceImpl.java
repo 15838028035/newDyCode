@@ -81,9 +81,12 @@ public class WeixinFansCountServiceImpl  implements WeixinFansCountService{
 	}
 
 	@Override
-	public List<Map<String, Object>> selectUserStatus(Query query) {
-		return weixinFansCountMapper.selectUserStatus(query);
+	public LayUiTableResultResponse selectUserStatus(Query query) {
+		 com.github.pagehelper.Page<Object> result = PageHelper.startPage(query.getPage(), query.getLimit());
+		List<Map<String, Object>> list=weixinFansCountMapper.selectUserStatus(query);
+		return new LayUiTableResultResponse(result.getTotal(), list);
 	}
+
 	
 
 }

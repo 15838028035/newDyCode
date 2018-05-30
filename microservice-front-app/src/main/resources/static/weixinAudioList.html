@@ -202,7 +202,6 @@ layui.use(['laypage', 'table', 'element', 'layer','laydate','form'], function(){
         elem: '#datagrid'
         ,url:ctxAppSec+'/api/WeixinAudio?Authorization='+acekeystoken
         ,cellMinWidth: 20 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-
         ,cols: [[
             {type:'checkbox'},
             {field:'id',title:'ID'},
@@ -214,7 +213,6 @@ layui.use(['laypage', 'table', 'element', 'layer','laydate','form'], function(){
             {field:'categoryId',title:'分类'},
             {field:'headImg',title:'音频' ,templet: '#headImgTpl'},
             {field: 'opt', title: '操作',templet: '#optTpl'}
-
         ]]
         ,page: true
         ,id: 'datagridTable'

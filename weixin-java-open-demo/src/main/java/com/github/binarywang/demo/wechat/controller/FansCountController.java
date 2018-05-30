@@ -1236,7 +1236,7 @@ public class FansCountController {
 			m.put("page", page);
 			m.put("limit", limit);
 			Query query=new Query(m);
-			LayUiTableResultResponse LayUiTableResultResponse = weixinFansCountService.selectByQuery(query);
+			LayUiTableResultResponse LayUiTableResultResponse = weixinFansCountService.selectUserStatus(query);
 			return LayUiTableResultResponse;
 	}
 	@ApiOperation(value = "getAppId")

@@ -468,9 +468,10 @@
             a.new_fans new_fans,
             b.id user_id,
             b.nick_name nick_name
-             from weixin_fanscount a
+             from weixin_fans_count a
              LEFT JOIN weixin_userinfo b ON a.user_id = b.id
         where a.create_time=(select max(create_time) from weixin_fans_count)
+        and b.nick_name is not null
 </select>
 <select id="selectByPageExample" resultType="java.util.HashMap" >
      select 

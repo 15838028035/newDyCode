@@ -30,6 +30,6 @@ public interface WeixinFansCountService  {
     
     public String selectNextOpenidByUserId(Integer userId);
     public List<Map<String,Object>> selectByUserIdAndTime(Map<String,Object> map);
-    public  List<Map<String,Object>> selectUserStatus(Query query);
+    public  LayUiTableResultResponse<Map<String,Object>> selectUserStatus(Query query);
 
 }
