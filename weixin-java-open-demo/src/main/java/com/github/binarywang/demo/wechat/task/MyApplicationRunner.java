@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
-import org.assertj.core.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -22,7 +21,6 @@ import com.lj.cloud.secrity.service.WeixinImgtextItemService;
 import com.lj.cloud.secrity.service.WeixinPushLogService;
 import com.lj.cloud.secrity.service.WeixinUserinfoService;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinArticleTask;
-import com.weixindev.micro.serv.common.pagination.Query;
 
 import me.chanjar.weixin.mp.api.WxMpService;
 @Component 
