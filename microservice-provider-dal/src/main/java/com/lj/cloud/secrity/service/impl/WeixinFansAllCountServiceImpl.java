@@ -76,5 +76,12 @@ public class WeixinFansAllCountServiceImpl  implements WeixinFansAllCountService
 		return weixinFansAllCountMapper.selectFansSource();
 	}
 
+	@Override
+	public LayUiTableResultResponse tableCountAll(Query query) {
+		com.github.pagehelper.Page<Object> result = PageHelper.startPage(query.getPage(), query.getLimit());
+		List<Map<String, Object>> list=weixinFansAllCountMapper.tableCountAll(query);
+		return new LayUiTableResultResponse(result.getTotal(), list);
+	}
+
 
 }

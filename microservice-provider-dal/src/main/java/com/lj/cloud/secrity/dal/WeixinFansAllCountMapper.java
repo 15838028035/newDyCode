@@ -39,5 +39,6 @@ public interface WeixinFansAllCountMapper  {
     
     List<Map<String,Object>> selectByPageExampleMaxTime(Object mapAndObject);
     Map<String,Object> selectFansSource();
+    List<Map<String,Object>> tableCountAll(Object mapAndObject);
     
 }

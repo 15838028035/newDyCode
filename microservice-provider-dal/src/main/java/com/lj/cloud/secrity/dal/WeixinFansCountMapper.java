@@ -38,4 +38,5 @@ public interface WeixinFansCountMapper  {
     String selectNextOpenidByNikename(String nikeName);
     String selectNextOpenidByuserId(Integer userId);
     List<Map<String,Object>> selectByUserIdAndTime(Map<String,Object> map);
+    List<Map<String,Object>> selectUserStatus(Object mapAndObject);
 }
