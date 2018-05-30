@@ -293,7 +293,7 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 		  //第一个实例
 		  table.render({
 		    elem: '#countTable'
-		    ,url: ctxAppWeixin+'/api/count/tableCount?day=30&ids='+ids //数据接口
+		    ,url: ctxAppWeixin+'/api/count/tableCount?day=30' //数据接口
 		    ,page: true //开启分页
 		    ,cols: [[ //表头
 		      {field: 'create_time', title: '时间', sort: true,align:'center'}
@@ -313,7 +313,7 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 			    elem: '#userList'
 			    ,url: ctxAppWeixin+'/api/count/userTableCount' //数据接口
 			    ,page: true //开启分页
-			    ,cellMinWidth:20
+			    ,cellMinWidth:200
 			    ,cols: [[ //表头
 			      {field: 'user_id', title: '公众号ID', sort: true,align:'center'}
 			      ,{field: 'nick_name', title: '公众号昵称',align:'center'}
@@ -722,7 +722,7 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 		sourceArray.push(addSceneprofileLink);
 		
 		var min=Math.min.apply( Math, sourceArray );
-		var max=Math.max.apply( Math, sourceArray )+5;
+		var max=Math.max.apply( Math, sourceArray );
 		
 		var data=[];
 		if(addSceneAccountMigration){

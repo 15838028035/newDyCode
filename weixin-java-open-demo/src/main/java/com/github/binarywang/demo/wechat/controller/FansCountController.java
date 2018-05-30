@@ -151,25 +151,21 @@ public class FansCountController {
 	}
 	@ApiOperation(value = "表统计")
 	@RequestMapping(value = "/api/count/tableCount")
-	public LayUiTableResultResponse tableCount(Integer day,String ids) {
+	public LayUiTableResultResponse tableCount(Integer day,Integer limit,Integer page) {
 			Map<String,Object> m=new HashMap<String,Object>();
 			String endTime=DateUtil.getNowDate("yyyy-MM-dd");
 		    String beginTime=DateUtil.formatDate(DateUtil.rollDay(DateUtil.formatDate(endTime, "yyyy-MM-dd"),-day),"yyyy-MM-dd");
 			logger.info("总用户统计：开始时间"+beginTime+"结束时间:"+endTime);
 			m.put("createDateBegin",beginTime);
 			m.put("createDateEnd",endTime);
-			if(ids!=null&ids.endsWith(",")) {
-				ids=ids.substring(0,ids.length()-1);
-			}
-			System.out.println("------------------");
-			System.out.println("tableCount"+ids);
-			m.put("ids", ids);
+			m.put("page", page);
+			m.put("limit", limit);
 		/*	List<WeixinFansAllCount> list=weixinFansAllCountService.selectByExample(query);
 			if(list==null) {
 				return null;
 			}*/
 			Query query=new Query(m);
-			LayUiTableResultResponse LayUiTableResultResponse = weixinFansAllCountService.selectByQuery(query);
+			LayUiTableResultResponse LayUiTableResultResponse = weixinFansAllCountService.tableCountAll(query);
 //			for(WeixinFansAllCount w:list) {
 //				Map<String,Object> map=new HashMap<String,Object>();
 //				if(w.getNetGrowth()!=null) {

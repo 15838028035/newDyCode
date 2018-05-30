@@ -358,6 +358,29 @@
                 <![CDATA[ and  create_time <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
         </if>
   </select>
+  <select id="tableCountAll" resultType="map">
+  	 select 
+		sum(count) count,
+		sum(male) male,
+		sum(female) female,
+		sum(chinese) chinese,
+		sum(not_chinese) not_chinese,
+		sum(cancel) cancel,
+		sum(lang_ch) lang_ch,
+		sum(lang_other) lang_other,
+		sum(net_growth) net_growth,
+        date_format(create_time, '%Y-%m-%d' )  create_time,
+        sum(new_fans) new_fans
+        from weixin_fans_count
+        where 1=1
+         <if test="createDateBegin != null" >
+               <![CDATA[ and  create_time >= str_to_date(#{createDateBegin,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        <if test="createDateEnd != null " >
+                <![CDATA[ and  create_time <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
+        </if>
+        group by date_format(create_time, '%Y-%m-%d')
+  </select>
   <select id="selectByPageExampleMaxTime" resultType="java.util.HashMap">
   select 
             id ,
@@ -387,29 +410,27 @@
   </select>
 <select id="selectByExample" resultMap="weixinFansAllCountResult" >
 	 select 
-		 id ,
-            count ,
-            male ,
-            female ,
-            chinese ,
-            not_chinese ,
-            cancel ,
-            lang_ch ,
-            lang_other ,
-            net_growth ,
-            date_format(create_time, '%Y-%m-%d')  as create_time,
-        	date_format(update_time, '%Y-%m-%d')  as update_time,
-            new_fans ,
-            add_scene_search ,
-            add_scene_account_migration ,
-            add_scene_profile_card ,
-            add_scene_qr_code ,
-            add_sceneprofile_link ,
-            add_scene_profile_item ,
-            add_scene_paid ,
-            add_scene_others,
-            add_circle_friends
-   	       	from weixin_fans_all_count 
+            sum(count) count,
+            sum(male) male,
+            sum(female) female,
+            sum(chinese) chinese,
+            sum(not_chinese) not_chinese,
+            sum(cancel) cancel,
+            sum(lang_ch) lang_ch,
+            sum(lang_other) lang_other,
+            sum(net_growth) net_growth,
+            date_format(create_time, '%Y-%m-%d')  create_time,
+            sum(new_fans) new_fans,
+            sum(add_scene_search) add_scene_search,
+            sum(add_scene_account_migration) add_scene_account_migration,
+            sum(add_scene_profile_card) add_scene_profile_card,
+            sum(add_scene_qr_code) add_scene_qr_code,
+            sum(add_sceneprofile_link) add_sceneprofile_link,
+            sum(add_scene_profile_item) add_scene_profile_item,
+            sum(add_scene_paid) add_scene_paid,
+            sum(add_scene_others) add_scene_others,
+            sum(add_circle_friends) add_circle_friends
+   	       	from weixin_fans_count 
         where 1=1 
 		<if test="id != null and  id != ''" >
 	      	   and   id = #{id,jdbcType=INTEGER}
@@ -483,7 +504,7 @@
         <if test="createDateEnd != null " >
                 <![CDATA[ and  create_time <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
         </if>
-			
+        group by date_format(create_time, '%Y-%m-%d')
   </select>
   <select id="selectFansSource" resultType="map">
   		select
