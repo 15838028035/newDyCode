@@ -456,7 +456,22 @@
                and   user_id = #{userId,jdbcType=INTEGER}
         </if>
   </select>
-
+<select id="selectUserStatus" resultType="map">
+	select
+            a.count count,
+            a.male male,
+            a.female female,
+            a.chinese chinese,
+            a.not_chinese not_chinese,
+            a.cancel cancel,
+            a.net_growth net_growth,
+            a.new_fans new_fans,
+            b.id user_id,
+            b.nick_name nick_name
+             from weixin_fanscount a
+             LEFT JOIN weixin_userinfo b ON a.user_id = b.id
+        where a.create_time=(select max(create_time) from weixin_fans_count)
+</select>
 <select id="selectByPageExample" resultType="java.util.HashMap" >
      select 
         <include refid="Base_Column_List"/>
@@ -545,8 +560,6 @@
         </if>
             
   </select>
-  
- 
   <select id="selectNextOpenidByNikename" parameterType="string" resultType="string">
   		select 
   			next_openid

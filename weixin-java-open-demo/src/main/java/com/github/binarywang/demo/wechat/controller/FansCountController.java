@@ -448,7 +448,6 @@ public class FansCountController {
 						  notChinese=0;
 						  langCh=0;
 						  langOther=0;
-						 
 						for (String openid : wxMpUserList.getOpenids()) {
 							try {
 							WxMpUser userInfo = wxOpenServiceDemo.getWxOpenComponentService()
@@ -1232,17 +1231,15 @@ public class FansCountController {
 	
 	@ApiOperation(value = "用户表统计")
 	@RequestMapping(value = "/api/count/userTableCount")
-	public LayUiTableResultResponse userTableCount(String ids) {
+	public LayUiTableResultResponse userTableCount(Integer page,Integer limit) {
 			Map<String,Object> m=new HashMap<String,Object>();
-			if(ids!=null&ids.endsWith(",")) {
-				ids=ids.substring(0,ids.length()-1);
-			}
-			m.put("ids", ids);
+			m.put("page", page);
+			m.put("limit", limit);
 			Query query=new Query(m);
-			LayUiTableResultResponse LayUiTableResultResponse = weixinFansAllCountService.selectByPageExampleMaxTime(query);
+			LayUiTableResultResponse LayUiTableResultResponse = weixinFansCountService.selectByQuery(query);
 			return LayUiTableResultResponse;
 	}
-	@ApiOperation(value = "用户表统计")
+	@ApiOperation(value = "getAppId")
 	@RequestMapping(value = "/api/count/getAppId")
 	public Map<String,Object> getAppId(String id) {
 		Map<String,Object> map=new HashMap<String,Object>();
