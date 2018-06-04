@@ -144,7 +144,7 @@ public class FansCountController {
 			System.out.println("------------------allCount");
 			map.put("createDateBegin",beginTime);
 			map.put("createDateEnd",endTime);
-			map.put("ids", ids);
+			map.put("ids",ids);
 			Query query=new Query(map);
 			List<WeixinFansAllCount> list=weixinFansAllCountService.selectByExample(query);
 		return list;
@@ -427,7 +427,7 @@ public class FansCountController {
 					if(countlist==null) {
 						logger.error(weixinUserinfo.getNickName()+"出现错误:获得累计用户失败,id:"+weixinUserinfo.getId());
 						logger.error("countlist=null");
-						break;
+						continue;
 					}
 					Integer count=countlist.get(countlist.size()-1).getCumulateUser();
 					int n=0;
@@ -609,6 +609,7 @@ public class FansCountController {
 					if(endTimeDay==day&&endTimeHour>=timeEnd) {
 						logger.info("当前公众号"+weixinUserinfo.getNickName()+"统计结束");
 						logger.info("统计结束,结束时间:"+endTimeHour+"点");
+						break;
 					}
 				}catch(Exception e) {
 					e.printStackTrace();
@@ -705,7 +706,7 @@ public class FansCountController {
 				if(list==null){
 					logger.error("统计公众号:"+weixinUserinfo.getNickName()+"时出现异常");
 					logger.error("list为null");
-					break;
+					continue;
 				}
 				// 查出数据库最后nextOpenid
 				String nextOpenId=weixinFansCountService.selectNextOpenidByNikename(weixinUserinfo.getNickName());

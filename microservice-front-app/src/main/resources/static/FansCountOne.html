@@ -284,10 +284,18 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 			 var url=ctxAppWeixin+'/api/count/oneFansCount';
 			 var data={day:day,uid:getQueryString("id")};
 			$.get(url,data,function(obj){
+				function compare(property){
+				    return function(a,b){
+				        var value1 = a[property];
+				        var value2 = b[property];
+				        return value1 - value2;
+				    }
+				}
+				var maxTimeObj=[obj.sort(compare('createTime'))[obj.length-1]];
 				lineTable(echarts,obj);
-				sexCount(echarts,obj);
-				langCount(echarts,obj);
-				sourceCount(echarts,obj);
+				sexCount(echarts,maxTimeObj);
+				langCount(echarts,maxTimeObj);
+				sourceCount(echarts,maxTimeObj);
 				getMapData(echarts,day);
 				simpleCount(obj);
 				//['公众号搜索','公众号文章广告','名片分享','扫描二维码','图文页内名称点击','图文页右上角菜单','支付后关注','朋友圈广告','其他']
@@ -1326,7 +1334,7 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 			var day=$("#selectDays").val();
 			var source=$("#dataType").val();
 			if(source=="9"||source==9){
-				source=null;
+				source="";
 			}
 			var url=ctxAppWeixin+'/api/count/oneFansCount';
 			var data={day:day,source:source,uid:getQueryString('id')};

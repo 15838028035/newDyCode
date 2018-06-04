@@ -32,7 +32,6 @@ public class DynamicScheduledTaskController {
 		RestAPIResult2 RestAPIResult2 = new RestAPIResult2();
 		RestAPIResult2.setRespCode(1);
 		RestAPIResult2.setRespMsg("成功");
-		
 		try {
 			weixinImgageArticleReportTask.setCron(cron);
 		}
