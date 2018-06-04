@@ -341,17 +341,24 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 			 var url=ctxAppWeixin+'/api/count/allFansCount';
 			 var data={day:30,ids:ids};
 			$.get(url,data,function(obj){
+				function compare(property){
+				    return function(a,b){
+				        var value1 = a[property];
+				        var value2 = b[property];
+				        return value1 - value2;
+				    }
+				}
+				var maxTimeObj=[obj.sort(compare('createTime'))[obj.length-1]];
 				lineTable(echarts,obj);
-				sexCount(echarts,obj);
-				langCount(echarts,obj);
-				sourceCount(echarts,obj);
+				sexCount(echarts,maxTimeObj);
+				langCount(echarts,maxTimeObj);
+				sourceCount(echarts,maxTimeObj);
 				getMapData(echarts,day);
 				simpleCount(obj);
 				//['公众号搜索','公众号文章广告','名片分享','扫描二维码','图文页内名称点击','图文页右上角菜单','支付后关注','朋友圈广告','其他']
 			});
 		 }
 	function simpleCount(obj){
-		console.log(obj);
 		var newUserNum=0;
 		var cancelUserNum=0;
 		var netGrowthNum=0;
@@ -369,9 +376,33 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 		
 		var lastMonthParas={newUser:0,cancelUser:0,netGrowth:0};
 		var thisMonthParas={newUser:0,cancelUser:0,netGrowth:0};
+		
+		for(var i=0;i<obj.length;i++){
+			if(obj[i].createTime>lastDay){
+				lastDay=endDay;
+				endDay=obj[i].createTime;
+			}
+		}
+		var nowTime=new Date().getTime();
 		var lastWeekBeginTime=endDay-24*60*60*1000*14;
 		var lastWeekEndTime=endDay-24*60*60*1000*7;
-		
+  Date.prototype.format = function (fmt) { //author: meizz 
+			    var o = {
+			        "M+": this.getMonth() + 1, //月份 
+			        "d+": this.getDate(), //日 
+			        "h+": this.getHours(), //小时 
+			        "m+": this.getMinutes(), //分 
+			        "s+": this.getSeconds(), //秒 
+			        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+			        "S": this.getMilliseconds() //毫秒 
+			    };
+			    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+			    for (var k in o)
+			    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+			    return fmt;
+			}
+		lastWeekParas.netGrowth=lastWeekParas.newUser-lastWeekParas.cancelUser;
+		thisWeekParas.netGrowth=thisWeekParas.newUser-thisWeekParas.cancelUser;
 		for(var i=0;i<obj.length;i++){
 			if(obj[i].createTime>lastWeekBeginTime&&obj[i].createTime<lastWeekEndTime){
 				lastWeekParas.newUser+=obj[i].newFans;
@@ -381,13 +412,7 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 				thisWeekParas.newUser+=obj[i].newFans;
 				thisWeekParas.cancelUser+=obj[i].cancel;
 			}
-			if(obj[i].createTime>lastDay){
-				lastDay=endDay;
-				endDay=obj[i].createTime;
-			}
 		}
-		lastWeekParas.netGrowth=lastWeekParas.newUser-lastWeekParas.cancelUser;
-		thisWeekParas.netGrowth=thisWeekParas.newUser-thisWeekParas.cancelUser;
 		var timeTimplate=0;
 		for(var i=0;i<obj.length;i++){
 			if(obj[i].createTime>timeTimplate){
@@ -405,8 +430,6 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 				endDaycancelUser+=obj[i].cancel;
 			}
 		}
-		console.log(11111);
-		console.log(netGrowthNum);
 		lastDaynetGrowth=lastDayUserNum-lastDaycancelUser;
 		endDaynetGrowth=endDayUserNum-endDaycancelUser;
 		if(lastDayUserNum==0){
