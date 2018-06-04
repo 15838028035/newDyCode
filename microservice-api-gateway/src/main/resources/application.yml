@@ -4,11 +4,11 @@ hystrix:
       execution: 
         isolation: 
           thread: 
-            timeoutInMilliseconds: 120000  
+            timeoutInMilliseconds: 999999999  
 ribbon: 
-  ReadTimeout: 120000
-  ConnectTimeout: 120000
+  ReadTimeout: 999999999
+  ConnectTimeout: 999999999
 zuul:
     host:
-        socket-timeout-millis: 120000
-        connect-timeout-millis: 120000
+        socket-timeout-millis: 999999999
+        connect-timeout-millis: 999999999
