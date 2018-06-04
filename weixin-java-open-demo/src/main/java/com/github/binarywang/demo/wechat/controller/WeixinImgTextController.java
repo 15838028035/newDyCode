@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
 import javax.imageio.ImageIO;
+import javax.net.ssl.SSLSocketFactory;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +37,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
+import com.github.binarywang.demo.wechat.config.RedisProperies;
+import com.github.binarywang.demo.wechat.service.RedisBusiness;
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
 import com.github.binarywang.demo.wechat.task.CancelFailedException;
 import com.github.binarywang.demo.wechat.task.FuturesMap;
@@ -77,6 +81,8 @@ import me.chanjar.weixin.mp.bean.material.WxMpMaterialUploadResult;
 import me.chanjar.weixin.mp.bean.material.WxMpMaterialVideoInfoResult;
 import me.chanjar.weixin.mp.bean.result.WxMpMassSendResult;
 import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 @Api(value = "服务管理服务", tags = "图文管理服务")
 @RestController
@@ -94,7 +100,7 @@ public class WeixinImgTextController {
 
 	@Autowired
 	private WeixinImgtextItemService weixinImgtextItemService;
-	
+		
 	@Autowired
 	private WeixinPushLogService weixinPushLogService ;
 	@Autowired
@@ -112,6 +118,9 @@ public class WeixinImgTextController {
 	private FuturesMap futuresMap;
 	@Autowired
 	private WeixinArticleTaskService weixinArticleTaskService;
+	
+	@Autowired
+    private RedisBusiness r;
 	
 	/**
 	 * 1、首先，预先将图文消息中需要用到的图片，使用上传图文消息内图片接口，上传成功并获得图片 URL；
@@ -411,7 +420,7 @@ public class WeixinImgTextController {
 		RestAPIResult2 restAPIResult = new RestAPIResult2();
 		restAPIResult.setRespCode(1);
 		restAPIResult.setRespMsg("成功");
-		
+		double count=0;//同步成功的微信公众号数量初始化
 		StringBuffer sb = new StringBuffer("");
 
 		String imgTextId = String.valueOf(map.get("imgTextId"));// 图文素材ID
@@ -439,9 +448,15 @@ public class WeixinImgTextController {
 					return restAPIResult;
 				}
 			}
-
+			NumberFormat aaa = NumberFormat.getPercentInstance();   
 			for (String str : idsList) {
-				int i = 0;
+				double number = count/(idsList.size()-1);
+				System.out.println("--------------------------"+count+"------------------------------------");
+				String rates = aaa.format(number);
+				if(r.get("tongbuNum")!=null&&r.get("tongbuNum")!="") {
+					r.del("tongbuNum");
+				}
+				r.set("tongbuNum", rates);
 				WxMpMassNews news = new WxMpMassNews();
 				// (1)处理图文消息正文内部的图片、视频、音频等文件信息替换 上传图文消息的正文图片(返回的url拼在正文的<img>标签中)
 
@@ -662,9 +677,10 @@ public class WeixinImgTextController {
 							weixinPushLogService.insertSelective(weixinPushLog);
 						}
 				}
+				count++;
 			}
-
 		} catch (Exception e) {
+			count++;
 			e.printStackTrace();
 			logger.error("同步异常，异常信息:" + e.getMessage());
 			restAPIResult.setRespCode(0);
@@ -1364,6 +1380,15 @@ public class WeixinImgTextController {
 		list.setData(data);
 		return list;
 	}
+	@GetMapping(value="/api/getSynchronizationNum")
+	public RestAPIResult2 getSynchronizationNum() throws Exception {
+		RestAPIResult2 result=new RestAPIResult2();
+		String stringResult = r.get("tongbuNum");
+		result.setDataCode("0");
+		result.setRespMsg(stringResult);
+		return result;
+	}
+	
 	@RequestMapping(value="/api/updateTimingTask")
 	public RestAPIResult2 updateTimingTask(@RequestParam Map<String,Object> params) {
 		RestAPIResult2 result=new RestAPIResult2();
@@ -1405,5 +1430,6 @@ public class WeixinImgTextController {
 		weixinArticleTaskService.updateByPrimaryKey(w);
 		return result;
 	}
+
 	
 }
