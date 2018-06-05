@@ -1,7 +1,6 @@
 package com.github.binarywang.demo.wechat.task;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
-import com.lj.cloud.secrity.service.WeixinFansAllCountService;
 import com.lj.cloud.secrity.service.WeixinFansCountService;
 import com.lj.cloud.secrity.service.WeixinFansInfoService;
 import com.lj.cloud.secrity.service.WeixinTaskRunLogService;
@@ -67,8 +65,11 @@ public class WeixinUserTask {
 	private int addSceneOthers;
 	private int cancelUser;
 	private int countNewUser;
-	private List<String> openidList=new ArrayList<String>();
-
+	private WeixinFansCount fansCount;
+	private String openidListStr;
+	private List<String> oldOpenIdList;
+	private List<String> newOpenids;
+	
 	private int cronCount = 1;
 	@Scheduled(cron = "0 0 0 * * ?") // cron接受cron表达式，根据cron表达式确定定时规则
 	public void userCountCronTest() {
@@ -90,10 +91,9 @@ public class WeixinUserTask {
 				.selectByExample(new Query(new HashMap<String, Object>()));
 		logger.info("查询公众账号列表数量:WeixinUserinfoList", WeixinUserinfoList.size());
 		WeixinTaskRunLog weixinTaskRunLog=new WeixinTaskRunLog();
-		WeixinFansCount fansCount = new WeixinFansCount();
 		String logTemplate="";
 		for (WeixinUserinfo weixinUserinfo : WeixinUserinfoList) {
-			initParams();
+			initParams(weixinUserinfo.getId());
 			weixinTaskRunLog.setTaskName("用户分析数据拉取");
 			weixinTaskRunLog.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
 			
@@ -193,29 +193,23 @@ public class WeixinUserTask {
 				Integer count = countlist.get(countlist.size() - 1).getCumulateUser();
 				WxMpUserList wxMpUserList = null;
 				String nextOpenId =null;
-				if(!openidList.isEmpty()) {
-					openidList.clear();
-				}
 				int n = 0;
 				do {
-					// 获取新关注者列表
 					wxMpUserList = wxOpenServiceDemo.getWxOpenComponentService()
 							.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getUserService()
 							.userList(nextOpenId);
 					if(wxMpUserList.getNextOpenid()!=null&&wxMpUserList.getNextOpenid()!="") {
 						nextOpenId = wxMpUserList.getNextOpenid();
 					}
-					List<String> newOpenids=getNewOpenids(weixinUserinfo.getId(),wxMpUserList.getOpenids());
-					if(newOpenids!=null) {
-						openidList.addAll(newOpenids);
-					}else {
-						openidList.addAll(wxMpUserList.getOpenids());
+					newOpenids=getNewOpenids(wxMpUserList.getOpenids());
+					if(newOpenids==null) {
+						newOpenids.addAll(wxMpUserList.getOpenids());
 					}
 					n = count - 10000;
 				} while (n >= 10000);
 				logger.info("------------------------------------\n当前公众号:"+weixinUserinfo.getNickName()
-				+"新增用户为:"+countNewUser+"openidListSize为"+openidList.size());
-					for (String openid : openidList) {
+				+"新增用户为:"+countNewUser+"newOpenids为"+newOpenids.size());
+					for (String openid : newOpenids) {
 						try {
 							WxMpUser userInfo = wxOpenServiceDemo.getWxOpenComponentService()
 									.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getUserService()
@@ -268,7 +262,6 @@ public class WeixinUserTask {
 							weixinTaskRunLogService.insert(weixinTaskRunLog);
 						}
 					}
-					openidList.clear();
 
 				logger.info("id为" + weixinUserinfo.getId() + "的公众号新插入粉丝:" + wxMpUserList.getCount());
 				fansCount.setAddSceneSearch(addSceneSearch);
@@ -294,7 +287,8 @@ public class WeixinUserTask {
 				fansCount.setLangCh(langCh);
 				fansCount.setLangOther(langOther);
 				fansCount.setNetGrowth(countNewUser - cancelUser);
-				fansCount.setNextOpenid(org.apache.commons.lang.StringUtils.join(list.toArray(),","));
+				newOpenids.addAll(oldOpenIdList);
+				fansCount.setNextOpenid(org.apache.commons.lang.StringUtils.join(newOpenids,","));
 				weixinFansCountService.insertSelective(fansCount);
 				Integer nowHour = Integer.parseInt(sdf1.format(new Date()));
 				userNames.append(weixinUserinfo.getNickName() + ",");
@@ -314,34 +308,40 @@ public class WeixinUserTask {
 		}
 		logger.info("统计结束,耗时:" + (System.currentTimeMillis() - timeBegin) + "毫秒");
 	}
-	public List<String> getNewOpenids(Integer userid,List<String> openIdList){
-		String oldOpenIdStr=weixinFansCountService.selectNextOpenidByUserId(userid);
-		if(oldOpenIdStr==null||oldOpenIdStr.equals("")) {
+	public List<String> getNewOpenids(List<String> openIdList){
+		if(openidListStr==null||openidListStr.equals("")) {
 			return null;
 		}
-		List<String> oldOpenIdList=StringUtil.splitStringToStringList(oldOpenIdStr);
+		oldOpenIdList=StringUtil.splitStringToStringList(openidListStr);
 		openIdList.removeAll(oldOpenIdList);
 		return openIdList;
 	}
-	private void initParams() {
-		 male=0;
-		 female=0;
-		 chinese=0;
-		 notChinese=0;
-		 langCh=0;
-		 langOther=0;
-		 addSceneSearch=0;
-		 addSceneAccountMigration=0;
-		 addSceneProfileCard=0;
-		 addSceneQrCode=0;
-		 addSceneProfileItem=0;
-		 addScenePaid=0;
-		 addSceneprofileLink=0;
-		 addCircleFriends=0;
-		 addSceneOthers=0;
-		 cancelUser=0;
-		 countNewUser=0;
-		 openidList.clear();
+	private void initParams(int userId) {
+		fansCount=weixinFansCountService.selectByuserIdMaxTime(userId);
+		 male=fansCount.getMale();
+		 female=fansCount.getFemale();
+		 chinese=fansCount.getChinese();
+		 notChinese=fansCount.getNotChinese();
+		 langCh=fansCount.getLangCh();
+		 langOther=fansCount.getLangOther();
+		 addSceneSearch=fansCount.getAddSceneSearch();
+		 addSceneAccountMigration=fansCount.getAddSceneAccountMigration();
+		 addSceneProfileCard=fansCount.getAddSceneProfileCard();
+		 addSceneQrCode=fansCount.getAddSceneQrCode();
+		 addSceneProfileItem=fansCount.getAddSceneProfileItem();
+		 addScenePaid=fansCount.getAddScenePaid();
+		 addSceneprofileLink=fansCount.getAddSceneprofileLink();
+		 addCircleFriends=fansCount.getAddCircleFriends();
+		 addSceneOthers=fansCount.getAddSceneOthers();
+		 cancelUser=fansCount.getCancel();
+		 countNewUser=fansCount.getNewFans();
+		 openidListStr=fansCount.getNextOpenid();
+		 if(newOpenids!=null&&!newOpenids.isEmpty()) {
+			 newOpenids.clear();
+		 }
+		 if(oldOpenIdList!=null&&!oldOpenIdList.isEmpty()) {
+			 oldOpenIdList.clear();
+		 }
 	}
 
 }

@@ -41,7 +41,7 @@
  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
 
         INSERT INTO weixin_task_run_log (
-         id, create_date, update_date, logs_desc, task_name
+         create_date, update_date, logs_desc, task_name
         ) VALUES (
          #{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{logsDesc,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}        
         )
