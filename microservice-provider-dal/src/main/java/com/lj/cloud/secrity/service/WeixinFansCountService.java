@@ -31,5 +31,7 @@ public interface WeixinFansCountService  {
     public String selectNextOpenidByUserId(Integer userId);
     public List<Map<String,Object>> selectByUserIdAndTime(Map<String,Object> map);
     public  LayUiTableResultResponse<Map<String,Object>> selectUserStatus(Query query);
+    
+    public WeixinFansCount selectByuserIdMaxTime(int userId);
 
 }

@@ -1300,9 +1300,14 @@ public class FansCountController {
 	private int addSceneOthers;
 	private int cancelUser;
 	private int countNewUser;
-	@ApiOperation(value = "userCountCronTest")
-	@RequestMapping(value = "/api/count/test22")
-	public void test22(Integer stopTime) {
+	private WeixinFansCount fansCount;
+	private String openidListStr;
+	private List<String> oldOpenIdList;
+	private List<String> newOpenids;
+	
+	@ApiOperation(value = "获取所有用户粉丝来源")
+	@RequestMapping(value = "/api/count/testCount")
+	public String userCountCronTest(Integer stopTime) {
 		long timeBegin = System.currentTimeMillis();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdf1 = new SimpleDateFormat("HH");
@@ -1320,11 +1325,9 @@ public class FansCountController {
 				.selectByExample(new Query(new HashMap<String, Object>()));
 		logger.info("查询公众账号列表数量:WeixinUserinfoList", WeixinUserinfoList.size());
 		WeixinTaskRunLog weixinTaskRunLog=new WeixinTaskRunLog();
-		WeixinFansCount fansCount = new WeixinFansCount();
 		String logTemplate="";
-		List<String> openidList=new ArrayList<String>();
 		for (WeixinUserinfo weixinUserinfo : WeixinUserinfoList) {
-			initParams();
+			initParams(weixinUserinfo.getId());
 			weixinTaskRunLog.setTaskName("用户分析数据拉取");
 			weixinTaskRunLog.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
 			
@@ -1393,6 +1396,8 @@ public class FansCountController {
 							case 78:
 								addCircleFriends += newUser;
 								break;
+							default:
+								addSceneOthers += newUser;
 							}
 						}
 					} catch (Exception e) {
@@ -1422,27 +1427,23 @@ public class FansCountController {
 				Integer count = countlist.get(countlist.size() - 1).getCumulateUser();
 				WxMpUserList wxMpUserList = null;
 				String nextOpenId =null;
-				if(!openidList.isEmpty()) {
-					openidList.clear();
-				}
 				int n = 0;
 				do {
-					// 获取新关注者列表
 					wxMpUserList = wxOpenServiceDemo.getWxOpenComponentService()
 							.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getUserService()
 							.userList(nextOpenId);
 					if(wxMpUserList.getNextOpenid()!=null&&wxMpUserList.getNextOpenid()!="") {
 						nextOpenId = wxMpUserList.getNextOpenid();
 					}
-					List<String> newOpenids=getNewOpenids(weixinUserinfo.getId(),wxMpUserList.getOpenids());
-					if(newOpenids!=null) {
-						openidList.addAll(newOpenids);
+					newOpenids=getNewOpenids(wxMpUserList.getOpenids());
+					if(newOpenids==null) {
+						newOpenids.addAll(wxMpUserList.getOpenids());
 					}
 					n = count - 10000;
 				} while (n >= 10000);
 				logger.info("------------------------------------\n当前公众号:"+weixinUserinfo.getNickName()
-				+"新增用户为:"+countNewUser+"openidListSize为"+openidList.size());
-					for (String openid : openidList) {
+				+"新增用户为:"+countNewUser+"newOpenids为"+newOpenids.size());
+					for (String openid : newOpenids) {
 						try {
 							WxMpUser userInfo = wxOpenServiceDemo.getWxOpenComponentService()
 									.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getUserService()
@@ -1495,7 +1496,6 @@ public class FansCountController {
 							weixinTaskRunLogService.insert(weixinTaskRunLog);
 						}
 					}
-					openidList.clear();
 
 				logger.info("id为" + weixinUserinfo.getId() + "的公众号新插入粉丝:" + wxMpUserList.getCount());
 				fansCount.setAddSceneSearch(addSceneSearch);
@@ -1521,14 +1521,15 @@ public class FansCountController {
 				fansCount.setLangCh(langCh);
 				fansCount.setLangOther(langOther);
 				fansCount.setNetGrowth(countNewUser - cancelUser);
-				fansCount.setNextOpenid(org.apache.commons.lang.StringUtils.join(list.toArray(),","));
+				newOpenids.addAll(oldOpenIdList);
+				fansCount.setNextOpenid(org.apache.commons.lang.StringUtils.join(newOpenids,","));
 				weixinFansCountService.insertSelective(fansCount);
 				Integer nowHour = Integer.parseInt(sdf1.format(new Date()));
 				userNames.append(weixinUserinfo.getNickName() + ",");
 				logger.info("当前公众号" + weixinUserinfo.getNickName() + "统计结束");
 				logger.info("耗时:" + (System.currentTimeMillis() - timeBegin) + "毫秒");
 				logger.info("已统计公众号:" + userNames);
-				if (nowHour!=null&& nowHour >= stopTime) {
+				if (nowHour!=null&& nowHour >= 9 && nowHour < 18) {
 					break;
 				}
 				System.gc();
@@ -1540,34 +1541,43 @@ public class FansCountController {
 			}
 		}
 		logger.info("统计结束,耗时:" + (System.currentTimeMillis() - timeBegin) + "毫秒");
+		return "success";
 	}
-	public List<String> getNewOpenids(Integer userid,List<String> openIdList){
-		String oldOpenIdStr=weixinFansCountService.selectNextOpenidByUserId(userid);
-		if(oldOpenIdStr==null||oldOpenIdStr.equals("")) {
+	public List<String> getNewOpenids(List<String> openIdList){
+		if(openidListStr==null||openidListStr.equals("")) {
 			return null;
 		}
-		List<String> oldOpenIdList=StringUtil.splitStringToStringList(oldOpenIdStr);
+		oldOpenIdList=StringUtil.splitStringToStringList(openidListStr);
 		openIdList.removeAll(oldOpenIdList);
 		return openIdList;
 	}
-	private void initParams() {
-		 male=0;
-		 female=0;
-		 chinese=0;
-		 notChinese=0;
-		 langCh=0;
-		 langOther=0;
-		 addSceneSearch=0;
-		 addSceneAccountMigration=0;
-		 addSceneProfileCard=0;
-		 addSceneQrCode=0;
-		 addSceneProfileItem=0;
-		 addScenePaid=0;
-		 addSceneprofileLink=0;
-		 addCircleFriends=0;
-		 addSceneOthers=0;
-		 cancelUser=0;
-		 countNewUser=0;
+	private void initParams(int userId) {
+		fansCount=weixinFansCountService.selectByuserIdMaxTime(userId);
+		 male=fansCount.getMale();
+		 female=fansCount.getFemale();
+		 chinese=fansCount.getChinese();
+		 notChinese=fansCount.getNotChinese();
+		 langCh=fansCount.getLangCh();
+		 langOther=fansCount.getLangOther();
+		 addSceneSearch=fansCount.getAddSceneSearch();
+		 addSceneAccountMigration=fansCount.getAddSceneAccountMigration();
+		 addSceneProfileCard=fansCount.getAddSceneProfileCard();
+		 addSceneQrCode=fansCount.getAddSceneQrCode();
+		 addSceneProfileItem=fansCount.getAddSceneProfileItem();
+		 addScenePaid=fansCount.getAddScenePaid();
+		 addSceneprofileLink=fansCount.getAddSceneprofileLink();
+		 addCircleFriends=fansCount.getAddCircleFriends();
+		 addSceneOthers=fansCount.getAddSceneOthers();
+		 cancelUser=fansCount.getCancel();
+		 countNewUser=fansCount.getNewFans();
+		 openidListStr=fansCount.getNextOpenid();
+		 if(newOpenids!=null&&!newOpenids.isEmpty()) {
+			 newOpenids.clear();
+		 }
+		 if(oldOpenIdList!=null&&!oldOpenIdList.isEmpty()) {
+			 oldOpenIdList.clear();
+		 }
 	}
+
 	
 }

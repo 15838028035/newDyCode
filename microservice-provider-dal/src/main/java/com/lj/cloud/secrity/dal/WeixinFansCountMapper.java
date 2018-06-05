@@ -39,4 +39,5 @@ public interface WeixinFansCountMapper  {
     String selectNextOpenidByuserId(Integer userId);
     List<Map<String,Object>> selectByUserIdAndTime(Map<String,Object> map);
     List<Map<String,Object>> selectUserStatus(Object mapAndObject);
+    WeixinFansCount selectByuserIdMaxTime(int userId);
 }
