@@ -67,6 +67,7 @@ public class WeixinUserTask {
 	private int addSceneOthers;
 	private int cancelUser;
 	private int countNewUser;
+	private List<String> openidList=new ArrayList<String>();
 
 	private int cronCount = 1;
 	@Scheduled(cron = "0 0 0 * * ?") // cron接受cron表达式，根据cron表达式确定定时规则
@@ -91,7 +92,6 @@ public class WeixinUserTask {
 		WeixinTaskRunLog weixinTaskRunLog=new WeixinTaskRunLog();
 		WeixinFansCount fansCount = new WeixinFansCount();
 		String logTemplate="";
-		List<String> openidList=new ArrayList<String>();
 		for (WeixinUserinfo weixinUserinfo : WeixinUserinfoList) {
 			initParams();
 			weixinTaskRunLog.setTaskName("用户分析数据拉取");
@@ -162,6 +162,8 @@ public class WeixinUserTask {
 							case 78:
 								addCircleFriends += newUser;
 								break;
+							default:
+								addSceneOthers += newUser;
 							}
 						}
 					} catch (Exception e) {
@@ -206,6 +208,8 @@ public class WeixinUserTask {
 					List<String> newOpenids=getNewOpenids(weixinUserinfo.getId(),wxMpUserList.getOpenids());
 					if(newOpenids!=null) {
 						openidList.addAll(newOpenids);
+					}else {
+						openidList.addAll(wxMpUserList.getOpenids());
 					}
 					n = count - 10000;
 				} while (n >= 10000);
@@ -337,6 +341,7 @@ public class WeixinUserTask {
 		 addSceneOthers=0;
 		 cancelUser=0;
 		 countNewUser=0;
+		 openidList.clear();
 	}
 
 }
