@@ -10,7 +10,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
 import javax.imageio.ImageIO;
-import javax.net.ssl.SSLSocketFactory;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,11 +35,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
-import com.ctc.wstx.util.DataUtil;
-import com.github.binarywang.demo.wechat.config.RedisProperies;
 import com.github.binarywang.demo.wechat.service.RedisBusiness;
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
-import com.github.binarywang.demo.wechat.task.CancelFailedException;
 import com.github.binarywang.demo.wechat.task.FuturesMap;
 import com.github.binarywang.demo.wechat.task.TimingSendTask;
 import com.github.binarywang.demo.wechat.task.TimingThread;
@@ -66,7 +61,6 @@ import com.weixindev.micro.serv.common.util.FileType;
 import com.weixindev.micro.serv.common.util.FileTypeJudge;
 import com.weixindev.micro.serv.common.util.StringUtil;
 
-import cn.binarywang.wx.miniapp.bean.WxMaTemplateMessage.Data;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.api.WxConsts;
@@ -83,8 +77,6 @@ import me.chanjar.weixin.mp.bean.material.WxMpMaterialUploadResult;
 import me.chanjar.weixin.mp.bean.material.WxMpMaterialVideoInfoResult;
 import me.chanjar.weixin.mp.bean.result.WxMpMassSendResult;
 import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 @Api(value = "服务管理服务", tags = "图文管理服务")
 @RestController
