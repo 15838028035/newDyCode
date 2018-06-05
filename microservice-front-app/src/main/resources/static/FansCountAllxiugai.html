@@ -339,8 +339,12 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 	 getData(30);
 		 function getData(day){
 			 var url=ctxAppWeixin+'/api/count/allFansCount';
-			 var data={day:30,ids:ids};
+			 var data={day:30};
 			$.get(url,data,function(obj){
+// 				console.log(obj);
+// 				for(var i=0;i<obj.length;i++){
+// 					console.log(new Date(obj[i].createTime));
+// 				}
 				function compare(property){
 				    return function(a,b){
 				        var value1 = a[property];
