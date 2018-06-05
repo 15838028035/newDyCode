@@ -77,4 +77,25 @@ public class WxOpenServiceDemo extends WxOpenServiceImpl {
         //System.exit(0);
         return pool;
     }
+    
+    public JedisPool getJedisPools() {
+        if (pool == null) {
+            synchronized (WxOpenServiceDemo.class) {
+                if (pool == null) {
+                    pool = new JedisPool(redisProperies, redisProperies.getHost(),
+                            redisProperies.getPort(), redisProperies.getConnectionTimeout(),
+                            redisProperies.getSoTimeout(), redisProperies.getPassword(),
+                            redisProperies.getDatabase(), redisProperies.getClientName(),
+                            redisProperies.isSsl(), redisProperies.getSslSocketFactory(),
+                            redisProperies.getSslParameters(), redisProperies.getHostnameVerifier());
+                }
+            }
+        }
+        System.out.println("----------------------------------开始自动注入redis-----------------------");
+        System.out.println(pool);
+        System.out.println(pool==null);
+        System.out.println("----------------------------------开始自动注入redis-----------------------");
+        //System.exit(0);
+        return pool;
+    }
 }

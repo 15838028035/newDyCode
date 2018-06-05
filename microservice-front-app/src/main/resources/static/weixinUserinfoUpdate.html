@@ -99,25 +99,31 @@ if (acekeystoken == ""||acekeystoken==undefined) {
                 $("#cityId").val(data.cityId);
                 $("#cinemaId").val(data.cinemaId);
                 var groupId=data.weixinGroupsId;
-                $.ajax({
-                    url: ctxAppSec + '/api/WeixinGroups/'+groupId,
-                    type: "get",
-                    dataType: "json",
-                    success: function (data) {
-                    	parentId=data.parentId;//获取父级菜单编号
-						if(data.level==1){
-							console.log("一级菜单");
-							getGroup(authorizerAppid,nowgroupIndex,acekeystoken,groupId);//
-							//$("#fenzu1").find("option[value = '"+groupId+"']").attr("selected","selected");
-						}else{
-							console.log("二级菜单");
-							getChidrenlGroup(authorizerAppid,parentId,acekeystoken,groupId);
-							getGroup(authorizerAppid,nowgroupIndex,acekeystoken,parentId);//
-							//$("#fenzu1").find("option[value = '"+parentId+"']").attr("selected","selected");
-						}
-                    }
-
-                });
+                console.log(groupId);
+                if(groupId!=null&&groupId!=''){
+	                $.ajax({
+	                    url: ctxAppSec + '/api/WeixinGroups/'+groupId,
+	                    type: "get",
+	                    dataType: "json",
+	                    success: function (data) {
+	                    	parentId=data.parentId;//获取父级菜单编号
+							if(data.level==1){
+								console.log("一级菜单");
+								getGroup(authorizerAppid,nowgroupIndex,acekeystoken,groupId);//
+								//$("#fenzu1").find("option[value = '"+groupId+"']").attr("selected","selected");
+							}else{
+								console.log("二级菜单");
+								getChidrenlGroup(authorizerAppid,parentId,acekeystoken,groupId);
+								getGroup(authorizerAppid,nowgroupIndex,acekeystoken,parentId);//
+								//$("#fenzu1").find("option[value = '"+parentId+"']").attr("selected","selected");
+							}
+	                    }
+	
+	                });
+                }else{
+                	console.log("未分组");
+                	getGroup(authorizerAppid,nowgroupIndex,acekeystoken,-100);
+                }
             },
             error: function (data) {
                 try {

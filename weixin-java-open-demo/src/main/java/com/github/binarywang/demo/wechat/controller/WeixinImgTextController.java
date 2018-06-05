@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
 import javax.imageio.ImageIO;
+import javax.net.ssl.SSLSocketFactory;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +37,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
+import com.ctc.wstx.util.DataUtil;
+import com.github.binarywang.demo.wechat.config.RedisProperies;
+import com.github.binarywang.demo.wechat.service.RedisBusiness;
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
 import com.github.binarywang.demo.wechat.task.CancelFailedException;
 import com.github.binarywang.demo.wechat.task.FuturesMap;
@@ -61,6 +66,7 @@ import com.weixindev.micro.serv.common.util.FileType;
 import com.weixindev.micro.serv.common.util.FileTypeJudge;
 import com.weixindev.micro.serv.common.util.StringUtil;
 
+import cn.binarywang.wx.miniapp.bean.WxMaTemplateMessage.Data;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.api.WxConsts;
@@ -77,6 +83,8 @@ import me.chanjar.weixin.mp.bean.material.WxMpMaterialUploadResult;
 import me.chanjar.weixin.mp.bean.material.WxMpMaterialVideoInfoResult;
 import me.chanjar.weixin.mp.bean.result.WxMpMassSendResult;
 import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 @Api(value = "服务管理服务", tags = "图文管理服务")
 @RestController
@@ -94,7 +102,7 @@ public class WeixinImgTextController {
 
 	@Autowired
 	private WeixinImgtextItemService weixinImgtextItemService;
-	
+		
 	@Autowired
 	private WeixinPushLogService weixinPushLogService ;
 	@Autowired
@@ -113,6 +121,9 @@ public class WeixinImgTextController {
 	@Autowired
 	private WeixinArticleTaskService weixinArticleTaskService;
 	
+	@Autowired
+    private RedisBusiness r;
+	
 	/**
 	 * 1、首先，预先将图文消息中需要用到的图片，使用上传图文消息内图片接口，上传成功并获得图片 URL；
 	 * 2、上传图文消息素材，需要用到图片时，请使用上一步获取的图片 URL； 3、使用对用户标签的群发，或对 OpenID
@@ -124,8 +135,6 @@ public class WeixinImgTextController {
 	public RestAPIResult2 doExexcuteBatchSend(@RequestParam Map<String, String> map) {
 		RestAPIResult2 restAPIResult = new RestAPIResult2();
 		restAPIResult.setRespCode(1);
-		restAPIResult.setRespMsg("成功");
-
 		String imgTextId = String.valueOf(map.get("imgTextId"));// 图文素材ID
 		String ids = map.get("ids");// 选择的公众号
 
@@ -404,14 +413,15 @@ public class WeixinImgTextController {
 	 * 2、上传图文消息素材，需要用到图片时，请使用上一步获取的图片 URL； 3、使用对用户标签的群发，或对 OpenID
 	 * 列表的群发，将图文消息群发出去，群发时微信会进行原创校验，并返回群发操作结果；
 	 * 4、在上述过程中，如果需要，还可以预览图文消息、查询群发状态，或删除已群发的消息等。
+	 * @throws Exception 
 	 */
 	@ApiOperation(value = "群发同步")
 	@RequestMapping(value = "/api/doExexcuteBatchSync", method = {RequestMethod.POST})
-	public RestAPIResult2 doExexcuteBatchSync(@RequestParam Map<String, String> map) {
+	public RestAPIResult2 doExexcuteBatchSync(@RequestParam Map<String, String> map) throws Exception {
 		RestAPIResult2 restAPIResult = new RestAPIResult2();
 		restAPIResult.setRespCode(1);
 		restAPIResult.setRespMsg("成功");
-		
+		double count=1;//同步成功的微信公众号数量初始化
 		StringBuffer sb = new StringBuffer("");
 
 		String imgTextId = String.valueOf(map.get("imgTextId"));// 图文素材ID
@@ -423,224 +433,249 @@ public class WeixinImgTextController {
 
 		logger.info("同步消息 imgTextId:" + imgTextId + ",公众号ids:" + ids);
 
-		try {
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("imgTextId", imgTextId);
-			// 查看图文列表项数据
-			Query query = new Query(params);
-			List<WeixinImgtextItem> list = weixinImgtextItemService.selectByExample(query);
+		/*try {*/
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("imgTextId", imgTextId);
+		// 查看图文列表项数据
+		Query query = new Query(params);
+		List<WeixinImgtextItem> list = weixinImgtextItemService.selectByExample(query);
 
-			logger.info("imgTextId= " + imgTextId + " 的记录数据是list.size :" + list.size());
+		logger.info("imgTextId= " + imgTextId + " 的记录数据是list.size :" + list.size());
 
-			for (WeixinImgtextItem WeixinImgtextItem : list) {
-				if (StringUtils.isBlank(WeixinImgtextItem.getHeadImg())) {
-					restAPIResult.setRespCode(0);
-					restAPIResult.setRespMsg("封面图片为空，不允许发送");
-					return restAPIResult;
-				}
+		for (WeixinImgtextItem WeixinImgtextItem : list) {
+			if (StringUtils.isBlank(WeixinImgtextItem.getHeadImg())) {
+				restAPIResult.setRespCode(0);
+				restAPIResult.setRespMsg("封面图片为空，不允许发送");
+				return restAPIResult;
 			}
+		}
+		NumberFormat aaa = NumberFormat.getPercentInstance();   
+		double number = 0/idsList.size();
+		String rates = aaa.format(number);
+		if(r.get("tongbuNum")!=null&&r.get("tongbuNum")!="") {
+			r.del("tongbuNum");
+		}
+		r.set("tongbuNum", rates);
+		Integer successCount=0;//同步成功条数
+		Integer errorCount=0;//同步失败条数
+		String userName="";
+		for (String str : idsList) {
+			// (1)处理图文消息正文内部的图片、视频、音频等文件信息替换 上传图文消息的正文图片(返回的url拼在正文的<img>标签中)
+			WeixinUserinfo weixin=WeixinUserinfoService.selectByauthorizerAppid(str);
+			for (WeixinImgtextItem WeixinImgtextItem : list) {
 
-			for (String str : idsList) {
-				int i = 0;
-				WxMpMassNews news = new WxMpMassNews();
-				// (1)处理图文消息正文内部的图片、视频、音频等文件信息替换 上传图文消息的正文图片(返回的url拼在正文的<img>标签中)
+				if (StringUtil.isNotBlank(WeixinImgtextItem.getArticleContent())) {// 更新media
+					try {
+						
+						List<String> strContentList = FileMatchUtil
+								.getImgSrcList(WeixinImgtextItem.getArticleContent());
+						String retContent = "";
+						retContent = WeixinImgtextItem.getArticleContent();
+						WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
 
-				for (WeixinImgtextItem WeixinImgtextItem : list) {
+						if (strContentList != null) {// 替换图片
+							for (String strCon : strContentList) {
+								System.out.println("图片strCon=" + strCon);
 
-					if (StringUtil.isNotBlank(WeixinImgtextItem.getArticleContent())) {// 更新media
-						try {
+								String headImgRepl = strCon.replaceFirst(appURL, file_location);
 
-							List<String> strContentList = FileMatchUtil
-									.getImgSrcList(WeixinImgtextItem.getArticleContent());
-							String retContent = "";
-							retContent = WeixinImgtextItem.getArticleContent();
-							WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
+								File fileTmp = new File(headImgRepl);
+								
+								if(fileTmp!=null &&fileTmp.exists())	{
 
-							if (strContentList != null) {// 替换图片
-								for (String strCon : strContentList) {
-									System.out.println("图片strCon=" + strCon);
+									WxMediaImgUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
+											.getWxMpServiceByAppid(str).getMaterialService()
+											.mediaImgUpload(fileTmp);
+									String url = res.getUrl();
+									retContent = retContent.replaceFirst(strCon, url);// 替换后的内容
 
-									String headImgRepl = strCon.replaceFirst(appURL, file_location);
-
-									File fileTmp = new File(headImgRepl);
+									WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
+									weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
+									logger.info(" 替换图片img WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
+											+ ",的imgTextId=" + imgTextId + ", url:" + res.getUrl() + ",retContent:"
+											+ retContent);
+								}else {
+									WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
+									logger.info(" 替换图片文件路径不存在" + headImgRepl + ",str="+str);
 									
-									if(fileTmp!=null &&fileTmp.exists())	{
-
-										WxMediaImgUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
+									//网络图片地址
+									/*URL fileUrl = new URL(str);
+									URLConnection rulConnection = fileUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
+									HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
+									InputStream inputStream = httpUrlConnection.getInputStream();
+									InputStream inputStream2 = httpUrlConnection.getInputStream();//两个流，防止被关闭
+									
+									String extName = FileTypeJudge.getType2(inputStream).name().toLowerCase();
+									String fileName = System.nanoTime()+"."+extName; 
+									String filePath = file_location +fileName;
+									
+									FileUtil.createFile(inputStream2, filePath);*/
+									
+									 URL netUrl = new URL(strCon);   
+							        URLConnection rulConnection = netUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
+									HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
+									InputStream inputStream = httpUrlConnection.getInputStream();
+									
+									 ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+									 byte[] buffer = new byte[1024];  
+									 int len;  
+									 while ((len = inputStream.read(buffer)) > -1 ) {  
+									     baos.write(buffer, 0, len);  
+									 }  
+									 baos.flush();                
+									   
+									 InputStream inputStream1 = new ByteArrayInputStream(baos.toByteArray());  
+									 InputStream inputStream2 = new ByteArrayInputStream(baos.toByteArray());  
+									
+									FileType FileType = FileTypeJudge.getType(inputStream1);
+									
+									String extName = FileType.name().toLowerCase();//文件扩展名
+									String fileName = System.nanoTime()+"."+extName; 
+									String filePath = file_location +fileName;
+							        
+							        if(FileType.GIF.name().toLowerCase().equals(extName)){
+										GIfUtil.saveGif(inputStream2,filePath);
+									}else {
+										BufferedImage image = null; 
+										image = ImageIO.read(netUrl);    
+								        ImageIO.write(image, extName, new File(filePath));   
+									}
+							        
+									
+									WeixinImg weixinImg = new WeixinImg();
+									
+									Integer createBy = 1;
+									weixinImg.setCreateBy(createBy);
+									weixinImg.setCreateByUname("admin01");
+									weixinImg.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
+									
+									String headImg = appURL+"/"+fileName;
+									weixinImg.setHeadImg(headImg);
+									weixinImgService.insertSelective(weixinImg);
+									
+									 fileTmp = new File(filePath);
+									 WxMediaImgUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
 												.getWxMpServiceByAppid(str).getMaterialService()
 												.mediaImgUpload(fileTmp);
 										String url = res.getUrl();
 										retContent = retContent.replaceFirst(strCon, url);// 替换后的内容
-	
+		
 										WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
 										weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
 										logger.info(" 替换图片img WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
 												+ ",的imgTextId=" + imgTextId + ", url:" + res.getUrl() + ",retContent:"
 												+ retContent);
-									}else {
-										WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
-										logger.info(" 替换图片文件路径不存在" + headImgRepl + ",str="+str);
-										
-										//网络图片地址
-										/*URL fileUrl = new URL(str);
-										URLConnection rulConnection = fileUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
-										HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
-										InputStream inputStream = httpUrlConnection.getInputStream();
-										InputStream inputStream2 = httpUrlConnection.getInputStream();//两个流，防止被关闭
-										
-										String extName = FileTypeJudge.getType2(inputStream).name().toLowerCase();
-										String fileName = System.nanoTime()+"."+extName; 
-										String filePath = file_location +fileName;
-										
-										FileUtil.createFile(inputStream2, filePath);*/
-										
-										 URL netUrl = new URL(strCon);   
-								        URLConnection rulConnection = netUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
-										HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
-										InputStream inputStream = httpUrlConnection.getInputStream();
-										
-										 ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-										 byte[] buffer = new byte[1024];  
-										 int len;  
-										 while ((len = inputStream.read(buffer)) > -1 ) {  
-										     baos.write(buffer, 0, len);  
-										 }  
-										 baos.flush();                
-										   
-										 InputStream inputStream1 = new ByteArrayInputStream(baos.toByteArray());  
-										 InputStream inputStream2 = new ByteArrayInputStream(baos.toByteArray());  
-										
-										FileType FileType = FileTypeJudge.getType(inputStream1);
-										
-										String extName = FileType.name().toLowerCase();//文件扩展名
-										String fileName = System.nanoTime()+"."+extName; 
-										String filePath = file_location +fileName;
-								        
-								        if(FileType.GIF.name().toLowerCase().equals(extName)){
-											GIfUtil.saveGif(inputStream2,filePath);
-										}else {
-											BufferedImage image = null; 
-											image = ImageIO.read(netUrl);    
-									        ImageIO.write(image, extName, new File(filePath));   
-										}
-								        
-										
-										WeixinImg weixinImg = new WeixinImg();
-										
-										Integer createBy = 1;
-										weixinImg.setCreateBy(createBy);
-										weixinImg.setCreateByUname("admin01");
-										weixinImg.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
-										
-										String headImg = appURL+"/"+fileName;
-										weixinImg.setHeadImg(headImg);
-										weixinImgService.insertSelective(weixinImg);
-										
-										 fileTmp = new File(filePath);
-										 WxMediaImgUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
-													.getWxMpServiceByAppid(str).getMaterialService()
-													.mediaImgUpload(fileTmp);
-											String url = res.getUrl();
-											retContent = retContent.replaceFirst(strCon, url);// 替换后的内容
-			
-											WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
-											weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
-											logger.info(" 替换图片img WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
-													+ ",的imgTextId=" + imgTextId + ", url:" + res.getUrl() + ",retContent:"
-													+ retContent);
-										
-									}
+									
 								}
 							}
+						}
 
-						} catch(WxErrorException e) {
-							 e.printStackTrace();
-					    		Integer code = e.getError().getErrorCode();
-								logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-								sb.append("上传图文消息的封面的图片异常:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
+					} catch(WxErrorException e) {
+						 e.printStackTrace();
+				    		Integer code = e.getError().getErrorCode();
+							logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
+							sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
+							sb.append("失败原因:【上传图文消息的封面的图片异常:"+ WxMpErrorMsg.findMsgByCode(code)+"】<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
+							if (!userName.equals(weixin.getNickName())) {
+								errorCount++;
+								userName=weixin.getNickName();
+							}
 					} catch (Exception e) {
-							e.printStackTrace();
-							logger.error("处理图文消息正文内部的图片、视频、音频等文件信息替换，异常信息:" + e.getMessage());
-							restAPIResult.setRespCode(0);
-							restAPIResult.setRespMsg("处理图文消息正文内部的图片、视频、音频等文件信息替换，异常信息:" + e.getMessage());
-							sb.append("上传图文消息的封面的图片异常:" + e.getMessage()+"<br/>");
+						e.printStackTrace();
+						logger.error("处理图文消息正文内部的图片、视频、音频等文件信息替换，异常信息:" + e.getMessage());
+						restAPIResult.setRespCode(0);
+						sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
+						sb.append("失败原因:【处理图文消息正文内部的媒体文件信息替换异常:】<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
+						if (!userName.equals(weixin.getNickName())) {
+							errorCount++;
+							userName=weixin.getNickName();
 						}
-
 					}
-				}
 
-				// (2) 上传图文消息的封面的图片
-				for (WeixinImgtextItem WeixinImgtextItem : list) {
-					if (StringUtil.isNotBlank(WeixinImgtextItem.getHeadImg())) {// 更新media
-							
+				}
+			}
+
+			// (2) 上传图文消息的封面的图片
+			for (WeixinImgtextItem WeixinImgtextItem : list) {
+				if (StringUtil.isNotBlank(WeixinImgtextItem.getHeadImg())) {// 更新media
+						
+					try {
+						// 动态判断mediaType
+						String headImg = WeixinImgtextItem.getHeadImg();// 图片地址
+						String headImgRepl = headImg.replaceFirst(appURL, file_location);
+
+						String fileType = StringUtil.getExtension(headImg);// 获得文件的扩展名
+
+						String fileName = headImg.substring(headImg.lastIndexOf("/") + 1);
+						File fileTmp = new File(headImgRepl);
+						if (!fileTmp.exists()) {
+							throw new Exception("封面图片不存在,headImgRepl"+headImgRepl);
+						}
+						String mediaType = WxConsts.MediaFileType.THUMB;
+
+						// 上传图片
+						WxMpMaterial wxMpMaterial = new WxMpMaterial();
+						wxMpMaterial.setFile(fileTmp);
+						wxMpMaterial.setName(fileName);
+
+						WxMpMaterialUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
+								.getWxMpServiceByAppid(str).getMaterialService()
+								.materialFileUpload(mediaType, wxMpMaterial);
+
+						String mediaId = res.getMediaId();
+						logger.info("上传图文消息的封面的mediaId=" + mediaId + ",mediaType=" + mediaType + ",fileType=" + fileType
+								+ ",headImg=" + headImg);
+
+						WeixinImgtextItem.setMediaId(mediaId);
+						weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
+
+						logger.info("上传图文消息的封面的图片  WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
+								+ ",的imgTextId=" + imgTextId + ", mediaId= " + mediaId);
+						
+					} catch(WxErrorException e) {
+						 e.printStackTrace();
+				    		Integer code = e.getError().getErrorCode();
+							logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
+							sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
+							sb.append("失败原因:【上传图文消息的封面的图片异常】<br/>");
+							if (!userName.equals(weixin.getNickName())) {
+								errorCount++;
+								userName=weixin.getNickName();
+							}
+					} catch (Exception e) {
+						e.printStackTrace();
+						logger.error("上传图文消息的封面的图片，异常信息:" + e.getMessage());
+						restAPIResult.setRespCode(0);
+						sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
+						sb.append("失败原因:【上传图文消息的封面的图片异常】<br/>");
+						if (!userName.equals(weixin.getNickName())) {
+							errorCount++;
+							userName=weixin.getNickName();
+						}
+					}
+
+				}
+			}
+			
+			if (StringUtils.isNotBlank(str)) {// 过滤授权状态为空的
+				if (list != null) {
+					String appId = str;
+
+						WxMpMaterialNews wxMpMaterialNewsSingle = new WxMpMaterialNews();
+
+						for (WeixinImgtextItem WeixinImgtextItem : list) {
+
+							WxMpMaterialNews.WxMpMaterialNewsArticle mpMaterialNewsArticleSingle = new WxMpMaterialNews.WxMpMaterialNewsArticle();
+							mpMaterialNewsArticleSingle.setAuthor(WeixinImgtextItem.getAuthor());
+							mpMaterialNewsArticleSingle.setThumbMediaId(WeixinImgtextItem.getMediaId());
+							mpMaterialNewsArticleSingle.setTitle(WeixinImgtextItem.getTitle());
+							mpMaterialNewsArticleSingle.setContent(WeixinImgtextItem.getNewContent());
+							mpMaterialNewsArticleSingle.setContentSourceUrl(WeixinImgtextItem.getOriginUrl());
+							mpMaterialNewsArticleSingle.setShowCoverPic(false);
+							mpMaterialNewsArticleSingle.setDigest(WeixinImgtextItem.getIntro());
+							wxMpMaterialNewsSingle.addArticle(mpMaterialNewsArticleSingle);
+						}
 						try {
-							// 动态判断mediaType
-							String headImg = WeixinImgtextItem.getHeadImg();// 图片地址
-							String headImgRepl = headImg.replaceFirst(appURL, file_location);
-
-							String fileType = StringUtil.getExtension(headImg);// 获得文件的扩展名
-
-							String fileName = headImg.substring(headImg.lastIndexOf("/") + 1);
-							File fileTmp = new File(headImgRepl);
-							if (!fileTmp.exists()) {
-								throw new Exception("封面图片不存在,headImgRepl"+headImgRepl);
-							}
-							String mediaType = WxConsts.MediaFileType.THUMB;
-
-							// 上传图片
-							WxMpMaterial wxMpMaterial = new WxMpMaterial();
-							wxMpMaterial.setFile(fileTmp);
-							wxMpMaterial.setName(fileName);
-
-							WxMpMaterialUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
-									.getWxMpServiceByAppid(str).getMaterialService()
-									.materialFileUpload(mediaType, wxMpMaterial);
-
-							String mediaId = res.getMediaId();
-							logger.info("上传图文消息的封面的mediaId=" + mediaId + ",mediaType=" + mediaType + ",fileType=" + fileType
-									+ ",headImg=" + headImg);
-
-							WeixinImgtextItem.setMediaId(mediaId);
-							weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
-
-							logger.info("上传图文消息的封面的图片  WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
-									+ ",的imgTextId=" + imgTextId + ", mediaId= " + mediaId);
-							
-						} catch(WxErrorException e) {
-							 e.printStackTrace();
-					    		Integer code = e.getError().getErrorCode();
-								logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-								sb.append("上传图文消息的封面的图片异常:" + WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-						} catch (Exception e) {
-							e.printStackTrace();
-							logger.error("上传图文消息的封面的图片，异常信息:" + e.getMessage());
-							restAPIResult.setRespCode(0);
-							restAPIResult.setRespMsg("上传图文消息的封面的图片，异常信息:" + e.getMessage());
-							sb.append("上传图文消息的封面的图片异常:" + e.getMessage()+"<br/>");
-						}
-
-					}
-				}
-				
-				if (StringUtils.isNotBlank(str)) {// 过滤授权状态为空的
-					if (list != null) {
-						String appId = str;
-
-							WxMpMaterialNews wxMpMaterialNewsSingle = new WxMpMaterialNews();
-
-							for (WeixinImgtextItem WeixinImgtextItem : list) {
-
-								WxMpMaterialNews.WxMpMaterialNewsArticle mpMaterialNewsArticleSingle = new WxMpMaterialNews.WxMpMaterialNewsArticle();
-								mpMaterialNewsArticleSingle.setAuthor(WeixinImgtextItem.getAuthor());
-								mpMaterialNewsArticleSingle.setThumbMediaId(WeixinImgtextItem.getMediaId());
-								mpMaterialNewsArticleSingle.setTitle(WeixinImgtextItem.getTitle());
-								mpMaterialNewsArticleSingle.setContent(WeixinImgtextItem.getNewContent());
-								mpMaterialNewsArticleSingle.setContentSourceUrl(WeixinImgtextItem.getOriginUrl());
-								mpMaterialNewsArticleSingle.setShowCoverPic(false);
-								mpMaterialNewsArticleSingle.setDigest(WeixinImgtextItem.getIntro());
-								wxMpMaterialNewsSingle.addArticle(mpMaterialNewsArticleSingle);
-							}
-
 							WxMpMaterialUploadResult resSingle = wxOpenServiceDemo.getWxOpenComponentService()
 									.getWxMpServiceByAppid(appId).getMaterialService()
 									.materialNewsUpload(wxMpMaterialNewsSingle);
@@ -660,23 +695,43 @@ public class WeixinImgTextController {
 							weixinPushLog.setAuthorizerAppid(str);
 
 							weixinPushLogService.insertSelective(weixinPushLog);
+						} catch (Exception e) {
+							e.printStackTrace();
+							sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
+							sb.append("失败原因:【处理图文消息正文内部的媒体文件信息替换异常】<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
 						}
-				}
+					}
 			}
-
-		} catch (Exception e) {
+			number = count/idsList.size();
+			System.out.println("--------------------------"+count+"------------------------------------");
+			rates = aaa.format(number);
+			if(r.get("tongbuNum")!=null&&r.get("tongbuNum")!="") {
+				r.del("tongbuNum");
+			}
+			r.set("tongbuNum", rates);
+			count++;
+			successCount++;
+		}
+		if(errorCount!=0) {
+			sb.insert(0,"本次共同步公众号"+idsList.size()+"条;同步:"+successCount+"条;失败:"+errorCount+"条</br><font  color=\"red\">失败信息明细:</font><br/>");
+		}else {
+			sb.insert(0,"本次共同步公众号"+idsList.size()+"条;同步:"+successCount+"条;失败:"+errorCount+"条</br>");
+		}
+		
+		/*} catch (Exception e) {
+			count++;
 			e.printStackTrace();
 			logger.error("同步异常，异常信息:" + e.getMessage());
 			restAPIResult.setRespCode(0);
 			restAPIResult.setRespMsg("同步异常，异常信息:" + e.getMessage());
 			sb.append("同步异常:"+ e.getMessage()+"<br/>");
-		}
+		}*/
 
 		if(StringUtils.isNoneBlank(sb.toString())){
 			restAPIResult.setRespCode(0);
 			restAPIResult.setRespMsg(sb.toString());
 		}
-		
+		restAPIResult.setRespMsg(sb.toString());
 		return restAPIResult;
 	}
 	
@@ -1364,6 +1419,15 @@ public class WeixinImgTextController {
 		list.setData(data);
 		return list;
 	}
+	@GetMapping(value="/api/getSynchronizationNum")
+	public RestAPIResult2 getSynchronizationNum() throws Exception {
+		RestAPIResult2 result=new RestAPIResult2();
+		String stringResult = r.get("tongbuNum");
+		result.setDataCode("0");
+		result.setRespMsg(stringResult);
+		return result;
+	}
+	
 	@RequestMapping(value="/api/updateTimingTask")
 	public RestAPIResult2 updateTimingTask(@RequestParam Map<String,Object> params) {
 		RestAPIResult2 result=new RestAPIResult2();
@@ -1405,5 +1469,6 @@ public class WeixinImgTextController {
 		weixinArticleTaskService.updateByPrimaryKey(w);
 		return result;
 	}
+
 	
 }

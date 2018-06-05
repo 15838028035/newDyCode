@@ -71,26 +71,6 @@ public class WeixinGroupsServiceImpl  implements WeixinGroupsService{
 	@Override
 	public List<WeixinGroups> selectByExample(Query query) {
 		List<WeixinGroups> wgList = weixinGroupsMapper.selectByExample(query);
-		if (query.get("authorizerAppid") != null) {
-			String appId = query.get("authorizerAppid").toString();
-			Map<String, Object> map = weixinUserinfoMapper.selectByAppId(appId);
-			Integer pid = Integer.valueOf(map.get("parentId").toString());
-			Integer id = Integer.valueOf(map.get("groupId").toString());
-
-			if (wgList != null && wgList.size() > 0) {
-				for (WeixinGroups weixinGroups : wgList) {
-					if (weixinGroups.getParentId() == pid) {
-						weixinGroups.setChildflag("true");
-						;
-					}
-					if (weixinGroups.getId() == pid) {
-						weixinGroups.setParentflag("true");
-					}
-				}
-			}
-
-		}
-		
 		return wgList;
 	}
 

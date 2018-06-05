@@ -22,6 +22,12 @@ spring:
     view: 
       prefix: /
       suffix: .html
+  redis:
+    host: 182.92.99.67
+    port: 6379
+    password: dkfTYF76876
+    database: 1
+    connectionTimeout: 100000
 eureka:
   client:
     serviceUrl:
@@ -30,5 +36,6 @@ eureka:
   instance:
       prefer-ip-address: true  
       instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+
 
 
