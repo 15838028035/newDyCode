@@ -87,6 +87,11 @@ public class WeixinFansCountServiceImpl  implements WeixinFansCountService{
 		return new LayUiTableResultResponse(result.getTotal(), list);
 	}
 
+	@Override
+	public WeixinFansCount selectByuserIdMaxTime(int userId) {
+		return weixinFansCountMapper.selectByuserIdMaxTime(userId);
+	}
+
 	
 
 }

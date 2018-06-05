@@ -75,7 +75,6 @@
  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
            delete from weixin_fans_count where
         id = #{id,jdbcType=INTEGER}
-    
        </delete>
 
  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
@@ -605,6 +604,16 @@ FROM
         <if test="createDateEnd != null and createDateEnd != ''" >
                 <![CDATA[ and  create_time <= str_to_date(#{createDateEnd,jdbcType=VARCHAR},'%Y-%m-%d') ]]>
         </if>
+  </select>
+  
+   <select id="selectByuserIdMaxTime" parameterType="int" resultMap="weixinFansCountResult">
+  		select 
+  			<include refid="Base_Column_List"/>
+  		from 
+  			weixin_fans_count 
+  		WHERE
+  			user_id=#{userId,jdbcType=INTEGER}
+             and  create_time = (select max(create_time) from weixin_fans_count where user_id=#{userId,jdbcType=INTEGER})
   </select>
 
 </mapper>
