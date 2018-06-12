@@ -664,8 +664,8 @@
 				AuthorizationCode = #{AuthorizationCode,jdbcType=VARCHAR}
 				,
 			</if>
-			 <if test="cityId != null">	city_id=#{cityId},	</if>
-			<if test="cinemaId != null">cinema_id=#{cinemaId},	</if>
+			 <if test="cityId != null and cityId!=''">	city_id=#{cityId},	</if>
+			<if test="cinemaId != null and cinemaId!=''">cinema_id=#{cinemaId},	</if>
 
 		</set>
 		WHERE
