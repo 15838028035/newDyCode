@@ -87,12 +87,9 @@
    
 </insert>
 
- <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinFansCount">
+ <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinFansCount">
           INSERT INTO weixin_fans_count 
              <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="id != null" >
-                id,
-            </if>
             <if test="count != null" >
                 count,
             </if>
@@ -167,10 +164,6 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-
-                <if test="id != null" >
-                     #{id,jdbcType=INTEGER},
-                </if>
                 <if test="count != null" >
                      #{count,jdbcType=INTEGER},
                 </if>

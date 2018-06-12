@@ -508,19 +508,19 @@
   </select>
   <select id="selectFansSource" resultType="map">
   		select
-  		  add_scene_search ,
-          add_scene_account_migration ,
-          add_scene_profile_card ,
-          add_scene_qr_code ,
-          add_sceneprofile_link ,
-          add_scene_profile_item ,
-          add_scene_paid ,
-          add_scene_others,
-          add_circle_friends,
+  		  sum(add_scene_search ) add_scene_search,
+          sum(add_scene_account_migration ) add_scene_account_migration,
+          sum(add_scene_profile_card ) add_scene_profile_card,
+          sum(add_scene_qr_code ) add_scene_qr_code,
+          sum(add_sceneprofile_link ) add_sceneprofile_link,
+          sum(add_scene_profile_item ) add_scene_profile_item,
+          sum(add_scene_paid ) add_scene_paid,
+          sum(add_scene_others) add_scene_others,
+          sum(add_circle_friends) add_circle_friends,
           create_time
   		from
-  		weixin_fans_all_count
-  		where create_time=(select max(create_time) from weixin_fans_all_count)
+  		weixin_fans_count
+  		where DATE_FORMAT(create_time,'%Y-%m-%d')=(select DATE_FORMAT(max(create_time),'%Y-%m-%d') from weixin_fans_count)
   </select>
 <!--  
 <select id="selectByPageExample" resultType="javutil.HashMap" >

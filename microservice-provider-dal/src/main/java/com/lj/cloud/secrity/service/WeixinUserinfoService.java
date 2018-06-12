@@ -46,4 +46,5 @@ public interface WeixinUserinfoService  {
 	
 	String selectAuthorizerAppidByPrimaryKey(int id);
 	public WeixinUserinfo selectByauthorizerAppid(String authorizerAppid);
+	public Integer selectIdByName(String userName);
 }

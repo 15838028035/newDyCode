@@ -856,15 +856,15 @@
 	        <div class="layui-input-block">
 	        	<label class="layui-form-label" style="width: 100%;text-align: left">公众号列表</label>
                     <table id="datagrid" class="layui-table" lay-filter="Grid" ></table>
-                    <div id="loadingCount">
-                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-					  <legend>同步进度</legend>
-					</fieldset>
+<!--                     <div id="loadingCount"> -->
+<!--                     <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;"> -->
+<!-- 					  <legend>同步进度</legend> -->
+<!-- 					</fieldset> -->
 					 
-					<div class="layui-progress layui-progress-big" lay-showpercent="true" width="260"  lay-filter="demo">
-					  <div class="layui-progress-bar layui-bg-red" lay-percent="0%" width="260" style="width: 0%" ></div>
-					</div>
-                    </div>
+<!-- 					<div class="layui-progress layui-progress-big" lay-showpercent="true" width="260"  lay-filter="demo"> -->
+<!-- 					  <div class="layui-progress-bar layui-bg-red" lay-percent="0%" width="260" style="width: 0%" ></div> -->
+<!-- 					</div> -->
+<!--                     </div> -->
                 <div class="layui-form-item btns">
                     <div class="layui-input-block" style="text-align: center;width: 100%;">
                         <span class="layui-btn" lay-button="" lay-filter="btnSend" id ="btnSend">发送</span>
@@ -905,7 +905,6 @@ var acekeystoken = $.cookie('bearcktkaeskey');
 if (acekeystoken == ""||acekeystoken==undefined) {
     parent.location.href = ctxApp + '/login.html';
 }
-var timeid; //定时器
 var table;
 var element;
 layui.use(['laypage', 'table', 'element', 'layer','laydate'], function(){
@@ -931,7 +930,7 @@ table.render({
 ,page: true
 ,id: 'datagridTable'  
 });
-	element.progress('demo', '50%');
+// 	element.progress('demo', '50%');
 });
 $("#btnSend").click(function(){
     var     url =ctxAppWeixin+'/api/doExexcuteBatchSend';
@@ -957,27 +956,33 @@ $("#btnSend").click(function(){
      });
 
 
-    var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken};
+    var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken,"userName":$.cookie('loginNo')};
     
-    console.log(postData);
     layer.confirm('您确认要进行发送吗？如果图文消息中图片内容过多，请尽量选择少量的公众号进行发送操作', {title: "系统提示", anim: 1, icon: 3, closeBtn: 0}, function (index) {
+    	layer.close(index);
+    	parent.parent.timeid();
 	    //提交
 	    $.ajax({
 	        url: url,
 	        data: postData,
 	        type: "POST",
-	        dataType: "json",
-	        beforeSend: function(){
-                layer.msg("正在执行中...，请勿关闭或刷新页面",{time:120000});
-            },
+	        dataType: "text",
+// 	        beforeSend: function(){
+//                 layer.msg("正在执行中...，请勿关闭或刷新页面",{time:120000});
+//             },
 	        success: function(data){
-	               layer.closeAll('loading');
-	                 layer.alert(data.respMsg,{area: ['400px', '300px']});
-	                 return true;
+// 	               layer.closeAll('loading');
+// 	                 layer.alert(data.respMsg,{area: ['400px', '300px']});
+// 	                 return true;
+	        	parent.parent.layer.tips('任务已执行,可再此查看进度', '#sdf',{
+					  tips: [1, '#3595CC'],
+					  time: 4000
+					});
 	          },
 	          error: function(data){
 	              try {
 	                 layer.msg("请求异常");
+	                 parent.parent.window.clearInterval(timeid);
 	                 return false;
 	              }catch (e) {
 	                 console.log(e);
@@ -1036,47 +1041,43 @@ $("#btnSync").click(function(){
              var id = item.authorizerAppid;
              ids+=id+",";
          });
-        
-        var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken};
-        
+        var userName=$.cookie('loginNo');
+        var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken,"userName":userName};
+        console.log(userName);
         console.log(postData);
         
        // 测试地址  url = "http://127.0.0.1:8050/weixin/zullTest3";
         
         layer.confirm('您确认要进行同步吗？如果图文消息中图片内容过多，请尽量选择少量的公众号进行同步操作', {title: "系统提示", anim: 1, icon: 3, closeBtn: 0}, function (index) {
         	layer.close(index);
-        	$("#loadingCount").show();
-        	timeid =setInterval(function loading (){
-        		$.ajax({
-     	            url: ctxAppWeixin+'/api/getSynchronizationNum',
-     	            type: "get",
-     	            dataType: "json",
-     	            success: function (data) {
-     	            	console.log(data.respMsg);
-     	            	element.progress('demo',data.respMsg);
-     	            },
-     	        });
-        	},800);
+//         	$("#loadingCount").show();
+			parent.parent.timeid();
 	        //提交
 	        $.ajax({
 	            url: url,
 	            data: postData,
 	            type: "POST",
-	            dataType: "JSON",
-	            beforeSend: function(){
-	            	layer.msg("正在执行中...，请勿关闭或刷新页面",{time:120000});
-	            },
+	            dataType: "text",
+// 	            beforeSend: function(){
+// 	            	layer.msg("正在执行中...，请勿关闭或刷新页面",{time:120000});
+// 	            },
 	            success: function(data){
-	            	  window.clearInterval(timeid);
-	            	  $("#loadingCount").hide();
-	            	  console.log(data);
-	                   layer.closeAll('loading');
-	                     layer.alert(data.respMsg,{area: ['550px', '300px']});
-	                     return true;
+// 	            	  window.clearInterval(timeid);
+// 	            	  $("#loadingCount").hide();
+// 	            	  console.log(data);
+// 	                   layer.closeAll('loading');
+// 	                     layer.alert(data.respMsg,{area: ['550px', '300px']});
+// 						layer.alert(data);
+						parent.parent.layer.tips('任务已执行,可再此查看进度', '#sdf',{
+							  tips: [1, '#3595CC'],
+							  time: 4000
+							});
+						
+						//iframe层
 	              },
 	              error: function(data){
-	            	  $("#loadingCount").hide();
-	            	  window.clearInterval(timeid);
+// 	            	  $("#loadingCount").hide();
+	            	  parent.parent.window.clearInterval(timeid);
 	                  try {
 	                     layer.msg("请求异常或请求超时");
 	                     return false;
@@ -1276,24 +1277,24 @@ $("#btnSync").click(function(){
     	        });
     	    })
     	    
-    	    function loading (){
-    	    	 $.ajax({
-     	            url: ctxAppWeixin+'/api/getSynchronizationNum',
-     	            type: "get",
-     	            dataType: "json",
-     	            success: function (data) {
-     	            	element.progress('demo',data.respMsg);
-     	            },
-     	            error: function (data) {
-     	                try {
-     	                    layer.msg("获取同步进度失败");
-     	                    return false;
-     	                } catch (e) {
-     	                    console.log(e);
-     	                }
-     	            }
-     	        });
-    	    }
+//     	    function loading (){
+//     	    	 $.ajax({
+//      	            url: ctxAppWeixin+'/api/getSynchronizationNum',
+//      	            type: "get",
+//      	            dataType: "json",
+//      	            success: function (data) {
+//      	            	element.progress('demo',data.respMsg);
+//      	            },
+//      	            error: function (data) {
+//      	                try {
+//      	                    layer.msg("获取同步进度失败");
+//      	                    return false;
+//      	                } catch (e) {
+//      	                    console.log(e);
+//      	                }
+//      	            }
+//      	        });
+//     	    }
 </script>
 
 

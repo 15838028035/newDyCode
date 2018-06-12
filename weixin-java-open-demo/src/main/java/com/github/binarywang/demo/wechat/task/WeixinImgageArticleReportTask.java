@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
@@ -43,7 +44,7 @@ public class WeixinImgageArticleReportTask  {
 	 
 	 private static final  FastDateFormat dateFormat = FastDateFormat.getInstance("HH:mm:ss");  
 
-	  private static final String DEFAULT_CRON = "0 0 1 * * ?";
+	  private static final String DEFAULT_CRON = "0/5 * * * * ?";
 	  private String cron = DEFAULT_CRON;
 	  
 	  @Autowired
@@ -67,7 +68,7 @@ public class WeixinImgageArticleReportTask  {
 	    private static final  FastDateFormat sdf = FastDateFormat.getInstance("yyyy-MM-dd");  
 	    
 
-	 //   @Scheduled(cron = "0 0 */1 * * ?")  //cron接受cron表达式，根据cron表达式确定定时规则
+//	    @Scheduled(cron = "0 0/20 * * * ?")  //cron接受cron表达式，根据cron表达式确定定时规则
 	    public void cronRun()  {
 	        logger.info("===cronRun: 第{}次执行方法", cronCount++);
 			

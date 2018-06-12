@@ -49,4 +49,5 @@ public interface WeixinUserinfoMapper  {
 	List selectByTyinfo(String infotype);
 	
 	String selectAuthorizerAppidByPrimaryKey(int id);
+	Integer selectIdByName(String userName);
 }
