@@ -37,8 +37,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
-import com.ctc.wstx.util.DataUtil;
 import com.github.binarywang.demo.wechat.config.RedisProperies;
+import com.github.binarywang.demo.wechat.service.AsyncTask;
 import com.github.binarywang.demo.wechat.service.RedisBusiness;
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
 import com.github.binarywang.demo.wechat.task.CancelFailedException;
@@ -123,289 +123,28 @@ public class WeixinImgTextController {
 	
 	@Autowired
     private RedisBusiness r;
+	@Autowired  
+    private AsyncTask asyncTask;  
 	
 	/**
 	 * 1、首先，预先将图文消息中需要用到的图片，使用上传图文消息内图片接口，上传成功并获得图片 URL；
 	 * 2、上传图文消息素材，需要用到图片时，请使用上一步获取的图片 URL； 3、使用对用户标签的群发，或对 OpenID
 	 * 列表的群发，将图文消息群发出去，群发时微信会进行原创校验，并返回群发操作结果；
 	 * 4、在上述过程中，如果需要，还可以预览图文消息、查询群发状态，或删除已群发的消息等。
+	 * @throws InterruptedException 
 	 */
+	
+	@ApiOperation(value = "群发同步")
+	@RequestMapping(value = "/api/doExexcuteBatchSync", method = {RequestMethod.POST})
+	public String doTask(@RequestParam Map<String, String> map) throws InterruptedException {
+		asyncTask.BatchSyncAsyncTask(map);
+		return "success";
+	}
 	@ApiOperation(value = "群发")
 	@RequestMapping(value = "/api/doExexcuteBatchSend", method = {RequestMethod.POST})
-	public RestAPIResult2 doExexcuteBatchSend(@RequestParam Map<String, String> map) {
-		RestAPIResult2 restAPIResult = new RestAPIResult2();
-		restAPIResult.setRespCode(1);
-		String imgTextId = String.valueOf(map.get("imgTextId"));// 图文素材ID
-		String ids = map.get("ids");// 选择的公众号
-
-		List<String> idsList = StringUtil.splitStringToStringList(ids);
-
-		logger.info("StringUtil.splitStringToStringList :" + idsList.size());
-
-		logger.info("群发消息 imgTextId:" + imgTextId + ",公众号ids:" + ids);
-		
-		StringBuffer sb = new StringBuffer("");
-
-		try {
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("imgTextId", imgTextId);
-			// 查看图文列表项数据
-			Query query = new Query(params);
-			List<WeixinImgtextItem> list = weixinImgtextItemService.selectByExample(query);
-
-			logger.info("imgTextId= " + imgTextId + " 的记录数据是list.size :" + list.size());
-
-			for (WeixinImgtextItem WeixinImgtextItem : list) {
-				if (StringUtils.isBlank(WeixinImgtextItem.getHeadImg())) {
-					restAPIResult.setRespCode(0);
-					restAPIResult.setRespMsg("封面图片为空，不允许发送");
-					return restAPIResult;
-				}
-			}
-
-			
-			for (String str : idsList) {
-				int i = 0;
-				if (StringUtils.isNotBlank(str)) {// 过滤授权状态为空的
-					if (list != null) {
-						String appId = str;
-						
-						WxMpMassNews news = new WxMpMassNews();
-						
-						try {
-							for (WeixinImgtextItem WeixinImgtextItem : list) {
-								
-								String thumbMediaId = "";
-								
-								//替换图片 
-								if (StringUtil.isNotBlank(WeixinImgtextItem.getArticleContent())) {// 更新media
-									List<String> strContentList = FileMatchUtil
-											.getImgSrcList(WeixinImgtextItem.getArticleContent());
-									String retContent = "";
-									retContent = WeixinImgtextItem.getArticleContent();
-									WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
-	
-									if (strContentList != null) {// 替换图片
-										for (String strCont : strContentList) {
-											System.out.println("图片strCont=" + strCont);
-	
-											String headImgRepl = strCont.replaceFirst(appURL, file_location);
-	
-											File fileTmp = new File(headImgRepl);
-	
-											if(fileTmp!=null &&fileTmp.exists())	{
-												WxMediaImgUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
-														.getWxMpServiceByAppid(str).getMaterialService()
-														.mediaImgUpload(fileTmp);
-												String url = res.getUrl();
-												retContent = retContent.replaceFirst(strCont, url);// 替换后的内容
-		
-												WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
-												weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
-												logger.info(" 替换图片img WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
-														+ ",的imgTextId=" + imgTextId + ", url:" + url + ",retContent:" + retContent);
-											}else {
-												logger.info(" 替换图片文件路径不存在" + headImgRepl + ",str="+str);
-												
-												//网络图片地址
-												/*URL fileUrl = new URL(str);
-												URLConnection rulConnection = fileUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
-												HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
-												InputStream inputStream = httpUrlConnection.getInputStream();
-												InputStream inputStream2 = httpUrlConnection.getInputStream();//两个流，防止被关闭
-												
-												String extName = FileTypeJudge.getType2(inputStream).name().toLowerCase();
-												String fileName = System.nanoTime()+"."+extName; 
-												String filePath = file_location +fileName;
-												
-												FileUtil.createFile(inputStream2, filePath);*/
-										        
-												 URL netUrl = new URL(strCont);   
-										        URLConnection rulConnection = netUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
-												HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
-												InputStream inputStream = httpUrlConnection.getInputStream();
-												
-												 ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-												 byte[] buffer = new byte[1024];  
-												 int len;  
-												 while ((len = inputStream.read(buffer)) > -1 ) {  
-												     baos.write(buffer, 0, len);  
-												 }  
-												 baos.flush();                
-												   
-												 InputStream inputStream1 = new ByteArrayInputStream(baos.toByteArray());  
-												 InputStream inputStream2 = new ByteArrayInputStream(baos.toByteArray());  
-												
-												FileType FileType = FileTypeJudge.getType(inputStream1);
-												
-												String extName = FileType.name().toLowerCase();//文件扩展名
-												String fileName = System.nanoTime()+"."+extName; 
-												String filePath = file_location +fileName;
-										        
-										        if(FileType.GIF.name().toLowerCase().equals(extName)){
-													GIfUtil.saveGif(inputStream2,filePath);
-												}else {
-													BufferedImage image = null; 
-													image = ImageIO.read(netUrl);    
-											        ImageIO.write(image, extName, new File(filePath));   
-												}
-										        
-												WeixinImg weixinImg = new WeixinImg();
-												
-												Integer createBy = 1;
-												weixinImg.setCreateBy(createBy);
-												weixinImg.setCreateByUname("admin01");
-												weixinImg.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
-												
-												String headImg = appURL+"/"+fileName;
-												weixinImg.setHeadImg(headImg);
-												weixinImgService.insertSelective(weixinImg);
-												String mediaType = WxConsts.MediaFileType.IMAGE;
-
-												 fileTmp = new File(filePath);
-												 WxMediaImgUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
-															.getWxMpServiceByAppid(str).getMaterialService()
-															.mediaImgUpload(fileTmp);
-													String url = res.getUrl();
-													retContent = retContent.replaceFirst(strCont, url);// 替换后的内容
-					
-													WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
-													weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
-													logger.info(" 替换图片img WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
-															+ ",的imgTextId=" + imgTextId + ", url:" + res.getUrl() + ",retContent:"
-															+ retContent);
-											}
-										}
-									}
-								}
-									
-								//上传图文
-									try {
-										URL fileUrl = new URL(WeixinImgtextItem.getHeadImg());
-
-										URLConnection rulConnection = fileUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
-										HttpURLConnection httpUrlConnection = (HttpURLConnection) rulConnection;
-
-										InputStream inputStream = httpUrlConnection.getInputStream();
-
-										// 动态判断mediaType
-										String headImg = WeixinImgtextItem.getHeadImg();
-
-										String mediaType = "image";// 图片类型的素材
-										String fileType = StringUtil.getExtension(headImg);// 获得文件的扩展名
-
-										WxMediaUploadResult res = wxOpenServiceDemo.getWxOpenComponentService()
-												.getWxMpServiceByAppid(str).getMaterialService()
-												.mediaUpload(mediaType, fileType, inputStream);
-
-										String mediaId = res.getMediaId();
-
-										logger.info("上传图文消息的封面的mediaId=" + mediaId + ",mediaType=" + mediaType + ",fileType=" + fileType
-												+ ",headImg=" + headImg);
-										
-										thumbMediaId = mediaId;
-										
-										WeixinImgtextItem.setMediaId(mediaId);
-										weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
-
-										logger.info("上传图文消息的封面的图片  WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
-												+ ",的imgTextId=" + imgTextId + ", mediaId= " + mediaId);
-
-										if (inputStream != null) {
-											inputStream.close();
-										}
-									}
-										catch(WxErrorException e) {
-											 e.printStackTrace();
-									    		Integer code = e.getError().getErrorCode();
-												logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-												sb.append("上传图文消息的封面的图片异常:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-									} catch (Exception e) {
-										e.printStackTrace();
-										logger.error("上传图文消息的封面的图片，异常信息:" + e.getMessage());
-										restAPIResult.setRespCode(0);
-										restAPIResult.setRespMsg("上传图文消息的封面的图片，异常信息:" + e.getMessage());
-										sb.append("群发异常:" +e.getMessage()+"<br/>");
-									}
-
-								
-								WxMpMassNews.WxMpMassNewsArticle article2 = new WxMpMassNews.WxMpMassNewsArticle();
-								article2.setTitle(WeixinImgtextItem.getTitle());
-								article2.setContent(WeixinImgtextItem.getNewContent());// 文章内容为替换以后的文章内容
-								article2.setThumbMediaId(thumbMediaId);
-								// if (i == 0) {// 默认第一张是封面
-								// article2.setShowCoverPic(true);
-								// } else {
-								// article2.setShowCoverPic(false);
-								// }
-								article2.setShowCoverPic(false);
-								article2.setAuthor(WeixinImgtextItem.getAuthor());
-								article2.setContentSourceUrl(WeixinImgtextItem.getOriginUrl());
-								article2.setDigest(WeixinImgtextItem.getIntro());
-								news.addArticle(article2);
-								i++;
-							}
-
-							WxMpMassUploadResult massUploadResult = wxOpenServiceDemo.getWxOpenComponentService()
-									.getWxMpServiceByAppid(appId).getMassMessageService().massNewsUpload(news);
-
-							logger.info("群发文件素材结果 type:" + massUploadResult.getType() + ",mediaId="
-									+ massUploadResult.getMediaId());
-
-
-							WxMpMassTagMessage WxMpMassTagMessage = new WxMpMassTagMessage();
-							WxMpMassTagMessage.setMsgType("mpnews");// 群发 WxConsts.MASS_MSG_NEWS
-							WxMpMassTagMessage.setMediaId(massUploadResult.getMediaId());
-							// WxMpMassTagMessage.setSendAll(true);
-
-							WxMpMassSendResult massResult = wxOpenServiceDemo.getWxOpenComponentService()
-									.getWxMpServiceByAppid(appId).getMassMessageService()
-									.massGroupMessageSend(WxMpMassTagMessage);
-							
-							
-							WeixinUserinfo WeixinUserinfoFilter = WeixinUserinfoService.selectByauthorizerAppid(appId);
-							
-							WeixinPushLog weixinPushLog = new WeixinPushLog();
-							weixinPushLog.setCategoryId("mpnews");//图文消息
-							weixinPushLog.setMsgId(massResult.getMsgId());
-							weixinPushLog.setMsgDataId(massResult.getMsgDataId());
-							weixinPushLog.setCreateBy(1);
-							weixinPushLog.setCreateByUname("admin01");
-							weixinPushLog.setUserId(WeixinUserinfoFilter.getId());
-							weixinPushLog.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
-							weixinPushLog.setAuthorizerAppid(appId);
-							
-							weixinPushLogService.insertSelective(weixinPushLog);
-
-							logger.info("群发消息str= " + str + ",结果：" + massResult.getErrorCode() + ","
-									+ massResult.getErrorMsg() + "," + massResult.getMsgId());
-						}catch(WxErrorException e) {
-							 e.printStackTrace();
-					    		Integer code = e.getError().getErrorCode();
-								logger.info(str + "群发异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-								sb.append("异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-					    }catch(Exception e){
-							sb.append(str + "群发异常:" +e.getMessage()+"<br/>");
-						}
-						
-					}
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("群发异常，异常信息:" + e.getMessage());
-			restAPIResult.setRespCode(0);
-			restAPIResult.setRespMsg("群发异常，异常信息:" + e.getMessage());
-			sb.append("群发异常:" +e.getMessage()+"<br/>");
-		}
-		
-		if(StringUtils.isNoneBlank(sb.toString())){
-			restAPIResult.setRespCode(0);
-			restAPIResult.setRespMsg(sb.toString());
-		}
-
-		return restAPIResult;
+	public String doExexcuteBatchSend(@RequestParam Map<String, String> map) {
+		asyncTask.doExexcuteBatchSend(map);
+		return "success";
 	}
 
 	/**
@@ -415,8 +154,8 @@ public class WeixinImgTextController {
 	 * 4、在上述过程中，如果需要，还可以预览图文消息、查询群发状态，或删除已群发的消息等。
 	 * @throws Exception 
 	 */
-	@ApiOperation(value = "群发同步")
-	@RequestMapping(value = "/api/doExexcuteBatchSync", method = {RequestMethod.POST})
+//	@ApiOperation(value = "群发同步")
+//	@RequestMapping(value = "/api/doExexcuteBatchSync", method = {RequestMethod.POST})
 	public RestAPIResult2 doExexcuteBatchSync(@RequestParam Map<String, String> map) throws Exception {
 		RestAPIResult2 restAPIResult = new RestAPIResult2();
 		restAPIResult.setRespCode(1);
@@ -1420,12 +1159,15 @@ public class WeixinImgTextController {
 		return list;
 	}
 	@GetMapping(value="/api/getSynchronizationNum")
-	public RestAPIResult2 getSynchronizationNum() throws Exception {
-		RestAPIResult2 result=new RestAPIResult2();
-		String stringResult = r.get("tongbuNum");
-		result.setDataCode("0");
-		result.setRespMsg(stringResult);
-		return result;
+	public Map<String,String> getSynchronizationNum(String userName) {
+		Map<String,String> map=new HashMap<String,String>();
+		try {
+			map.put("percent",r.get(userName+"tongbuNum"));
+			map.put("status", r.get(userName+"status"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return map;
 	}
 	
 	@RequestMapping(value="/api/updateTimingTask")

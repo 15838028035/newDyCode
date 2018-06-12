@@ -1,6 +1,7 @@
 package com.github.binarywang.demo.wechat.task;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.github.binarywang.demo.wechat.service.RedisBusiness;
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
 import com.lj.cloud.secrity.service.WeixinFansCountService;
 import com.lj.cloud.secrity.service.WeixinFansInfoService;
+import com.lj.cloud.secrity.service.WeixinSubscribeService;
 import com.lj.cloud.secrity.service.WeixinTaskRunLogService;
 import com.lj.cloud.secrity.service.WeixinUserinfoService;
 import com.weixindev.micro.serv.common.bean.WxMpErrorMsg;
@@ -23,7 +26,6 @@ import com.weixindev.micro.serv.common.bean.report.WeixinTaskRunLog;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinUserinfo;
 import com.weixindev.micro.serv.common.pagination.Query;
 import com.weixindev.micro.serv.common.util.DateUtil;
-import com.weixindev.micro.serv.common.util.StringUtil;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.datacube.WxDataCubeUserCumulate;
@@ -31,7 +33,7 @@ import me.chanjar.weixin.mp.bean.datacube.WxDataCubeUserSummary;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 
-@Component
+//@Component
 public class WeixinUserTask {
 	private Logger logger = LoggerFactory.getLogger(WeixinImgageArticleReportTask.class);
 
@@ -47,31 +49,31 @@ public class WeixinUserTask {
 	private WeixinFansInfoService weixinFansInfoService;
 	@Autowired
 	private WeixinTaskRunLogService weixinTaskRunLogService;
+	@Autowired
+    private RedisBusiness r;
+	private WeixinSubscribeService weixinSubscribeService;
 	
-	private int male;
-	private int female;
-	private int chinese;
-	private int notChinese;
-	private int langCh;
-	private int langOther;
-	private int addSceneSearch;
-	private int addSceneAccountMigration;
-	private int addSceneProfileCard;
-	private int addSceneQrCode;
-	private int addSceneProfileItem;
-	private int addScenePaid;
-	private int addSceneprofileLink;
-	private int addCircleFriends;
-	private int addSceneOthers;
-	private int cancelUser;
-	private int countNewUser;
+	private Integer male;
+	private Integer female;
+	private Integer chinese;
+	private Integer notChinese;
+	private Integer langCh;
+	private Integer langOther;
+	private Integer addSceneSearch;
+	private Integer addSceneAccountMigration;
+	private Integer addSceneProfileCard;
+	private Integer addSceneQrCode;
+	private Integer addSceneProfileItem;
+	private Integer addScenePaid;
+	private Integer addSceneprofileLink;
+	private Integer addCircleFriends;
+	private Integer addSceneOthers;
+	private Integer cancelUser;
+	private Integer countNewUser;
 	private WeixinFansCount fansCount;
-	private String openidListStr;
-	private List<String> oldOpenIdList;
-	private List<String> newOpenids;
 	
 	private int cronCount = 1;
-	@Scheduled(cron = "0 0 0 * * ?") // cron接受cron表达式，根据cron表达式确定定时规则
+//	@Scheduled(cron = "0 0 0 * * ?") // cron接受cron表达式，根据cron表达式确定定时规则
 	public void userCountCronTest() {
 		logger.info("===initialDelay: 第{}次执行方法", cronCount++);
 		long timeBegin = System.currentTimeMillis();
@@ -92,7 +94,22 @@ public class WeixinUserTask {
 		logger.info("查询公众账号列表数量:WeixinUserinfoList", WeixinUserinfoList.size());
 		WeixinTaskRunLog weixinTaskRunLog=new WeixinTaskRunLog();
 		String logTemplate="";
-		for (WeixinUserinfo weixinUserinfo : WeixinUserinfoList) {
+		String point="0";
+		try {
+			point=r.get("point");
+		}catch(Exception e) {
+			
+		}
+		Integer index=0;
+		if(point!="0") {
+			try {
+				index=Integer.parseInt(point);
+			}catch(Exception e) {
+				
+			}
+		}
+		for(index=(index==null?0:index);index<WeixinUserinfoList.size();index++) {
+			WeixinUserinfo weixinUserinfo=WeixinUserinfoList.get(index);
 			initParams(weixinUserinfo.getId());
 			weixinTaskRunLog.setTaskName("用户分析数据拉取");
 			weixinTaskRunLog.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
@@ -194,22 +211,18 @@ public class WeixinUserTask {
 				WxMpUserList wxMpUserList = null;
 				String nextOpenId =null;
 				int n = 0;
+				List<String> openids=new ArrayList<String>();
+				//TODO
 				do {
 					wxMpUserList = wxOpenServiceDemo.getWxOpenComponentService()
 							.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getUserService()
 							.userList(nextOpenId);
-					if(wxMpUserList.getNextOpenid()!=null&&wxMpUserList.getNextOpenid()!="") {
-						nextOpenId = wxMpUserList.getNextOpenid();
-					}
-					newOpenids=getNewOpenids(wxMpUserList.getOpenids());
-					if(newOpenids==null) {
-						newOpenids.addAll(wxMpUserList.getOpenids());
-					}
+					openids.addAll(wxMpUserList.getOpenids());
 					n = count - 10000;
 				} while (n >= 10000);
 				logger.info("------------------------------------\n当前公众号:"+weixinUserinfo.getNickName()
-				+"新增用户为:"+countNewUser+"newOpenids为"+newOpenids.size());
-					for (String openid : newOpenids) {
+				+"新增用户为:"+countNewUser+"newOpenids为");
+					for (String openid : openids) {
 						try {
 							WxMpUser userInfo = wxOpenServiceDemo.getWxOpenComponentService()
 									.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getUserService()
@@ -262,7 +275,6 @@ public class WeixinUserTask {
 							weixinTaskRunLogService.insert(weixinTaskRunLog);
 						}
 					}
-
 				logger.info("id为" + weixinUserinfo.getId() + "的公众号新插入粉丝:" + wxMpUserList.getCount());
 				fansCount.setAddSceneSearch(addSceneSearch);
 				fansCount.setAddSceneAccountMigration(addSceneAccountMigration);
@@ -287,8 +299,7 @@ public class WeixinUserTask {
 				fansCount.setLangCh(langCh);
 				fansCount.setLangOther(langOther);
 				fansCount.setNetGrowth(countNewUser - cancelUser);
-				newOpenids.addAll(oldOpenIdList);
-				fansCount.setNextOpenid(org.apache.commons.lang.StringUtils.join(newOpenids,","));
+//				fansCount.setNextOpenid(org.apache.commons.lang.StringUtils.join(newOpenids,","));
 				weixinFansCountService.insertSelective(fansCount);
 				Integer nowHour = Integer.parseInt(sdf1.format(new Date()));
 				userNames.append(weixinUserinfo.getNickName() + ",");
@@ -298,6 +309,7 @@ public class WeixinUserTask {
 				if (nowHour!=null&& nowHour >= 9 && nowHour < 18) {
 					break;
 				}
+				r.set("point",index.toString());
 				System.gc();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -308,40 +320,79 @@ public class WeixinUserTask {
 		}
 		logger.info("统计结束,耗时:" + (System.currentTimeMillis() - timeBegin) + "毫秒");
 	}
-	public List<String> getNewOpenids(List<String> openIdList){
-		if(openidListStr==null||openidListStr.equals("")) {
-			return null;
-		}
-		oldOpenIdList=StringUtil.splitStringToStringList(openidListStr);
-		openIdList.removeAll(oldOpenIdList);
-		return openIdList;
-	}
 	private void initParams(int userId) {
-		fansCount=weixinFansCountService.selectByuserIdMaxTime(userId);
-		 male=fansCount.getMale();
-		 female=fansCount.getFemale();
-		 chinese=fansCount.getChinese();
-		 notChinese=fansCount.getNotChinese();
-		 langCh=fansCount.getLangCh();
-		 langOther=fansCount.getLangOther();
-		 addSceneSearch=fansCount.getAddSceneSearch();
-		 addSceneAccountMigration=fansCount.getAddSceneAccountMigration();
-		 addSceneProfileCard=fansCount.getAddSceneProfileCard();
-		 addSceneQrCode=fansCount.getAddSceneQrCode();
-		 addSceneProfileItem=fansCount.getAddSceneProfileItem();
-		 addScenePaid=fansCount.getAddScenePaid();
-		 addSceneprofileLink=fansCount.getAddSceneprofileLink();
-		 addCircleFriends=fansCount.getAddCircleFriends();
-		 addSceneOthers=fansCount.getAddSceneOthers();
-		 cancelUser=fansCount.getCancel();
-		 countNewUser=fansCount.getNewFans();
-		 openidListStr=fansCount.getNextOpenid();
-		 if(newOpenids!=null&&!newOpenids.isEmpty()) {
-			 newOpenids.clear();
-		 }
-		 if(oldOpenIdList!=null&&!oldOpenIdList.isEmpty()) {
-			 oldOpenIdList.clear();
-		 }
+		fansCount=new WeixinFansCount();
+		 male=0;
+		 female=0;
+		 chinese=0;
+		 notChinese=0;
+		 langCh=0;
+		 langOther=0;
+		 addSceneSearch=0;
+		 addSceneAccountMigration=0;
+		 addSceneProfileCard=0;
+		 addSceneQrCode=0;
+		 addSceneProfileItem=0;
+		 addScenePaid=0;
+		 addSceneprofileLink=0;
+		 addCircleFriends=0;
+		 addSceneOthers=0;
+		 cancelUser=0;
+		 countNewUser=0;
+//		 fansCount=weixinFansCountService.selectByuserIdMaxTime(userId);
+//		 if(fansCount==null) {
+//			 fansCount=new WeixinFansCount();
+//			 male=0;
+//			 female=0;
+//			 chinese=0;
+//			 notChinese=0;
+//			 langCh=0;
+//			 langOther=0;
+//			 addSceneSearch=0;
+//			 addSceneAccountMigration=0;
+//			 addSceneProfileCard=0;
+//			 addSceneQrCode=0;
+//			 addSceneProfileItem=0;
+//			 addScenePaid=0;
+//			 addSceneprofileLink=0;
+//			 addCircleFriends=0;
+//			 addSceneOthers=0;
+//			 cancelUser=0;
+//			 countNewUser=0;
+//		}else {
+//			male=fansCount.getMale();
+//			 female=fansCount.getFemale();
+//			 chinese=fansCount.getChinese();
+//			 notChinese=fansCount.getNotChinese();
+//			 langCh=fansCount.getLangCh();
+//			 langOther=fansCount.getLangOther();
+//			 addSceneSearch=fansCount.getAddSceneSearch();
+//			 addSceneAccountMigration=fansCount.getAddSceneAccountMigration();
+//			 addSceneProfileCard=fansCount.getAddSceneProfileCard();
+//			 addSceneQrCode=fansCount.getAddSceneQrCode();
+//			 addSceneProfileItem=fansCount.getAddSceneProfileItem();
+//			 addScenePaid=fansCount.getAddScenePaid();
+//			 addSceneprofileLink=fansCount.getAddSceneprofileLink();
+//			 addCircleFriends=fansCount.getAddCircleFriends();
+//			 addSceneOthers=fansCount.getAddSceneOthers();
+//			 cancelUser=fansCount.getCancel();
+//			 countNewUser=fansCount.getNewFans();
+//		}
 	}
+//	@Scheduled(cron = "0 0 0 * * ?") // cron接受cron表达式，根据cron表达式确定定时规则
+//	public void userCountCron() {
+//		logger.info("===initialDelay: 第{}次执行方法", cronCount++);
+//		long timeBegin = System.currentTimeMillis();
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//		Date endDateTime=null;
+//		Date beginDateTime = null;
+//		try {
+//			endDateTime = DateUtil.rollDay(new Date(), -1);
+//			beginDateTime = DateUtil.rollDay(new Date(), -2);
+//		} catch (Exception e) {
+//			logger.error("异常：" + e.getMessage());
+//		}
+//		weixinSubscribeService.select(1, sdf.format(beginDateTime), sdf.format(endDateTime));
+//	}
 
 }

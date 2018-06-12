@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+
+<mapper namespace="com.lj.cloud.secrity.dal.WeixinSubscribeMapper">
+    <resultMap id="weixinSubscribeResult" type="com.weixindev.micro.serv.common.bean.weixin.WeixinSubscribe">
+        <result property="id" column="id" jdbcType="INTEGER"   />
+        <result property="openid" column="openid" jdbcType="VARCHAR"/>
+        <result property="userid" column="userid" jdbcType="VARCHAR"/>
+         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+          <result property="event" column="event" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        <![CDATA[
+          id ,
+            openid,
+            userid,
+            create_time,
+            event
+        ]]>
+    </sql>
+
+   <select id="select" resultMap="weixinSubscribeResult" parameterType="map">
+     select 
+        <include refid="Base_Column_List"/>
+            from weixin_subscribe 
+            where 
+            event=#{event,jdbcType=INTEGER}
+            and create_time between #{beginTime,jdbcType=TIMESTAMP}
+            and #{endTime,jdbcType=TIMESTAMP}
+            
+</select>
+ <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+       INSERT INTO weixin_subscribe (
+            openid,
+            userid,
+            create_time,
+            event
+        ) VALUES (
+         #{openid,jdbcType=VARCHAR},#{userid,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},#{event,jdbcType=INTEGER}
+        )
+</insert>
+
+</mapper>
+
+

@@ -1106,5 +1106,10 @@
 		from weixin_userinfo
 		where id=#{id}
 	</select>
+	<select id="selectIdByName" parameterType="string" resultType="java.lang.Integer">
+		select id
+		from weixin_userinfo
+		where user_name=#{userName}
+	</select>
 </mapper>
 

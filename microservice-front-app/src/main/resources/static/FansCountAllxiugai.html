@@ -405,8 +405,6 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 			    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 			    return fmt;
 			}
-		lastWeekParas.netGrowth=lastWeekParas.newUser-lastWeekParas.cancelUser;
-		thisWeekParas.netGrowth=thisWeekParas.newUser-thisWeekParas.cancelUser;
 		for(var i=0;i<obj.length;i++){
 			if(obj[i].createTime>lastWeekBeginTime&&obj[i].createTime<lastWeekEndTime){
 				lastWeekParas.newUser+=obj[i].newFans;
@@ -417,6 +415,8 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 				thisWeekParas.cancelUser+=obj[i].cancel;
 			}
 		}
+		lastWeekParas.netGrowth=lastWeekParas.newUser-lastWeekParas.cancelUser;
+		thisWeekParas.netGrowth=thisWeekParas.newUser-thisWeekParas.cancelUser;
 		var timeTimplate=0;
 		for(var i=0;i<obj.length;i++){
 			if(obj[i].createTime>timeTimplate){
@@ -485,8 +485,8 @@ ul{bottom: 0; top: 0;z-index: 9999;}
 					thisMonthParams.cancelUser+=obj[i].cancel;
 				}
 			}
-			lastMonthParams.netGrowth=lastWeekParas.newUser-lastWeekParas.cancelUser;
-			thisMonthParams.netGrowth=thisWeekParas.newUser-thisWeekParas.cancelUser;
+			lastMonthParams.netGrowth=lastMonthParams.newUser-lastMonthParams.cancelUser;
+			thisMonthParams.netGrowth=thisMonthParams.newUser-thisMonthParams.cancelUser;
 			if(lastMonthParams.newUser==0){
 				$("#newUser .month").html('月:0%');
 			}else{

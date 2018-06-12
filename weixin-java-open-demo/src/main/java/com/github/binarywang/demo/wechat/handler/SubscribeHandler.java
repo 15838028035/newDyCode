@@ -1,12 +1,18 @@
 package com.github.binarywang.demo.wechat.handler;
 
 import com.github.binarywang.demo.wechat.builder.TextBuilder;
+import com.lj.cloud.secrity.service.WeixinSubscribeService;
+import com.lj.cloud.secrity.service.WeixinUserinfoService;
+import com.weixindev.micro.serv.common.bean.weixin.WeixinSubscribe;
+import com.weixindev.micro.serv.common.util.DateUtil;
+
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
-import me.chanjar.weixin.mp.bean.result.WxMpUser;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -25,12 +31,8 @@ public class SubscribeHandler extends AbstractHandler {
     this.logger.info("新关注用户 OPENID: " + wxMessage.getFromUser());
 
     // 获取微信用户基本信息
-    WxMpUser userWxInfo = weixinService.getUserService()
-        .userInfo(wxMessage.getFromUser(), null);
-
-    if (userWxInfo != null) {
-      // TODO 可以添加关注用户到本地
-    }
+//    WxMpUser userWxInfo = weixinService.getUserService()
+//        .userInfo(wxMessage.getFromUser(), null);
 
     WxMpXmlOutMessage responseResult = null;
     try {
@@ -57,7 +59,6 @@ public class SubscribeHandler extends AbstractHandler {
    */
   private WxMpXmlOutMessage handleSpecial(WxMpXmlMessage wxMessage)
       throws Exception {
-    //TODO
     return null;
   }
 

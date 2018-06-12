@@ -116,4 +116,9 @@ public class WeixinUserinfoServiceImpl  implements WeixinUserinfoService{
 		return new WeixinUserinfo();
 	}
 
+	@Override
+	public Integer selectIdByName(String userName) {
+		return weixinUserinfoMapper.selectIdByName(userName);
+	}
+
 }

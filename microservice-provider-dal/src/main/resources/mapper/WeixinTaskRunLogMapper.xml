@@ -43,7 +43,7 @@
         INSERT INTO weixin_task_run_log (
          create_date, update_date, logs_desc, task_name
         ) VALUES (
-         #{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{logsDesc,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}        
+         #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{logsDesc,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}        
         )
    
 </insert>
