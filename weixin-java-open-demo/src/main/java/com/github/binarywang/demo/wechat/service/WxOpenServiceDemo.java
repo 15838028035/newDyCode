@@ -62,12 +62,14 @@ public class WxOpenServiceDemo extends WxOpenServiceImpl {
             	   try {
             		   if("subscribe".equals(wxMpXmlMessage.getEvent())) {
             			   Integer userid=WeixinUserinfoService.selectIdByName(wxMpXmlMessage.getToUser());
-                        	WeixinSubscribe weixinSubscribe=new WeixinSubscribe();
-                        	weixinSubscribe.setUserid(userid.toString());
-                        	weixinSubscribe.setEvent(1);
-                        	weixinSubscribe.setCreateTime(DateUtil.getNowDate("yyyy-MM-dd"));
-                        	weixinSubscribe.setOpenid(wxMpXmlMessage.getFromUser());
-                        	weixinSubscribeService.insert(weixinSubscribe);  
+            			   if(userid!=null) {
+            				   WeixinSubscribe weixinSubscribe=new WeixinSubscribe();
+                           	weixinSubscribe.setUserid(userid.toString());
+                           	weixinSubscribe.setEvent(1);
+                           	weixinSubscribe.setCreateTime(DateUtil.getNowDate("yyyy-MM-dd"));
+                           	weixinSubscribe.setOpenid(wxMpXmlMessage.getFromUser());
+                           	weixinSubscribeService.insert(weixinSubscribe);    
+            			   }
             		   }
                    }catch(Exception e) {
                      logger.error("插入新用户信息出现异常"+e.getMessage());

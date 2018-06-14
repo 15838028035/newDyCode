@@ -2,15 +2,19 @@ package com.github.binarywang.demo.wechat.controller;
 
 import com.github.binarywang.demo.wechat.service.WxOpenServiceDemo;
 import com.lj.cloud.secrity.service.WeixinUserinfoService;
+import com.lj.cloud.secrity.service.impl.WeixinUserinfoServiceImpl;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinUserinfo;
 import com.weixindev.micro.serv.common.util.DateUtil;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.open.bean.result.WxOpenAuthorizerInfoResult;
 import me.chanjar.weixin.open.bean.result.WxOpenQueryAuthResult;
+
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +22,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -32,6 +41,10 @@ public class WechatApiController {
 	private WxOpenServiceDemo wxOpenServiceDemo;
 	@Autowired
 	public WeixinUserinfoService weixinUserinfoService;
+	@Value("${file_location}")
+    private String file_location;
+	@Autowired
+	public WeixinUserinfoServiceImpl weixinUserinfoServiceImpl;
 
 	@GetMapping("auth/goto_auth_url_show")
 	public String gotoPreAuthUrlShow() {
@@ -71,7 +84,7 @@ public class WechatApiController {
 		WxOpenQueryAuthResult queryAuthResult;
 		try {
 			queryAuthResult = wxOpenServiceDemo.getWxOpenComponentService().getQueryAuth(authorizationCode);
-			logger.info("getQueryAuth", queryAuthResult);
+			logger.info("getQueryAuth"+queryAuthResult);
 
 			// WeixinUserinfo weixinUserinfo = new WeixinUserinfo();
 			// weixinUserinfo.setAuthorizerAppid(queryAuthResult.getAuthorizationInfo().getAuthorizerAppid());
@@ -119,11 +132,10 @@ public class WechatApiController {
 			String url = "";
 			url = "http://" + host + ":8022/weixinUserinfoUpdate.html?authorizerAppid="
 					+ queryAuthResult.getAuthorizationInfo().getAuthorizerAppid();
-
+			logger.info(authorizationCode);
 			try {
 				response.sendRedirect(url);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} catch (WxErrorException e1) {
@@ -154,6 +166,46 @@ public class WechatApiController {
 				weixinUserinfo.setNickName(wx.getNickName());
 				weixinUserinfo.setWeixinGroupsId(wx.getWeixinGroupsId());
 			}
+//			int status=0;
+			if(null==wx.getId()) {
+				weixinUserinfo.setId(-100);
+				return weixinUserinfo;
+//				WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
+//						.getAuthorizerInfo(authorizerAppid);
+//				weixinUserinfo.setAuthorizerAppid(authorizerAppid);
+//				weixinUserinfo.setNickName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getNickName());
+//				weixinUserinfo.setHeadImg(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getHeadImg());
+//				weixinUserinfo.setInfoType("authorized");
+//				Date date = new Date(System.currentTimeMillis());  
+//				 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");  
+//			     String fileName = authorizerAppid+dateFormat.format(date) + ".jpg";  
+//			     try {
+//			            URL httpurl = new URL(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getQrcodeUrl());  
+//			            File dirfile = new File(file_location);
+//			            if (!dirfile.exists()) {
+//			                dirfile.mkdirs();
+//			            }
+//			            FileUtils.copyURLToFile(httpurl, new File(file_location+fileName));
+//			            weixinUserinfo.setQrcodeUrl(file_location+fileName);
+//			        } catch (Exception e) {
+//			            e.printStackTrace();
+//			        }
+//			     weixinUserinfo.setServiceTypeInfo(
+//							wxOpenAuthorizerInfoResult.getAuthorizerInfo().getServiceTypeInfo().toString());
+//					weixinUserinfo.setVerifyTypeInfo(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getVerifyTypeInfo());
+//					weixinUserinfo.setUserName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getUserName());
+//					weixinUserinfo.setPrincipalName(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getPrincipalName());
+//					weixinUserinfo
+//							.setBusinessInfo(wxOpenAuthorizerInfoResult.getAuthorizerInfo().getBusinessInfo().toString());
+//					Integer createBy = 1;
+//					weixinUserinfo.setCreateBy(createBy);
+//					weixinUserinfo.setCreateByUname("admin01");
+//					weixinUserinfo.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
+//					status=weixinUserinfoServiceImpl.insert(weixinUserinfo);
+////					wxOpenAuthorizerInfoResult.getAuthorizerInfo().getAlias()
+////					wxOpenServiceDemo.getWxOpenComponentService().getWxMpServiceByAppid(authorizerAppid).getAccessToken()
+			}
+//			System.out.println(status+"-----------------------------------");
 			WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenServiceDemo.getWxOpenComponentService()
 					.getAuthorizerInfo(authorizerAppid);
 			

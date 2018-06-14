@@ -1,10 +1,13 @@
 package com.github.binarywang.demo.wechat.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -49,7 +52,8 @@ public class WechatNotifyController {
 			@RequestParam("timestamp") String timestamp, @RequestParam("nonce") String nonce,
 			@RequestParam("signature") String signature,
 			@RequestParam(name = "encrypt_type", required = false) String encType,
-			@RequestParam(name = "msg_signature", required = false) String msgSignature) {
+			@RequestParam(name = "msg_signature", required = false) String msgSignature,
+			 HttpServletResponse response) {
 		this.logger.info(
 				"\n接收微信请求：[signature=[{}], encType=[{}], msgSignature=[{}],"
 						+ " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
@@ -58,9 +62,8 @@ public class WechatNotifyController {
 		if (!StringUtils.equalsIgnoreCase("aes", encType)) {
 			throw new IllegalArgumentException("非法请求，可能属于伪造的请求！");
 		}
-
 		// aes加密的消息
-		WxOpenXmlMessage inMessage = WxOpenXmlMessage.fromEncryptedXml(requestBody,
+			WxOpenXmlMessage inMessage = WxOpenXmlMessage.fromEncryptedXml(requestBody,
 				wxOpenService.getWxOpenConfigStorage(), timestamp, nonce, msgSignature);
 
 		this.logger.debug("\n消息解密后内容为：\n{} ", inMessage.toString());
@@ -74,9 +77,10 @@ public class WechatNotifyController {
 
 			HashMap<String, Object> weixinUserinfo2 = weixinUserinfoServiceImpl
 					.selectByAppId(inMessage.getAuthorizerAppid());
-			this.logger.debug("\n公众号开始授权或更新授权,开始-------------------------：\n{} ", inMessage.toString());
+			this.logger.info("\n公众号开始授权或更新授权,开始-------------------------：\n{} ", inMessage.toString());
+			System.out.println("sys----------------------------------------------------"+inMessage.toString());
 			if (StringUtils.equalsAnyIgnoreCase(inMessage.getInfoType(), "authorized", "updateauthorized")) {
-				this.logger.debug("\n公众号开始授权或更新授权,结果为-------------------------：\n{} ", inMessage.toString());
+				this.logger.info("\n公众号开始授权或更新授权,结果为-------------------------：\n{} ", inMessage.toString());
 				WxOpenAuthorizerInfoResult wxOpenAuthorizerInfoResult = wxOpenService.getWxOpenComponentService()
 						.getAuthorizerInfo(inMessage.getAuthorizerAppid());
 
@@ -97,6 +101,7 @@ public class WechatNotifyController {
 		            FileUtils.copyURLToFile(httpurl, new File(file_location+fileName));
 		            weixinUserinfo.setQrcodeUrl(file_location+fileName);
 		        } catch (Exception e) {
+		        	System.out.println("-----------授权出现异常--E-------------------------"+e.getMessage());
 		            e.printStackTrace();
 		        }
 				
@@ -124,11 +129,13 @@ public class WechatNotifyController {
 					weixinUserinfoServiceImpl.updateByPrimaryKeySelective(weixinUserinfo);
 				}
 			} else if (inMessage.getInfoType().equals("component_verify_ticket")) {
-				this.logger.debug("\ncomponent_verify_ticket信息：{}", inMessage);
+				this.logger.info("\ncomponent_verify_ticket信息：{}", inMessage);
+				
 			}
 
 			this.logger.debug("\n组装回复信息：{}", out);
 		} catch (WxErrorException e) {
+			System.out.println("-----------授权出现异常---------------------------"+e.getMessage()+e.getError());
 			this.logger.error("receive_ticket", e);
 		}
 
@@ -140,6 +147,7 @@ public class WechatNotifyController {
 			@RequestParam("signature") String signature, @RequestParam("timestamp") String timestamp,
 			@RequestParam("nonce") String nonce, @RequestParam("openid") String openid,
 			@RequestParam("encrypt_type") String encType, @RequestParam("msg_signature") String msgSignature) {
+		this.logger.info("---------------xxxx--------------------------------------------");
 		this.logger.info(
 				"\n接收微信请求：[appId=[{}], openid=[{}], signature=[{}], encType=[{}], msgSignature=[{}],"
 						+ " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
@@ -153,7 +161,8 @@ public class WechatNotifyController {
 		// aes加密的消息
 		WxMpXmlMessage inMessage = WxOpenXmlMessage.fromEncryptedMpXml(requestBody,
 				wxOpenService.getWxOpenConfigStorage(), timestamp, nonce, msgSignature);
-		this.logger.debug("\n消息解密后内容为：\n{} ", inMessage.toString());
+		this.logger.info("---------------xxxx--------------------------------------------"+inMessage.toString());
+		this.logger.info("\n消息解密后内容为：\n{} ", inMessage.toString());
 		// 全网发布测试用例
 		if (StringUtils.equalsAnyIgnoreCase(appId, "wxd101a85aa106f53e", "wx570bc396a51b8ff8", "wx0901d417572264df")) {
 			try {
@@ -178,6 +187,7 @@ public class WechatNotifyController {
 				}
 			} catch (WxErrorException e) {
 				logger.error("callback", e);
+				logger.error("授权出现异常___________________--"+e.getMessage());
 			}
 		} else {
 			WxMpXmlOutMessage outMessage = wxOpenService.getWxOpenMessageRouter().route(inMessage, appId);
@@ -210,7 +220,6 @@ public class WechatNotifyController {
 				"\n接收微信请求：[signature=[{}], encType=[{}], msgSignature=[{}],"
 						+ " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
 				signature, encType, msgSignature, timestamp, nonce, requestBody);
-
 	    if (!StringUtils.equalsIgnoreCase("aes", encType)
 				|| !wxOpenService.getWxOpenComponentService().checkSignature(timestamp, nonce, signature)) {
 			throw new IllegalArgumentException("非法请求，可能属于伪造的请求！");

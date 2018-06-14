@@ -260,7 +260,7 @@ public class AsyncTask{
 				    		Integer code = e.getError().getErrorCode();
 							logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
 							sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
-							sb.append("失败原因:【上传图文消息的封面的图片异常:"+ WxMpErrorMsg.findMsgByCode(code)+"】<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
+							sb.append("失败原因::"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
 							if (!userName.equals(weixin.getNickName())) {
 								errorCount++;
 								userName=weixin.getNickName();
@@ -269,8 +269,6 @@ public class AsyncTask{
 						e.printStackTrace();
 						logger.error("处理图文消息正文内部的图片、视频、音频等文件信息替换，异常信息:" + e.getMessage());
 						restAPIResult.setRespCode(0);
-						sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
-						sb.append("失败原因:【处理图文消息正文内部的媒体文件信息替换异常:】<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
 						if (!userName.equals(weixin.getNickName())) {
 							errorCount++;
 							userName=weixin.getNickName();
@@ -322,7 +320,7 @@ public class AsyncTask{
 				    		Integer code = e.getError().getErrorCode();
 							logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
 							sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
-							sb.append("失败原因:【上传图文消息的封面的图片异常】<br/>");
+							sb.append("失败原因:"+WxMpErrorMsg.findMsgByCode(code));
 							if (!userName.equals(weixin.getNickName())) {
 								errorCount++;
 								userName=weixin.getNickName();
@@ -331,8 +329,6 @@ public class AsyncTask{
 						e.printStackTrace();
 						logger.error("上传图文消息的封面的图片，异常信息:" + e.getMessage());
 						restAPIResult.setRespCode(0);
-						sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
-						sb.append("失败原因:【上传图文消息的封面的图片异常】<br/>");
 						if (!userName.equals(weixin.getNickName())) {
 							errorCount++;
 							userName=weixin.getNickName();
