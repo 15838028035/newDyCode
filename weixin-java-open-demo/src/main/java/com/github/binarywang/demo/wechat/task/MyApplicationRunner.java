@@ -41,7 +41,8 @@ public class MyApplicationRunner implements ApplicationRunner{
 
 	@Autowired
 	private WeixinImgtextItemService weixinImgtextItemService;
-	
+	@Autowired
+	private WeixinImgageArticleReportTask weixinImgageArticleReportTask;
 	@Autowired
 	private WeixinPushLogService weixinPushLogService ;
 	@Value("${appURL}")
@@ -75,6 +76,8 @@ public class MyApplicationRunner implements ApplicationRunner{
 			w.setMapKey(key);
 			weixinArticleTaskService.updateByPrimaryKey(w);
 			count++;
+			String cron="0 0/20 * * * *";
+			weixinImgageArticleReportTask.setCron(cron);
 		}
 		System.out.println("-------------------------");
 		System.out.println("重新启动定时任务:"+count+"个");

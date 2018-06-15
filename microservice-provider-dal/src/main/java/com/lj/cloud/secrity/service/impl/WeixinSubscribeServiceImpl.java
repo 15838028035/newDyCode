@@ -1,5 +1,6 @@
 package com.lj.cloud.secrity.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class WeixinSubscribeServiceImpl implements WeixinSubscribeService {
 	}
 
 	@Override
-	public WeixinSubscribe select(Map<String,Object> map) {
+	public List<WeixinSubscribe> select(Map<String,Object> map) {
 		return weixinSubscribeMapper.select(map);
 	}
 

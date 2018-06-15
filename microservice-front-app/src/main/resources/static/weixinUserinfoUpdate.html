@@ -94,6 +94,25 @@ if (acekeystoken == ""||acekeystoken==undefined) {
             dataType: "json",
             success: function (data) {
                 console.log(data);
+                console.log('--------------------------------');
+                console.log(data.id==-100);
+                if(data.id==-100){
+                	var index = parent.layer.getFrameIndex(window.name);
+                	parent.layer.close(index);
+                	parent.layer.open({
+                         title: "提示",
+                         type: 2,
+                         maxmin: true,
+                         area: ['1200px', '600px'],
+                         content:'weixinUserinfoMsg.html',
+                         // 下面这句是,添加页面关闭后,刷新本页面.
+                         end: function () {
+                         	$(".layui-laypage-btn")[0].click();
+                             //location.reload();
+                         }
+                     });
+                	return;
+                }
                 $("#nikename").val(data.nickName);
                 $("#headimg").attr("src",data.headImg);
                 $("#cityId").val(data.cityId);
