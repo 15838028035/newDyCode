@@ -29,6 +29,7 @@
             event=#{event,jdbcType=INTEGER}
             and create_time between #{beginTime,jdbcType=TIMESTAMP}
             and #{endTime,jdbcType=TIMESTAMP}
+            and userid=#{endTime,jdbcType=INTEGER}
             
 </select>
  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
