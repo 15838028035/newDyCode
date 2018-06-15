@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lj.cloud.secrity.dal.WeixinSendHistoryMapper" >
+  <resultMap id="BaseResultMap" type="com.weixindev.micro.serv.common.bean.report.WeixinSendHistory" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_by_UName" property="createByUname" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="media_category" property="mediaCategory" jdbcType="VARCHAR" />
+    <result column="imgTextId" property="imgtextid" jdbcType="INTEGER" />
+    <result column="media_id" property="mediaId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="authorizerAppid" property="authorizerappid" jdbcType="VARCHAR" />
+    <result column="category" property="category" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="execute_result" property="executeResult" jdbcType="VARCHAR" />
+    <result column="to_user_name" property="toUserName" jdbcType="VARCHAR" />
+    <result column="error_user_name" property="errorUserName" jdbcType="VARCHAR" />
+    <result column="error_user_id" property="errorUserId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, create_date, create_by_UName, update_date, media_category, imgTextId, media_id, 
+    user_id, authorizerAppid, category, status, execute_result, to_user_name, error_user_name, 
+    error_user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from weixin_send_history
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByPageExample" resultType="java.util.HashMap" >
+	 select 
+             <include refid="Base_Column_List" />
+   	       	   from weixin_send_history
+                WHERE 1=1  
+         <if test="createByUname != null and createByUname != ''" >
+                and  create_by_UName = #{createByUname,jdbcType=VARCHAR}
+        </if>
+         <if test="category != null and  category != ''" >
+               and   category = #{category,jdbcType=INTEGER}
+        </if>
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from weixin_send_history
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinSendHistory" >
+    insert into weixin_send_history (id, create_date, create_by_UName, 
+      update_date, media_category, imgTextId, 
+      media_id, user_id, authorizerAppid, 
+      category, status, execute_result, 
+      to_user_name, error_user_name, error_user_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{createByUname,jdbcType=VARCHAR}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{mediaCategory,jdbcType=VARCHAR}, #{imgtextid,jdbcType=INTEGER}, 
+      #{mediaId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{authorizerappid,jdbcType=VARCHAR}, 
+      #{category,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{executeResult,jdbcType=VARCHAR}, 
+      #{toUserName,jdbcType=VARCHAR}, #{errorUserName,jdbcType=VARCHAR}, #{errorUserId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinSendHistory" >
+    insert into weixin_send_history
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createByUname != null" >
+        create_by_UName,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="mediaCategory != null" >
+        media_category,
+      </if>
+      <if test="imgtextid != null" >
+        imgTextId,
+      </if>
+      <if test="mediaId != null" >
+        media_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="authorizerappid != null" >
+        authorizerAppid,
+      </if>
+      <if test="category != null" >
+        category,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="executeResult != null" >
+        execute_result,
+      </if>
+      <if test="toUserName != null" >
+        to_user_name,
+      </if>
+      <if test="errorUserName != null" >
+        error_user_name,
+      </if>
+      <if test="errorUserId != null" >
+        error_user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createByUname != null" >
+        #{createByUname,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mediaCategory != null" >
+        #{mediaCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="imgtextid != null" >
+        #{imgtextid,jdbcType=INTEGER},
+      </if>
+      <if test="mediaId != null" >
+        #{mediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="authorizerappid != null" >
+        #{authorizerappid,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        #{category,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="executeResult != null" >
+        #{executeResult,jdbcType=VARCHAR},
+      </if>
+      <if test="toUserName != null" >
+        #{toUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="errorUserName != null" >
+        #{errorUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="errorUserId != null" >
+        #{errorUserId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinSendHistory" >
+    update weixin_send_history
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createByUname != null" >
+        create_by_UName = #{createByUname,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mediaCategory != null" >
+        media_category = #{mediaCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="imgtextid != null" >
+        imgTextId = #{imgtextid,jdbcType=INTEGER},
+      </if>
+      <if test="mediaId != null" >
+        media_id = #{mediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="authorizerappid != null" >
+        authorizerAppid = #{authorizerappid,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        category = #{category,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="executeResult != null" >
+        execute_result = #{executeResult,jdbcType=VARCHAR},
+      </if>
+      <if test="toUserName != null" >
+        to_user_name = #{toUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="errorUserName != null" >
+        error_user_name = #{errorUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="errorUserId != null" >
+        error_user_id = #{errorUserId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.weixindev.micro.serv.common.bean.report.WeixinSendHistory" >
+    update weixin_send_history
+    set create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_by_UName = #{createByUname,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      media_category = #{mediaCategory,jdbcType=VARCHAR},
+      imgTextId = #{imgtextid,jdbcType=INTEGER},
+      media_id = #{mediaId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      authorizerAppid = #{authorizerappid,jdbcType=VARCHAR},
+      category = #{category,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      execute_result = #{executeResult,jdbcType=VARCHAR},
+      to_user_name = #{toUserName,jdbcType=VARCHAR},
+      error_user_name = #{errorUserName,jdbcType=VARCHAR},
+      error_user_id = #{errorUserId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

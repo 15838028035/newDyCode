@@ -832,14 +832,32 @@
         }
         #history{
         	position: absolute;
-        	left:528px;
+        	left:717px;
         	display:none;
         }
         .btns{
         	position: absolute;
-        	width:700px;
-        	left:-100px;
+        	width:1000px;
+        	left:-200px;
         }
+         #sendXiala{
+       	width:50px;
+       	margin-left:-5px;
+       }
+        #syncXiala{
+       	width:50px;
+       	margin-left:-5px;
+       }
+       #sendHistory{
+       	position: absolute;
+   		left:173px;
+   		display:none;
+       }
+       #syncHistory{
+       		position: absolute;
+       		left:326px;
+       		display:none;
+       }
     </style>
     
 </head>
@@ -868,14 +886,19 @@
                 <div class="layui-form-item btns">
                     <div class="layui-input-block" style="text-align: center;width: 100%;">
                         <span class="layui-btn" lay-button="" lay-filter="btnSend" id ="btnSend">发送</span>
-                         <p><a class="layui-btn" href="javascript:;" id="sendHistory">发送历史</a></p>
+                        <i class="layui-btn layui-icon" id="sendXiala">&#xe625;</i>
+<!--                          <p><a class="layui-btn" href="javascript:;" id="sendHistory">发送历史</a> -->
                         <span class="layui-btn" lay-button="" lay-filter="btnSync" id ="btnSync">同步</span>
-                         <p><a class="layui-btn" href="javascript:;" id="syncHistory">同步历史</a></p>
+                        <i class="layui-btn layui-icon" id="syncXiala">&#xe625;</i>
                         <button class="layui-btn layui-btn-primary" id="yulan" type="button">预览</button>
                         <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                         <span class="layui-btn" lay-button="" lay-filter="btnTimingSend" id ="btnTimingSend">定时发送</span>
                         <i class="layui-btn layui-icon" id="xiala">&#xe625;</i>
-                         <p><a class="layui-btn" href="javascript:;" id="history">查看历史</a></p>
+                         <p>
+                         <a class="layui-btn" href="javascript:;" id="sendHistory">发送历史</a>
+                         <a class="layui-btn" href="javascript:;" id="syncHistory">同步历史</a>
+                         <a class="layui-btn" href="javascript:;" id="history">查看历史</a>
+                         </p>
                     </div>
                 </div>
 	        </div>
@@ -997,6 +1020,12 @@ $("#btnSend").click(function(){
 $('#xiala').click(function(){
 	$('#history').toggle();
 });
+$('#sendXiala').click(function(){
+	$('#sendHistory').toggle();
+});
+$('#syncXiala').click(function(){
+	$('#syncHistory').toggle();
+});
 $('#history').click(function(){
 	layer.open({
 		title : "历史任务",
@@ -1010,7 +1039,32 @@ $('#history').click(function(){
 		}
 	});
 });
-
+$('#sendHistory').click(function(){
+	layer.open({
+		title : "群发历史",
+		type : 2,
+		maxmin : true,
+		area : [ '1280px', '580px' ],
+		content : 'weixinSendHistory.html',
+		// 下面这句是,添加页面关闭后,刷新本页面.
+		end : function() {
+			location.reload();
+		}
+	});
+})
+$('#syncHistory').click(function(){
+	layer.open({
+		title : "群发历史",
+		type : 2,
+		maxmin : true,
+		area : [ '1280px', '580px' ],
+		content : 'weixinSyncHistory.html',
+		// 下面这句是,添加页面关闭后,刷新本页面.
+		end : function() {
+			location.reload();
+		}
+	});
+})
 $("#btnTimingSend").click(function(){
 	 var checkStatus = table.checkStatus('datagridTable');
 	    var datas = checkStatus.data;

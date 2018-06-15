@@ -47,9 +47,11 @@ import com.lj.cloud.secrity.service.WeixinArticleTaskService;
 import com.lj.cloud.secrity.service.WeixinImgService;
 import com.lj.cloud.secrity.service.WeixinImgtextItemService;
 import com.lj.cloud.secrity.service.WeixinPushLogService;
+import com.lj.cloud.secrity.service.WeixinSendHistoryService;
 import com.lj.cloud.secrity.service.WeixinUserinfoService;
 import com.weixindev.micro.serv.common.bean.RestAPIResult2;
 import com.weixindev.micro.serv.common.bean.WxMpErrorMsg;
+import com.weixindev.micro.serv.common.bean.report.WeixinSendHistory;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinArticleTask;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImg;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImgtextItem;
@@ -117,6 +119,8 @@ public class WeixinImgTextController {
     private RedisBusiness r;
 	@Autowired  
     private AsyncTask asyncTask;  
+	@Autowired
+	private WeixinSendHistoryService weixinSendHistoryService;
 	
 	/**
 	 * 1、首先，预先将图文消息中需要用到的图片，使用上传图文消息内图片接口，上传成功并获得图片 URL；
@@ -1203,6 +1207,24 @@ public class WeixinImgTextController {
 		weixinArticleTaskService.updateByPrimaryKey(w);
 		return result;
 	}
-
+	
+	@RequestMapping(value="/api/getSyncHistory")
+	public LayUiTableResultResponse getSyncHistory(@RequestParam Map<String,Object> params) {
+		Map<String,Object> map=new HashMap<String,Object>();
+		map.put("createByUname", params.get("createByUname"));
+		map.put("limit", params.get("limit"));
+		map.put("page", params.get("page"));
+		Query query=new Query(map);
+		LayUiTableResultResponse list=weixinSendHistoryService.selectByQuery(query);
+//		List data=list.getData();
+//		for(int i=0;i<data.size();i++) {
+//			Map<String,Object> m=(Map<String,Object>)data.get(i);
+//			List<String> nickNameList=StringUtil.splitStringToStringList((String)m.get("to_user_name"));
+//			m.remove("to_user_name");
+//			m.put("to_user_name", nickNameList);
+//		}
+//		list.setData(data);
+		return list;
+	}
 	
 }
