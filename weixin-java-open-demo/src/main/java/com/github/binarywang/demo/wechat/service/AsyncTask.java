@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,17 +24,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.github.binarywang.demo.wechat.task.FuturesMap;
-import com.github.binarywang.demo.wechat.task.TimingSendTask;
 import com.github.binarywang.demo.wechat.utils.FileMatchUtil;
 import com.github.binarywang.demo.wechat.utils.GIfUtil;
-import com.lj.cloud.secrity.service.WeixinArticleTaskService;
 import com.lj.cloud.secrity.service.WeixinImgService;
 import com.lj.cloud.secrity.service.WeixinImgtextItemService;
 import com.lj.cloud.secrity.service.WeixinPushLogService;
+import com.lj.cloud.secrity.service.WeixinSendHistoryService;
 import com.lj.cloud.secrity.service.WeixinUserinfoService;
 import com.weixindev.micro.serv.common.bean.RestAPIResult2;
 import com.weixindev.micro.serv.common.bean.WxMpErrorMsg;
+import com.weixindev.micro.serv.common.bean.report.WeixinSendHistory;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImg;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinImgtextItem;
 import com.weixindev.micro.serv.common.bean.weixin.WeixinPushLog;
@@ -76,8 +76,6 @@ public class AsyncTask{
 		
 	@Autowired
 	private WeixinPushLogService weixinPushLogService ;
-	@Autowired
-	private TimingSendTask task;
 	@Value("${appURL}")
 	private String appURL;// 网站前台url
 
@@ -88,23 +86,26 @@ public class AsyncTask{
 	@Autowired
 	private WeixinImgService weixinImgService;
 	@Autowired
-	private FuturesMap futuresMap;
-	@Autowired
-	private WeixinArticleTaskService weixinArticleTaskService;
+	private WeixinSendHistoryService weixinSendHistoryService;
 	
 	@Autowired
     private RedisBusiness r;
 	@Async  
-    public RestAPIResult2 BatchSyncAsyncTask(Map<String, String> map) {
-		RestAPIResult2 restAPIResult = new RestAPIResult2();
-		restAPIResult.setRespCode(1);
-		restAPIResult.setRespMsg("成功");
+    public void BatchSyncAsyncTask(Map<String, String> map) {
+		WeixinSendHistory w=new WeixinSendHistory();
+		w.setCategory(0);
+		StringBuffer errorIds=new StringBuffer();
+		StringBuffer errorNames=new StringBuffer();
 		double count=1;//同步成功的微信公众号数量初始化
 		StringBuffer sb = new StringBuffer("");
 		String imgTextId = String.valueOf(map.get("imgTextId"));// 图文素材ID
 		String ids = map.get("ids");// 选择的公众号
 		String name=map.get("userName");
 		String key=name+"tongbuNum";
+		w.setImgtextid(Integer.parseInt(imgTextId));
+		w.setCreateDate(new Date());
+		w.setCreateByUname(name);
+		w.setAuthorizerappid(ids);
 		List<String> idsList = StringUtil.splitStringToStringList(ids);
 
 		logger.info("StringUtil.splitStringToStringList :" + idsList.size());
@@ -119,12 +120,10 @@ public class AsyncTask{
 		List<WeixinImgtextItem> list = weixinImgtextItemService.selectByExample(query);
 
 		logger.info("imgTextId= " + imgTextId + " 的记录数据是list.size :" + list.size());
-
 		for (WeixinImgtextItem WeixinImgtextItem : list) {
 			if (StringUtils.isBlank(WeixinImgtextItem.getHeadImg())) {
-				restAPIResult.setRespCode(0);
-				restAPIResult.setRespMsg("封面图片为空，不允许发送");
-				return restAPIResult;
+				w.setExecuteResult("封面图片为空，不允许发送");
+				return;
 			}
 		}
 		NumberFormat aaa = NumberFormat.getPercentInstance();   
@@ -147,10 +146,11 @@ public class AsyncTask{
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
+			try {
 			for (WeixinImgtextItem WeixinImgtextItem : list) {
 
 				if (StringUtil.isNotBlank(WeixinImgtextItem.getArticleContent())) {// 更新media
-					try {
+//					try {
 						
 						List<String> strContentList = FileMatchUtil
 								.getImgSrcList(WeixinImgtextItem.getArticleContent());
@@ -255,25 +255,26 @@ public class AsyncTask{
 							}
 						}
 
-					} catch(WxErrorException e) {
-						 e.printStackTrace();
-				    		Integer code = e.getError().getErrorCode();
-							logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-							sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
-							sb.append("失败原因::"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
-							if (!userName.equals(weixin.getNickName())) {
-								errorCount++;
-								userName=weixin.getNickName();
-							}
-					} catch (Exception e) {
-						e.printStackTrace();
-						logger.error("处理图文消息正文内部的图片、视频、音频等文件信息替换，异常信息:" + e.getMessage());
-						restAPIResult.setRespCode(0);
-						if (!userName.equals(weixin.getNickName())) {
-							errorCount++;
-							userName=weixin.getNickName();
-						}
-					}
+//					} catch(WxErrorException e) {
+//						 e.printStackTrace();
+////						 w.setErrorUserId(weixin.getId());
+//				    		Integer code = e.getError().getErrorCode();
+//							logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
+//							sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
+//							sb.append("失败原因::"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
+//							if (!userName.equals(weixin.getNickName())) {
+//								errorCount++;
+//								userName=weixin.getNickName();
+//							}
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//						logger.error("处理图文消息正文内部的图片、视频、音频等文件信息替换，异常信息:" + e.getMessage());
+//						restAPIResult.setRespCode(0);
+//						if (!userName.equals(weixin.getNickName())) {
+//							errorCount++;
+//							userName=weixin.getNickName();
+//						}
+//					}
 
 				}
 			}
@@ -282,7 +283,7 @@ public class AsyncTask{
 			for (WeixinImgtextItem WeixinImgtextItem : list) {
 				if (StringUtil.isNotBlank(WeixinImgtextItem.getHeadImg())) {// 更新media
 						
-					try {
+//					try {
 						// 动态判断mediaType
 						String headImg = WeixinImgtextItem.getHeadImg();// 图片地址
 						String headImgRepl = headImg.replaceFirst(appURL, file_location);
@@ -315,25 +316,25 @@ public class AsyncTask{
 						logger.info("上传图文消息的封面的图片  WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
 								+ ",的imgTextId=" + imgTextId + ", mediaId= " + mediaId);
 						
-					} catch(WxErrorException e) {
-						 e.printStackTrace();
-				    		Integer code = e.getError().getErrorCode();
-							logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-							sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
-							sb.append("失败原因:"+WxMpErrorMsg.findMsgByCode(code));
-							if (!userName.equals(weixin.getNickName())) {
-								errorCount++;
-								userName=weixin.getNickName();
-							}
-					} catch (Exception e) {
-						e.printStackTrace();
-						logger.error("上传图文消息的封面的图片，异常信息:" + e.getMessage());
-						restAPIResult.setRespCode(0);
-						if (!userName.equals(weixin.getNickName())) {
-							errorCount++;
-							userName=weixin.getNickName();
-						}
-					}
+//					} catch(WxErrorException e) {
+//						 e.printStackTrace();
+//				    		Integer code = e.getError().getErrorCode();
+//							logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
+//							sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
+//							sb.append("失败原因:"+WxMpErrorMsg.findMsgByCode(code));
+//							if (!userName.equals(weixin.getNickName())) {
+//								errorCount++;
+//								userName=weixin.getNickName();
+//							}
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//						logger.error("上传图文消息的封面的图片，异常信息:" + e.getMessage());
+//						restAPIResult.setRespCode(0);
+//						if (!userName.equals(weixin.getNickName())) {
+//							errorCount++;
+//							userName=weixin.getNickName();
+//						}
+//					}
 
 				}
 			}
@@ -356,7 +357,7 @@ public class AsyncTask{
 							mpMaterialNewsArticleSingle.setDigest(WeixinImgtextItem.getIntro());
 							wxMpMaterialNewsSingle.addArticle(mpMaterialNewsArticleSingle);
 						}
-						try {
+//						try {
 							WxMpMaterialUploadResult resSingle = wxOpenServiceDemo.getWxOpenComponentService()
 									.getWxMpServiceByAppid(appId).getMaterialService()
 									.materialNewsUpload(wxMpMaterialNewsSingle);
@@ -376,11 +377,11 @@ public class AsyncTask{
 							weixinPushLog.setAuthorizerAppid(str);
 
 							weixinPushLogService.insertSelective(weixinPushLog);
-						} catch (Exception e) {
-							e.printStackTrace();
-							sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
-							sb.append("失败原因:【处理图文消息正文内部的媒体文件信息替换异常】<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
-						}
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//							sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
+//							sb.append("失败原因:【处理图文消息正文内部的媒体文件信息替换异常】<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
+//						}
 					}
 			}
 			number = count/idsList.size();
@@ -394,7 +395,27 @@ public class AsyncTask{
 			}
 			count++;
 			successCount++;
-			
+			} catch(WxErrorException e) {
+				 e.printStackTrace();
+//				 w.setErrorUserId(weixin.getId());
+				 errorIds.append(str);
+				 errorNames.append(weixin.getNickName());
+		    		Integer code = e.getError().getErrorCode();
+					logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
+					sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
+					sb.append("失败原因:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
+					errorCount++;
+					if (!userName.equals(weixin.getNickName())) {
+						userName=weixin.getNickName();
+					}
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.error("处理图文消息正文内部的图片、视频、音频等文件信息替换，异常信息:" + e.getMessage());
+				errorCount++;
+				if (!userName.equals(weixin.getNickName())) {
+					userName=weixin.getNickName();
+				}
+			}
 		}
 		if(errorCount!=0) {
 			sb.insert(0,"本次共同步公众号"+idsList.size()+"条;同步:"+successCount+"条;失败:"+errorCount+"条</br><font  color=\"red\">失败信息明细:</font><br/>");
@@ -410,18 +431,14 @@ public class AsyncTask{
 			restAPIResult.setRespMsg("同步异常，异常信息:" + e.getMessage());
 			sb.append("同步异常:"+ e.getMessage()+"<br/>");
 		}*/
-
-		if(StringUtils.isNoneBlank(sb.toString())){
-			restAPIResult.setRespCode(0);
-			restAPIResult.setRespMsg(sb.toString());
-		}
+		w.setExecuteResult("同步:"+successCount+"条;失败:"+errorCount+"条");
+		weixinSendHistoryService.insert(w);
 		try {
 			r.setEx(status, sb.toString(),600);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		restAPIResult.setRespMsg(sb.toString());
-		return restAPIResult;
+		return;
 	}  
 	
 	@Async  
@@ -436,6 +453,14 @@ public class AsyncTask{
 		Integer successCount=0;//同步成功条数
 		Integer errorCount=0;//同步失败条数
 		String status=name+"status";
+		WeixinSendHistory w=new WeixinSendHistory();
+		w.setCategory(0);
+		StringBuffer errorIds=new StringBuffer();
+		StringBuffer errorNames=new StringBuffer();
+		w.setImgtextid(Integer.parseInt(imgTextId));
+		w.setCreateDate(new Date());
+		w.setCreateByUname(name);
+		w.setAuthorizerappid(ids);
 
 		List<String> idsList = StringUtil.splitStringToStringList(ids);
 
@@ -445,7 +470,6 @@ public class AsyncTask{
 		
 		StringBuffer sb = new StringBuffer("");
 		StringBuffer mag = new StringBuffer("");
-		try {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("imgTextId", imgTextId);
 			// 查看图文列表项数据
@@ -598,7 +622,7 @@ public class AsyncTask{
 								}
 									
 								//上传图文
-									try {
+//									try {
 										URL fileUrl = new URL(WeixinImgtextItem.getHeadImg());
 
 										URLConnection rulConnection = fileUrl.openConnection();// 此处的urlConnection对象实际上是根据URL的
@@ -632,19 +656,19 @@ public class AsyncTask{
 										if (inputStream != null) {
 											inputStream.close();
 										}
-									}
-										catch(WxErrorException e) {
-											 e.printStackTrace();
-									    		Integer code = e.getError().getErrorCode();
-												logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-												sb.append("上传图文消息的封面的图片异常:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-												mag.append("上传图文消息的封面的图片异常:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
-									} catch (Exception e) {
-										e.printStackTrace();
-										logger.error("上传图文消息的封面的图片，异常信息:" + e.getMessage());
-										restAPIResult.setRespCode(0);
-										restAPIResult.setRespMsg("上传图文消息的封面的图片，异常信息:" + e.getMessage());
-									}
+//									}
+//										catch(WxErrorException e) {
+//											 e.printStackTrace();
+//									    		Integer code = e.getError().getErrorCode();
+//												logger.info(str + "上传图文消息的封面的图片异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
+//												sb.append("上传图文消息的封面的图片异常:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
+//												mag.append("上传图文消息的封面的图片异常:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
+//									} catch (Exception e) {
+//										e.printStackTrace();
+//										logger.error("上传图文消息的封面的图片，异常信息:" + e.getMessage());
+//										restAPIResult.setRespCode(0);
+//										restAPIResult.setRespMsg("上传图文消息的封面的图片，异常信息:" + e.getMessage());
+//									}
 
 								
 								WxMpMassNews.WxMpMassNewsArticle article2 = new WxMpMassNews.WxMpMassNewsArticle();
@@ -701,6 +725,8 @@ public class AsyncTask{
 							 e.printStackTrace();
 					    		Integer code = e.getError().getErrorCode();
 					    		errorCount++;
+					    		 errorIds.append(str);
+								 errorNames.append(weixin.getNickName());
 								logger.info(str + "群发异常:" +e.getMessage() + ",异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
 								sb.append("异常信息:"+ WxMpErrorMsg.findMsgByCode(code)+"<br/>");
 								mag.append("群发失败公众号:"+weixin.getNickName()+"<br/>");
@@ -751,16 +777,6 @@ public class AsyncTask{
 					
 				}
 			}
-			
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("群发异常，异常信息:" + e.getMessage());
-			restAPIResult.setRespCode(0);
-			restAPIResult.setRespMsg("群发异常，异常信息:" + e.getMessage());
-			sb.append("群发异常:" +e.getMessage()+"<br/>");
-			mag.append("群发异常:" +e.getMessage()+"<br/>");
-		}
 		
 		if(StringUtils.isNoneBlank(sb.toString())){
 			restAPIResult.setRespCode(0);
@@ -771,6 +787,8 @@ public class AsyncTask{
 		}else {
 			mag.insert(0,"本次共群发公众号"+idsList.size()+"条;群发:"+successCount+"条;失败:"+errorCount+"条</br>");
 		}
+		w.setExecuteResult("同步:"+successCount+"条;失败:"+errorCount+"条");
+		weixinSendHistoryService.insert(w);
 		try {
 			r.setEx(status, mag.toString(),600);
 		} catch (Exception e) {
