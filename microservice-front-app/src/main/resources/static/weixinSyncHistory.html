@@ -1,0 +1,172 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta
+	content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"
+	name="viewport" />
+<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1"
+	media="(device-height: 568px)" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta content="telephone=no" name="format-detection" />
+<meta http-equiv="Access-Control-Allow-Origin" content="*">
+<title>同步历史</title>
+
+<link rel="stylesheet" href="layui/css/layui.css">
+<!--     <link rel="stylesheet" href="css/css.css"> -->
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="./js/jquery.cookie.js"></script>
+<script src="js/js.js"></script>
+
+<script src="layer/layer.js"></script>
+<script src="layui/layui.js"></script>
+<style>
+.layui-form {
+	padding: 20px;
+}
+
+#upload {
+	display: block;
+}
+
+#headImgPic {
+	background: #F5F5F5;
+}
+
+.amentit {
+	margin: 10px 0;
+	font-size: 12px;
+	color: #999;
+}
+
+#tags {
+	width: 80%;
+	margin-bottom: 20px;
+	margin-top: 0px
+}
+
+#tags>div {
+	width: 100px
+}
+</style>
+</head>
+
+<body>
+	<div id="history">
+		<div>
+			<table id="waitToSend" class="layui-table" lay-filter="Grid"></table>
+		</div>
+	</div>
+
+<!-- 	<script type="text/html" id="optTpl"> -->
+<!--             <button class="layui-btn layui-btn layui-btn-xs" lay-event="select">重试</button> -->
+<!--     </script> -->
+	<script>
+		var acekeystoken = $.cookie('bearcktkaeskey');
+		if (acekeystoken == "" || acekeystoken == undefined) {
+			parent.location.href = ctxApp + '/login.html';
+		}
+		layui.use(
+				[ 'laypage', 'table', 'element', 'layer', 'laydate', 'form' ],
+				function() {
+					table = layui.table;
+					table.render({
+						elem : '#waitToSend',
+						url : ctxAppWeixin + '/api/getSyncHistory?Authorization='
+								+ acekeystoken,
+						cols : [ [  {
+							field : 'id',
+							title : 'ID'
+						},{
+							field : 'create_date',
+							title : '时间'
+						},{
+							field : 'to_user_name',
+							title : '同步目标'
+						},{
+							field : 'execute_result',
+							title : '执行结果'
+						},{
+							title : '操作',
+							templet : '#optTpl'
+						} ] ],
+						page : true,
+						id : 'waitToSend',
+						initSort : {
+							field : 'id' //排序字段，对应 cols 设定的各字段名
+							,
+							type : 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+						},
+						request : {
+							pageName : 'page' //页码的参数名称，默认：page
+							,
+							limitName : 'limit' //每页数据量的参数名，默认：limit
+						}
+					});
+					function splitStringToStringList(str) {
+					    var strArray = str.split(",");
+					    var strList = new Array();
+					    for (var i=0;i<strArray.length;i++) {
+					    	var strObj=strArray[i];
+					      strList.push(strObj+"</br>");
+					    }
+					    return strList;
+					  }
+					$(document).on('click','.layui-table-cell',function(){
+						var templateHtml=$(this).html();
+						$('.layui-table-tips-main').html(splitStringToStringList(templateHtml));
+						     })
+// 					table.on('tool(Grid)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+// 						var data = obj.data; //获得当前行数据
+// 						var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+// 						if (layEvent === 'cancel') {
+// 							layer.confirm('您确定取消任务？', {
+// 								title : "系统提示",
+// 								anim : 1,
+// 								icon : 3,
+// 								closeBtn : 0
+// 							}, function(index) {
+// 								$.ajax({
+// 									url : ctxAppWeixin + '/api/stopTimingTask',
+// 									data : {
+// 										"Authorization" : acekeystoken,
+// 										id : data.id
+// 									},
+// 									type : "post",
+// 									dataType : "json",
+// 									success : function(data) {
+// 										layer.msg(data.respMsg);
+// 									},
+// 									error : function(data) {
+// 										try {
+// 											layer.msg("请求异常");
+// 											return false;
+// 										} catch (e) {
+// 											console.log(e);
+// 										}
+// 									}
+// 								});
+// 							})
+// 						}
+// 						if (layEvent === 'update') {
+// 							layer.open({
+// 								title : "定时任务",
+// 								type : 2,
+// 								maxmin : true,
+// 								area : [ '680px', '380px' ],
+// 								content : 'weixinTimingUpdate.html?id='
+// 										+ data.id,
+// 								// 下面这句是,添加页面关闭后,刷新本页面.
+// 								end : function() {
+// 									location.reload();
+// 								}
+// 							});
+// 						}
+// 					});
+				})
+	</script>
+</body>
+</html>
