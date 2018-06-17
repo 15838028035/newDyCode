@@ -6,9 +6,9 @@ hystrix:
           thread: 
             timeoutInMilliseconds: 999999999  
 ribbon: 
-  ReadTimeout: 999999999
-  ConnectTimeout: 999999999
+  ReadTimeout: 30000
+  ConnectTimeout: 30000
 zuul:
     host:
-        socket-timeout-millis: 999999999
-        connect-timeout-millis: 999999999
+        socket-timeout-millis: 30000
+        connect-timeout-millis: 30000
