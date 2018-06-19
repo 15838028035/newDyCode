@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1160,6 +1161,7 @@ public class WeixinImgTextController {
 		try {
 			map.put("percent",r.get(userName+"tongbuNum"));
 			map.put("status", r.get(userName+"status"));
+			map.put("isExecuting", r.get(userName+"isExecuting"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1212,18 +1214,35 @@ public class WeixinImgTextController {
 	public LayUiTableResultResponse getSyncHistory(@RequestParam Map<String,Object> params) {
 		Map<String,Object> map=new HashMap<String,Object>();
 		map.put("createByUname", params.get("createByUname"));
+		map.put("category", params.get("category"));
 		map.put("limit", params.get("limit"));
 		map.put("page", params.get("page"));
+		map.put("id",  params.get("id"));
 		Query query=new Query(map);
 		LayUiTableResultResponse list=weixinSendHistoryService.selectByQuery(query);
-//		List data=list.getData();
-//		for(int i=0;i<data.size();i++) {
-//			Map<String,Object> m=(Map<String,Object>)data.get(i);
-//			List<String> nickNameList=StringUtil.splitStringToStringList((String)m.get("to_user_name"));
-//			m.remove("to_user_name");
-//			m.put("to_user_name", nickNameList);
-//		}
-//		list.setData(data);
+		if(params.get("id")!=null&&!params.get("id").equals("null")&&params.get("id")!="") {
+			List data=list.getData();
+			List<String> nickNameList=new ArrayList<String>();
+			List<String> errorNameList=new ArrayList<String>();
+			for(int i=0;i<data.size();i++) {
+				Map<String,Object> m=(Map<String,Object>)data.get(i);
+				nickNameList.addAll(StringUtil.splitStringToStringList((String)m.get("to_user_name")));
+				errorNameList.addAll(StringUtil.splitStringToStringList((String)m.get("error_user_name")));
+			}
+			data.clear();
+			
+			for(String nickName:nickNameList) {
+				Map<String,String> nickNameMap=new HashMap<String,String>();
+				if(errorNameList.contains(nickName)) {
+					nickNameMap.put("status","发送失败");
+				}else {
+					nickNameMap.put("status","发送成功");
+				}
+				nickNameMap.put("to_user_name",nickName);
+				data.add(nickNameMap);
+			}
+			list.setData(data);
+		}
 		return list;
 	}
 	

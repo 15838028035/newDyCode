@@ -1681,30 +1681,24 @@ public class FansCountController {
 			initParams();
 			weixinTaskRunLog.setTaskName("用户分析数据拉取");
 			weixinTaskRunLog.setCreateDate(DateUtil.getNowDateYYYYMMddHHMMSS());
-			
+			System.out.println("---------------------------");
 			logTemplate="公众号ID"+weixinUserinfo.getId()+","+weixinUserinfo.getNickName()
 			+"出现异常:";
 			try {
 				// 获取增减用户
 				List<WxDataCubeUserSummary> list = null;
-				try {
 					list = wxOpenServiceDemo.getWxOpenComponentService()
 							.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getDataCubeService()
 							.getUserSummary(beginDateTime, endDateTime);
-				} catch (WxErrorException e) {
-					logger.error("统计公众号:" + weixinUserinfo.getNickName() + "时出现异常");
-					logger.error("异常信息:" + e.getMessage());
-					weixinTaskRunLog.setLogsDesc(logTemplate+WxMpErrorMsg.findMsgByCode(e.getError().getErrorCode()));
-					weixinTaskRunLogService.insert(weixinTaskRunLog);
-				}
 				if (list == null) {
 					logger.error("统计公众号:" + weixinUserinfo.getNickName() + "时出现异常");
 					logger.error("list为null");
 					continue;
 				}
+				System.out.println("---------------------------");
 				// 获取当前用户新增和取消用户总数
 				for (WxDataCubeUserSummary wxDataCubeUserSummary : list) {
-					try {
+//					try {
 						Integer newUser = wxDataCubeUserSummary.getNewUser();
 						countNewUser += newUser;
 						cancelUser += wxDataCubeUserSummary.getCancelUser();
@@ -1751,30 +1745,31 @@ public class FansCountController {
 								addSceneOthers += newUser;
 							}
 						}
-					} catch (Exception e) {
-						logger.error("异常:" + e.getMessage());
-						weixinTaskRunLog.setLogsDesc(logTemplate+e.getMessage());
-						weixinTaskRunLogService.insert(weixinTaskRunLog);
-					}
+//					} catch (Exception e) {
+//						logger.error("异常:" + e.getMessage());
+//						weixinTaskRunLog.setLogsDesc(logTemplate+e.getMessage());
+//						weixinTaskRunLogService.insert(weixinTaskRunLog);
+//					}
 				}
 				logger.info("查询userid为" + weixinUserinfo.getId() + "查询新增用户为：" + countNewUser + "取消用户为" + cancelUser);
 
 				// 获取累计用户
 				List<WxDataCubeUserCumulate> countlist = null;
-				try {
+//				try {
 					countlist = wxOpenServiceDemo.getWxOpenComponentService()
 							.getWxMpServiceByAppid(weixinUserinfo.getAuthorizerAppid()).getDataCubeService()
 							.getUserCumulate(beginDateTime, endDateTime);
-				} catch (WxErrorException e) {
-					logger.error("获得累计用户出现异常:" + weixinUserinfo.getNickName());
-					weixinTaskRunLog.setLogsDesc(logTemplate+WxMpErrorMsg.findMsgByCode(e.getError().getErrorCode()));
-					weixinTaskRunLogService.insert(weixinTaskRunLog);
-				}
+//				} catch (WxErrorException e) {
+//					logger.error("获得累计用户出现异常:" + weixinUserinfo.getNickName());
+//					weixinTaskRunLog.setLogsDesc(logTemplate+WxMpErrorMsg.findMsgByCode(e.getError().getErrorCode()));
+//					weixinTaskRunLogService.insert(weixinTaskRunLog);
+//				}
 				if (countlist == null) {
 					logger.error(weixinUserinfo.getNickName() + "出现错误:获得累计用户失败,id:" + weixinUserinfo.getId());
 					logger.error("countlist=null");
 					continue;
 				}
+				System.out.println("---------------------------");
 				Integer count = countlist.get(countlist.size() - 1).getCumulateUser();
 				Map<String,Object> map=new HashMap<String,Object>();
 				map.put("event", 1);
@@ -1873,11 +1868,16 @@ public class FansCountController {
 				logger.info("耗时:" + (System.currentTimeMillis() - timeBegin) + "毫秒");
 				logger.info("已统计公众号:" + userNames);
 				logger.info("over----------");
-				if (nowHour < 22) {
+				if (nowHour < 21) {
 					break;
 				}
 				System.gc();
-			} catch (Exception e) {
+			} catch (WxErrorException e) {
+				e.printStackTrace();
+				logger.error("获得累计用户出现异常:" + weixinUserinfo.getNickName());
+				weixinTaskRunLog.setLogsDesc(logTemplate+WxMpErrorMsg.findMsgByCode(e.getError().getErrorCode()));
+				weixinTaskRunLogService.insert(weixinTaskRunLog);
+			}catch (Exception e) {
 				e.printStackTrace();
 				logger.info("统计异常:" + e.getMessage());
 				weixinTaskRunLog.setLogsDesc(logTemplate+e.getMessage());

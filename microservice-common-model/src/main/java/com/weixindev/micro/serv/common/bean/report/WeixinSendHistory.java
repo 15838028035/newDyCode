@@ -23,7 +23,7 @@ public class WeixinSendHistory {
 
     private Integer category;
 
-    private Integer status;
+    private String status;
 
     private String executeResult;
 
@@ -113,11 +113,11 @@ public class WeixinSendHistory {
         this.category = category;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

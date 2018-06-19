@@ -12,14 +12,14 @@
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="authorizerAppid" property="authorizerappid" jdbcType="VARCHAR" />
     <result column="category" property="category" jdbcType="INTEGER" />
-    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="execute_result" property="executeResult" jdbcType="VARCHAR" />
     <result column="to_user_name" property="toUserName" jdbcType="VARCHAR" />
     <result column="error_user_name" property="errorUserName" jdbcType="VARCHAR" />
     <result column="error_user_id" property="errorUserId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, create_date, create_by_UName, update_date, media_category, imgTextId, media_id, 
+    id,  DATE_FORMAT(create_date, '%Y-%m-%d %H:%i:%s' )  AS create_date, create_by_UName, update_date, media_category, imgTextId, media_id, 
     user_id, authorizerAppid, category, status, execute_result, to_user_name, error_user_name, 
     error_user_id
   </sql>
@@ -41,6 +41,9 @@
          <if test="category != null and  category != ''" >
                and   category = #{category,jdbcType=INTEGER}
         </if>
+        <if test="id != null and  id != ''" >
+               and   id = #{id,jdbcType=INTEGER}
+        </if>
   </select>
   
   
@@ -58,7 +61,7 @@
     values (#{id,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{createByUname,jdbcType=VARCHAR}, 
       #{updateDate,jdbcType=TIMESTAMP}, #{mediaCategory,jdbcType=VARCHAR}, #{imgtextid,jdbcType=INTEGER}, 
       #{mediaId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{authorizerappid,jdbcType=VARCHAR}, 
-      #{category,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{executeResult,jdbcType=VARCHAR}, 
+      #{category,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{executeResult,jdbcType=VARCHAR}, 
       #{toUserName,jdbcType=VARCHAR}, #{errorUserName,jdbcType=VARCHAR}, #{errorUserId,jdbcType=VARCHAR}
       )
   </insert>
@@ -143,7 +146,7 @@
         #{category,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=VARCHAR},
       </if>
       <if test="executeResult != null" >
         #{executeResult,jdbcType=VARCHAR},
@@ -190,7 +193,7 @@
         category = #{category,jdbcType=INTEGER},
       </if>
       <if test="status != null" >
-        status = #{status,jdbcType=INTEGER},
+        status = #{status,jdbcType=VARCHAR},
       </if>
       <if test="executeResult != null" >
         execute_result = #{executeResult,jdbcType=VARCHAR},
@@ -218,7 +221,7 @@
       user_id = #{userId,jdbcType=INTEGER},
       authorizerAppid = #{authorizerappid,jdbcType=VARCHAR},
       category = #{category,jdbcType=INTEGER},
-      status = #{status,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
       execute_result = #{executeResult,jdbcType=VARCHAR},
       to_user_name = #{toUserName,jdbcType=VARCHAR},
       error_user_name = #{errorUserName,jdbcType=VARCHAR},
