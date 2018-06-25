@@ -1224,6 +1224,7 @@ public class WeixinImgTextController {
 //			m.put("to_user_name", nickNameList);
 //		}
 //		list.setData(data);
+		System.out.println(list);
 		return list;
 	}
 	
