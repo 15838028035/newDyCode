@@ -26,10 +26,10 @@ if(hostname == window.location.protocol + "//" +"127.0.0.1" || hostname == windo
 }
 else {
     //linux
-//    ctxApp = "http://weixin.xrtz.org:8022";
-//    ctxAppSec = "http://weixin.xrtz.org:8050/sec";
-//    ctxAppSec2 = "http://weixin.xrtz.org:8002";
-//    ctxAppWeixin = "http://weixin.xrtz.org:8050/weixin";
+//    ctxApp = "http://dadi3.palmbly.com:8022";
+//    ctxAppSec = "http://dadi3.palmbly.com:8050/sec";
+//    ctxAppSec2 = "http://dadi3.palmbly.com:8002";
+//    ctxAppWeixin = "http://dadi3.palmbly.com:8050/weixin";
 
 }
 

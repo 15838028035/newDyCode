@@ -1590,17 +1590,17 @@ public class FansCountController {
 //    	weixinSubscribeService.insert(weixinSubscribe);
 //		return "success";
 //	}
-//	@ApiOperation(value = "test")
-//	@RequestMapping(value = "/api/count/getRedis")
-//	public String getRedis(String key) {
-//		String value="";
-//		try {
-//			 value=r.get(key);
-//		}catch(Exception e) {
-//			e.printStackTrace();
-//		}
-//		return value;
-//	}
+	@ApiOperation(value = "test")
+	@RequestMapping(value = "/api/count/getRedis")
+	public String getRedis(String key) {
+		String value="";
+		try {
+			 value=r.get(key);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return value;
+	}
 //	@ApiOperation(value = "test")
 //	@RequestMapping(value = "/api/count/getUserInfo")
 //	public List<WxDataCubeUserCumulate> getUserInfo(Integer index) {
