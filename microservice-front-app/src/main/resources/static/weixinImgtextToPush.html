@@ -975,13 +975,14 @@ $("#btnSend").click(function(){
 
 
     var ids = "";
+    var toUser="";
     $.each(datas, function(index, item){
          var id = item.authorizerAppid;
+         var toUserName=item.nick_name;
          ids+=id+",";
+         toUser+=toUserName+",";
      });
-
-
-    var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken,"userName":$.cookie('loginNo')};
+    var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken,"userName":$.cookie('loginNo'),"toUser":toUser};
     
     layer.confirm('您确认要进行发送吗？如果图文消息中图片内容过多，请尽量选择少量的公众号进行发送操作', {title: "系统提示", anim: 1, icon: 3, closeBtn: 0}, function (index) {
     	layer.close(index);
@@ -1054,7 +1055,7 @@ $('#sendHistory').click(function(){
 })
 $('#syncHistory').click(function(){
 	layer.open({
-		title : "群发历史",
+		title : "同步历史",
 		type : 2,
 		maxmin : true,
 		area : [ '1280px', '580px' ],
@@ -1093,12 +1094,15 @@ $("#btnSync").click(function(){
         var datas = checkStatus.data;
         
         var ids = "";
+        var toUser="";
         $.each(datas, function(index, item){
              var id = item.authorizerAppid;
+             var toUserName=item.nick_name;
              ids+=id+",";
+             toUser+=toUserName+",";
          });
         var userName=$.cookie('loginNo');
-        var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken,"userName":userName};
+        var postData = {"imgTextId":imgTextId, "ids":ids,"Authorization":acekeystoken,"userName":userName,"toUser":toUser};
         console.log(userName);
         console.log(postData);
         
@@ -1314,7 +1318,7 @@ $("#btnSync").click(function(){
 
                 var url = ctxAppWeixin + '/api/wxopen/get_authorizer_info?authorizerAppid=' + authorizerAppid + '&Authorization=' + acekeystoken;
                 
-               // url = 'http://weixin.xrtz.org:8050/weixin/api/wxopen/get_authorizer_info?authorizerAppid=' + authorizerAppid + '&Authorization=' + acekeystoken;
+               // url = 'http://dadi3.palmbly.com:8050/weixin/api/wxopen/get_authorizer_info?authorizerAppid=' + authorizerAppid + '&Authorization=' + acekeystoken;
     	        $.ajax({
     	            url: url,
     	            type: "get",

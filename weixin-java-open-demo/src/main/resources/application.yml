@@ -9,7 +9,7 @@ wechat:
     componentToken: "Ivj6eZRx40+MTx2ZvnG8nA"
     componentAesKey: "MPWhAW4iaGMtIcpyd0AXlRUZ39Fj3XLbzTLXBTC3Q0L"
   redis:
-    host: "182.92.99.67"
+    host: "180.76.98.239"
     password: "dkfTYF76876"
     database: 1
     connectionTimeout: 100000
@@ -23,7 +23,7 @@ spring:
       prefix: /
       suffix: .html
   redis:
-    host: 182.92.99.67
+    host: 180.76.98.239
     port: 6379
     password: dkfTYF76876
     database: 1

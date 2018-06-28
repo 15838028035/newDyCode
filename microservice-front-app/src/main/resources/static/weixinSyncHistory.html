@@ -61,12 +61,16 @@
 		</div>
 	</div>
 
-<!-- 	<script type="text/html" id="optTpl"> -->
-<!--             <button class="layui-btn layui-btn layui-btn-xs" lay-event="select">重试</button> -->
-<!--     </script> -->
+	<script type="text/html" id="optTpl">
+            <button class="layui-btn layui-btn layui-btn-xs" lay-event="select">点击查看</button>
+    </script>
 	<script>
 		var acekeystoken = $.cookie('bearcktkaeskey');
 		if (acekeystoken == "" || acekeystoken == undefined) {
+			parent.location.href = ctxApp + '/login.html';
+		}
+		var createByUname=$.cookie('loginNo');
+		if (createByUname == "" || createByUname == undefined) {
 			parent.location.href = ctxApp + '/login.html';
 		}
 		layui.use(
@@ -75,7 +79,7 @@
 					table = layui.table;
 					table.render({
 						elem : '#waitToSend',
-						url : ctxAppWeixin + '/api/getSyncHistory?Authorization='
+						url : ctxAppWeixin + '/api/getSyncHistory?category=0&createByUname='+createByUname+'&Authorization='
 								+ acekeystoken,
 						cols : [ [  {
 							field : 'id',
@@ -84,13 +88,14 @@
 							field : 'create_date',
 							title : '时间'
 						},{
-							field : 'to_user_name',
-							title : '同步目标'
+							field : 'status',
+							title : '执行状态'
 						},{
 							field : 'execute_result',
-							title : '执行结果'
+							title : '执行结果',
+							width:180
 						},{
-							title : '操作',
+							title : '同步目标',
 							templet : '#optTpl'
 						} ] ],
 						page : true,
@@ -104,7 +109,7 @@
 							pageName : 'page' //页码的参数名称，默认：page
 							,
 							limitName : 'limit' //每页数据量的参数名，默认：limit
-						}
+						}    
 					});
 					function splitStringToStringList(str) {
 					    var strArray = str.split(",");
@@ -117,55 +122,26 @@
 					  }
 					$(document).on('click','.layui-table-cell',function(){
 						var templateHtml=$(this).html();
-						$('.layui-table-tips-main').html(splitStringToStringList(templateHtml));
+						console.log(templateHtml);
+						$('.layui-table-tips-main').html(templateHtml);
 						     })
-// 					table.on('tool(Grid)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-// 						var data = obj.data; //获得当前行数据
-// 						var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-// 						if (layEvent === 'cancel') {
-// 							layer.confirm('您确定取消任务？', {
-// 								title : "系统提示",
-// 								anim : 1,
-// 								icon : 3,
-// 								closeBtn : 0
-// 							}, function(index) {
-// 								$.ajax({
-// 									url : ctxAppWeixin + '/api/stopTimingTask',
-// 									data : {
-// 										"Authorization" : acekeystoken,
-// 										id : data.id
-// 									},
-// 									type : "post",
-// 									dataType : "json",
-// 									success : function(data) {
-// 										layer.msg(data.respMsg);
-// 									},
-// 									error : function(data) {
-// 										try {
-// 											layer.msg("请求异常");
-// 											return false;
-// 										} catch (e) {
-// 											console.log(e);
-// 										}
-// 									}
-// 								});
-// 							})
-// 						}
-// 						if (layEvent === 'update') {
-// 							layer.open({
-// 								title : "定时任务",
-// 								type : 2,
-// 								maxmin : true,
-// 								area : [ '680px', '380px' ],
-// 								content : 'weixinTimingUpdate.html?id='
-// 										+ data.id,
-// 								// 下面这句是,添加页面关闭后,刷新本页面.
-// 								end : function() {
-// 									location.reload();
-// 								}
-// 							});
-// 						}
-// 					});
+					table.on('tool(Grid)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+						var data = obj.data; //获得当前行数据
+						var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+						if (layEvent === 'select') {
+							layer.open({
+								title : "群发公众号",
+								type : 2,
+								maxmin : false,
+								area : [ '600px', '580px' ],
+								content : 'weixin_send_target.html?category=0&id='+data.id,
+								// 下面这句是,添加页面关闭后,刷新本页面.
+								end : function() {
+									location.reload();
+								}
+							});
+						}
+					});
 				})
 	</script>
 </body>

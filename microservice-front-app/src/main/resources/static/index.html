@@ -350,7 +350,7 @@
   /*   }) */
     
     });
-    var  percent;
+    var  isExecuting;
     var timeid =function(){
     	intervalid=setInterval(function (){
     		$.ajax({
@@ -359,14 +359,14 @@
     	            dataType: "json",
     	            success: function (data) {
     	            	console.log(data);
-    	            	percent=data.percent;
+    	            	isExecuting=data.isExecuting;
     	            	var status=data.status;
+    	            	var percent=data.percent;
     	            	$('#status').html(status);
     	            	layui.element.progress('demo',percent);
     	            },
     	        });
-    		if(percent=='100%'){
-    			console.log(111111111111);
+    		if(isExecuting=='0'){
         		window.clearInterval(intervalid);
         		return;
         	}

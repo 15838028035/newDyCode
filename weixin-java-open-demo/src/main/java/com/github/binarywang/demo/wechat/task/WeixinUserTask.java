@@ -49,6 +49,7 @@ public class WeixinUserTask {
 	private WeixinFansInfoService weixinFansInfoService;
 	@Autowired
 	private WeixinTaskRunLogService weixinTaskRunLogService;
+	@Autowired
 	private WeixinSubscribeService weixinSubscribeService;
 	
 	private Integer male;
@@ -287,7 +288,7 @@ public class WeixinUserTask {
 				logger.info("当前公众号" + weixinUserinfo.getNickName() + "统计结束");
 				logger.info("耗时:" + (System.currentTimeMillis() - timeBegin) + "毫秒");
 				logger.info("已统计公众号:" + userNames);
-				if (nowHour!=null&& nowHour >= 9 && nowHour < 18) {
+				if (nowHour!=null&& nowHour >= 8 && nowHour < 23) {
 					break;
 				}
 				System.gc();
