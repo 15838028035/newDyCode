@@ -1272,6 +1272,7 @@ public class WeixinImgTextController {
 		map.put("category", params.get("category"));
 		map.put("limit", params.get("limit"));
 		map.put("page", params.get("page"));
+//<<<<<<< HEAD
 		map.put("id", params.get("id"));
 		Query query = new Query(map);
 		LayUiTableResultResponse list = weixinSendHistoryService.selectByQuery(query);
@@ -1298,6 +1299,11 @@ public class WeixinImgTextController {
 			}
 			list.setData(data);
 		}
+//=======
+//		Query query=new Query(map);
+//		LayUiTableResultResponse list=weixinSendHistoryService.selectByQuery(query);
+//		System.out.println(list);
+//>>>>>>> 137169a34e75b6114176d29b44e90138f4b9244d
 		return list;
 	}
 

@@ -667,6 +667,7 @@ public class AsyncTask {
 												BufferedImage image = null;
 												image = ImageIO.read(netUrl);
 												ImageIO.write(image, extName, new File(filePath));
+
 											}
 
 											WeixinImg weixinImg = new WeixinImg();
