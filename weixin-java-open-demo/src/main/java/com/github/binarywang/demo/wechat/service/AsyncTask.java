@@ -692,7 +692,7 @@ public class AsyncTask {
 												// errorIds.append(str+",");
 												// errorNames.append(weixin.getNickName()+",");
 												// sb.append("同步失败公众号:"+weixin.getNickName()+"<br/>");
-												logger.info(
+												logger.error(
 														"图片替换出现异常oldRetContent:" + oldRetContent + ",new-retContent:"
 																+ retContent + ",url" + url + ",strCon:" + strCont);
 												// sb.append("失败原因:图片替换出现异常<br/>时间:"+DateUtil.getNowDateYYYYMMddHHMMSS()+"<br/>");
