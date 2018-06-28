@@ -161,7 +161,7 @@ public class AsyncTask{
 						if (strContentList != null) {// 替换图片
 							for (String strCon : strContentList) {
 								System.out.println("图片strCon=" + strCon);
-
+								System.out.println(strContentList.size()+"----------------------------------------------------------------");
 								String headImgRepl = strCon.replaceFirst(appURL, file_location);
 
 								File fileTmp = new File(headImgRepl);
@@ -530,7 +530,7 @@ public class AsyncTask{
 									if (strContentList != null) {// 替换图片
 										for (String strCont : strContentList) {
 											System.out.println("图片strCont=" + strCont);
-	
+											System.out.println("*********************"+strContentList.size());
 											String headImgRepl = strCont.replaceFirst(appURL, file_location);
 	
 											File fileTmp = new File(headImgRepl);
@@ -610,7 +610,8 @@ public class AsyncTask{
 															.mediaImgUpload(fileTmp);
 													String url = res.getUrl();
 													retContent = retContent.replaceFirst(strCont, url);// 替换后的内容
-					
+													System.out.println("**********新内容"+url+"**************************************");
+													System.out.println("**********新内容"+retContent+"**************************************");
 													WeixinImgtextItem.setNewContent(retContent);// 设置替换以后新的内容
 													weixinImgtextItemService.updateByPrimaryKeySelective(WeixinImgtextItem);
 													logger.info(" 替换图片img WeixinImgtextItem.getId 的ID为=" + WeixinImgtextItem.getId()
